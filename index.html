@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="smartisan">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>AI 正在改变软件开发的未来</title>
+<style>
+/* === 全局重置 === */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+}
+
+/* === 中文排版精修 === */
+body {
+  font-variant-east-asian: proportional-width;
+  line-break: strict;
+  overflow-wrap: break-word;
+}
+@supports (text-autospace: ideograph-alpha ideograph-numeric) {
+  body { text-autospace: ideograph-alpha ideograph-numeric; }
+}
+
+/* === 字体系统 === */
+:root {
+  --font-zh: "SF Pro SC", "PingFang SC", "Noto Sans SC", "Source Han Sans SC", "Heiti SC", sans-serif;
+  --font-en: "SF Pro Display", "Inter", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  --font-num: "SF Pro Display", "DIN Alternate", "Helvetica Neue", monospace;
+}
+
+/* === Smartisan 风格变量 === */
+:root {
+  --bg-primary: linear-gradient(180deg, #0A0A0A 0%, #1C1C1E 40%, #111111 100%);
+  --bg-slide: #0F0F0F;
+  --card-bg: rgba(255,255,255,0.04);
+  --card-border: 1px solid rgba(255,255,255,0.08);
+  --card-shadow: 0 12px 48px rgba(0,0,0,0.25), 0 2px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.1);
+  --card-radius: 16px;
+  --text-hero: #FFFFFF;
+  --text-primary: rgba(255,255,255,0.92);
+  --text-secondary: rgba(255,255,255,0.65);
+  --text-muted: rgba(255,255,255,0.35);
+  --accent: #E74C3C;
+  --accent-light: #FF6B5A;
+  --accent-glow: rgba(231,76,60,0.3);
+  --slide-padding: 10vmin;
+  --transition-default: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (color-gamut: p3) {
+  :root {
+    --accent: color(display-p3 0.92 0.28 0.22);
+    --accent-light: color(display-p3 1.0 0.42 0.35);
+  }
+}
+
+/* === 布局系统 === */
+body {
+  font-family: var(--font-zh);
+  color: var(--text-primary);
+  background: #0A0A0A;
+  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
+}
+@supports not (height: 100dvh) {
+  body { height: -webkit-fill-available; }
+}
+
+.presentation {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 1200px;
+}
+
+/* === 幻灯片基础 === */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--slide-padding);
+  opacity: 0;
+  pointer-events: none;
+  backface-visibility: hidden;
+  contain: layout style paint;
+  overflow: hidden;
+  /* 三层背景 */
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(255,255,255,0.02) 0%, transparent 70%),
+    var(--bg-primary);
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+}
+.slide.exiting {
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* 噪点纹理 */
+.slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  opacity: 0.018;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 舞台顶部光晕 */
+.slide::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%;
+  height: 50%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.slide > * { position: relative; z-index: 1; }
+
+/* 非活动 slide 优化 — 用 visibility 替代 content-visibility 避免渲染闪烁 */
+.slide:not(.active):not(.exiting) { visibility: hidden; }
+
+/* === 背景渐变预设 === */
+.slide.bg-spotlight {
+  background:
+    radial-gradient(ellipse 60% 45% at 50% -10%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 40%, transparent 70%),
+    radial-gradient(ellipse 25% 80% at -5% 50%, rgba(240,173,78,0.03) 0%, transparent 70%),
+    var(--bg-primary);
+}
+.slide.bg-cosmos {
+  background:
+    radial-gradient(ellipse 35% 40% at 75% 25%, rgba(100,80,180,0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 35% at 20% 70%, rgba(60,100,200,0.06) 0%, transparent 70%),
+    linear-gradient(180deg, #06060A 0%, #0C0C18 35%, #0A0A14 65%, #080810 100%);
+}
+.slide.bg-sunset {
+  background:
+    radial-gradient(ellipse 100% 40% at 50% 100%, rgba(231,76,60,0.06) 0%, rgba(240,173,78,0.03) 40%, transparent 70%),
+    linear-gradient(180deg, #0A0A0C 0%, #12101A 30%, #1A1218 60%, #1C1410 100%);
+}
+
+/* === 转场动画 === */
+/* 不使用 transition — 只用 animation，避免 transition+animation 冲突导致闪跳 */
+.slide.active { visibility: visible; }
+.slide.exiting { visibility: visible; }
+.slide.transition-push.active { animation: pushInRight 0.7s cubic-bezier(0.4,0,0.2,1) both; }
+.slide.transition-push.exiting { animation: pushOutLeft 0.7s cubic-bezier(0.4,0,0.2,1) both; }
+.slide.transition-zoom.active { animation: zoomIn 0.8s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+.slide.transition-zoom.exiting { animation: zoomOut 0.8s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+.slide.transition-dissolve.active { animation: dissolveIn 1.0s ease both; }
+.slide.transition-dissolve.exiting { animation: dissolveOut 1.0s ease both; }
+.slide.transition-push-rev.active { animation: pushInLeft 0.7s cubic-bezier(0.4,0,0.2,1) both; }
+.slide.transition-push-rev.exiting { animation: pushOutRight 0.7s cubic-bezier(0.4,0,0.2,1) both; }
+/* 无转场 class 时直接显示（不触发额外动画，避免 cleanup 后二次闪烁） */
+.slide.active:not([class*="transition-"]) { opacity: 1; }
+
+@keyframes pushInRight { from{transform:translate3d(100%,0,0);opacity:.8} to{transform:translate3d(0,0,0);opacity:1} }
+@keyframes pushOutLeft { from{transform:translate3d(0,0,0);opacity:1} to{transform:translate3d(-30%,0,0);opacity:0} }
+@keyframes pushInLeft { from{transform:translate3d(-100%,0,0);opacity:.8} to{transform:translate3d(0,0,0);opacity:1} }
+@keyframes pushOutRight { from{transform:translate3d(0,0,0);opacity:1} to{transform:translate3d(30%,0,0);opacity:0} }
+@keyframes zoomIn { from{transform:scale3d(.85,.85,1);opacity:0} to{transform:scale3d(1,1,1);opacity:1} }
+@keyframes zoomOut { from{transform:scale3d(1,1,1);opacity:1} to{transform:scale3d(1.15,1.15,1);opacity:0} }
+@keyframes dissolveIn { 0%{opacity:0;filter:blur(8px) saturate(.5)} 50%{filter:blur(3px) saturate(.8)} 100%{opacity:1;filter:blur(0) saturate(1)} }
+@keyframes dissolveOut { 0%{opacity:1;filter:blur(0)} 100%{opacity:0;filter:blur(8px) saturate(.3)} }
+
+/* === 进场动画 === */
+.anim { opacity: 0; }
+.slide.active .anim-up { animation: animUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+.slide.active .anim-scale { animation: animScale 0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
+.slide.active .anim-blur { animation: animBlur 1s cubic-bezier(0.22,1,0.36,1) both; }
+.slide.active .anim-left { animation: animLeft 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+.slide.active .anim-right { animation: animRight 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+@keyframes animUp { from{opacity:0;transform:translate3d(0,30px,0)} to{opacity:1;transform:translate3d(0,0,0)} }
+@keyframes animScale { from{opacity:0;transform:scale3d(.8,.8,1)} to{opacity:1;transform:scale3d(1,1,1)} }
+@keyframes animBlur { from{opacity:0;filter:blur(12px)} to{opacity:1;filter:blur(0)} }
+@keyframes animLeft { from{opacity:0;transform:translate3d(40px,0,0)} to{opacity:1;transform:translate3d(0,0,0)} }
+@keyframes animRight { from{opacity:0;transform:translate3d(-40px,0,0)} to{opacity:1;transform:translate3d(0,0,0)} }
+
+/* 结尾页呼吸动画 */
+.slide[data-slide-type="closing"] .accent-line {
+  animation: breathe 3s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; box-shadow: 0 0 20px var(--accent-glow); }
+  50% { opacity: 1; box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(231,76,60,0.1); }
+}
+
+/* 开场页装饰光点 */
+.slide[data-slide-type="opening"]::before {
+  background:
+    radial-gradient(circle 2px at 15% 20%, rgba(255,255,255,0.15), transparent 3px),
+    radial-gradient(circle 1.5px at 80% 30%, rgba(255,255,255,0.1), transparent 3px),
+    radial-gradient(circle 1px at 45% 75%, rgba(255,255,255,0.08), transparent 2px),
+    radial-gradient(circle 2px at 70% 65%, rgba(255,255,255,0.06), transparent 3px),
+    radial-gradient(circle 1px at 25% 55%, rgba(255,255,255,0.12), transparent 2px),
+    radial-gradient(ellipse 60% 45% at 50% -10%, rgba(255,255,255,0.06) 0%, transparent 70%) !important;
+}
+
+/* auto-stagger */
+.slide.active .auto-stagger > .anim:nth-child(1) { animation-delay: 0s; }
+.slide.active .auto-stagger > .anim:nth-child(2) { animation-delay: 0.12s; }
+.slide.active .auto-stagger > .anim:nth-child(3) { animation-delay: 0.24s; }
+.slide.active .auto-stagger > .anim:nth-child(4) { animation-delay: 0.36s; }
+.slide.active .auto-stagger > .anim:nth-child(5) { animation-delay: 0.48s; }
+
+/* === 排版 === */
+.hero-title {
+  font-family: var(--font-zh);
+  font-size: clamp(2.5rem, 10vw, 7rem);
+  font-weight: 900;
+  color: var(--text-hero);
+  text-align: center;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.subtitle {
+  font-family: var(--font-zh);
+  font-size: clamp(1rem, 3vw, 1.75rem);
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.8;
+  margin-top: 2rem;
+  max-width: 600px;
+}
+.accent-line {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  border-radius: 2px;
+  margin: 1.5rem auto;
+  box-shadow: 0 0 20px var(--accent-glow), 0 0 40px rgba(231,76,60,0.15);
+}
+.big-number {
+  font-family: var(--font-num);
+  font-size: clamp(4rem, 18vw, 14rem);
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums lining-nums;
+  text-shadow: 0 4px 24px var(--accent-glow), 0 0 80px rgba(231,76,60,0.12);
+  position: relative;
+}
+/* 数字背后的大光晕 */
+.big-number::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%; height: 200%;
+  background: radial-gradient(ellipse, rgba(231,76,60,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+.big-number .unit {
+  font-size: 0.25em;
+  font-weight: 400;
+  color: var(--text-secondary);
+  vertical-align: super;
+}
+.section-title {
+  font-family: var(--font-zh);
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: var(--text-hero);
+  text-align: center;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+}
+.body-text {
+  font-family: var(--font-zh);
+  font-size: clamp(0.875rem, 2.2vw, 1.25rem);
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.8;
+  max-width: 560px;
+}
+.label-tag {
+  font-family: var(--font-en);
+  font-size: clamp(0.6rem, 1.2vw, 0.75rem);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1.2rem;
+  padding: 6px 16px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.02);
+}
+
+/* === 拟物化卡片 === */
+.skeu-card {
+  background: var(--card-bg);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(24px) saturate(180%) brightness(1.1);
+  -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.1);
+  padding: clamp(20px, 4vmin, 40px);
+  position: relative;
+  overflow: hidden;
+}
+/* 顶部高光弧线 */
+.skeu-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3) 50%, transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+/* hover 抬升微动效 */
+.skeu-card {
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+}
+.skeu-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.1);
+}
+
+/* 内部光晕 — 模拟环境光散射 */
+.skeu-card::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse 40% 30% at 30% 20%, rgba(255,255,255,0.04), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.card-grid {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  max-width: 900px;
+}
+.card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 768px) {
+  .card-grid-3 { grid-template-columns: 1fr; }
+  .card-grid-2 { grid-template-columns: 1fr; }
+}
+
+.card-icon-wrap {
+  width: 56px; height: 56px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.card-icon {
+  width: 28px; height: 28px;
+  color: rgba(255,255,255,0.85);
+}
+.card-title {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 700;
+  color: var(--text-hero);
+  margin-bottom: 8px;
+}
+.card-desc {
+  font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* === 对比页 === */
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 32px;
+  align-items: center;
+  max-width: 800px;
+  width: 100%;
+}
+.comparison .vs {
+  font-family: var(--font-en);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.2em;
+  position: relative;
+  padding: 16px 0;
+}
+/* 竖向渐变线替代纯文字分隔 */
+.comparison .vs::before,
+.comparison .vs::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.12), transparent);
+}
+.comparison .vs::before { bottom: 100%; }
+.comparison .vs::after { top: 100%; }
+@media (max-width: 768px) {
+  .comparison { grid-template-columns: 1fr; gap: 16px; }
+  .comparison .vs {
+    display: block;
+    text-align: center;
+    padding: 4px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+}
+
+/* === 引用页 === */
+.quote-mark {
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 200;
+  color: var(--accent);
+  line-height: 0.6;
+  opacity: 0.25;
+  text-shadow: 0 4px 16px var(--accent-glow);
+  font-family: Georgia, "Times New Roman", serif;
+  margin-bottom: 0.5rem;
+}
+.quote-text {
+  font-family: var(--font-zh);
+  font-size: clamp(1.2rem, 3.5vw, 2.2rem);
+  font-weight: 300;
+  color: var(--text-hero);
+  text-align: center;
+  line-height: 2.0;
+  letter-spacing: 0.06em;
+  max-width: 700px;
+}
+.quote-author {
+  font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+  color: var(--text-muted);
+  margin-top: 2rem;
+  letter-spacing: 0.08em;
+}
+.quote-author {
+  font-size: clamp(0.75rem, 1.5vw, 1rem);
+  color: var(--text-muted);
+  margin-top: 1.5rem;
+}
+
+/* === 导航控件 === */
+.controls {
+  position: fixed;
+  bottom: 50%;
+  transform: translateY(50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+.controls.left { left: 20px; }
+.controls.right { right: 20px; }
+.controls button {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.controls button:hover {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.9);
+  transform: scale(1.05);
+}
+.controls button:active { transform: scale(0.95); }
+.controls button svg { width: 20px; height: 20px; }
+
+/* === 进度条导航 === */
+.progress-bar-nav {
+  position: fixed;
+  bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 4px;
+  padding: 8px 16px;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.06);
+  z-index: 100;
+  transition: opacity 0.4s ease;
+}
+.progress-segment {
+  width: 24px; height: 3px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.progress-segment.active {
+  width: 40px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+.progress-segment.visited { background: rgba(255,255,255,0.3); }
+
+/* 进度条 hover 预览 */
+.progress-segment { position: relative; }
+.progress-segment .tooltip {
+  position: absolute;
+  bottom: 16px; left: 50%;
+  transform: translateX(-50%) translateY(4px) scale(0.95);
+  padding: 4px 10px;
+  background: rgba(30,30,30,0.95);
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.08);
+  font-family: var(--font-zh);
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.7);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
+  z-index: 101;
+}
+.progress-segment:hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+/* === 页码指示器 === */
+.page-indicator {
+  position: fixed;
+  bottom: 28px; right: 32px;
+  font-family: var(--font-num);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  z-index: 100;
+  user-select: none;
+}
+.page-indicator .current { color: rgba(255,255,255,0.8); font-weight: 600; }
+
+/* === 全屏按钮 === */
+.fullscreen-btn {
+  position: fixed;
+  bottom: 24px; left: 24px;
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: all 0.2s ease;
+}
+.fullscreen-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); }
+.fullscreen-btn svg { width: 16px; height: 16px; }
+
+/* === 全屏隐藏控件 === */
+.is-fullscreen.controls-hidden .controls,
+.is-fullscreen.controls-hidden .progress-bar-nav,
+.is-fullscreen.controls-hidden .fullscreen-btn,
+.is-fullscreen.controls-hidden .page-indicator {
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+.is-fullscreen.controls-hidden { cursor: none; }
+
+/* === Safe Area === */
+.fullscreen-btn {
+  left: calc(24px + env(safe-area-inset-left, 0px));
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+}
+.progress-bar-nav { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+.page-indicator { bottom: calc(28px + env(safe-area-inset-bottom, 0px)); }
+
+/* === 响应式 === */
+@media (max-width: 1024px) { :root { --slide-padding: 6vmin; } }
+@media (max-width: 768px) {
+  :root { --slide-padding: 5vmin; }
+  .controls { display: none; }
+}
+@media (min-aspect-ratio: 21/9) {
+  .slide > * { max-width: 1400px; }
+}
+
+/* === prefers-reduced-motion === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* === 打印 === */
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .slide {
+    page-break-after: always; break-after: page;
+    position: relative !important; opacity: 1 !important;
+    transform: none !important; display: flex !important;
+  }
+  .slide { visibility: visible !important; opacity: 1 !important; }
+  .controls, .progress-bar-nav, .fullscreen-btn, .page-indicator { display: none !important; }
+  * { animation: none !important; transition: none !important; }
+  @page { size: landscape; margin: 0; }
+}
+
+/* === 焦点指示器 === */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* === 屏幕阅读器 === */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+</style>
+</head>
+<body>
+<!-- 查看密码门 -->
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+  <div style="font-family:var(--font-en);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <input id="auth-input" type="password" placeholder="Access Code" autocomplete="off"
+      style="width:200px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:1rem;font-family:var(--font-en);outline:none;text-align:center;letter-spacing:.1em;"
+      onfocus="this.style.borderColor='rgba(255,255,255,.2)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+  </div>
+  <div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0;transition:opacity .3s">incorrect code</div>
+  <div style="font-size:.6rem;color:rgba(255,255,255,.15);margin-top:20px">Press Enter to continue</div>
+</div>
+<script>
+// === 密码保护 ===
+// 修改密码：1) 在终端运行 echo -n "你的密码" | shasum -a 256  2) 替换下面的 hash
+const AUTH_HASH = '81a1a2439b6d34b7e685086ca8d2f9c2bbe94950c04d1d3e97159b70bbe98c37'; // 访问密码: kenno2026
+(function(){
+  if(sessionStorage.getItem('kenwebppt-authed')==='1'){document.getElementById('auth-gate').remove();return}
+  const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
+  document.querySelector('.presentation').style.display='none';
+  document.querySelectorAll('.controls,.progress-bar-nav,.page-indicator,.fullscreen-btn').forEach(e=>e.style.display='none');
+  setTimeout(()=>input.focus(),100);
+  input.addEventListener('keydown',async e=>{
+    if(e.key!=='Enter')return;
+    const val=input.value;
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(val));
+    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hash===AUTH_HASH){
+      sessionStorage.setItem('kenwebppt-authed','1');
+      gate.style.opacity='0';gate.style.transition='opacity .5s';
+      setTimeout(()=>{
+        gate.remove();
+        document.querySelector('.presentation').style.display='';
+        document.querySelectorAll('.controls,.progress-bar-nav,.page-indicator,.fullscreen-btn').forEach(e=>e.style.display='');
+      },500);
+    }else{
+      err.style.opacity='1';input.value='';input.style.borderColor='#E74C3C';
+      setTimeout(()=>{err.style.opacity='0';input.style.borderColor='rgba(255,255,255,.1)'},2000);
+    }
+  });
+})();
+</script>
+
+<!-- 公共 SVG 定义 -->
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <linearGradient id="metalGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.22)"/>
+      <stop offset="40%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+    <filter id="iconShadow">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.45)"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- 无障碍 -->
+<a href="#slide-1" class="sr-only">跳到演示内容</a>
+<div class="sr-only" role="note">使用左右箭头键切换幻灯片。按 F 键全屏。按 Escape 退出全屏。</div>
+<div class="sr-only" aria-live="polite" aria-atomic="true" id="slide-announce">第 1 页，共 8 页</div>
+
+<!-- === 幻灯片 === -->
+<div class="presentation">
+
+  <!-- 第1页：断言开场 -->
+  <section class="slide active bg-spotlight" id="slide-1" data-slide-type="opening" role="tabpanel" aria-roledescription="幻灯片" aria-label="开场">
+    <div class="label-tag anim anim-up" style="animation-delay:0s">THE FUTURE OF SOFTWARE</div>
+    <h1 class="hero-title anim anim-up" style="animation-delay:0.15s">代码的终局</h1>
+    <div class="accent-line anim anim-scale" style="animation-delay:0.35s"></div>
+    <p class="subtitle anim anim-up" style="animation-delay:0.45s">AI 正在重新定义软件开发的每一个环节</p>
+  </section>
+
+  <!-- 第2页：痛点共鸣 -->
+  <section class="slide" id="slide-2" data-slide-type="problem" role="tabpanel" aria-roledescription="幻灯片" aria-label="问题">
+    <div class="label-tag anim anim-up">THE PROBLEM</div>
+    <h2 class="section-title anim anim-up" style="animation-delay:0.1s">你有没有想过</h2>
+    <p class="subtitle anim anim-up" style="animation-delay:0.2s" style="margin-top:1.5rem">
+      一个软件工程师，真正在写代码的时间<br>只占工作时间的 30%
+    </p>
+    <p class="body-text anim anim-up" style="animation-delay:0.3s;margin-top:1rem;color:var(--text-muted)">
+      其余时间花在调试、搜索文档、理解遗留代码、开会对齐需求
+    </p>
+  </section>
+
+  <!-- 第3页：数据展示 -->
+  <section class="slide" id="slide-3" data-slide-type="data" role="tabpanel" aria-roledescription="幻灯片" aria-label="数据">
+    <div class="label-tag anim anim-up">PRODUCTIVITY GAIN</div>
+    <div class="big-number anim anim-scale" style="animation-delay:0.1s">
+      <span class="animate-number" data-target="73" data-duration="1500">0</span><span class="unit">%</span>
+    </div>
+    <p class="subtitle anim anim-up" style="animation-delay:0.3s">的开发者表示 AI 工具<br>显著提升了编码效率</p>
+    <p class="body-text anim anim-up" style="animation-delay:0.5s;color:var(--text-muted);font-size:0.8rem;margin-top:1rem">
+      Source: GitHub 2025 Developer Survey
+    </p>
+  </section>
+
+  <!-- 第4页：转折/洞察 -->
+  <section class="slide bg-cosmos" id="slide-4" data-slide-type="insight" role="tabpanel" aria-roledescription="幻灯片" aria-label="核心观点">
+    <h2 class="hero-title anim anim-scale" style="font-size:clamp(2rem,8vw,5rem)">
+      AI 不是替代开发者<br>
+      <span style="color:var(--accent)">而是重塑开发</span>
+    </h2>
+  </section>
+
+  <!-- 第5页：三个核心变化 -->
+  <section class="slide" id="slide-5" data-slide-type="data" role="tabpanel" aria-roledescription="幻灯片" aria-label="三个变化">
+    <div class="label-tag anim anim-up">THREE SHIFTS</div>
+    <h2 class="section-title anim anim-up" style="animation-delay:0.1s;margin-bottom:2rem">三个根本性转变</h2>
+    <div class="card-grid card-grid-3 auto-stagger">
+      <div class="skeu-card anim anim-up">
+        <div class="card-icon-wrap"><svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+        </svg></div>
+        <div class="card-title">从编写到意图</div>
+        <div class="card-desc">开发者描述意图，AI 生成实现。写代码变成审代码。</div>
+      </div>
+      <div class="skeu-card anim anim-up">
+        <div class="card-icon-wrap"><svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+        </svg></div>
+        <div class="card-title">从串行到并行</div>
+        <div class="card-desc">多个 AI Agent 同时工作，开发速度呈指数级提升。</div>
+      </div>
+      <div class="skeu-card anim anim-up">
+        <div class="card-icon-wrap"><svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>
+        </svg></div>
+        <div class="card-title">从工具到伙伴</div>
+        <div class="card-desc">AI 理解上下文、记住偏好，成为持续学习的协作者。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第6页：对比 -->
+  <section class="slide" id="slide-6" data-slide-type="comparison" role="tabpanel" aria-roledescription="幻灯片" aria-label="对比">
+    <div class="label-tag anim anim-up">BEFORE & AFTER</div>
+    <div class="comparison" style="margin-top:1rem">
+      <div class="skeu-card anim anim-left" style="text-align:center">
+        <div style="font-size:0.75rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">传统开发</div>
+        <div style="font-size:clamp(2rem,6vw,4rem);font-weight:900;font-family:var(--font-num);color:var(--text-secondary)">2-4</div>
+        <div style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">周 / 功能模块</div>
+      </div>
+      <div class="vs anim anim-scale" style="animation-delay:0.2s">VS</div>
+      <div class="skeu-card anim anim-right" style="text-align:center">
+        <div style="font-size:0.75rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">AI 辅助开发</div>
+        <div style="font-size:clamp(2rem,6vw,4rem);font-weight:900;font-family:var(--font-num);color:var(--accent)">2-3</div>
+        <div style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">天 / 功能模块</div>
+      </div>
+    </div>
+    <p class="body-text anim anim-up" style="animation-delay:0.4s;margin-top:2rem">
+      交付速度提升 5-10 倍，而代码质量不降反升
+    </p>
+  </section>
+
+  <!-- 第7页：引用金句 -->
+  <section class="slide bg-sunset" id="slide-7" data-slide-type="quote" role="tabpanel" aria-roledescription="幻灯片" aria-label="引用">
+    <div class="quote-mark anim anim-scale">"</div>
+    <p class="quote-text anim anim-blur" style="animation-delay:0.2s">
+      未来最稀缺的不是写代码的能力<br>
+      而是定义问题的能力
+    </p>
+    <div class="quote-author anim anim-up" style="animation-delay:0.5s">— 写给每一位软件工程师</div>
+  </section>
+
+  <!-- 第8页：诗意收束 -->
+  <section class="slide" id="slide-8" data-slide-type="closing" role="tabpanel" aria-roledescription="幻灯片" aria-label="结尾">
+    <h2 class="hero-title anim anim-blur" style="font-weight:300;font-size:clamp(1.8rem,5vw,3.5rem);letter-spacing:0.05em">
+      代码只是手段<br>创造才是目的
+    </h2>
+    <div class="accent-line anim anim-scale" style="animation-delay:0.5s"></div>
+  </section>
+
+</div>
+
+<!-- 导航控件 -->
+<nav class="controls left" aria-label="上一页">
+  <button onclick="prevSlide()" aria-label="上一页">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+  </button>
+</nav>
+<nav class="controls right" aria-label="下一页">
+  <button onclick="nextSlide()" aria-label="下一页">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+  </button>
+</nav>
+
+<!-- 进度条 -->
+<div class="progress-bar-nav" role="tablist" aria-label="幻灯片导航"></div>
+
+<!-- 页码 -->
+<div class="page-indicator"><span class="current">1</span> / 8</div>
+
+<!-- 全屏按钮 -->
+<button class="fullscreen-btn" onclick="toggleFullscreen()" aria-label="全屏">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+  </svg>
+</button>
+
+<script>
+// === 核心状态 ===
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// === 转场类型选择 ===
+function getTransition(fromIdx, toIdx, direction) {
+  const to = slides[toIdx];
+  const from = slides[fromIdx];
+  const toType = to?.dataset.slideType || '';
+  const fromType = from?.dataset.slideType || '';
+  if (fromType === 'opening') return 'push';
+  if (toType === 'insight') return 'zoom';
+  if (toType === 'closing' || toType === 'quote') return 'dissolve';
+  return 'push';
+}
+
+// === 页面切换 ===
+function goToSlide(index, direction) {
+  if (index < 0 || index >= totalSlides || index === currentSlide) return;
+  const dir = direction || (index > currentSlide ? 'next' : 'prev');
+  const from = slides[currentSlide];
+  const to = slides[index];
+  const trans = getTransition(currentSlide, index, dir);
+
+  const transClass = dir === 'next' ? 'transition-' + trans : 'transition-push-rev';
+
+  // 退场：先加 exiting + 动画 class，动画结束后再移除 active
+  from.classList.add('exiting', transClass);
+  from.classList.remove('active');
+
+  // 进场：加 active + 动画 class
+  to.classList.add('active', transClass);
+
+  // 动画结束后清理 class（用动画最长时长 + buffer）
+  const cleanupDelay = trans === 'dissolve' ? 1100 : 800;
+  setTimeout(() => {
+    from.classList.remove('exiting', 'transition-push', 'transition-zoom',
+      'transition-dissolve', 'transition-push-rev');
+    to.classList.remove('transition-push', 'transition-zoom',
+      'transition-dissolve', 'transition-push-rev');
+  }, cleanupDelay);
+
+  currentSlide = index;
+  updateProgress();
+  triggerAnimations(to);
+}
+function nextSlide() { goToSlide(currentSlide + 1, 'next'); }
+function prevSlide() { goToSlide(currentSlide - 1, 'prev'); }
+
+// === 进度条 ===
+function initProgress() {
+  const nav = document.querySelector('.progress-bar-nav');
+  const titles = ['开场','问题','数据','观点','三个变化','对比','引用','结尾'];
+  for (let i = 0; i < totalSlides; i++) {
+    const seg = document.createElement('button');
+    seg.className = 'progress-segment' + (i === 0 ? ' active' : '');
+    seg.setAttribute('role', 'tab');
+    seg.setAttribute('aria-label', '第 ' + (i+1) + ' 页');
+    // tooltip 预览
+    const tip = document.createElement('span');
+    tip.className = 'tooltip';
+    tip.textContent = (i+1) + '. ' + (titles[i] || '');
+    seg.appendChild(tip);
+    seg.addEventListener('click', () => goToSlide(i));
+    nav.appendChild(seg);
+  }
+}
+function updateProgress() {
+  document.querySelectorAll('.progress-segment').forEach((seg, i) => {
+    seg.classList.toggle('active', i === currentSlide);
+    seg.classList.toggle('visited', i < currentSlide);
+  });
+  const ind = document.querySelector('.page-indicator');
+  if (ind) ind.innerHTML = '<span class="current">' + (currentSlide + 1) + '</span> / ' + totalSlides;
+  document.getElementById('slide-announce').textContent = '第 ' + (currentSlide+1) + ' 页，共 ' + totalSlides + ' 页';
+}
+
+// === 元素进场 ===
+function triggerAnimations(slide) {
+  slide.querySelectorAll('.anim').forEach(el => {
+    el.style.animation = 'none';
+    el.offsetHeight;
+    el.style.animation = '';
+  });
+  // 数字跳动
+  slide.querySelectorAll('.animate-number').forEach(el => {
+    const target = parseFloat(el.dataset.target);
+    const dur = parseInt(el.dataset.duration) || 1200;
+    if (prefersReducedMotion) { el.textContent = target; return; }
+    let start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 4);
+      el.textContent = Math.round(target * eased);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+// === 键盘 ===
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  switch(e.key) {
+    case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); nextSlide(); break;
+    case 'ArrowLeft': case 'PageUp': e.preventDefault(); prevSlide(); break;
+    case 'Home': e.preventDefault(); goToSlide(0); break;
+    case 'End': e.preventDefault(); goToSlide(totalSlides - 1); break;
+    case 'f': case 'F': e.preventDefault(); toggleFullscreen(); break;
+    default:
+      if (e.key >= '1' && e.key <= '9') { e.preventDefault(); goToSlide(parseInt(e.key) - 1); }
+  }
+});
+
+// === 触控 ===
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(dx) > 50) dx > 0 ? nextSlide() : prevSlide();
+}, { passive: true });
+
+// === 全屏 ===
+let hideTimer = null;
+function toggleFullscreen() {
+  const el = document.documentElement;
+  const rfs = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  } else if (rfs) {
+    rfs.call(el);
+  }
+}
+['fullscreenchange','webkitfullscreenchange'].forEach(evt => {
+  document.addEventListener(evt, () => {
+    const fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    document.body.classList.toggle('is-fullscreen', fs);
+    if (fs) {
+      document.addEventListener('mousemove', showControls);
+      hideControlsAfterDelay();
+    } else {
+      document.body.classList.remove('controls-hidden');
+      document.removeEventListener('mousemove', showControls);
+    }
+  });
+});
+function showControls() {
+  document.body.classList.remove('controls-hidden');
+  hideControlsAfterDelay();
+}
+function hideControlsAfterDelay() {
+  clearTimeout(hideTimer);
+  hideTimer = setTimeout(() => {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      document.body.classList.add('controls-hidden');
+    }
+  }, 2500);
+}
+
+// Safari 动画冻结修复
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    const active = document.querySelector('.slide.active');
+    if (active) triggerAnimations(active);
+  }
+});
+
+// === 初始化 ===
+initProgress();
+triggerAnimations(slides[0]);
+</script>
+</body>
+</html>
