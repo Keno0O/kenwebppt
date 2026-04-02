@@ -657,12 +657,11 @@ body {
 </div>
 <script>
 // === 密码保护 ===
-// 修改密码：1) 在终端运行 echo -n "你的密码" | shasum -a 256  2) 替换下面的 hash
 const AUTH_HASH = '81a1a2439b6d34b7e685086ca8d2f9c2bbe94950c04d1d3e97159b70bbe98c37'; // 访问密码: kenno2026
-(function(){
+document.addEventListener('DOMContentLoaded', function(){
   if(sessionStorage.getItem('kenwebppt-authed')==='1'){document.getElementById('auth-gate').remove();return}
   const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
-  document.querySelector('.presentation').style.display='none';
+  const pres=document.querySelector('.presentation'); if(pres) pres.style.display='none';
   document.querySelectorAll('.controls,.progress-bar-nav,.page-indicator,.fullscreen-btn').forEach(e=>e.style.display='none');
   setTimeout(()=>input.focus(),100);
   input.addEventListener('keydown',async e=>{
@@ -675,7 +674,7 @@ const AUTH_HASH = '81a1a2439b6d34b7e685086ca8d2f9c2bbe94950c04d1d3e97159b70bbe98
       gate.style.opacity='0';gate.style.transition='opacity .5s';
       setTimeout(()=>{
         gate.remove();
-        document.querySelector('.presentation').style.display='';
+        if(pres) pres.style.display='';
         document.querySelectorAll('.controls,.progress-bar-nav,.page-indicator,.fullscreen-btn').forEach(e=>e.style.display='');
       },500);
     }else{
@@ -683,7 +682,7 @@ const AUTH_HASH = '81a1a2439b6d34b7e685086ca8d2f9c2bbe94950c04d1d3e97159b70bbe98
       setTimeout(()=>{err.style.opacity='0';input.style.borderColor='rgba(255,255,255,.1)'},2000);
     }
   });
-})();
+});
 </script>
 
 <!-- 公共 SVG 定义 -->
