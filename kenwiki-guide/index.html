@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kenwiki v3.0 — 智能知识图谱系统</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-deep:#0a0e1a;--bg-card:#111827;--bg-card-hover:#1a2332;--bg-surface:#0f1520;
+  --accent:#00A0DF;--accent-dim:rgba(0,160,223,0.15);--accent-glow:rgba(0,160,223,0.3);
+  --purple:#8b5cf6;--purple-dim:rgba(139,92,246,0.15);
+  --green:#0EA573;--green-dim:rgba(14,165,115,0.15);
+  --amber:#E89820;--amber-dim:rgba(232,152,32,0.15);
+  --red:#C85040;--red-dim:rgba(200,80,64,0.15);
+  --text:#e2e8f0;--text-dim:#94a3b8;--text-muted:#64748b;
+  --border:#1e293b;--border-light:#334155;
+  --radius:12px;--radius-sm:8px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:"SF Mono","Fira Code",Consolas,monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg-deep);color:var(--text);line-height:1.6;min-height:100vh}
+
+/* Header */
+.header{
+  background:linear-gradient(135deg,#0a0e1a 0%,#0f1a2e 50%,#0a1628 100%);
+  border-bottom:1px solid var(--border);padding:40px 0 30px;text-align:center;position:relative;overflow:hidden
+}
+.header::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(circle at 30% 50%,rgba(0,160,223,0.06) 0%,transparent 50%),
+             radial-gradient(circle at 70% 50%,rgba(139,92,246,0.04) 0%,transparent 50%);
+  animation:headerPulse 8s ease-in-out infinite alternate
+}
+@keyframes headerPulse{0%{opacity:.6}100%{opacity:1}}
+.header h1{font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.5px;position:relative}
+.header h1 span{color:var(--accent)}
+.header p{font-size:13px;color:var(--text-dim);margin-top:8px;position:relative}
+.version-badge{
+  display:inline-block;background:var(--accent-dim);color:var(--accent);
+  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
+  border:1px solid rgba(0,160,223,0.3);margin-left:8px;vertical-align:middle
+}
+
+/* Nav */
+.nav{
+  display:flex;justify-content:center;gap:4px;padding:12px 20px;
+  background:var(--bg-surface);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)
+}
+.nav button{
+  background:transparent;border:1px solid transparent;color:var(--text-dim);
+  padding:8px 18px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .2s ease;font-family:var(--font)
+}
+.nav button:hover{color:var(--text);background:var(--bg-card)}
+.nav button.active{
+  color:var(--accent);background:var(--accent-dim);
+  border-color:rgba(0,160,223,0.3)
+}
+
+/* Container */
+.container{max-width:1200px;margin:0 auto;padding:24px 20px}
+
+/* Section */
+.section{display:none;animation:fadeIn .3s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Tab 1: Architecture ── */
+.arch-container{display:flex;flex-direction:column;gap:20px}
+.arch-layer{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;position:relative;overflow:hidden;transition:all .25s ease;cursor:default
+}
+.arch-layer:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,160,223,0.08)}
+.arch-layer::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px
+}
+.arch-layer.layer-ingest::before{background:var(--accent)}
+.arch-layer.layer-analyze::before{background:var(--purple)}
+.arch-layer.layer-present::before{background:var(--green)}
+.arch-layer-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.arch-layer-icon{
+  width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0
+}
+.layer-ingest .arch-layer-icon{background:var(--accent-dim)}
+.layer-analyze .arch-layer-icon{background:var(--purple-dim)}
+.layer-present .arch-layer-icon{background:var(--green-dim)}
+.arch-layer-icon svg{width:20px;height:20px}
+.arch-layer-title{font-size:16px;font-weight:700}
+.arch-layer-subtitle{font-size:11px;color:var(--text-dim);margin-top:2px}
+.arch-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.arch-tag{
+  padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;
+  border:1px solid var(--border);background:var(--bg-surface);color:var(--text-dim);
+  transition:all .15s ease
+}
+.arch-tag:hover{color:var(--text);border-color:var(--border-light)}
+.arch-tag.new{border-color:rgba(0,160,223,0.3);color:var(--accent);background:var(--accent-dim)}
+.arch-tag.new::after{content:' NEW';font-size:8px;font-weight:800;color:var(--accent);margin-left:4px}
+.arch-arrow{
+  text-align:center;color:var(--text-muted);font-size:20px;padding:4px 0;
+  animation:arrowPulse 2s ease-in-out infinite
+}
+@keyframes arrowPulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* ── Tab 2: Operations ── */
+.ops-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.op-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;transition:all .25s ease;cursor:pointer
+}
+.op-card:hover{border-color:var(--accent);box-shadow:0 4px 20px rgba(0,160,223,0.06)}
+.op-card.expanded{grid-column:1/-1}
+.op-card-header{padding:16px 18px;display:flex;align-items:center;gap:12px}
+.op-num{
+  width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;flex-shrink:0;color:#fff
+}
+.op-card-title{flex:1}
+.op-card-title h3{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.op-card-title p{font-size:10px;color:var(--text-dim);margin-top:2px}
+.op-new{
+  font-size:8px;font-weight:800;color:var(--accent);background:var(--accent-dim);
+  padding:2px 6px;border-radius:4px;letter-spacing:.5px
+}
+.op-enhanced{
+  font-size:8px;font-weight:800;color:var(--purple);background:var(--purple-dim);
+  padding:2px 6px;border-radius:4px;letter-spacing:.5px
+}
+.op-chevron{
+  color:var(--text-muted);transition:transform .2s ease;flex-shrink:0
+}
+.op-card.expanded .op-chevron{transform:rotate(180deg)}
+.op-detail{
+  max-height:0;overflow:hidden;transition:max-height .3s ease;
+  border-top:0 solid var(--border)
+}
+.op-card.expanded .op-detail{max-height:600px;border-top-width:1px}
+.op-detail-inner{padding:16px 18px}
+.op-commands{margin-top:10px}
+.op-cmd{
+  display:block;background:var(--bg-deep);border:1px solid var(--border);border-radius:6px;
+  padding:8px 12px;margin-top:6px;font-family:var(--mono);font-size:11px;color:var(--accent);
+  cursor:pointer;transition:all .15s ease;position:relative
+}
+.op-cmd:hover{border-color:var(--accent);background:#0a1220}
+.op-cmd .cmd-desc{color:var(--text-muted);font-family:var(--font);font-size:10px;margin-top:2px;display:block}
+.op-cmd-copy{
+  position:absolute;right:8px;top:8px;font-size:9px;color:var(--text-muted);
+  opacity:0;transition:opacity .15s ease
+}
+.op-cmd:hover .op-cmd-copy{opacity:1}
+
+/* ── Tab 3: Workflow ── */
+.workflow{display:flex;flex-direction:column;gap:0;position:relative}
+.wf-step{
+  display:flex;gap:16px;padding:20px;position:relative;
+  transition:all .25s ease;cursor:default
+}
+.wf-step:hover{background:var(--bg-card);border-radius:var(--radius)}
+.wf-timeline{
+  display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0;position:relative
+}
+.wf-dot{
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;color:#fff;position:relative;z-index:2;
+  transition:all .3s ease
+}
+.wf-step:hover .wf-dot{transform:scale(1.15);box-shadow:0 0 20px var(--accent-glow)}
+.wf-line{width:2px;flex:1;min-height:20px;background:var(--border);margin:4px 0}
+.wf-step:last-child .wf-line:last-child{display:none}
+.wf-content{flex:1}
+.wf-content h3{font-size:14px;font-weight:700;margin-bottom:4px}
+.wf-content p{font-size:12px;color:var(--text-dim)}
+.wf-content code{
+  display:inline-block;background:var(--bg-deep);border:1px solid var(--border);
+  padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:11px;
+  color:var(--accent);margin-top:6px
+}
+.wf-cycle{
+  text-align:center;padding:16px;color:var(--text-muted);font-size:12px;
+  border:1px dashed var(--border);border-radius:var(--radius);margin-top:8px
+}
+
+/* ── Tab 4: Comparison ── */
+.compare-table{width:100%;border-collapse:collapse;background:var(--bg-card);border-radius:var(--radius);overflow:hidden}
+.compare-table th{
+  background:var(--bg-deep);color:var(--text-dim);font-size:10px;font-weight:700;
+  padding:12px 16px;text-align:left;text-transform:uppercase;letter-spacing:.5px;
+  border-bottom:1px solid var(--border)
+}
+.compare-table th:nth-child(2){color:var(--text-muted)}
+.compare-table th:nth-child(3){color:var(--accent)}
+.compare-table td{
+  padding:12px 16px;font-size:12px;border-bottom:1px solid var(--border);
+  transition:background .15s ease
+}
+.compare-table tr:hover td{background:var(--bg-card-hover)}
+.compare-table td:first-child{font-weight:600;color:var(--text)}
+.compare-table td:nth-child(2){color:var(--text-muted)}
+.compare-table td:nth-child(3){color:var(--text)}
+.compare-table .delta{
+  display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;
+  margin-left:6px;vertical-align:middle
+}
+.delta-up{color:var(--green);background:var(--green-dim)}
+.delta-new{color:var(--accent);background:var(--accent-dim)}
+
+/* ── Tab 5: Commands ── */
+.cmd-search{
+  width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:12px 16px 12px 40px;font-size:13px;color:var(--text);font-family:var(--font);
+  outline:none;transition:border-color .15s ease;margin-bottom:16px;position:relative
+}
+.cmd-search:focus{border-color:var(--accent)}
+.cmd-search-wrap{position:relative}
+.cmd-search-wrap svg{position:absolute;left:14px;top:13px;color:var(--text-muted)}
+.cmd-filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.cmd-filter{
+  padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;
+  border:1px solid var(--border);background:transparent;color:var(--text-dim);
+  cursor:pointer;transition:all .15s ease;font-family:var(--font)
+}
+.cmd-filter:hover{border-color:var(--border-light);color:var(--text)}
+.cmd-filter.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.cmd-list{display:flex;flex-direction:column;gap:8px}
+.cmd-item{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:14px 16px;transition:all .15s ease;display:flex;gap:14px;align-items:flex-start
+}
+.cmd-item:hover{border-color:var(--border-light)}
+.cmd-item.hidden{display:none}
+.cmd-item-op{
+  font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;
+  white-space:nowrap;flex-shrink:0;margin-top:2px
+}
+.cmd-item-body{flex:1}
+.cmd-item-cmd{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.cmd-item-desc{font-size:11px;color:var(--text-dim);margin-top:3px}
+
+/* Toast */
+.toast{
+  position:fixed;top:20px;right:20px;background:var(--bg-card);border:1px solid var(--accent);
+  color:var(--accent);padding:10px 18px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;
+  transform:translateY(-20px);opacity:0;transition:all .25s ease;z-index:1000;
+  pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,0.3)
+}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* Footer */
+.footer{
+  text-align:center;padding:20px;color:var(--text-muted);font-size:10px;
+  border-top:1px solid var(--border);margin-top:40px
+}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg-deep)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-light)}
+
+@media(max-width:768px){
+  .ops-grid{grid-template-columns:1fr}
+  .nav{overflow-x:auto;justify-content:flex-start}
+  .header h1{font-size:22px}
+  .wf-step{padding:14px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>ken<span>wiki</span> v3.0 <span class="version-badge">Graphify + LLM Wiki</span></h1>
+  <p>智能知识图谱系统 — 编译一次、持续发现、主动洞察</p>
+</div>
+
+<nav class="nav" id="nav">
+  <button class="active" data-tab="arch">架构总览</button>
+  <button data-tab="ops">八大操作</button>
+  <button data-tab="workflow">推荐工作流</button>
+  <button data-tab="compare">版本对比</button>
+  <button data-tab="commands">命令速查</button>
+</nav>
+
+<div class="container">
+
+<!-- ══════ Tab 1: Architecture ══════ -->
+<div class="section active" id="arch">
+  <div class="arch-container">
+    <div class="arch-layer layer-ingest">
+      <div class="arch-layer-header">
+        <div class="arch-layer-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00A0DF" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+        </div>
+        <div>
+          <div class="arch-layer-title" style="color:var(--accent)">Layer 1 — 内容摄入层</div>
+          <div class="arch-layer-subtitle">Raw Sources 不可变，LLM 只读不写。用户负责策展</div>
+        </div>
+      </div>
+      <div class="arch-tags">
+        <span class="arch-tag">PDF / DOCX / XLSX</span>
+        <span class="arch-tag">Markdown / TXT</span>
+        <span class="arch-tag">图片（多模态）</span>
+        <span class="arch-tag">通用 URL</span>
+        <span class="arch-tag new">YouTube 字幕</span>
+        <span class="arch-tag new">微信公众号</span>
+        <span class="arch-tag new">arXiv 论文</span>
+        <span class="arch-tag new">Twitter/X</span>
+        <span class="arch-tag new">优雅降级</span>
+      </div>
+    </div>
+
+    <div class="arch-arrow">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m0 0l-4-4m4 4l4-4"/></svg>
+    </div>
+
+    <div class="arch-layer layer-analyze">
+      <div class="arch-layer-header">
+        <div class="arch-layer-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7-7H1m22 0h-4m-1.5-7.5l-2.8 2.8m-5.4 5.4l-2.8 2.8m0-11l2.8 2.8m5.4 5.4l2.8 2.8"/></svg>
+        </div>
+        <div>
+          <div class="arch-layer-title" style="color:var(--purple)">Layer 2 — 分析发现层</div>
+          <div class="arch-layer-subtitle">LLM 编译知识 + 图论分析，主动发现隐藏关联</div>
+        </div>
+      </div>
+      <div class="arch-tags">
+        <span class="arch-tag">实体/概念识别</span>
+        <span class="arch-tag">交叉引用</span>
+        <span class="arch-tag">矛盾检测</span>
+        <span class="arch-tag new">社区检测</span>
+        <span class="arch-tag new">God Nodes 识别</span>
+        <span class="arch-tag new">Surprising Connections</span>
+        <span class="arch-tag new">置信度审计 (E/I/A)</span>
+      </div>
+    </div>
+
+    <div class="arch-arrow">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m0 0l-4-4m4 4l4-4"/></svg>
+    </div>
+
+    <div class="arch-layer layer-present">
+      <div class="arch-layer-header">
+        <div class="arch-layer-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0EA573" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+        </div>
+        <div>
+          <div class="arch-layer-title" style="color:var(--green)">Layer 3 — 展现呈现层</div>
+          <div class="arch-layer-subtitle">结构化 Wiki 页面 + 交互式可视化 + 主动简报</div>
+        </div>
+      </div>
+      <div class="arch-tags">
+        <span class="arch-tag">Source 摘要页</span>
+        <span class="arch-tag">Entity 实体页</span>
+        <span class="arch-tag">Concept 概念页</span>
+        <span class="arch-tag">Analysis 分析页</span>
+        <span class="arch-tag new">Comparison 对比页</span>
+        <span class="arch-tag new">vis.js 交互图谱</span>
+        <span class="arch-tag new">God Nodes 排名</span>
+        <span class="arch-tag new">增强 Briefing</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ Tab 2: Operations ══════ -->
+<div class="section" id="ops">
+  <div class="ops-grid" id="opsGrid"></div>
+</div>
+
+<!-- ══════ Tab 3: Workflow ══════ -->
+<div class="section" id="workflow">
+  <div class="workflow" id="workflowContainer"></div>
+</div>
+
+<!-- ══════ Tab 4: Compare ══════ -->
+<div class="section" id="compare">
+  <table class="compare-table">
+    <thead><tr><th>维度</th><th>v2.1</th><th>v3.0</th></tr></thead>
+    <tbody id="compareBody"></tbody>
+  </table>
+</div>
+
+<!-- ══════ Tab 5: Commands ══════ -->
+<div class="section" id="commands">
+  <div class="cmd-search-wrap">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" class="cmd-search" id="cmdSearch" placeholder="搜索命令...  例如: discover, graph, --fix">
+  </div>
+  <div class="cmd-filters" id="cmdFilters"></div>
+  <div class="cmd-list" id="cmdList"></div>
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="footer">
+  kenwiki v3.0 — Karpathy LLM Wiki + Garry Tan GBrain + Graphify Graph Analysis + llm-wiki-skill Extractors &nbsp;|&nbsp; 2026-04-07
+</div>
+
+<script>
+// ── Data ──
+const OPS = [
+  {id:'ingest',name:'Ingest',cn:'摄入',color:'#00A0DF',badge:'enhanced',
+   desc:'将文件/URL/视频/公众号摄入知识库',
+   detail:'v3 新增 YouTube/微信/arXiv/Twitter 智能提取管线。根据 URL 域名自动路由到最佳提取器，提取器不可用时优雅降级到 WebFetch + 手动粘贴。提取后统一走标准 Ingest 流程。',
+   cmds:[
+     {cmd:'/kenwiki:ingest raw/articles/report.pdf',desc:'摄入本地 PDF 文件'},
+     {cmd:'/kenwiki:ingest https://youtube.com/watch?v=xxx',desc:'自动提取 YouTube 字幕'},
+     {cmd:'/kenwiki:ingest https://mp.weixin.qq.com/s/xxx',desc:'自动提取微信公众号全文'},
+     {cmd:'/kenwiki:ingest raw/articles/',desc:'批量摄入目录下所有文件'}
+   ]},
+  {id:'query',name:'Query',cn:'查询',color:'#2E4FD0',badge:'enhanced',
+   desc:'基于 wiki 回答问题，支持对比查询',
+   detail:'读取 index.md 定位相关页面，综合多源回答并标注引用。v3 新增对比查询自动生成 Comparison 页面，支持回写为持久化分析。',
+   cmds:[
+     {cmd:'/kenwiki:query "A公司和B公司的区别？"',desc:'对比查询，自动生成对比矩阵'},
+     {cmd:'/kenwiki:query --save "行业趋势分析"',desc:'回答并自动保存为 analysis 页面'},
+     {cmd:'/kenwiki:query "我们还不知道什么？"',desc:'缺口查询，识别信息薄弱区域'}
+   ]},
+  {id:'lint',name:'Lint',cn:'健检',color:'#0EA573',badge:'enhanced',
+   desc:'12 项检查 + 自动修复',
+   detail:'在原有 10 项检查基础上新增：图拓扑健康（孤立集群/超大hub/断裂子图）和社区内聚度（复用 discover 数据）。健康评分算法同步更新。',
+   cmds:[
+     {cmd:'/kenwiki:lint',desc:'完整 12 项健康检查'},
+     {cmd:'/kenwiki:lint --fix',desc:'检查 + 自动修复 LOW/MEDIUM 级问题'},
+     {cmd:'/kenwiki:lint --report',desc:'只输出报告不修复'}
+   ]},
+  {id:'discover',name:'Discover',cn:'知识发现',color:'#8b5cf6',badge:'new',
+   desc:'社区检测 / God Nodes / Surprising Connections',
+   detail:'扫描全部 wiki 页面构建知识图谱快照，执行三大分析：社区检测（自然知识聚类）、God Nodes（核心架构支柱节点）、Surprising Connections（跨域意外关联）。支持 diff 模式对比图谱演化。',
+   cmds:[
+     {cmd:'/kenwiki:discover',desc:'完整图分析（社区+核心节点+意外关联）'},
+     {cmd:'/kenwiki:discover --surprising',desc:'只看意外关联（最常用）'},
+     {cmd:'/kenwiki:discover --god-nodes',desc:'只看核心节点排名'},
+     {cmd:'/kenwiki:discover --diff',desc:'与上次 discover 对比，看图谱变化'}
+   ]},
+  {id:'graph',name:'Graph',cn:'图谱可视化',color:'#8b5cf6',badge:'new',
+   desc:'vis.js 交互式 HTML 知识图谱',
+   detail:'生成单文件 HTML（vis.js），浏览器直接打开。节点按类型着色，边按置信度区分线型。支持搜索、过滤、点击查看详情、社区高亮。可导出 Mermaid 轻量格式。',
+   cmds:[
+     {cmd:'/kenwiki:graph',desc:'生成完整交互式图谱'},
+     {cmd:'/kenwiki:graph --center company-alpha',desc:'以指定节点为中心展开 2 跳范围'},
+     {cmd:'/kenwiki:graph --community "AI基础设施"',desc:'仅显示指定社区'},
+     {cmd:'/kenwiki:graph --mermaid',desc:'输出轻量 Mermaid 格式'}
+   ]},
+  {id:'briefing',name:'Briefing',cn:'主动简报',color:'#E89820',badge:'enhanced',
+   desc:'健康仪表盘 + God Nodes 排名 + 图谱变化',
+   detail:'v3 新增：God Nodes Top 5 核心节点排名、图谱密度/连通性变化趋势、未验证意外关联提醒、图健康指标。周报模式额外包含知识图谱变化板块。',
+   cmds:[
+     {cmd:'/kenwiki:briefing',desc:'生成日报级简报（含 God Nodes 排名）'},
+     {cmd:'/kenwiki:briefing --weekly',desc:'生成周报（含图谱变化趋势）'}
+   ]},
+  {id:'enrich',name:'Enrich',cn:'外部充实',color:'#E89820',badge:null,
+   desc:'自动搜索外部信息充实实体',
+   detail:'对已有实体自动 WebSearch 搜索外部信息，验证后保存到 raw/enrichment/，再走标准 Ingest 流程编译进 wiki。复杂研究自动建议升级到 /kendresearch。',
+   cmds:[
+     {cmd:'/kenwiki:enrich company-alpha',desc:'充实指定实体'},
+     {cmd:'/kenwiki:enrich --auto',desc:'自动识别最稀疏的实体并充实'}
+   ]},
+  {id:'status',name:'Status',cn:'状态概览',color:'#64748b',badge:null,
+   desc:'快速查看 wiki 当前状态',
+   detail:'读取 index.md 统计和 log.md 最近操作，一屏输出页面统计、最近活动、未解决矛盾、健康评分。无需完整 Lint 或 Briefing。',
+   cmds:[
+     {cmd:'/kenwiki:status',desc:'一屏摘要：页面数/最近操作/健康评分'}
+   ]}
+];
+
+const WORKFLOW = [
+  {step:1,title:'日常喂料',desc:'持续摄入各类源文档，攒够 15-20 个源后进入发现阶段',cmd:'/kenwiki:ingest',color:'#00A0DF'},
+  {step:2,title:'知识发现',desc:'运行图分析，发现社区结构、核心节点、跨域意外关联',cmd:'/kenwiki:discover',color:'#8b5cf6'},
+  {step:3,title:'可视化查看',desc:'生成交互式 HTML 图谱，浏览器打开查看知识全貌',cmd:'/kenwiki:graph',color:'#8b5cf6'},
+  {step:4,title:'深入行动',desc:'验证意外关联 → 深入提问或启动深度研究',cmd:'/kenwiki:query 或 /kendresearch',color:'#0EA573'},
+  {step:5,title:'汇报简报',desc:'生成包含 God Nodes 排名和图谱变化的简报',cmd:'/kenwiki:briefing',color:'#E89820'}
+];
+
+const COMPARE = [
+  {dim:'操作数',v21:'5 个',v30:'8 个',delta:'+3',type:'up'},
+  {dim:'摄入源',v21:'本地文件 + 通用 URL',v30:'+ YouTube / 微信 / arXiv / Twitter 智能路由',delta:'NEW',type:'new'},
+  {dim:'分析能力',v21:'人问 LLM 答',v30:'+ 自动发现社区 / 核心节点 / 意外关联',delta:'NEW',type:'new'},
+  {dim:'可视化',v21:'纯 Markdown',v30:'+ vis.js 交互图谱 HTML',delta:'NEW',type:'new'},
+  {dim:'页面类型',v21:'4 种',v30:'5 种 (+ Comparison 对比页)',delta:'+1',type:'up'},
+  {dim:'Lint 检查项',v21:'10 项',v30:'12 项 (+ 图拓扑 + 社区内聚度)',delta:'+2',type:'up'},
+  {dim:'Briefing',v21:'健康仪表盘',v30:'+ God Nodes 排名 + 图谱变化',delta:'NEW',type:'new'},
+  {dim:'置信度审计',v21:'无',v30:'EXTRACTED / INFERRED / AMBIGUOUS 三级',delta:'NEW',type:'new'},
+  {dim:'灵感来源',v21:'Karpathy + GBrain',v30:'+ Graphify 图论 + llm-wiki-skill 提取管线',delta:'+2',type:'up'}
+];
+
+// ── Render ──
+function renderOps(){
+  const grid=document.getElementById('opsGrid');
+  grid.innerHTML=OPS.map((op,i)=>`
+    <div class="op-card" data-idx="${i}" onclick="toggleOp(this)">
+      <div class="op-card-header">
+        <div class="op-num" style="background:${op.color}">${i+1}</div>
+        <div class="op-card-title">
+          <h3>${op.name}（${op.cn}）${op.badge==='new'?'<span class="op-new">NEW</span>':op.badge==='enhanced'?'<span class="op-enhanced">ENHANCED</span>':''}</h3>
+          <p>${op.desc}</p>
+        </div>
+        <svg class="op-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="op-detail">
+        <div class="op-detail-inner">
+          <p style="font-size:12px;color:var(--text-dim);line-height:1.7">${op.detail}</p>
+          <div class="op-commands">
+            ${op.cmds.map(c=>`<div class="op-cmd" onclick="event.stopPropagation();copyCmd('${c.cmd.replace(/'/g,"\\'")}')">
+              <span>${c.cmd}</span><span class="cmd-desc">${c.desc}</span>
+              <span class="op-cmd-copy">CLICK TO COPY</span>
+            </div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderWorkflow(){
+  const container=document.getElementById('workflowContainer');
+  container.innerHTML=WORKFLOW.map((w,i)=>`
+    <div class="wf-step">
+      <div class="wf-timeline">
+        <div class="wf-dot" style="background:${w.color}">${w.step}</div>
+        ${i<WORKFLOW.length-1?'<div class="wf-line"></div>':''}
+      </div>
+      <div class="wf-content">
+        <h3>${w.title}</h3>
+        <p>${w.desc}</p>
+        <code>${w.cmd}</code>
+      </div>
+    </div>`).join('')+`
+    <div class="wf-cycle">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+      循环迭代 — 每攒够 15-20 个新源后重新进入 Step 2
+    </div>`;
+}
+
+function renderCompare(){
+  document.getElementById('compareBody').innerHTML=COMPARE.map(c=>`
+    <tr>
+      <td>${c.dim}</td>
+      <td>${c.v21}</td>
+      <td>${c.v30} <span class="delta delta-${c.type}">${c.delta}</span></td>
+    </tr>`).join('');
+}
+
+function renderCommands(){
+  const filters=document.getElementById('cmdFilters');
+  const list=document.getElementById('cmdList');
+  const ops=['全部',...new Set(OPS.map(o=>o.name))];
+  filters.innerHTML=ops.map((o,i)=>`<button class="cmd-filter${i===0?' active':''}" data-filter="${o}" onclick="filterCmds(this)">${o}</button>`).join('');
+
+  let allCmds=[];
+  OPS.forEach(op=>{
+    op.cmds.forEach(c=>{
+      allCmds.push({op:op.name,color:op.color,cmd:c.cmd,desc:c.desc,badge:op.badge});
+    });
+  });
+  list.innerHTML=allCmds.map(c=>`
+    <div class="cmd-item" data-op="${c.op}" data-cmd="${c.cmd.toLowerCase()}" data-desc="${c.desc}" onclick="copyCmd('${c.cmd.replace(/'/g,"\\'")}')">
+      <span class="cmd-item-op" style="color:${c.color};background:${c.color}18;border:1px solid ${c.color}30">${c.op}</span>
+      <div class="cmd-item-body">
+        <div class="cmd-item-cmd">${c.cmd}</div>
+        <div class="cmd-item-desc">${c.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── Interactions ──
+function toggleOp(card){
+  const wasExpanded=card.classList.contains('expanded');
+  document.querySelectorAll('.op-card').forEach(c=>c.classList.remove('expanded'));
+  if(!wasExpanded) card.classList.add('expanded');
+}
+
+function copyCmd(cmd){
+  navigator.clipboard.writeText(cmd).then(()=>showToast('已复制: '+cmd)).catch(()=>showToast(cmd));
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+function filterCmds(btn){
+  document.querySelectorAll('.cmd-filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const filter=btn.dataset.filter;
+  document.querySelectorAll('.cmd-item').forEach(item=>{
+    item.classList.toggle('hidden',filter!=='全部'&&item.dataset.op!==filter);
+  });
+}
+
+document.getElementById('cmdSearch').addEventListener('input',function(){
+  const q=this.value.toLowerCase();
+  document.querySelectorAll('.cmd-item').forEach(item=>{
+    const match=item.dataset.cmd.includes(q)||item.dataset.desc.includes(q)||item.dataset.op.toLowerCase().includes(q);
+    item.classList.toggle('hidden',!match);
+  });
+  document.querySelectorAll('.cmd-filter').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.cmd-filter[data-filter="全部"]').classList.add('active');
+});
+
+// ── Tab Navigation ──
+document.querySelectorAll('.nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ── Init ──
+renderOps();renderWorkflow();renderCompare();renderCommands();
+</script>
+</body>
+</html>
