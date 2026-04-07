@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CC Coach -- Claude Code 功能教练</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--blue:#1226AA;--techBlue:#00A0DF;--blueDeep:#091252;--blueLight:#E8EEFF;
+--bluePale:#F4F6FF;--green:#0EA573;--greenLight:#E6F9F0;--amber:#E89820;
+--amberLight:#FFF8E6;--redMuted:#C85040;--redPale:#FFF0EE;--bg:#F5F7FC;
+--textMid:#3A3F5C;--textLight:#6B7094;--textMuted:#9098B8;--border:#D8E2F0;
+--cardShadow:0 2px 8px rgba(0,0,0,0.06);--radiusCard:10px;--radiusModal:12px;
+}
+html{font-size:11px;line-height:1.5}
+body{background:var(--bg);color:var(--textMid);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;min-height:100vh}
+a{color:var(--blue);text-decoration:none}
+
+/* Header */
+.header{background:linear-gradient(135deg,#091252,#1226AA);color:#fff;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.header-left h1{font-size:16px;font-weight:700;letter-spacing:0.5px}
+.header-left p{font-size:10px;color:rgba(255,255,255,0.7);margin-top:2px}
+.header-badges{display:flex;gap:8px;flex-wrap:wrap}
+.header-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:4px;font-size:9px;font-weight:700;background:rgba(255,255,255,0.12);color:#fff}
+.header-badge .hb-num{font-size:14px}
+
+/* Tabs */
+.tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:50}
+.tab{padding:8px 14px;font-size:10px;cursor:pointer;white-space:nowrap;border-bottom:1px solid var(--border);color:var(--textLight);transition:all 0.15s ease;user-select:none;background:#fff}
+.tab:hover{color:var(--blue);background:var(--bluePale)}
+.tab.active{background:var(--blueLight);border-bottom:2px solid var(--blue);font-weight:700;color:var(--blue)}
+
+/* Container */
+.container{max-width:1200px;margin:0 auto;padding:16px}
+
+/* Cards */
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--radiusCard);box-shadow:var(--cardShadow);overflow:hidden}
+.card-bar{height:4px}
+.card-bar.blue{background:var(--blue)}
+.card-bar.tech{background:var(--techBlue)}
+.card-bar.green{background:var(--green)}
+.card-bar.amber{background:var(--amber)}
+.card-body{padding:14px 16px}
+
+/* KPI row */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:18px}
+.kpi-card .card-body{text-align:center}
+.kpi-num{font-size:22px;font-weight:700;color:var(--blue)}
+.kpi-label{font-size:10px;color:var(--textLight);margin-top:2px}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+@media(max-width:700px){.stats-row{grid-template-columns:1fr}}
+
+/* Donut */
+.donut-wrap{display:flex;align-items:center;justify-content:center;gap:20px;padding:10px}
+.donut-legend{display:flex;flex-direction:column;gap:6px}
+.donut-legend-item{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--textMid)}
+.donut-legend-item .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* Bar chart */
+.bar-chart{padding:10px 0}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.bar-label{font-size:10px;color:var(--textMid);width:70px;text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:16px;background:var(--bluePale);border-radius:4px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;transition:width 0.25s ease}
+.bar-count{font-size:9px;color:var(--textLight);width:24px;text-align:left;flex-shrink:0}
+
+/* Badge */
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;vertical-align:middle}
+.badge-mastered{background:var(--greenLight);color:var(--green)}
+.badge-improving{background:var(--amberLight);color:var(--amber)}
+.badge-unused{background:var(--bluePale);color:var(--blue)}
+.badge-skip{background:#f0f0f0;color:#888}
+.badge-p0{background:var(--redPale);color:var(--redMuted)}
+.badge-p1{background:var(--amberLight);color:var(--amber)}
+.badge-p2{background:var(--bluePale);color:var(--textLight)}
+
+/* Search & filters */
+.search-bar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.search-input{flex:1;min-width:200px;padding:7px 12px;border:1px solid var(--border);border-radius:6px;font-size:11px;outline:none;transition:border 0.15s ease;background:#fff;color:var(--textMid)}
+.search-input:focus-visible{border:2px solid var(--techBlue);outline:2px solid var(--techBlue);outline-offset:2px}
+.filter-group{display:flex;gap:4px;flex-wrap:wrap}
+.filter-btn{padding:4px 10px;border:1px solid var(--border);border-radius:4px;font-size:9px;font-weight:700;cursor:pointer;background:#fff;color:var(--textLight);transition:all 0.15s ease}
+.filter-btn:hover{border-color:var(--blue);color:var(--blue)}
+.filter-btn.active{background:var(--blueLight);border-color:var(--blue);color:var(--blue)}
+.filter-btn:focus-visible{outline:2px solid var(--techBlue);outline-offset:2px}
+
+/* Feature grid */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.feature-card{cursor:pointer;transition:box-shadow 0.15s ease,transform 0.15s ease}
+.feature-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.1);transform:translateY(-1px)}
+.feature-card:focus-visible{outline:2px solid var(--techBlue);outline-offset:2px}
+.feature-card .card-body{display:flex;flex-direction:column;gap:6px}
+.fc-header{display:flex;align-items:center;gap:8px}
+.fc-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fc-icon svg{width:16px;height:16px}
+.fc-name{font-size:12px;font-weight:700;color:var(--textMid)}
+.fc-desc{font-size:10px;color:var(--textLight);line-height:1.4}
+.fc-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px}
+
+/* Tables */
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl thead th{background:var(--blueDeep);color:#fff;font-size:9px;text-transform:uppercase;letter-spacing:0.5px;padding:8px 10px;text-align:left;font-weight:700}
+.tbl tbody tr:nth-child(odd){background:#fff}
+.tbl tbody tr:nth-child(even){background:var(--bluePale)}
+.tbl tbody tr:hover{background:var(--blueLight)}
+.tbl tbody td{padding:7px 10px;border-bottom:1px solid var(--border)}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:var(--radiusModal);max-width:640px;width:100%;max-height:80vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.18)}
+.modal-header{background:var(--blueDeep);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.modal-header h3{font-size:14px;font-weight:700}
+.modal-close{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px 8px;border-radius:4px;transition:background 0.15s ease}
+.modal-close:hover{background:rgba(255,255,255,0.15)}
+.modal-close:focus-visible{outline:2px solid var(--techBlue);outline-offset:2px}
+.modal-body{padding:20px;overflow-y:auto;font-size:11px;line-height:1.7;color:var(--textMid)}
+.modal-body h2,.modal-body h3{margin:12px 0 6px;color:var(--blueDeep)}
+.modal-body code{background:var(--bluePale);padding:1px 5px;border-radius:3px;font-size:10px;font-family:"SF Mono",Consolas,monospace}
+.modal-body pre{background:var(--blueDeep);color:#e0e6ff;padding:12px;border-radius:6px;overflow-x:auto;font-size:10px;line-height:1.5;margin:8px 0}
+.modal-body pre code{background:none;padding:0;color:inherit}
+.modal-body table{width:100%;border-collapse:collapse;margin:8px 0}
+.modal-body table th{background:var(--bluePale);padding:6px 8px;font-size:10px;text-align:left;font-weight:700}
+.modal-body table td{padding:6px 8px;border-bottom:1px solid var(--border);font-size:10px}
+.modal-body strong{color:var(--blueDeep)}
+.modal-body ul,.modal-body ol{padding-left:18px;margin:6px 0}
+
+/* Tab panels */
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* Section title */
+.section-title{font-size:14px;font-weight:700;color:var(--blueDeep);margin:18px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--blueLight)}
+
+/* Update guide */
+.guide-block{margin-bottom:16px}
+.guide-block h4{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:6px}
+.guide-block p,.guide-block li{font-size:11px;color:var(--textMid);line-height:1.6}
+.guide-block pre{background:var(--blueDeep);color:#e0e6ff;padding:10px;border-radius:6px;font-size:10px;margin:6px 0;overflow-x:auto}
+.guide-block code{background:var(--bluePale);padding:1px 4px;border-radius:3px;font-size:10px}
+
+/* Footer */
+.footer{text-align:center;padding:16px;font-size:8px;color:var(--textMuted)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--textMuted)}
+
+/* No results */
+.no-results{text-align:center;padding:40px;color:var(--textLight);font-size:12px}
+
+/* Rule group title */
+.rule-group-title{font-size:12px;font-weight:700;color:var(--blue);margin:14px 0 8px;display:flex;align-items:center;gap:6px}
+.rule-group-title .rg-count{font-size:9px;font-weight:700;background:var(--blueLight);color:var(--blue);padding:1px 6px;border-radius:4px}
+</style>
+</head>
+<body>
+<!-- 访问密码门 -->
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+  <div style="font-family:-apple-system,sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <input id="auth-input" type="password" placeholder="Access Code" autocomplete="off"
+      style="width:200px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:1rem;font-family:-apple-system,sans-serif;outline:none;text-align:center;letter-spacing:.1em;"
+      onfocus="this.style.borderColor='rgba(255,255,255,.2)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+  </div>
+  <div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0;transition:opacity .3s">incorrect code</div>
+  <div style="font-size:.6rem;color:rgba(255,255,255,.15);margin-top:20px">Press Enter to continue</div>
+</div>
+<script>
+const AUTH_HASH='81a1a2439b6d34b7e685086ca8d2f9c2bbe94950c04d1d3e97159b70bbe98c37';
+document.addEventListener('DOMContentLoaded',function(){
+  if(sessionStorage.getItem('kengit-authed')==='1'){document.getElementById('auth-gate').remove();return}
+  const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
+  const mainEls=Array.from(document.body.children).filter(el=>el.id!=='auth-gate'&&el.tagName!=='SCRIPT'&&el.tagName!=='SVG');
+  mainEls.forEach(el=>{el.dataset.kengitHidden='1';el.style.display='none';});
+  setTimeout(()=>input.focus(),100);
+  input.addEventListener('keydown',async e=>{
+    if(e.key!=='Enter')return;
+    const val=input.value;
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(val));
+    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hash===AUTH_HASH){
+      sessionStorage.setItem('kengit-authed','1');
+      gate.style.opacity='0';gate.style.transition='opacity .5s';
+      setTimeout(()=>{gate.remove();document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});},500);
+    }else{
+      err.style.opacity='1';input.value='';input.style.borderColor='#E74C3C';
+      setTimeout(()=>{err.style.opacity='0';input.style.borderColor='rgba(255,255,255,.1)'},2000);
+    }
+  });
+});
+</script>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <h1>CC Coach -- Claude Code 功能教练</h1>
+    <p>63 个功能 &middot; 31 条推荐规则 &middot; 场景驱动学习</p>
+  </div>
+  <div class="header-badges">
+    <div class="header-badge"><span class="hb-num" id="hb-mastered">0</span> 精通</div>
+    <div class="header-badge"><span class="hb-num" id="hb-improving">0</span> 待深化</div>
+    <div class="header-badge"><span class="hb-num" id="hb-unused">0</span> 未使用</div>
+    <div class="header-badge"><span class="hb-num" id="hb-skip">0</span> 跳过</div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs" id="tabs">
+  <div class="tab active" data-tab="dashboard">仪表盘</div>
+  <div class="tab" data-tab="all">全部功能</div>
+  <div class="tab" data-tab="shortcut">快捷键</div>
+  <div class="tab" data-tab="slash">Slash命令</div>
+  <div class="tab" data-tab="agent">Agent系统</div>
+  <div class="tab" data-tab="cli">CLI参数</div>
+  <div class="tab" data-tab="hook">Hook系统</div>
+  <div class="tab" data-tab="config">配置</div>
+  <div class="tab" data-tab="mcp">MCP</div>
+  <div class="tab" data-tab="rules">推荐规则</div>
+  <div class="tab" data-tab="guide">更新指南</div>
+</div>
+
+<!-- Container -->
+<div class="container">
+
+  <!-- Dashboard -->
+  <div class="tab-panel active" id="panel-dashboard">
+    <div class="kpi-row">
+      <div class="card kpi-card"><div class="card-bar blue"></div><div class="card-body"><div class="kpi-num">63</div><div class="kpi-label">总功能数</div></div></div>
+      <div class="card kpi-card"><div class="card-bar tech"></div><div class="card-body"><div class="kpi-num">31</div><div class="kpi-label">Hook 推荐规则</div></div></div>
+      <div class="card kpi-card"><div class="card-bar green"></div><div class="card-body"><div class="kpi-num">63</div><div class="kpi-label">每日 Tips</div></div></div>
+      <div class="card kpi-card"><div class="card-bar amber"></div><div class="card-body"><div class="kpi-num">95%+</div><div class="kpi-label">CC 功能覆盖率</div></div></div>
+    </div>
+    <div class="stats-row">
+      <div class="card">
+        <div class="card-bar blue"></div>
+        <div class="card-body">
+          <div style="font-size:12px;font-weight:700;color:var(--blueDeep);margin-bottom:10px">掌握度分布</div>
+          <div class="donut-wrap" id="donut-area"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-bar tech"></div>
+        <div class="card-body">
+          <div style="font-size:12px;font-weight:700;color:var(--blueDeep);margin-bottom:10px">分类统计</div>
+          <div class="bar-chart" id="bar-chart-area"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All features -->
+  <div class="tab-panel" id="panel-all">
+    <div class="search-bar">
+      <input class="search-input" id="search-input" type="text" placeholder="搜索功能名称或描述...">
+      <div class="filter-group" id="mastery-filters">
+        <button class="filter-btn active" data-mastery="all">全部</button>
+        <button class="filter-btn" data-mastery="mastered">精通</button>
+        <button class="filter-btn" data-mastery="improving">待深化</button>
+        <button class="filter-btn" data-mastery="unused">未使用</button>
+        <button class="filter-btn" data-mastery="skip">跳过</button>
+      </div>
+      <div class="filter-group" id="priority-filters">
+        <button class="filter-btn active" data-priority="all">全部</button>
+        <button class="filter-btn" data-priority="P0">P0</button>
+        <button class="filter-btn" data-priority="P1">P1</button>
+        <button class="filter-btn" data-priority="P2">P2</button>
+      </div>
+    </div>
+    <div class="feature-grid" id="feature-grid"></div>
+    <div class="no-results" id="no-results" style="display:none">没有匹配的功能</div>
+  </div>
+
+  <!-- Category panels -->
+  <div class="tab-panel" id="panel-shortcut"><div class="section-title">快捷键</div><div class="feature-grid" data-cat="shortcut"></div></div>
+  <div class="tab-panel" id="panel-slash"><div class="section-title">Slash 命令</div><div class="feature-grid" data-cat="slash"></div></div>
+  <div class="tab-panel" id="panel-agent"><div class="section-title">Agent 系统</div><div class="feature-grid" data-cat="agent"></div></div>
+  <div class="tab-panel" id="panel-cli"><div class="section-title">CLI 参数</div><div class="feature-grid" data-cat="cli"></div></div>
+  <div class="tab-panel" id="panel-hook"><div class="section-title">Hook 系统</div><div class="feature-grid" data-cat="hook"></div></div>
+  <div class="tab-panel" id="panel-config"><div class="section-title">配置</div><div class="feature-grid" data-cat="config"></div></div>
+  <div class="tab-panel" id="panel-mcp"><div class="section-title">MCP</div><div class="feature-grid" data-cat="mcp"></div></div>
+
+  <!-- Rules -->
+  <div class="tab-panel" id="panel-rules">
+    <div class="section-title">推荐规则 (31 条)</div>
+    <div id="rules-area"></div>
+  </div>
+
+  <!-- Guide -->
+  <div class="tab-panel" id="panel-guide">
+    <div class="section-title">更新指南</div>
+    <div class="guide-block"><h4>如何添加新 Tip</h4>
+      <p>在 <code>~/.claude/skills/cc-coach/tips/</code> 目录下创建新的 .md 文件：</p>
+      <pre>## 功能名 -- 一句话价值主张
+
+2-3 行说明这个功能是什么。
+
+**用法**：具体命令或快捷键
+**适合场景**：什么时候用
+**好处**：具体收益</pre>
+      <p>文件命名：<code>NN-feature-name.md</code>，NN 从 64 开始递增。</p>
+    </div>
+    <div class="guide-block"><h4>更新检查命令</h4>
+      <pre>帮我检查 cc-coach 是否需要更新——
+1. 跑 /release-notes 看最近的新功能
+2. 比对 tips/ 目录，找出缺失的
+3. 补全缺失的 tips</pre>
+    </div>
+    <div class="guide-block"><h4>自动检测更新</h4>
+      <p>建议每月跑一次，配合 <code>/release-notes</code> 发现 + <code>/powerup</code> 学习。</p>
+    </div>
+    <div class="guide-block"><h4>数据映射修改</h4>
+      <p>功能的分类、掌握度、优先级定义在本页面 JS 的 <code>FEATURES</code> 数组中。修改后刷新页面即可。</p>
+    </div>
+    <div class="guide-block"><h4>版本信息</h4>
+      <p>CC Coach 页面 v1.0 &middot; 2026-04-07 &middot; 63 tips &middot; 31 rules</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">功能详情</h3>
+      <button class="modal-close" id="modal-close" aria-label="关闭">[X]</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div class="footer">CC Coach v1.0 -- Built for Kenno -- 2026-04-07 -- Corporate Dual-Blue Design System</div>
+
+<script>
+// ========== DATA ==========
+const FEATURES=[
+{id:1,name:"/fast 快速模式",desc:"简单任务省一半",cat:"shortcut",mastery:"unused",priority:"P0",content:"你当前所有操作都跑 high effort Opus。\n但格式转换、简单编辑、模板生成不需要深度推理。\n\n**一键切换**：按 `Option+O`（Mac）\n- 同一个 Opus 模型，降低推理深度\n- 速度快 2-3x，成本降约 50%\n- 再按一次切回正常模式\n\n**适合**：文件操作、代码格式化、简单重构、模板填充\n**不适合**：架构设计、复杂 bug 调试、战略分析（/kenThink）\n\n试试看：下次做简单编辑前按一下 Option+O。"},
+{id:2,name:"Esc+Esc 快速回滚",desc:"改坏了一键撤销",cat:"shortcut",mastery:"unused",priority:"P0",content:"Claude 改代码改坏了？不用 git stash、git reset。\n\n**双击 Esc 键**：回滚到之前的某个对话点\n- 代码编辑会被撤销（Edit/Write 的改动）\n- 对话历史也回退\n- 比 git 更精细：只撤销 Claude 的改动\n\n**等价命令**：`/rewind`\n\n你的 CLAUDE.md 有\"2次失败熔断\"规则——\n改了两次还不对？Esc Esc 回到起点，换个思路。"},
+{id:3,name:"/cost",desc:"看看你每个会话花了多少",cat:"slash",mastery:"unused",priority:"P0",content:"输入 `/cost`，看到当前会话的 Token 消耗明细：\n- 输入/输出各多少 token\n- 总花费（如果按量计费）\n- 分段消耗趋势\n\n**为什么要看**：你 effortLevel 固定 \"high\"，所有 subagent 默认 Opus。\n不看 /cost 你永远不知道自己每天的 token 消耗有多大。\n\n建议：今天就跑一次 `/cost`，建立成本基线。\n之后配合 Agent model 覆写（Explore 用 Sonnet），再跑一次 /cost 对比。"},
+{id:4,name:"/context",desc:"看见你的上下文在被什么吃掉",cat:"slash",mastery:"unused",priority:"P1",content:"输入 `/context`，用彩色网格显示上下文窗口使用情况：\n- 哪些内容占了多少空间\n- 哪些可以优化\n- 什么时候该 compact\n\n你已经配了\"70% 时 proactive compact\"的规则。\n但 /context 让你**看见**是什么在吃空间——\n也许某个巨大的 tool result 白白占了 30%。\n\n配合使用：/context 诊断 → /compact [focus] 有针对性压缩。"},
+{id:5,name:"Shift+Tab",desc:"秒切权限模式",cat:"shortcut",mastery:"unused",priority:"P0",content:"不用输入 `/plan`，按一下 Shift+Tab 就循环切换：\ndefault → acceptEdits → plan → auto → dontAsk\n\n**实战场景**：\n1. 想先分析再改代码 → Shift+Tab 切到 Plan 模式\n2. 分析完要动手了 → Shift+Tab 切回 default 或 acceptEdits\n3. 信任当前操作 → 切到 auto 模式让 AI 自动判断\n\n比每次打 `/plan` 快 10 倍。\n试试看：现在按一下 Shift+Tab 感受一下。"},
+{id:6,name:"Ctrl+B",desc:"不想等了？推到后台",cat:"shortcut",mastery:"unused",priority:"P1",content:"Claude 在跑一个耗时任务，你不想干等？\n\n**按 Ctrl+B**：当前运行中的任务推到后台\n- 你可以继续输入新指令\n- 后台任务完成后自动通知\n- 用 `/tasks` 或 Ctrl+T 看进度\n\n**配合 Agent 使用**：\n启动 Agent 时加 `run_in_background: true`，直接后台跑。\n\n**典型场景**：\n- 让 /kendresearch 在后台做深度研究\n- 同时在前台做 KB 项目的编码工作"},
+{id:7,name:"/btw",desc:"问个无关问题，不污染当前工作",cat:"slash",mastery:"unused",priority:"P1",content:"你在改 KB 的搜索管线，突然想查个 Python 语法？\n\n**输入**：`/btw Python asyncio.gather 和 TaskGroup 区别？`\n\n特点：\n- 不进入对话历史（不污染上下文）\n- 复用 Prompt Cache（很快很便宜）\n- 答完了当前工作上下文不变\n\n**对比你现在的做法**：\n直接在对话里问 → 浪费上下文空间 → 加速 compact 触发\n用 /btw → 零上下文成本"},
+{id:8,name:"/schedule",desc:"让 Claude 在云端定时帮你干活",cat:"slash",mastery:"unused",priority:"P0",content:"你的 kentdstock 选股系统每次都要手动触发。\n但它完全可以自动化：\n\n**输入** `/schedule`，进入配置向导：\n- 设置频率：每个交易日 15:30\n- 设置任务：跑 kentdstock 选股分析\n- 设置输出：结果存到指定目录\n\n**关闭终端也照样执行**——这是云端持久化的定时 Agent。\n\n**其他场景**：\n- 每周一自动跑 /retro 周回顾\n- 每天自动用 /kendresearch 追踪竞对\n- 每天凌晨检查 GitHub Pages 部署状态\n\n从\"人驱动工具\"变成\"工具自动运转\"。"},
+{id:9,name:"Agent model 覆写",desc:"搜索任务用 Sonnet 省 80%",cat:"agent",mastery:"unused",priority:"P0",content:"你每次起 Explore Agent 搜文件都在用 Opus。\n但搜索不需要深度推理——Sonnet 完全够用。\n\n**用法**：Agent 调用时加 model 参数\n```\nAgent(subagent_type=\"Explore\", model=\"sonnet\", prompt=\"搜索...\")\n```\n\n**成本分级建议**：\n| 任务类型 | 推荐模型 | 成本 |\n|---------|---------|------|\n| 搜索/读文件 | Sonnet | ~20% |\n| 简单操作 | Haiku | ~2% |\n| 架构分析 | Opus | 100% |\n| 代码修改 | Opus | 100% |\n\n一个简单的参数，每天可能省下几十万 token。"},
+{id:10,name:"Worktree 隔离",desc:"大重构的保命技能",cat:"agent",mastery:"unused",priority:"P0",content:"做超过 3 个文件的重构，最怕改到一半代码跑不起来。\n\n**两种用法**：\n\n**方法1：Agent 级隔离**\n```\nAgent(isolation=\"worktree\", prompt=\"重构 search pipeline...\")\n```\nAgent 在独立分支工作，改坏了直接丢弃。\n\n**方法2：会话级隔离**\n```bash\nclaude -w refactor-search\n```\n整个会话在隔离环境，做完满意就合并，不满意就丢。\n\n**好处**：\n- 改坏了零损失（不需要 git reset --hard）\n- 不影响你主分支的其他工作\n- 多个 worktree 可以并行开发不同功能\n\n你的 CLAUDE.md 说\"Commit before destructive operation\"——\nWorktree 从根本上消除了这个风险。"},
+{id:11,name:"/diff",desc:"交互式查看这次改了什么",cat:"slash",mastery:"unused",priority:"P1",content:"输入 `/diff`，在终端里可视化查看所有变更：\n- 按**文件**导航：看哪些文件被改了\n- 按**轮次**导航：看第 3 轮改了什么，第 5 轮又改了什么\n\n**比 git diff 好在哪**：\ngit diff 只给你扁平的改动列表。\n/diff 按对话轮次组织，你能看到改动的**逻辑顺序**。\n\n**适合场景**：\n- 大任务做完后 review 自己的改动\n- 不确定 Claude 改了什么时快速确认\n- commit 前的最终检查"},
+{id:12,name:"/security-review",desc:"部署前一键安全扫描",cat:"slash",mastery:"unused",priority:"P1",content:"输入 `/security-review`，自动分析你的 git diff 中的安全问题：\n- SQL 注入\n- XSS 漏洞\n- 敏感信息泄露\n- 其他 OWASP Top 10 风险\n\n**和你的 codex-review-gate 区别**：\ncodex gate 是通用代码审查，/security-review 专注安全维度。\n\n**建议**：部署前双保险——\n1. codex-review-gate 做代码质量检查（自动）\n2. `/security-review` 做安全扫描（手动跑一次）"},
+{id:13,name:"/powerup",desc:"交互式功能发现教程",cat:"slash",mastery:"unused",priority:"P0",content:"输入 `/powerup`，进入互动式功能教程：\n- 每个 powerup 是一个 30 秒的交互演示\n- 手把手教你一个新功能\n- 比看文档快 10 倍\n\n**为什么现在就该跑**：\n你有 15+ 个未使用的高价值功能。\n/powerup 帮你系统性地发现和学习它们。\n\n试试看：输入 /powerup，跟着走一遍。"},
+{id:14,name:"claude -p",desc:"把 Claude Code 嵌入脚本",cat:"slash",mastery:"unused",priority:"P1",content:"不用进入交互式会话，直接在命令行拿到结果：\n\n```bash\n# 一次性查询\nclaude -p \"解释 Python GIL 是什么\"\n\n# 管道模式\ncat buggy.py | claude -p \"找出这段代码的 bug\"\n\n# JSON 输出（适合脚本解析）\nclaude -p \"列出 src/ 下所有 TODO\" --output-format json\n\n# 预算控制（防止跑飞）\nclaude -p \"重构这个模块\" --max-turns 5 --max-budget-usd 2\n\n# 裸启动（跳过加载所有 skill/hook，快 2-3x）\nclaude --bare -p \"快速查询\"\n```\n\n**配合 crontab 实现定时任务**：\n```bash\n# 每天 15:30 自动分析（不需要 /schedule）\n30 15 * * 1-5 claude -p \"跑 kentdstock 分析\" > ~/reports/daily.md\n```"},
+{id:15,name:"/branch",desc:"对话也能分支，AB 方案同时试",cat:"slash",mastery:"unused",priority:"P2",content:"做架构决策时，不确定走方案 A 还是方案 B？\n\n**输入** `/branch plan-a`：在当前对话点创建分支\n- 在这个分支里尝试方案 A\n- 用 `/resume` 回到分支点，再建 `/branch plan-b`\n- 两条路都试完再做决定\n\n**和 git branch 类比**：\ngit branch 是对代码分支，/branch 是对**对话和思考**分支。\n\n**适合场景**：\n- 重大架构决策：微服务 vs 单体？\n- 技术选型：LanceDB vs Milvus？\n- 方案对比：先改 A 还是先改 B？"},
+{id:16,name:"/insights",desc:"你这次 session 效率如何？",cat:"slash",mastery:"unused",priority:"P1",content:"输入 `/insights`，生成当前会话分析报告：\n- 哪些工具用得最多、哪里卡住最久\n- context 使用效率评估\n- 具体优化建议\n\n**建议频率**：每个大 session 结束前跑一次。"},
+{id:17,name:"/remote + /mobile",desc:"不坐在电脑前也能跑任务",cat:"slash",mastery:"unused",priority:"P1",content:"`/remote \"深度研究竞对动态\"`：在 claude.ai 上创建远程会话。\n关掉终端也不影响，手机上也能看进度。\n\n`/mobile`：显示二维码，手机扫码连接当前会话。\n\n`/remote-control`（或 `claude --rc`）：\n让 claude.ai 远程控制你本地的 CLI session。\n\n适合：长任务启动后出门、在手机上查看分析结果。"},
+{id:18,name:"CronCreate",desc:"会话内定时任务",cat:"slash",mastery:"improving",priority:"P1",content:"和 /schedule（云端持久）不同，CronCreate 是**本次会话内**的定时器：\n\n```\n\"每5分钟检查构建状态\"\n\"每10分钟跑一次测试\"\n\"每30分钟自动 /compact\"\n```\n\n等价命令：`/loop 5m 检查状态`\n\n**会话结束后自动销毁**——适合临时监控、持续验证、开发中轮询。\n不需要配置，直接对 Claude 说就行。"},
+{id:19,name:"TaskCreate + Ctrl+T",desc:"多步骤任务不丢进度",cat:"slash",mastery:"unused",priority:"P1",content:"复杂任务分多个步骤？用 Task 系统：\n- 自动创建任务清单、追踪进度\n- 支持依赖关系（B 完成后才开 C）\n- **compact 后任务列表仍然保留**（对话内容会被压缩，但 Task 不会）\n\n**Ctrl+T**：随时切换任务进度面板。\n\n特别适合你 CLAUDE.md 的\"多文件变更分阶段\"规则——\n每阶段是一个 Task，完成一个勾一个。"},
+{id:20,name:"Ctrl+G",desc:"在编辑器里写长 prompt",cat:"shortcut",mastery:"unused",priority:"P1",content:"要给 Claude 一个很长的指令（需求描述、多步骤操作）？\n在输入框里打字太不方便。\n\n**按 Ctrl+G**：用你的默认编辑器（vim/nano/code）打开一个临时文件。\n写完保存退出，内容自动提交给 Claude。\n\n适合：复杂的 skill 调用参数、多段代码粘贴、详细的需求描述。"},
+{id:21,name:"Ctrl+V 粘贴截图",desc:"直接粘贴截图给 Claude 看",cat:"shortcut",mastery:"improving",priority:"P2",content:"Claude Code 是多模态的。截图后直接 Ctrl+V 粘贴：\n- UI bug 截图 → Claude 直接看到并诊断\n- 设计稿 → Claude 分析布局和配色\n- 报错截图 → 不用手打错误信息\n\n**支持格式**：PNG, JPG, GIF, WebP\n**用 Read 工具也能读图片文件**：Read(\"/path/to/screenshot.png\")"},
+{id:22,name:"Option+P 切模型",desc:"一键切模型，不清 prompt",cat:"shortcut",mastery:"unused",priority:"P1",content:"不用输 `/model`，按 **Option+P** 直接切换：\n- Opus → 复杂推理、架构设计\n- Sonnet → 日常编码、中等任务\n- Haiku → 简单查询、格式化\n\n**什么时候切**：\n- 要省钱 → 切 Sonnet 或 Haiku\n- 要准确 → 切 Opus\n- 切了不满意 → 再按一次切回来\n\n配合 Option+O（Fast 模式）使用效果更佳：\nSonnet + Fast = 成本最低的组合。"},
+{id:23,name:"Option+T 深度思考",desc:"Extended Thinking 模式",cat:"shortcut",mastery:"improving",priority:"P2",content:"遇到特别复杂的问题？按 **Option+T** 开启 Extended Thinking：\n- Claude 会先进行长链条推理再回答\n- 适合多步推理、复杂 bug 分析、架构权衡\n- 会消耗更多 token，但准确率明显提高\n\n**你当前 effortLevel: \"high\" 已经默认有思考。**\nOption+T 是在此基础上进一步加深，或者在降低 effort 后手动开启。\n\n`/effort max`：最高档（仅 Opus），无 token 限制地思考。"},
+{id:24,name:"PostToolUse Hook",desc:"工具执行后自动化",cat:"hook",mastery:"unused",priority:"P1",content:"你的 CLAUDE.md 说\"Edit 后重新读取确认\"。\n这个规则可以变成**自动化 hook**：\n\n```json\n{\n  \"event\": \"PostToolUse\",\n  \"matcher\": \"Edit\",\n  \"hooks\": [{\n    \"type\": \"prompt\",\n    \"prompt\": \"你刚执行了 Edit，请重新读取该文件确认修改生效。\"\n  }]\n}\n```\n\n**其他 PostToolUse 用法**：\n- Edit 后自动跑 lint/typecheck\n- Write 后自动检查文件大小\n- Bash 后自动记录命令输出\n\n把你 CLAUDE.md 里的\"规则\"变成\"自动执行\"。"},
+{id:25,name:"PreCompact/PostCompact Hook",desc:"compact 前后不丢关键文件",cat:"hook",mastery:"unused",priority:"P1",content:"你配了\"70% proactive compact\"和\"compact 后重新读取关键文件\"。\n这两个规则可以 hook 自动化：\n\n**PreCompact**：压缩前自动保存当前关键上下文到临时文件\n**PostCompact**：压缩后自动注入关键文件内容\n\n```json\n{\n  \"event\": \"PostCompact\",\n  \"hooks\": [{\n    \"type\": \"prompt\",\n    \"prompt\": \"Context 刚被压缩。请重新读取当前任务涉及的关键文件。\"\n  }]\n}\n```\n\n这样你不用担心 compact 后\"失忆\"。"},
+{id:26,name:"/export + /copy",desc:"对话和代码一键导出",cat:"slash",mastery:"unused",priority:"P2",content:"`/copy`：复制 Claude 最后一条回复到剪贴板\n- `/copy 2`：复制倒数第 2 条\n- 如果回复有多个代码块，弹出选择器让你选\n\n`/export`：导出整个对话到文件\n- `/export conversation.txt`：存到文件\n- 不指定文件名则复制到剪贴板\n\n适合：分享代码片段、保存分析结果、存档重要对话。\n你已有 nmem save，但 /export 保存的是**原始完整对话**。"},
+{id:27,name:"会话管理",desc:"/resume + /rename 管理会话",cat:"slash",mastery:"improving",priority:"P2",content:"`/rename auth-refactor`：给当前会话起个名字，方便以后找。\n\n`/resume`：恢复之前的会话\n- `/resume` 不带参数：弹出交互式选择器\n- `/resume auth-refactor`：按名字恢复\n- `claude -c`：恢复最近的会话\n- `claude -r auth-refactor`：CLI 启动时直接恢复\n\n`--fork-session`：恢复会话的同时创建副本，不影响原会话。\n\n适合：长期项目的连续工作、多任务之间切换。"},
+{id:28,name:"claude --bare -p",desc:"极速查询和脚本模式",cat:"slash",mastery:"unused",priority:"P2",content:"`claude --bare -p \"查询\"`：\n- `--bare`：跳过加载所有 skill/hook/CLAUDE.md（快 2-3x）\n- `-p`：非交互模式，打印结果就退出\n\n```bash\n# 快速查个语法\nclaude --bare -p \"Python dataclass frozen=True 和 slots=True 区别\"\n\n# 管道模式\ncat error.log | claude -p \"分析这个错误日志\"\n\n# 批量处理\nfor f in src/*.py; do\n  claude -p \"检查 $f 的类型注解\" --max-turns 2\ndone\n```\n\n**和 /btw 区别**：/btw 在会话内零污染提问；--bare -p 是独立进程快速查询。"},
+{id:29,name:"--max-turns + --max-budget-usd",desc:"防止 Agent 跑飞",cat:"slash",mastery:"unused",priority:"P1",content:"自动化脚本中最怕 Agent 陷入无限循环。两个安全阀：\n\n```bash\n# 限制最大轮次\nclaude -p \"重构这个模块\" --max-turns 5\n\n# 限制最大花费\nclaude -p \"深度研究\" --max-budget-usd 2.00\n\n# 双保险\nclaude -p \"分析代码\" --max-turns 10 --max-budget-usd 3.00\n```\n\n达到限制后自动停止，输出已完成的部分。\n\n适合：crontab 定时任务、CI/CD 集成、任何无人值守的 Claude 调用。"},
+{id:30,name:"Codex challenge + consult",desc:"不止 review",cat:"agent",mastery:"improving",priority:"P1",content:"你的 codex-review-gate 只用了 Codex 的 1/3。还有两个模式：\n\n`/codex challenge`：对抗模式\n- Codex 扮演红队，尝试找你代码的漏洞\n- 适合部署前的压力测试\n- 和你的 /k1autoresearch:security 互补\n\n`/codex consult`：顾问模式\n- 把 Codex 当第二个 AI 顾问\n- 支持多轮对话，有 session 连续性\n- 适合复杂架构决策时获取第二意见\n\n**组合打法**：\nkenThink 做战略分析 → codex consult 做技术验证 → codex challenge 做安全测试"},
+{id:31,name:"Plan 模式进阶",desc:"不只是 /plan",cat:"slash",mastery:"mastered",priority:"P1",content:"你已经在用 Plan 模式，但有几个进阶用法：\n\n**Shift+Tab 快速切换**：比输入 /plan 快 10x\n`/plan fix the auth bug`：带任务描述进入 Plan\n**Plan 中可用工具**：Read, Grep, Glob, WebSearch（只读不写）\n\n**Plan 三板斧（配合你的 plan review skills）**：\n1. `/plan` → 自己先分析\n2. `/plan-eng-review` → 工程维度审查\n3. `/plan-ceo-review` → 产品维度审查\n\n**进入 Plan 的最佳时机**：\n- 不确定该怎么改时 → 先 Plan 看全貌\n- 改了两次还不对时（你的 2 次熔断规则）→ 切 Plan 重新思考\n- 大重构开始前 → Plan 梳理影响范围"},
+{id:32,name:"SubagentStart/Stop Hook",desc:"管控子 Agent 质量",cat:"hook",mastery:"unused",priority:"P2",content:"**SubagentStart**：子 Agent 启动时自动注入上下文\n```json\n{\n  \"event\": \"SubagentStart\",\n  \"hooks\": [{\n    \"type\": \"command\",\n    \"command\": \"echo '项目规范：所有代码必须有类型注解，测试覆盖率>80%'\"\n  }]\n}\n```\n\n**SubagentStop**：子 Agent 完成时自动评估结果\n- 检查输出质量\n- 提取关键发现存入 memory\n- 决定是否需要重跑\n\n目前你的质量控制在 skill prompt 里。搬到 hook 层 → 对**所有** subagent 生效。"},
+{id:33,name:"Notion MCP",desc:"12 个工具直连 Notion",cat:"mcp",mastery:"unused",priority:"P2",content:"如果你或老板用 Notion 管信息，这是巨大效率提升：\n\n| 工具 | 能力 |\n|------|------|\n| notion-search | 搜索 Notion 页面和数据库 |\n| notion-create-pages | 创建新页面 |\n| notion-create-database | 创建数据库 |\n| notion-create-view | 创建视图 |\n| notion-update-page | 更新页面 |\n| notion-fetch | 获取页面内容 |\n| notion-get-comments | 读评论 |\n| notion-create-comment | 写评论 |\n\n**场景**：kendresearch 研究结果 → 自动写入 Notion → 老板直接看\n**前提**：需要先认证。输入 `/mcp` 配置 Notion OAuth。\n**如果不用 Notion**：跳过这个功能。"},
+{id:34,name:"Agent subagent_type",desc:"选对 Agent 类型",cat:"agent",mastery:"improving",priority:"P1",content:"不同任务用不同类型的 Agent：\n\n| 类型 | 用途 | 工具权限 | 建议 model |\n|------|------|---------|------------|\n| Explore | 搜索/读文件/探索代码 | 只读 | sonnet |\n| Plan | 架构分析/方案设计 | 只读 | opus |\n| general-purpose | 写代码/修改文件 | 全部 | opus |\n| claude-code-guide | 问 CC 功能怎么用 | 只读 | sonnet |\n\n**你也可以自定义 Agent 类型**：\n在 `.claude/agents/my-agent.md` 中用 frontmatter 定义。"},
+{id:35,name:"/stats + /doctor",desc:"CC 健康监控",cat:"slash",mastery:"unused",priority:"P2",content:"`/stats`：可视化你的每日使用量、连续使用天数、使用趋势。\n了解自己的使用节奏，发现效率高低峰。\n\n`/doctor`：诊断 CC 安装和配置是否正常。\n检查：版本、权限、MCP 连接、插件状态、hook 配置。\n遇到莫名其妙的问题时先跑 /doctor。"},
+{id:36,name:"/release-notes",desc:"跟踪 CC 新功能",cat:"slash",mastery:"unused",priority:"P1",content:"输入 `/release-notes`：交互式版本更新日志浏览器。\n可以选择查看任意版本的变更——新功能、bug 修复、Breaking Changes。\n\n**建议**：每周跑一次，看看有没有新功能值得学。\n配合 `/powerup` 使用：/release-notes 发现 → /powerup 学习。\n\n**CC Coach 更新机制**：发现新功能后对我说\n\"帮我给 cc-coach 加个 tip：XXX功能\"，我会自动创建新 tip 文件。"},
+{id:37,name:"/effort",desc:"认知资源精确调控",cat:"slash",mastery:"unused",priority:"P1",content:"5 个档位，比 /fast 更精确：\n- `low`：最快最省，适合格式化、简单问答\n- `medium`：日常平衡\n- `high`：复杂推理（你当前默认值）\n- `max`：极限思考，仅 Opus，无 token 限制\n- `auto`：让 CC 自动判断任务复杂度\n\n**和 /fast 的区别**：/fast 是简化版开关，/effort 是精细控制。\n**快捷方式**：settings.json 里的 effortLevel 字段。\n**CLI**：`claude --effort medium`"},
+{id:38,name:".claudeignore",desc:"排除不需要的文件",cat:"config",mastery:"unused",priority:"P1",content:"类似 .gitignore，但控制 CC 的上下文索引范围。\n在项目根目录创建 `.claudeignore`：\n\n```\nnode_modules/\n.venv/\n__pycache__/\n*.pyc\ndist/\nbuild/\n.next/\n```\n\n**为什么重要**：CC 会自动发现项目文件。\n大型依赖目录（node_modules 10万+文件）会浪费 context 和搜索时间。\n\n**什么时候创建**：npm/pip install 后，或项目有大量生成文件时。"},
+{id:39,name:"自定义 Agent",desc:"AGENTS.md 自定义 Agent 类型",cat:"agent",mastery:"unused",priority:"P1",content:"在项目 `.claude/agents/` 目录下创建 .md 文件，定义专用 Agent：\n\n```yaml\n---\nname: \"Security Reviewer\"\ntype: \"Explore\"\nmodel: \"sonnet\"\ntools: [\"Read\", \"Grep\", \"Glob\"]\n---\n你是安全审查专员，只做代码安全分析...\n```\n\n**Frontmatter 可配置**：\n- model：固定此 Agent 的模型\n- tools：限制可用工具\n- permissions：限制权限\n- effort：固定 effort 级别\n\n**适合场景**：反复使用的专项 Agent（安全审查、代码规范检查、文档生成）。"},
+{id:40,name:"Auto 权限模式",desc:"AI 自动判断安全性",cat:"config",mastery:"unused",priority:"P1",content:"`Shift+Tab` 循环到 `auto` 模式：\nCC 用 AI 分类器自动判断每个操作是否安全。\n- 安全操作（读文件、搜索）→ 自动放行\n- 高风险操作（删除、push）→ 仍然提示你确认\n\n**和其他模式对比**：\n- default：每次都问（最安全但最慢）\n- acceptEdits：自动批准编辑（中等）\n- auto：AI 判断（平衡安全和效率）\n- dontAsk：预设白名单内自动执行（快但限制多）\n\n**要求**：Team/Enterprise/API 计划 + Sonnet/Opus 4.6"},
+{id:41,name:"EnterWorktree",desc:"交互式 worktree（会话级隔离）",cat:"agent",mastery:"unused",priority:"P1",content:"和 Agent 的 isolation:\"worktree\" 不同，这是**你和 Claude 一起**在隔离环境工作：\n\n**CLI 启动**：`claude -w feature-refactor`\n**会话内进入**：Claude 调用 EnterWorktree\n\n整个对话在独立 git 分支 + 独立目录里进行。\n做完了：满意 → merge 回主分支；不满意 → 丢弃。\n\n**加 --tmux**：`claude -w feature --tmux`\n在 tmux 窗口中运行，可以同时开多个 worktree session。"},
+{id:42,name:"更多 Hook 事件",desc:"自动化你的规则",cat:"hook",mastery:"unused",priority:"P2",content:"你当前用了 3/25 种 hook 事件。值得加的：\n\n**TaskCompleted**：任务标记完成时触发\n→ 强制检查\"是否跑了测试\"，防止虚报完成\n\n**UserPromptSubmit**：你按回车后、Claude 处理前\n→ 自动注入上下文、检测危险请求、路由到 skill\n\n**FileChanged**：磁盘文件被外部修改时\n→ IDE 和 CLI 同时编辑时保持同步\n\n**CwdChanged**：工作目录变更时\n→ 自动加载新项目的环境变量\n\n**PostToolUseFailure**：工具执行失败时\n→ 自动记录失败原因，辅助调试"},
+{id:43,name:".claude/rules/",desc:"路径级规则",cat:"config",mastery:"unused",priority:"P2",content:"不同目录可以有不同的 Claude 行为规则：\n\n```\n.claude/rules/\n  src/api.md      → API 目录的编码规范\n  tests/unit.md   → 单元测试的特殊要求\n  docs/style.md   → 文档风格指南\n```\n\n当 Claude 操作对应路径的文件时，自动加载该规则。\n\n**和 CLAUDE.md 区别**：\n- CLAUDE.md = 全局规则\n- .claude/rules/ = 分路径规则\n- 两者叠加生效"},
+{id:44,name:"1M 上下文窗口",desc:"大项目利器",cat:"config",mastery:"unused",priority:"P1",content:"默认 200K tokens。Opus/Sonnet 4.6 支持 1M：\n\n**启用方式**：\n- `/model opus[1m]` 或 `sonnet[1m]`\n- 自动对 Max/Team/Enterprise 用户启用\n\n**1M 的好处**：\n- 大项目不用频繁 compact\n- 更长的对话保持完整上下文\n- 复杂多文件分析一次到位\n\n**什么时候用 1M**：跨多文件的大型任务\n**什么时候不用**：简单查询（浪费）\n\n**禁用**：`CLAUDE_CODE_DISABLE_1M_CONTEXT=1`"},
+{id:45,name:"Voice 语音输入",desc:"解放双手",cat:"shortcut",mastery:"improving",priority:"P2",content:"你已启用 voiceEnabled: true。\n\n**用法**：长按 Space 键 → 说话 → 松开自动提交\n**等价命令**：`/voice` 切换开关\n\n**适合场景**：\n- 描述复杂需求时（说比打字快）\n- 站着看代码时口述想法\n- 长 prompt 不想打字时\n\n**语言切换**：`/config` → Voice language\n**自定义按键**：`/keybindings` 修改触发键"},
+{id:46,name:"多模态能力",desc:"PDF、图片、Notebook",cat:"other",mastery:"improving",priority:"P1",content:"CC 不只能读代码，还能：\n\n**图片**：`Ctrl+V` 粘贴截图，或 `Read(\"/path/to/image.png\")`\n→ UI bug 截图直接给 Claude 看\n\n**PDF**：`Read(\"/path/to/report.pdf\", pages=\"1-5\")`\n→ 大 PDF 必须指定页码范围（最多 20 页/次）\n\n**Jupyter Notebook**：Read .ipynb 返回所有 cell + 输出\n→ 代码 + 文本 + 可视化一起看\n\n**适合你的场景**：\n- 竞对报告 PDF 直接喂给 kendresearch\n- UI 问题截图粘贴诊断"},
+{id:47,name:"/sandbox",desc:"沙箱模式",cat:"slash",mastery:"unused",priority:"P2",content:"限制 CC 的文件系统访问范围：\n\n```json\n\"sandbox\": {\n  \"enabled\": true,\n  \"writePaths\": [\"/tmp/myapp\", \"./src\"],\n  \"readPaths\": [\"/etc/config\"]\n}\n```\n\n**效果**：只能写入 writePaths，只能读 readPaths，其他一律拒绝。\n\n**切换**：`/sandbox` 命令\n\n**适合场景**：\n- 操作生产相关文件时\n- 不信任的任务需要隔离\n- 和 /freeze 类似但更底层"},
+{id:48,name:"--fallback-model",desc:"模型过载自动降级",cat:"cli",mastery:"unused",priority:"P2",content:"```bash\nclaude -p --fallback-model sonnet \"分析这段代码\"\n```\n\n当 Opus 过载或限流时，自动切换到 Sonnet 继续工作。\n不会因为模型不可用而完全停摆。\n\n**仅 print 模式可用**（-p 参数）。\n适合自动化脚本和 cron 任务——保证任务一定会执行。"},
+{id:49,name:"/mcp 管理",desc:"MCP 服务器管理",cat:"mcp",mastery:"unused",priority:"P2",content:"输入 `/mcp`：交互式管理 MCP 服务器连接。\n- 查看已连接的 MCP 服务器\n- 认证需要 OAuth 的服务（Notion、Calendar 等）\n- 添加新的 MCP 服务器\n\n**自建 MCP 服务器**（高级）：\n如果你有自己的 API 或数据库，可以写 MCP server 让 CC 直接操作。\n比在 skill 里调 curl 更优雅，工具自动发现。\n\n**配置文件**：`~/.claude/.mcp.json`（全局）或 `.claude/.mcp.json`（项目）"},
+{id:50,name:"--system-prompt",desc:"自定义系统提示",cat:"cli",mastery:"unused",priority:"P2",content:"```bash\n# 完全替换系统提示\nclaude --system-prompt \"你是一个 Python 专家\"\n\n# 追加到默认提示后面\nclaude --append-system-prompt \"所有代码必须有类型注解\"\n\n# 从文件加载\nclaude --system-prompt-file ./custom-prompt.txt\n```\n\n**和 CLAUDE.md 区别**：\n- CLAUDE.md：持久化规则，每次自动加载\n- --system-prompt：一次性覆盖，仅当前 session\n\n**适合场景**：临时需要特殊行为但不想改 CLAUDE.md"},
+{id:51,name:"PR 创建工作流",desc:"完整 PR 创建流程",cat:"slash",mastery:"mastered",priority:"P1",content:"CC 内置完整的 PR 创建流程：\n1. 分析所有 commit（不只是最新的）\n2. 生成 PR 标题 + 描述\n3. 用 `gh pr create` 创建\n\n**快捷方式**：`/ship` skill（你已有）\n\n**进阶用法**：\n- `claude --from-pr 123`：恢复和某个 PR 关联的 session\n- `Cmd+Click` PR 链接直接在浏览器打开"},
+{id:52,name:"/ultraplan",desc:"云端深度规划",cat:"slash",mastery:"unused",priority:"P2",content:"```\n/ultraplan \"重构用户认证系统\"\n```\n\n在 claude.ai 浏览器中打开一个深度规划会话：\n- 30 分钟深度分析（不受 CLI context 限制）\n- 完成后发回 CLI 执行\n- 可以在规划中来回修改再确认\n\n**和 /plan 区别**：\n- /plan：本地 CLI 内的只读分析\n- /ultraplan：云端浏览器中的深度规划，更长更深"},
+{id:53,name:"Ctrl+X Ctrl+K",desc:"一键终止所有后台 Agent",cat:"shortcut",mastery:"unused",priority:"P2",content:"按 Ctrl+X 然后 Ctrl+K（按两次确认）：\n终止所有正在后台运行的 Agent。\n\n**什么时候用**：\n- Agent 跑飞了，占资源\n- 启动了多个后台任务想全部取消\n- 配合 `/tasks` 查看哪些在跑"},
+{id:54,name:"--debug + --verbose",desc:"调试 CC 行为",cat:"shortcut",mastery:"unused",priority:"P2",content:"```bash\n# 开启调试（可按类别过滤）\nclaude --debug \"api,mcp\"\n\n# 写调试日志到文件\nclaude --debug-file /tmp/claude-debug.log\n\n# 详细输出（完整 turn-by-turn）\nclaude --verbose\n```\n\n**会话内**：`Ctrl+O` 切换详细输出模式。\n\n**适合场景**：\n- Hook 不工作，想看执行过程\n- MCP 连接失败，看详细错误\n- 理解 Claude 内部决策链"},
+{id:55,name:"--fork-session",desc:"复制会话继续",cat:"slash",mastery:"unused",priority:"P2",content:"```bash\nclaude -r \"my-session\" --fork-session\n```\n\n恢复某个历史 session，但创建一个**副本**——\n原 session 保持不变，你在副本上继续工作。\n\n**和 /branch 区别**：\n- /branch：同一 session 内分叉\n- --fork-session：跨 session 复制\n\n**适合场景**：\n- 回到某个历史状态重新尝试\n- 保留成功的 session 作为参考，在副本上实验"},
+{id:56,name:"/color + /theme",desc:"个性化终端",cat:"shortcut",mastery:"unused",priority:"P2",content:"`/color [颜色]`：设置 prompt bar 颜色\nred, blue, green, yellow, purple, orange, pink, cyan\n\n`/theme`：切换颜色主题\nlight, dark, 以及色盲友好变体\n\n不影响功能，纯粹个人偏好。\n多个 session 用不同颜色可以快速区分。"},
+{id:57,name:"/extra-usage",desc:"突破限流继续工作",cat:"slash",mastery:"unused",priority:"P2",content:"被限流了？输入 `/extra-usage` 配置额外用量。\n让你在达到计划限制后仍能继续工作。\n\n`/usage`：查看当前计划限额和限流状态。\n\n**配合使用**：\n/cost 看当前消耗 → /usage 看剩余额度 → \n快到限制时 /extra-usage 扩展"},
+{id:58,name:"/add-dir + --add-dir",desc:"多目录项目",cat:"cli",mastery:"unused",priority:"P2",content:"让 CC 同时访问多个工作目录：\n\n**会话内**：`/add-dir ../shared-lib`\n**启动时**：`claude --add-dir ../apps ../lib`\n\nCC 默认只能访问启动目录。如果你的项目跨多个文件夹\n（如 monorepo、前后端分离），用 /add-dir 把它们都加进来。\n\n注意：额外目录不会自动发现 .claude/ 配置。"},
+{id:59,name:"GitHub App",desc:"/install-github-app GitHub Actions 集成",cat:"other",mastery:"unused",priority:"P2",content:"输入 `/install-github-app`：交互式安装 Claude GitHub App。\n安装后 Claude 可以：\n- 自动响应 PR 评论\n- 在 CI 中跑代码审查\n- 接收 GitHub webhook 触发任务\n\n适合：团队协作、自动化 PR 流程。"},
+{id:60,name:"settings.local.json",desc:"项目级本地覆盖",cat:"config",mastery:"unused",priority:"P2",content:"放在项目 `.claude/settings.local.json`，被 .gitignore 忽略。\n适合存不想提交到 git 的个人配置：\n\n- 本地 MCP 服务器路径\n- 个人 API key\n- 本地独有的权限规则\n- 测试环境 URL\n\n优先级：managed > user > project > **local**（最高优先）"},
+{id:61,name:"/batch + /simplify",desc:"内置代码 Skill",cat:"slash",mastery:"unused",priority:"P1",content:"**/batch**：并行修改多文件\n在隔离的 Agent 中同时处理多个文件，然后合并结果。\n适合大规模重构、批量格式化、跨文件 rename。\n\n**/simplify**：代码简化审查\n检查你改过的代码，找出可复用、可简化、可优化的部分。\n然后自动修复发现的问题。\n\n两个都是 CC 内置 skill，不需要安装。"},
+{id:62,name:"/loop",desc:"循环执行命令",cat:"slash",mastery:"unused",priority:"P1",content:"```\n/loop 5m 跑测试\n/loop 10m /compact\n/loop 30m 检查部署状态\n```\n\n每隔指定时间重复执行一个命令或 skill。\n默认间隔 10 分钟。\n\n**和 CronCreate 区别**：\n- /loop：简单语法，重复同一命令\n- CronCreate：cron 表达式，更灵活\n\n**和 /schedule 区别**：\n- /loop：当前会话内，关终端就停\n- /schedule：云端持久，关终端继续跑"},
+{id:63,name:"--name",desc:"启动时给会话命名",cat:"cli",mastery:"unused",priority:"P2",content:"```bash\nclaude --name \"KB-search-refactor\"\n```\n\n直接在启动时命名，不用启动后再 /rename。\n名字显示在 prompt bar 上，方便区分多个并行 session。\n\n配合 `claude -r \"KB-search-refactor\"` 恢复。"}
+];
+
+// Recommended rules (31)
+const RULES=[
+{group:"Agent",trigger:"Agent 调用无 model 覆写",condition:"subagent_type=Explore",recommend:"加 model:\"sonnet\"",benefit:"成本降 80%，速度快 3x"},
+{group:"Agent",trigger:"Agent prompt 含重构/refactor",condition:"涉及 >3 文件修改",recommend:"加 isolation:\"worktree\"",benefit:"改坏零损失，不影响主分支"},
+{group:"Agent",trigger:"多个独立 Agent 任务",condition:"任务间无依赖",recommend:"run_in_background: true",benefit:"并行执行不阻塞"},
+{group:"Agent",trigger:"Agent 跑飞/无限循环",condition:"无轮次/预算限制",recommend:"--max-turns + --max-budget-usd",benefit:"自动熔断防跑飞"},
+{group:"Agent",trigger:"反复创建同类型 Agent",condition:"相同 prompt 模式 >3 次",recommend:"创建自定义 Agent (.claude/agents/)",benefit:"一次定义反复使用"},
+{group:"Edit",trigger:"Edit 执行后",condition:"每次 Edit 操作",recommend:"重新 Read 确认修改生效",benefit:"防止静默失败"},
+{group:"Edit",trigger:"连续 3+ 次 Edit 同一文件",condition:"中间无验证读取",recommend:"穿插 Read 验证",benefit:"及时发现失败"},
+{group:"Edit",trigger:"同一修复尝试 2 次失败",condition:"patch-on-patch 模式",recommend:"停下重新通读代码",benefit:"避免螺旋式修补"},
+{group:"Edit",trigger:"对话超过 10 轮",condition:"准备编辑文件前",recommend:"重新 Read 文件",benefit:"防 compact 后记忆失真"},
+{group:"Edit",trigger:">300 LOC 文件重构",condition:"结构性重构前",recommend:"先清理死代码，单独 commit",benefit:"降低重构复杂度"},
+{group:"Edit",trigger:"多文件变更",condition:">5 个文件",recommend:"分阶段，每阶段 <=5 文件",benefit:"可控可验证"},
+{group:"Edit",trigger:"Bug 报告修复",condition:"用户给出一个案例",recommend:"检查所有同类模式",benefit:"修复 ALL 而非 ONE"},
+{group:"Bash",trigger:"准备 git reset --hard",condition:"有未提交改动",recommend:"先 commit 非实验代码",benefit:"防数据丢失"},
+{group:"Bash",trigger:"生成临时文件",condition:"输出路径在 ~/",recommend:"改用 /tmp/ 目录",benefit:"保持 home 目录干净"},
+{group:"Bash",trigger:"搜索结果异常少",condition:"grep 返回 <5 条",recommend:"缩小范围重新搜索",benefit:"防结果截断遗漏"},
+{group:"Bash",trigger:"处理多文件",condition:"批量操作前",recommend:"验证 100% 输入覆盖率",benefit:"防遗漏文件"},
+{group:"Global",trigger:"会话超 20 轮未 compact",condition:"context 使用率 >70%",recommend:"/context 诊断 + /compact",benefit:"防上下文溢出"},
+{group:"Global",trigger:"简单任务（格式化/模板）",condition:"不需要深度推理",recommend:"Option+O 切 Fast 模式",benefit:"速度 2-3x，成本 -50%"},
+{group:"Global",trigger:"问与当前任务无关的问题",condition:"临时查询",recommend:"/btw 旁路提问",benefit:"零上下文污染"},
+{group:"Global",trigger:"等待长时间运行任务",condition:"Agent/研究任务进行中",recommend:"Ctrl+B 推到后台",benefit:"不阻塞当前工作"},
+{group:"Global",trigger:"重大架构决策前",condition:"不确定方案",recommend:"Shift+Tab 切 Plan 模式",benefit:"只读分析不动代码"},
+{group:"Global",trigger:"代码改坏了",condition:"需要撤销 Claude 改动",recommend:"Esc+Esc 回滚",benefit:"比 git 更精细"},
+{group:"Global",trigger:"部署前",condition:"准备发布",recommend:"/security-review 安全扫描",benefit:"OWASP Top 10 检查"},
+{group:"Global",trigger:"任务完成报告前",condition:"准备说\"完成了\"",recommend:"确认跑了测试/lint",benefit:"禁止虚报完成"},
+{group:"Global",trigger:"UI 显示异常",condition:"用户报告 bug",recommend:"追踪完整链路（后端→API→前端）",benefit:"根因定位不遗漏"},
+{group:"Global",trigger:"搜索阈值调优",condition:"修改了匹配参数",recommend:"跑 full eval 全量验证",benefit:"防改一个坏其他"},
+{group:"Global",trigger:"A 股数据查询",condition:"日期判断",recommend:"15:00后当天数据可用",benefit:"避免用昨天数据"},
+{group:"Global",trigger:"功能需要特定字段/精度",condition:"开发前",recommend:"验证数据基础是否具备",benefit:"不构建\"碰巧正确\"功能"},
+{group:"Global",trigger:"高风险操作（转换/删除）",condition:"开始前",recommend:"nmem search 查历史教训",benefit:"不重蹈覆辙"},
+{group:"Global",trigger:"任务有意外发现/踩坑",condition:"完成后",recommend:"/sum 沉淀经验",benefit:"跨会话知识积累"},
+{group:"Global",trigger:"用户纠正错误后",condition:"每次纠错",recommend:"评估是否更新规则/Memory",benefit:"错误→规则闭环"}
+];
+
+// ========== CATEGORY INFO ==========
+const CAT_INFO={
+shortcut:{label:"快捷键",color:"#1226AA"},
+slash:{label:"Slash命令",color:"#00A0DF"},
+agent:{label:"Agent系统",color:"#0EA573"},
+cli:{label:"CLI参数",color:"#E89820"},
+hook:{label:"Hook系统",color:"#C85040"},
+config:{label:"配置",color:"#6B7094"},
+mcp:{label:"MCP",color:"#9098B8"},
+other:{label:"其他",color:"#3A3F5C"}
+};
+const MASTERY_INFO={
+mastered:{label:"精通",cls:"badge-mastered"},
+improving:{label:"待深化",cls:"badge-improving"},
+unused:{label:"未使用",cls:"badge-unused"},
+skip:{label:"跳过",cls:"badge-skip"}
+};
+const PRIORITY_INFO={
+P0:{label:"P0",cls:"badge-p0"},
+P1:{label:"P1",cls:"badge-p1"},
+P2:{label:"P2",cls:"badge-p2"}
+};
+
+// ========== SVG ICONS ==========
+function catIcon(cat,color){
+const icons={
+shortcut:'<svg viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6" y2="8.01"/><line x1="10" y1="8" x2="18" y2="8"/><line x1="6" y1="12" x2="6" y2="12.01"/><line x1="10" y1="12" x2="18" y2="12"/><line x1="6" y1="16" x2="6" y2="16.01"/><line x1="10" y1="16" x2="18" y2="16"/></svg>',
+slash:'<svg viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>',
+agent:'<svg viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>',
+cli:'<svg viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="6 9 10 12 6 15"/><line x1="12" y1="15" x2="18" y2="15"/></svg>',
+hook:'<svg viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2"><path d="M12 2a4 4 0 0 0-4 4c0 2 2 3 2 6h4c0-3 2-4 2-6a4 4 0 0 0-4-4z"/><path d="M10 12v4a2 2 0 1 0 4 0v-4"/><line x1="12" y1="18" x2="12" y2="22"/></svg>',
+config:'<svg viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+mcp:'<svg viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/><line x1="10" y1="6" x2="14" y2="6"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="18" y1="10" x2="18" y2="14"/><line x1="10" y1="18" x2="14" y2="18"/></svg>',
+other:'<svg viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+};
+return icons[cat]||icons.other;
+}
+
+// ========== INIT ==========
+document.addEventListener('DOMContentLoaded',function(){
+// Count masteries
+const counts={mastered:0,improving:0,unused:0,skip:0};
+FEATURES.forEach(function(f){counts[f.mastery]=(counts[f.mastery]||0)+1;});
+document.getElementById('hb-mastered').textContent=counts.mastered;
+document.getElementById('hb-improving').textContent=counts.improving;
+document.getElementById('hb-unused').textContent=counts.unused;
+document.getElementById('hb-skip').textContent=counts.skip;
+
+// Dashboard
+renderDonut();
+renderBarChart();
+
+// Tabs
+document.querySelectorAll('.tab').forEach(function(tab){
+tab.addEventListener('click',function(){
+document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+this.classList.add('active');
+document.getElementById('panel-'+this.dataset.tab).classList.add('active');
+if(['shortcut','slash','agent','cli','hook','config','mcp'].indexOf(this.dataset.tab)!==-1){
+renderCategoryGrid(this.dataset.tab);
+}
+});
+});
+
+// Feature grid (all)
+renderFeatureGrid(FEATURES,document.getElementById('feature-grid'));
+
+// Search & filters
+document.getElementById('search-input').addEventListener('input',filterAll);
+document.querySelectorAll('#mastery-filters .filter-btn').forEach(function(btn){
+btn.addEventListener('click',function(){
+document.querySelectorAll('#mastery-filters .filter-btn').forEach(function(b){b.classList.remove('active');});
+this.classList.add('active');
+filterAll();
+});
+});
+document.querySelectorAll('#priority-filters .filter-btn').forEach(function(btn){
+btn.addEventListener('click',function(){
+document.querySelectorAll('#priority-filters .filter-btn').forEach(function(b){b.classList.remove('active');});
+this.classList.add('active');
+filterAll();
+});
+});
+
+// Modal
+document.getElementById('modal-close').addEventListener('click',closeModal);
+document.getElementById('modal-overlay').addEventListener('click',function(e){
+if(e.target===this) closeModal();
+});
+document.addEventListener('keydown',function(e){
+if(e.key==='Escape') closeModal();
+});
+
+// Rules
+renderRules();
+});
+
+// ========== RENDER ==========
+function renderFeatureGrid(features,container){
+container.innerHTML='';
+if(features.length===0) return;
+features.forEach(function(f){
+var ci=CAT_INFO[f.cat]||CAT_INFO.other;
+var div=document.createElement('div');
+div.className='card feature-card';
+div.tabIndex=0;
+div.setAttribute('role','button');
+div.setAttribute('aria-label',f.name);
+div.innerHTML='<div class="card-bar" style="background:'+ci.color+'"></div>'+
+'<div class="card-body">'+
+'<div class="fc-header">'+
+'<div class="fc-icon" style="background:'+ci.color+'11">'+catIcon(f.cat,ci.color)+'</div>'+
+'<div class="fc-name">'+esc(f.name)+'</div>'+
+'</div>'+
+'<div class="fc-desc">'+esc(f.desc)+'</div>'+
+'<div class="fc-tags">'+
+'<span class="badge '+MASTERY_INFO[f.mastery].cls+'">'+MASTERY_INFO[f.mastery].label+'</span>'+
+'<span class="badge '+PRIORITY_INFO[f.priority].cls+'">'+PRIORITY_INFO[f.priority].label+'</span>'+
+'<span class="badge" style="background:'+ci.color+'15;color:'+ci.color+'">'+ci.label+'</span>'+
+'</div>'+
+'</div>';
+div.addEventListener('click',function(){openModal(f);});
+div.addEventListener('keydown',function(e){if(e.key==='Enter')openModal(f);});
+container.appendChild(div);
+});
+}
+
+var catRendered={};
+function renderCategoryGrid(cat){
+if(catRendered[cat]) return;
+catRendered[cat]=true;
+var grid=document.querySelector('#panel-'+cat+' .feature-grid');
+if(!grid) return;
+var filtered=FEATURES.filter(function(f){return f.cat===cat;});
+renderFeatureGrid(filtered,grid);
+}
+
+function filterAll(){
+var q=document.getElementById('search-input').value.toLowerCase();
+var mBtn=document.querySelector('#mastery-filters .filter-btn.active');
+var pBtn=document.querySelector('#priority-filters .filter-btn.active');
+var mFilter=mBtn?mBtn.dataset.mastery:'all';
+var pFilter=pBtn?pBtn.dataset.priority:'all';
+var filtered=FEATURES.filter(function(f){
+if(mFilter!=='all'&&f.mastery!==mFilter) return false;
+if(pFilter!=='all'&&f.priority!==pFilter) return false;
+if(q&&!(f.name.toLowerCase().indexOf(q)!==-1||f.desc.toLowerCase().indexOf(q)!==-1||f.content.toLowerCase().indexOf(q)!==-1)) return false;
+return true;
+});
+var grid=document.getElementById('feature-grid');
+renderFeatureGrid(filtered,grid);
+document.getElementById('no-results').style.display=filtered.length===0?'block':'none';
+}
+
+// ========== MODAL ==========
+function openModal(f){
+document.getElementById('modal-title').textContent=f.name+' -- '+f.desc;
+document.getElementById('modal-body').innerHTML=renderMarkdown(f.content);
+document.getElementById('modal-overlay').classList.add('open');
+document.body.style.overflow='hidden';
+}
+function closeModal(){
+document.getElementById('modal-overlay').classList.remove('open');
+document.body.style.overflow='';
+}
+
+// Simple markdown renderer
+function renderMarkdown(md){
+var html=esc(md);
+// Code blocks
+html=html.replace(/```(\w*)\n([\s\S]*?)```/g,function(m,lang,code){
+return '<pre><code>'+code.trim()+'</code></pre>';
+});
+// Inline code
+html=html.replace(/`([^`]+)`/g,'<code>$1</code>');
+// Bold
+html=html.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+// Tables
+html=html.replace(/((?:\|[^\n]+\|\n?)+)/g,function(tableBlock){
+var rows=tableBlock.trim().split('\n');
+if(rows.length<2) return tableBlock;
+var t='<table>';
+rows.forEach(function(row,i){
+if(/^\|[\s\-|:]+\|$/.test(row)) return;
+var cells=row.split('|').filter(function(c,j,a){return j>0&&j<a.length-1;});
+var tag=i===0?'th':'td';
+t+='<tr>'+cells.map(function(c){return '<'+tag+'>'+c.trim()+'</'+tag+'>';}).join('')+'</tr>';
+});
+t+='</table>';
+return t;
+});
+// Headers
+html=html.replace(/^### (.+)$/gm,'<h3>$1</h3>');
+html=html.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+// Lists
+html=html.replace(/^- (.+)$/gm,'<li>$1</li>');
+html=html.replace(/((<li>[^]*?<\/li>\n?)+)/g,function(m){
+return '<ul>'+m+'</ul>';
+});
+// Numbered lists
+html=html.replace(/^\d+\. (.+)$/gm,'<li>$1</li>');
+// Paragraphs - split on double newlines
+html=html.replace(/\n\n/g,'</p><p>');
+html='<p>'+html+'</p>';
+// Clean up empty p tags around block elements
+html=html.replace(/<p>\s*(<h[23]|<pre|<ul|<ol|<table)/g,'$1');
+html=html.replace(/(<\/h[23]>|<\/pre>|<\/ul>|<\/ol>|<\/table>)\s*<\/p>/g,'$1');
+html=html.replace(/<p>\s*<\/p>/g,'');
+return html;
+}
+
+function esc(s){
+var d=document.createElement('div');
+d.textContent=s;
+return d.innerHTML;
+}
+
+// ========== DONUT CHART ==========
+function renderDonut(){
+var area=document.getElementById('donut-area');
+var counts={};
+FEATURES.forEach(function(f){counts[f.mastery]=(counts[f.mastery]||0)+1;});
+var data=[
+{key:'mastered',label:'精通',color:'#0EA573',count:counts.mastered||0},
+{key:'improving',label:'待深化',color:'#E89820',count:counts.improving||0},
+{key:'unused',label:'未使用',color:'#1226AA',count:counts.unused||0},
+{key:'skip',label:'跳过',color:'#9098B8',count:counts.skip||0}
+];
+var total=data.reduce(function(s,d){return s+d.count;},0);
+var r=50,cx=60,cy=60,sw=14;
+var startAngle=-Math.PI/2;
+var paths='';
+data.forEach(function(d){
+if(d.count===0) return;
+var angle=(d.count/total)*2*Math.PI;
+var endAngle=startAngle+angle;
+var x1=cx+r*Math.cos(startAngle);
+var y1=cy+r*Math.sin(startAngle);
+var x2=cx+r*Math.cos(endAngle);
+var y2=cy+r*Math.sin(endAngle);
+var large=angle>Math.PI?1:0;
+paths+='<path d="M '+x1.toFixed(2)+' '+y1.toFixed(2)+' A '+r+' '+r+' 0 '+large+' 1 '+x2.toFixed(2)+' '+y2.toFixed(2)+'" fill="none" stroke="'+d.color+'" stroke-width="'+sw+'" stroke-linecap="round"/>';
+startAngle=endAngle;
+});
+var svg='<svg width="120" height="120" viewBox="0 0 120 120">'+paths+
+'<text x="'+cx+'" y="'+cy+'" text-anchor="middle" dominant-baseline="central" font-size="18" font-weight="700" fill="#091252">'+total+'</text></svg>';
+var legend='<div class="donut-legend">';
+data.forEach(function(d){
+legend+='<div class="donut-legend-item"><span class="dot" style="background:'+d.color+'"></span>'+d.label+': '+d.count+'</div>';
+});
+legend+='</div>';
+area.innerHTML=svg+legend;
+}
+
+// ========== BAR CHART ==========
+function renderBarChart(){
+var area=document.getElementById('bar-chart-area');
+var catCounts={};
+FEATURES.forEach(function(f){catCounts[f.cat]=(catCounts[f.cat]||0)+1;});
+var maxCount=0;
+Object.keys(catCounts).forEach(function(k){if(catCounts[k]>maxCount)maxCount=catCounts[k];});
+var html='';
+Object.keys(CAT_INFO).forEach(function(cat){
+var c=catCounts[cat]||0;
+var pct=maxCount>0?(c/maxCount*100):0;
+html+='<div class="bar-row">'+
+'<div class="bar-label">'+CAT_INFO[cat].label+'</div>'+
+'<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+CAT_INFO[cat].color+'"></div></div>'+
+'<div class="bar-count">'+c+'</div>'+
+'</div>';
+});
+area.innerHTML=html;
+}
+
+// ========== RULES ==========
+function renderRules(){
+var area=document.getElementById('rules-area');
+var groups={};
+var groupOrder=[];
+RULES.forEach(function(r){
+if(!groups[r.group]){groups[r.group]=[];groupOrder.push(r.group);}
+groups[r.group].push(r);
+});
+var html='';
+groupOrder.forEach(function(g){
+var rules=groups[g];
+html+='<div class="rule-group-title">'+esc(g)+' <span class="rg-count">'+rules.length+'</span></div>';
+html+='<div class="card" style="margin-bottom:14px"><div class="card-bar blue"></div><div style="overflow-x:auto">';
+html+='<table class="tbl"><thead><tr><th>触发信号</th><th>触发条件</th><th>推荐操作</th><th>收益</th></tr></thead><tbody>';
+rules.forEach(function(r){
+html+='<tr><td>'+esc(r.trigger)+'</td><td>'+esc(r.condition)+'</td><td>'+esc(r.recommend)+'</td><td>'+esc(r.benefit)+'</td></tr>';
+});
+html+='</tbody></table></div></div>';
+});
+area.innerHTML=html;
+}
+</script>
+</body>
+</html>
