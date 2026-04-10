@@ -1,668 +1,702 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="smartisan">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>AI 正在改变软件开发的未来</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI会议备战手册 — 策略建议书</title>
 <style>
-/* === 全局重置 === */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
-}
-
-/* === 中文排版精修 === */
-body {
-  font-variant-east-asian: proportional-width;
-  line-break: strict;
-  overflow-wrap: break-word;
-}
-@supports (text-autospace: ideograph-alpha ideograph-numeric) {
-  body { text-autospace: ideograph-alpha ideograph-numeric; }
-}
-
-/* === 字体系统 === */
 :root {
-  --font-zh: "SF Pro SC", "PingFang SC", "Noto Sans SC", "Source Han Sans SC", "Heiti SC", sans-serif;
-  --font-en: "SF Pro Display", "Inter", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  --font-num: "SF Pro Display", "DIN Alternate", "Helvetica Neue", monospace;
+  --blue-primary: #1226AA;
+  --blue-tech: #00A0DF;
+  --blue-light: #E8F4FD;
+  --blue-pale: #F0F6FF;
+  --red-danger: #C0392B;
+  --red-bg: #FDF2F0;
+  --orange-warn: #E67E22;
+  --orange-bg: #FEF5E7;
+  --green-ok: #27AE60;
+  --green-bg: #EAFAF1;
+  --gray-50: #FAFBFC;
+  --gray-100: #F5F6F8;
+  --gray-200: #E8EBF0;
+  --gray-300: #D1D5DE;
+  --gray-400: #9BA3B5;
+  --gray-600: #5A6275;
+  --gray-800: #2D3142;
+  --gray-900: #1A1D2E;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.1);
+  --radius: 8px;
+  --radius-lg: 12px;
 }
-
-/* === Smartisan 风格变量 === */
-:root {
-  --bg-primary: linear-gradient(180deg, #0A0A0A 0%, #1C1C1E 40%, #111111 100%);
-  --bg-slide: #0F0F0F;
-  --card-bg: rgba(255,255,255,0.04);
-  --card-border: 1px solid rgba(255,255,255,0.08);
-  --card-shadow: 0 12px 48px rgba(0,0,0,0.25), 0 2px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.1);
-  --card-radius: 16px;
-  --text-hero: #FFFFFF;
-  --text-primary: rgba(255,255,255,0.92);
-  --text-secondary: rgba(255,255,255,0.65);
-  --text-muted: rgba(255,255,255,0.35);
-  --accent: #E74C3C;
-  --accent-light: #FF6B5A;
-  --accent-glow: rgba(231,76,60,0.3);
-  --slide-padding: 10vmin;
-  --transition-default: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-@media (color-gamut: p3) {
-  :root {
-    --accent: color(display-p3 0.92 0.28 0.22);
-    --accent-light: color(display-p3 1.0 0.42 0.35);
-  }
-}
-
-/* === 布局系统 === */
+* { margin:0; padding:0; box-sizing:border-box; }
 body {
-  font-family: var(--font-zh);
-  color: var(--text-primary);
-  background: #0A0A0A;
-  overflow: hidden;
-  height: 100vh;
-  height: 100dvh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-800);
+  line-height: 1.7;
+  font-size: 15px;
 }
-@supports not (height: 100dvh) {
-  body { height: -webkit-fill-available; }
-}
-
-.presentation {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  perspective: 1200px;
-}
-
-/* === 幻灯片基础 === */
-.slide {
-  position: absolute;
-  inset: 0;
+/* Top header */
+.top-header {
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  padding: 16px 32px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: var(--slide-padding);
-  opacity: 0;
-  pointer-events: none;
-  backface-visibility: hidden;
-  contain: layout style paint;
-  overflow: hidden;
-  /* 三层背景 */
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(255,255,255,0.02) 0%, transparent 70%),
-    var(--bg-primary);
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-.slide.active {
-  opacity: 1;
-  pointer-events: auto;
-  z-index: 2;
+.top-header .logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--blue-primary), var(--blue-tech));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
 }
-.slide.exiting {
-  z-index: 1;
-  pointer-events: none;
+.top-header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900);
+  letter-spacing: -0.3px;
+}
+.top-header .subtitle {
+  font-size: 12px;
+  color: var(--gray-400);
+  margin-left: auto;
+}
+/* Tab navigation */
+.tab-nav {
+  background: white;
+  border-bottom: 2px solid var(--gray-200);
+  display: flex;
+  gap: 0;
+  padding: 0 24px;
+  overflow-x: auto;
+  position: sticky;
+  top: 65px;
+  z-index: 99;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-nav::-webkit-scrollbar { height: 0; }
+.tab-btn {
+  padding: 14px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-400);
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tab-btn:hover { color: var(--gray-600); }
+.tab-btn.active {
+  color: var(--blue-primary);
+  border-bottom-color: var(--blue-primary);
+}
+.tab-btn svg { width: 16px; height: 16px; }
+/* Tab content */
+.tab-content { display: none; padding: 32px; max-width: 1100px; margin: 0 auto; }
+.tab-content.active { display: block; }
+
+/* Typography */
+h2 {
+  font-size: 22px; font-weight: 700; color: var(--gray-900);
+  margin-bottom: 24px; letter-spacing: -0.3px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--gray-200);
+}
+h3 {
+  font-size: 17px; font-weight: 700; color: var(--blue-primary);
+  margin: 28px 0 14px;
+}
+h4 {
+  font-size: 15px; font-weight: 600; color: var(--gray-800);
+  margin: 20px 0 10px;
 }
 
-/* 噪点纹理 */
-.slide::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-  opacity: 0.018;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  z-index: 0;
+/* Cards */
+.card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
 }
-
-/* 舞台顶部光晕 */
-.slide::before {
-  content: '';
-  position: absolute;
-  top: -20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120%;
-  height: 50%;
-  background: radial-gradient(ellipse, rgba(255,255,255,0.03) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.slide > * { position: relative; z-index: 1; }
-
-/* 非活动 slide 优化 — 用 visibility 替代 content-visibility 避免渲染闪烁 */
-.slide:not(.active):not(.exiting) { visibility: hidden; }
-
-/* === 背景渐变预设 === */
-.slide.bg-spotlight {
-  background:
-    radial-gradient(ellipse 60% 45% at 50% -10%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 40%, transparent 70%),
-    radial-gradient(ellipse 25% 80% at -5% 50%, rgba(240,173,78,0.03) 0%, transparent 70%),
-    var(--bg-primary);
-}
-.slide.bg-cosmos {
-  background:
-    radial-gradient(ellipse 35% 40% at 75% 25%, rgba(100,80,180,0.10) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 35% at 20% 70%, rgba(60,100,200,0.06) 0%, transparent 70%),
-    linear-gradient(180deg, #06060A 0%, #0C0C18 35%, #0A0A14 65%, #080810 100%);
-}
-.slide.bg-sunset {
-  background:
-    radial-gradient(ellipse 100% 40% at 50% 100%, rgba(231,76,60,0.06) 0%, rgba(240,173,78,0.03) 40%, transparent 70%),
-    linear-gradient(180deg, #0A0A0C 0%, #12101A 30%, #1A1218 60%, #1C1410 100%);
-}
-
-/* === 转场动画 === */
-/* 不使用 transition — 只用 animation，避免 transition+animation 冲突导致闪跳 */
-.slide.active { visibility: visible; }
-.slide.exiting { visibility: visible; }
-.slide.transition-push.active { animation: pushInRight 0.7s cubic-bezier(0.4,0,0.2,1) both; }
-.slide.transition-push.exiting { animation: pushOutLeft 0.7s cubic-bezier(0.4,0,0.2,1) both; }
-.slide.transition-zoom.active { animation: zoomIn 0.8s cubic-bezier(0.25,0.46,0.45,0.94) both; }
-.slide.transition-zoom.exiting { animation: zoomOut 0.8s cubic-bezier(0.25,0.46,0.45,0.94) both; }
-.slide.transition-dissolve.active { animation: dissolveIn 1.0s ease both; }
-.slide.transition-dissolve.exiting { animation: dissolveOut 1.0s ease both; }
-.slide.transition-push-rev.active { animation: pushInLeft 0.7s cubic-bezier(0.4,0,0.2,1) both; }
-.slide.transition-push-rev.exiting { animation: pushOutRight 0.7s cubic-bezier(0.4,0,0.2,1) both; }
-/* 无转场 class 时直接显示（不触发额外动画，避免 cleanup 后二次闪烁） */
-.slide.active:not([class*="transition-"]) { opacity: 1; }
-
-@keyframes pushInRight { from{transform:translate3d(100%,0,0);opacity:.8} to{transform:translate3d(0,0,0);opacity:1} }
-@keyframes pushOutLeft { from{transform:translate3d(0,0,0);opacity:1} to{transform:translate3d(-30%,0,0);opacity:0} }
-@keyframes pushInLeft { from{transform:translate3d(-100%,0,0);opacity:.8} to{transform:translate3d(0,0,0);opacity:1} }
-@keyframes pushOutRight { from{transform:translate3d(0,0,0);opacity:1} to{transform:translate3d(30%,0,0);opacity:0} }
-@keyframes zoomIn { from{transform:scale3d(.85,.85,1);opacity:0} to{transform:scale3d(1,1,1);opacity:1} }
-@keyframes zoomOut { from{transform:scale3d(1,1,1);opacity:1} to{transform:scale3d(1.15,1.15,1);opacity:0} }
-@keyframes dissolveIn { 0%{opacity:0;filter:blur(8px) saturate(.5)} 50%{filter:blur(3px) saturate(.8)} 100%{opacity:1;filter:blur(0) saturate(1)} }
-@keyframes dissolveOut { 0%{opacity:1;filter:blur(0)} 100%{opacity:0;filter:blur(8px) saturate(.3)} }
-
-/* === 进场动画 === */
-.anim { opacity: 0; }
-.slide.active .anim-up { animation: animUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
-.slide.active .anim-scale { animation: animScale 0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
-.slide.active .anim-blur { animation: animBlur 1s cubic-bezier(0.22,1,0.36,1) both; }
-.slide.active .anim-left { animation: animLeft 0.7s cubic-bezier(0.22,1,0.36,1) both; }
-.slide.active .anim-right { animation: animRight 0.7s cubic-bezier(0.22,1,0.36,1) both; }
-@keyframes animUp { from{opacity:0;transform:translate3d(0,30px,0)} to{opacity:1;transform:translate3d(0,0,0)} }
-@keyframes animScale { from{opacity:0;transform:scale3d(.8,.8,1)} to{opacity:1;transform:scale3d(1,1,1)} }
-@keyframes animBlur { from{opacity:0;filter:blur(12px)} to{opacity:1;filter:blur(0)} }
-@keyframes animLeft { from{opacity:0;transform:translate3d(40px,0,0)} to{opacity:1;transform:translate3d(0,0,0)} }
-@keyframes animRight { from{opacity:0;transform:translate3d(-40px,0,0)} to{opacity:1;transform:translate3d(0,0,0)} }
-
-/* 结尾页呼吸动画 */
-.slide[data-slide-type="closing"] .accent-line {
-  animation: breathe 3s ease-in-out infinite;
-}
-@keyframes breathe {
-  0%, 100% { opacity: 0.6; box-shadow: 0 0 20px var(--accent-glow); }
-  50% { opacity: 1; box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(231,76,60,0.1); }
-}
-
-/* 开场页装饰光点 */
-.slide[data-slide-type="opening"]::before {
-  background:
-    radial-gradient(circle 2px at 15% 20%, rgba(255,255,255,0.15), transparent 3px),
-    radial-gradient(circle 1.5px at 80% 30%, rgba(255,255,255,0.1), transparent 3px),
-    radial-gradient(circle 1px at 45% 75%, rgba(255,255,255,0.08), transparent 2px),
-    radial-gradient(circle 2px at 70% 65%, rgba(255,255,255,0.06), transparent 3px),
-    radial-gradient(circle 1px at 25% 55%, rgba(255,255,255,0.12), transparent 2px),
-    radial-gradient(ellipse 60% 45% at 50% -10%, rgba(255,255,255,0.06) 0%, transparent 70%) !important;
-}
-
-/* auto-stagger */
-.slide.active .auto-stagger > .anim:nth-child(1) { animation-delay: 0s; }
-.slide.active .auto-stagger > .anim:nth-child(2) { animation-delay: 0.12s; }
-.slide.active .auto-stagger > .anim:nth-child(3) { animation-delay: 0.24s; }
-.slide.active .auto-stagger > .anim:nth-child(4) { animation-delay: 0.36s; }
-.slide.active .auto-stagger > .anim:nth-child(5) { animation-delay: 0.48s; }
-
-/* === 排版 === */
-.hero-title {
-  font-family: var(--font-zh);
-  font-size: clamp(2.5rem, 10vw, 7rem);
-  font-weight: 900;
-  color: var(--text-hero);
-  text-align: center;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-}
-.subtitle {
-  font-family: var(--font-zh);
-  font-size: clamp(1rem, 3vw, 1.75rem);
-  font-weight: 400;
-  color: var(--text-secondary);
-  text-align: center;
-  line-height: 1.8;
-  margin-top: 2rem;
-  max-width: 600px;
-}
-.accent-line {
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-light));
-  border-radius: 2px;
-  margin: 1.5rem auto;
-  box-shadow: 0 0 20px var(--accent-glow), 0 0 40px rgba(231,76,60,0.15);
-}
-.big-number {
-  font-family: var(--font-num);
-  font-size: clamp(4rem, 18vw, 14rem);
-  font-weight: 900;
-  color: var(--accent);
-  line-height: 0.95;
-  font-variant-numeric: tabular-nums lining-nums;
-  text-shadow: 0 4px 24px var(--accent-glow), 0 0 80px rgba(231,76,60,0.12);
-  position: relative;
-}
-/* 数字背后的大光晕 */
-.big-number::after {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 120%; height: 200%;
-  background: radial-gradient(ellipse, rgba(231,76,60,0.06) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: -1;
-}
-.big-number .unit {
-  font-size: 0.25em;
-  font-weight: 400;
-  color: var(--text-secondary);
-  vertical-align: super;
-}
-.section-title {
-  font-family: var(--font-zh);
-  font-size: clamp(1.8rem, 5vw, 3.5rem);
-  font-weight: 800;
-  color: var(--text-hero);
-  text-align: center;
-  line-height: 1.3;
-  letter-spacing: 0.02em;
-}
-.body-text {
-  font-family: var(--font-zh);
-  font-size: clamp(0.875rem, 2.2vw, 1.25rem);
-  font-weight: 400;
-  color: var(--text-secondary);
-  text-align: center;
-  line-height: 1.8;
-  max-width: 560px;
-}
-.label-tag {
-  font-family: var(--font-en);
-  font-size: clamp(0.6rem, 1.2vw, 0.75rem);
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 1.2rem;
-  padding: 6px 16px;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 20px;
-  background: rgba(255,255,255,0.02);
-}
-
-/* === 拟物化卡片 === */
-.skeu-card {
-  background: var(--card-bg);
-  border: var(--card-border);
-  border-radius: var(--card-radius);
-  box-shadow: var(--card-shadow);
-  backdrop-filter: blur(24px) saturate(180%) brightness(1.1);
-  -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.1);
-  padding: clamp(20px, 4vmin, 40px);
-  position: relative;
-  overflow: hidden;
-}
-/* 顶部高光弧线 */
-.skeu-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 10%; right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3) 50%, transparent);
-  pointer-events: none;
-  z-index: 1;
-}
-/* hover 抬升微动效 */
-.skeu-card {
-  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
-}
-.skeu-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.1);
-}
-
-/* 内部光晕 — 模拟环境光散射 */
-.skeu-card::after {
-  content: '';
-  position: absolute;
-  top: -50%; left: -50%;
-  width: 200%; height: 200%;
-  background: radial-gradient(ellipse 40% 30% at 30% 20%, rgba(255,255,255,0.04), transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-
 .card-grid {
   display: grid;
-  gap: 20px;
-  width: 100%;
-  max-width: 900px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
 }
-.card-grid-3 { grid-template-columns: repeat(3, 1fr); }
-.card-grid-2 { grid-template-columns: repeat(2, 1fr); }
-@media (max-width: 768px) {
-  .card-grid-3 { grid-template-columns: 1fr; }
-  .card-grid-2 { grid-template-columns: 1fr; }
+.card-sm {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
 }
 
-.card-icon-wrap {
-  width: 56px; height: 56px;
-  margin-bottom: 16px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-  border: 1px solid rgba(255,255,255,0.06);
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06);
+/* Hero quote */
+.hero-quote {
+  background: linear-gradient(135deg, var(--blue-primary), #1a35cc);
+  color: white;
+  padding: 48px 40px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  text-align: center;
 }
-.card-icon {
-  width: 28px; height: 28px;
-  color: rgba(255,255,255,0.85);
-}
-.card-title {
-  font-size: clamp(1rem, 2vw, 1.25rem);
+.hero-quote .quote-text {
+  font-size: 26px;
   font-weight: 700;
-  color: var(--text-hero);
-  margin-bottom: 8px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
 }
-.card-desc {
-  font-size: clamp(0.75rem, 1.5vw, 0.9rem);
-  color: var(--text-secondary);
-  line-height: 1.7;
+.hero-quote .quote-sub {
+  font-size: 15px;
+  opacity: 0.8;
+  font-weight: 400;
 }
 
-/* === 对比页 === */
-.comparison {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 32px;
-  align-items: center;
-  max-width: 800px;
-  width: 100%;
-}
-.comparison .vs {
-  font-family: var(--font-en);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.2em;
+/* Blue answer box */
+.answer-box {
+  background: var(--blue-pale);
+  border-left: 4px solid var(--blue-tech);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 16px 20px;
+  margin: 10px 0;
   position: relative;
-  padding: 16px 0;
 }
-/* 竖向渐变线替代纯文字分隔 */
-.comparison .vs::before,
-.comparison .vs::after {
+.answer-box .copy-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: var(--blue-tech);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.85;
+  min-height: 36px;
+  transition: opacity 0.2s;
+}
+.answer-box .copy-btn:hover { opacity: 1; }
+
+/* Red line box */
+.redline-box {
+  background: var(--red-bg);
+  border-left: 4px solid var(--red-danger);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 18px;
+  margin: 10px 0;
+  color: var(--red-danger);
+  font-weight: 600;
+}
+
+/* Danger badges */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.badge-high { background: var(--red-bg); color: var(--red-danger); }
+.badge-mid { background: var(--orange-bg); color: var(--orange-warn); }
+.badge-low { background: var(--blue-light); color: var(--blue-tech); }
+.badge-green { background: var(--green-bg); color: var(--green-ok); }
+
+/* Collapsible */
+.collapsible {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.collapsible-header {
+  padding: 16px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+  transition: background 0.15s;
+}
+.collapsible-header:hover { background: var(--gray-50); }
+.collapsible-header .arrow {
+  transition: transform 0.25s;
+  color: var(--gray-400);
+  flex-shrink: 0;
+}
+.collapsible.open .collapsible-header .arrow { transform: rotate(90deg); }
+.collapsible-header .scene-num {
+  width: 32px; height: 32px;
+  background: var(--blue-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+  flex-shrink: 0;
+}
+.collapsible-header .scene-title {
+  flex: 1;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--gray-800);
+}
+.collapsible-body {
+  display: none;
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--gray-200);
+}
+.collapsible.open .collapsible-body { display: block; padding-top: 16px; }
+
+/* Flow steps */
+.flow-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 16px 0;
+}
+.flow-step {
+  flex: 1;
+  min-width: 140px;
+  padding: 16px;
+  background: white;
+  border: 1px solid var(--gray-200);
+  position: relative;
+  text-align: center;
+}
+.flow-step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.flow-step:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.flow-step .step-num {
+  font-size: 11px;
+  color: var(--blue-tech);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.flow-step .step-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+.flow-step .step-desc {
+  font-size: 12px;
+  color: var(--gray-600);
+  margin-top: 4px;
+}
+.flow-step::after {
   content: '';
   position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid var(--gray-300);
+  z-index: 1;
+}
+.flow-step:last-child::after { display: none; }
+
+/* Force map */
+.force-map {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+.force-card {
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  background: white;
+}
+.force-card .role {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.force-card .desc {
+  font-size: 13px;
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+
+/* Goals */
+.goal-card {
+  padding: 20px 24px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 12px;
+}
+.goal-gold { background: linear-gradient(135deg, #FFF8E7, #FFF0C2); border: 1px solid #F0D060; }
+.goal-silver { background: linear-gradient(135deg, #F5F7FA, #E8ECF2); border: 1px solid #C0C8D8; }
+.goal-bronze { background: linear-gradient(135deg, #FDF5EE, #FAEADB); border: 1px solid #E0C0A0; }
+.goal-card .goal-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 8px;
+}
+.goal-gold .goal-label { color: #B8860B; }
+.goal-silver .goal-label { color: var(--gray-600); }
+.goal-bronze .goal-label { color: #A0744E; }
+.goal-card .goal-text { font-size: 14px; font-weight: 500; margin-bottom: 10px; }
+.goal-card .goal-script { font-size: 13px; color: var(--gray-600); font-style: italic; }
+
+/* Checklist */
+.checklist { list-style: none; padding: 0; }
+.checklist li {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--gray-100);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.checklist li:hover { background: var(--gray-50); }
+.checklist li.checked { opacity: 0.5; text-decoration: line-through; }
+.checklist li .check-box {
+  width: 20px; height: 20px;
+  border: 2px solid var(--gray-300);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.checklist li.checked .check-box {
+  background: var(--blue-primary);
+  border-color: var(--blue-primary);
+}
+
+/* Table */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0; }
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 400px;
+}
+.data-table th {
+  background: var(--gray-100);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--gray-600);
+  border-bottom: 2px solid var(--gray-200);
+}
+.data-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+/* Pursuit chain */
+.chain-level {
+  margin: 12px 0;
+  padding-left: 20px;
+  border-left: 3px solid var(--gray-200);
+}
+.chain-level .level-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gray-400);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.chain-level:nth-child(1) { border-left-color: var(--blue-tech); }
+.chain-level:nth-child(2) { border-left-color: var(--orange-warn); }
+.chain-level:nth-child(3) { border-left-color: var(--red-danger); }
+
+/* Note box */
+.note-box {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin: 10px 0;
+  font-size: 13px;
+  color: var(--gray-600);
+}
+
+/* Law article */
+.law-article {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.law-article .law-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blue-primary);
+  margin-bottom: 10px;
+}
+.law-article .law-text {
+  font-size: 13px;
+  color: var(--gray-600);
+  background: var(--gray-50);
+  padding: 12px;
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  line-height: 1.8;
+}
+
+/* Redline list */
+.redline-item {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.redline-item .rl-num {
+  width: 32px; height: 32px;
+  background: var(--red-bg);
+  color: var(--red-danger);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+  flex-shrink: 0;
+}
+.redline-item .rl-content { flex: 1; }
+.redline-item .rl-title { font-weight: 700; color: var(--red-danger); margin-bottom: 6px; }
+.redline-item .rl-reason { font-size: 13px; color: var(--gray-600); margin-bottom: 6px; }
+.redline-item .rl-alt {
+  font-size: 13px;
+  color: var(--green-ok);
+  font-weight: 500;
+}
+
+/* Minutes comparison */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+.compare-col {
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+.compare-col.bad { background: var(--red-bg); border: 1px solid #E0A0A0; }
+.compare-col.good { background: var(--green-bg); border: 1px solid #A0D0A0; }
+.compare-col h4 { margin-top: 0; }
+
+/* Pocket cards */
+.pocket-card {
+  background: linear-gradient(135deg, var(--blue-pale), white);
+  border: 2px solid var(--blue-tech);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 12px;
+}
+.pocket-card .pc-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue-tech);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 40px;
   left: 50%;
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.12), transparent);
-}
-.comparison .vs::before { bottom: 100%; }
-.comparison .vs::after { top: 100%; }
-@media (max-width: 768px) {
-  .comparison { grid-template-columns: 1fr; gap: 16px; }
-  .comparison .vs {
-    display: block;
-    text-align: center;
-    padding: 4px 0;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-}
-
-/* === 引用页 === */
-.quote-mark {
-  font-size: clamp(4rem, 10vw, 8rem);
-  font-weight: 200;
-  color: var(--accent);
-  line-height: 0.6;
-  opacity: 0.25;
-  text-shadow: 0 4px 16px var(--accent-glow);
-  font-family: Georgia, "Times New Roman", serif;
-  margin-bottom: 0.5rem;
-}
-.quote-text {
-  font-family: var(--font-zh);
-  font-size: clamp(1.2rem, 3.5vw, 2.2rem);
-  font-weight: 300;
-  color: var(--text-hero);
-  text-align: center;
-  line-height: 2.0;
-  letter-spacing: 0.06em;
-  max-width: 700px;
-}
-.quote-author {
-  font-size: clamp(0.75rem, 1.5vw, 0.95rem);
-  color: var(--text-muted);
-  margin-top: 2rem;
-  letter-spacing: 0.08em;
-}
-.quote-author {
-  font-size: clamp(0.75rem, 1.5vw, 1rem);
-  color: var(--text-muted);
-  margin-top: 1.5rem;
-}
-
-/* === 导航控件 === */
-.controls {
-  position: fixed;
-  bottom: 50%;
-  transform: translateY(50%);
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-}
-.controls.left { left: 20px; }
-.controls.right { right: 20px; }
-.controls button {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: rgba(255,255,255,0.6);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-.controls button:hover {
-  background: rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.9);
-  transform: scale(1.05);
-}
-.controls button:active { transform: scale(0.95); }
-.controls button svg { width: 20px; height: 20px; }
-
-/* === 进度条导航 === */
-.progress-bar-nav {
-  position: fixed;
-  bottom: 24px; left: 50%;
-  transform: translateX(-50%);
-  display: flex; gap: 4px;
-  padding: 8px 16px;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.06);
-  z-index: 100;
-  transition: opacity 0.4s ease;
-}
-.progress-segment {
-  width: 24px; height: 3px;
-  border-radius: 2px;
-  background: rgba(255,255,255,0.15);
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
-}
-.progress-segment.active {
-  width: 40px;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent-glow);
-}
-.progress-segment.visited { background: rgba(255,255,255,0.3); }
-
-/* 进度条 hover 预览 */
-.progress-segment { position: relative; }
-.progress-segment .tooltip {
-  position: absolute;
-  bottom: 16px; left: 50%;
-  transform: translateX(-50%) translateY(4px) scale(0.95);
-  padding: 4px 10px;
-  background: rgba(30,30,30,0.95);
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.08);
-  font-family: var(--font-zh);
-  font-size: 0.65rem;
-  color: rgba(255,255,255,0.7);
-  white-space: nowrap;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--gray-900);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 9999;
   opacity: 0;
+  transition: all 0.3s;
   pointer-events: none;
-  transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
-  z-index: 101;
 }
-.progress-segment:hover .tooltip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0) scale(1);
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tab-nav { padding: 0 8px; }
+  .tab-btn { padding: 12px 12px; font-size: 12px; }
+  .tab-content { padding: 20px 16px; }
+  .hero-quote { padding: 32px 24px; }
+  .hero-quote .quote-text { font-size: 20px; }
+  .force-map { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .flow-steps { flex-direction: column; }
+  .flow-step { border-radius: var(--radius) !important; }
+  .flow-step::after { display: none; }
+  .card-grid { grid-template-columns: 1fr; }
+  .top-header { padding: 12px 16px; }
+  .top-header h1 { font-size: 15px; }
+}
+@media (max-width: 480px) {
+  .tab-btn { padding: 12px 10px; font-size: 12px; min-height: 44px; }
+  .tab-btn svg { display: none; }
+  .copy-btn { padding: 10px 16px; font-size: 13px; min-height: 44px; }
 }
 
-/* === 页码指示器 === */
-.page-indicator {
-  position: fixed;
-  bottom: 28px; right: 32px;
-  font-family: var(--font-num);
-  font-size: 0.8rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-muted);
-  z-index: 100;
-  user-select: none;
+/* Print */
+@media print {
+  .top-header, .tab-nav { position: static; }
+  .tab-content { display: block !important; page-break-before: always; }
+  .copy-btn { display: none !important; }
 }
-.page-indicator .current { color: rgba(255,255,255,0.8); font-weight: 600; }
 
-/* === 全屏按钮 === */
-.fullscreen-btn {
-  position: fixed;
-  bottom: 24px; left: 24px;
-  width: 36px; height: 36px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: rgba(255,255,255,0.4);
-  cursor: pointer;
+/* Decision tree */
+.decision-tree {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin: 16px 0;
+}
+.dt-node {
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  margin: 8px 0;
+  font-size: 13px;
+}
+.dt-question {
+  background: var(--blue-pale);
+  border: 1px solid var(--blue-tech);
+  font-weight: 600;
+  color: var(--blue-primary);
+}
+.dt-yes {
+  background: var(--green-bg);
+  border: 1px solid #A0D0A0;
+  margin-left: 24px;
+}
+.dt-no {
+  background: var(--orange-bg);
+  border: 1px solid #E0C0A0;
+  margin-left: 24px;
+}
+.dt-action {
+  background: white;
+  border: 2px solid var(--blue-primary);
+  margin-left: 48px;
+  font-weight: 600;
+}
+
+/* Evidence meter */
+.evidence-meter {
   display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 100;
-  transition: all 0.2s ease;
+  gap: 8px;
+  margin: 12px 0;
 }
-.fullscreen-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); }
-.fullscreen-btn svg { width: 16px; height: 16px; }
-
-/* === 全屏隐藏控件 === */
-.is-fullscreen.controls-hidden .controls,
-.is-fullscreen.controls-hidden .progress-bar-nav,
-.is-fullscreen.controls-hidden .fullscreen-btn,
-.is-fullscreen.controls-hidden .page-indicator {
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.8s ease;
+.meter-bar {
+  flex: 1;
+  height: 20px;
+  background: var(--gray-200);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
 }
-.is-fullscreen.controls-hidden { cursor: none; }
-
-/* === Safe Area === */
-.fullscreen-btn {
-  left: calc(24px + env(safe-area-inset-left, 0px));
-  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+.meter-fill-real {
+  height: 100%;
+  background: var(--red-danger);
 }
-.progress-bar-nav { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
-.page-indicator { bottom: calc(28px + env(safe-area-inset-bottom, 0px)); }
-
-/* === 响应式 === */
-@media (max-width: 1024px) { :root { --slide-padding: 6vmin; } }
-@media (max-width: 768px) {
-  :root { --slide-padding: 5vmin; }
-  .controls { display: none; }
-}
-@media (min-aspect-ratio: 21/9) {
-  .slide > * { max-width: 1400px; }
+.meter-fill-bluff {
+  height: 100%;
+  background: var(--gray-300);
 }
 
-/* === prefers-reduced-motion === */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+/* Timeline */
+.timeline { position: relative; padding-left: 32px; margin: 16px 0; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--gray-200);
+}
+.timeline-item { position: relative; margin-bottom: 20px; }
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -27px; top: 6px;
+  width: 10px; height: 10px;
+  background: var(--blue-primary);
+  border-radius: 50%;
+}
+.timeline-item .tl-time {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue-tech);
+  margin-bottom: 4px;
 }
 
-/* === 打印 === */
-@media print {
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .slide {
-    page-break-after: always; break-after: page;
-    position: relative !important; opacity: 1 !important;
-    transform: none !important; display: flex !important;
-  }
-  .slide { visibility: visible !important; opacity: 1 !important; }
-  .controls, .progress-bar-nav, .fullscreen-btn, .page-indicator { display: none !important; }
-  * { animation: none !important; transition: none !important; }
-  @page { size: landscape; margin: 0; }
+/* Subtle section divider */
+.section-divider {
+  height: 1px;
+  background: var(--gray-200);
+  margin: 32px 0;
 }
 
-/* === 焦点指示器 === */
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-:focus:not(:focus-visible) { outline: none; }
-
-/* === 屏幕阅读器 === */
-.sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+/* Keyword badge in minutes */
+.kw-bad {
+  display: inline-block;
+  background: var(--red-bg);
+  color: var(--red-danger);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 2px;
 }
 </style>
 </head>
 <body>
-<!-- 查看密码门 -->
+<!-- 访问密码门 -->
 <div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
-  <div style="font-family:var(--font-en);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div>
+  <div style="font-family:-apple-system,sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div>
   <div style="display:flex;gap:8px;align-items:center;">
     <input id="auth-input" type="password" placeholder="Access Code" autocomplete="off"
-      style="width:200px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:1rem;font-family:var(--font-en);outline:none;text-align:center;letter-spacing:.1em;"
+      style="width:200px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:1rem;font-family:-apple-system,sans-serif;outline:none;text-align:center;letter-spacing:.1em;"
       onfocus="this.style.borderColor='rgba(255,255,255,.2)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
   </div>
   <div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0;transition:opacity .3s">incorrect code</div>
   <div style="font-size:.6rem;color:rgba(255,255,255,.15);margin-top:20px">Press Enter to continue</div>
 </div>
 <script>
-// === 密码保护 ===
-const AUTH_HASH = '81a1a2439b6d34b7e685086ca8d2f9c2bbe94950c04d1d3e97159b70bbe98c37'; // 访问密码: kenno2026
+const AUTH_HASH = '407d4fa7f26d3afa96646076136928241136f4c181caa0380b732d18e1bba395';
 document.addEventListener('DOMContentLoaded', function(){
-  if(sessionStorage.getItem('kenwebppt-authed')==='1'){document.getElementById('auth-gate').remove();return}
+  if(sessionStorage.getItem('kengit-authed')==='1'){document.getElementById('auth-gate').remove();return}
   const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
-  const pres=document.querySelector('.presentation'); if(pres) pres.style.display='none';
-  document.querySelectorAll('.controls,.progress-bar-nav,.page-indicator,.fullscreen-btn').forEach(e=>e.style.display='none');
+  const mainEls=Array.from(document.body.children).filter(el=>el.id!=='auth-gate'&&el.tagName!=='SCRIPT'&&el.tagName!=='SVG');
+  mainEls.forEach(el=>{el.dataset.kengitHidden='1';el.style.display='none';});
   setTimeout(()=>input.focus(),100);
   input.addEventListener('keydown',async e=>{
     if(e.key!=='Enter')return;
@@ -670,12 +704,11 @@ document.addEventListener('DOMContentLoaded', function(){
     const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(val));
     const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
     if(hash===AUTH_HASH){
-      sessionStorage.setItem('kenwebppt-authed','1');
+      sessionStorage.setItem('kengit-authed','1');
       gate.style.opacity='0';gate.style.transition='opacity .5s';
       setTimeout(()=>{
         gate.remove();
-        if(pres) pres.style.display='';
-        document.querySelectorAll('.controls,.progress-bar-nav,.page-indicator,.fullscreen-btn').forEach(e=>e.style.display='');
+        document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});
       },500);
     }else{
       err.style.opacity='1';input.value='';input.style.borderColor='#E74C3C';
@@ -685,337 +718,1419 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
-<!-- 公共 SVG 定义 -->
-<svg style="position:absolute;width:0;height:0" aria-hidden="true">
-  <defs>
-    <linearGradient id="metalGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="rgba(255,255,255,0.22)"/>
-      <stop offset="40%" stop-color="rgba(255,255,255,0.08)"/>
-      <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
-    </linearGradient>
-    <filter id="iconShadow">
-      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.45)"/>
-    </filter>
-  </defs>
-</svg>
+<div class="top-header">
+  <div class="logo-icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+  </div>
+  <h1>AI会议备战手册</h1>
+  <span class="subtitle">策略建议书 | 机密文件 | 2026.04</span>
+</div>
 
-<!-- 无障碍 -->
-<a href="#slide-1" class="sr-only">跳到演示内容</a>
-<div class="sr-only" role="note">使用左右箭头键切换幻灯片。按 F 键全屏。按 Escape 退出全屏。</div>
-<div class="sr-only" aria-live="polite" aria-atomic="true" id="slide-announce">第 1 页，共 8 页</div>
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn active" data-tab="tab1">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    战略总览
+  </button>
+  <button class="tab-btn" data-tab="tab2">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    对手底牌
+  </button>
+  <button class="tab-btn" data-tab="tab3">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    场景模拟器
+  </button>
+  <button class="tab-btn" data-tab="tab4">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    追问升级链
+  </button>
+  <button class="tab-btn" data-tab="tab5">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    法律反击
+  </button>
+  <button class="tab-btn" data-tab="tab6">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    红线清单
+  </button>
+  <button class="tab-btn" data-tab="tab7">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    纪要攻防
+  </button>
+  <button class="tab-btn" data-tab="tab8">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    行动清单
+  </button>
+</nav>
 
-<!-- === 幻灯片 === -->
-<div class="presentation">
+<div id="toast" class="toast">已复制到剪贴板</div>
 
-  <!-- 第1页：断言开场 -->
-  <section class="slide active bg-spotlight" id="slide-1" data-slide-type="opening" role="tabpanel" aria-roledescription="幻灯片" aria-label="开场">
-    <div class="label-tag anim anim-up" style="animation-delay:0s">THE FUTURE OF SOFTWARE</div>
-    <h1 class="hero-title anim anim-up" style="animation-delay:0.15s">代码的终局</h1>
-    <div class="accent-line anim anim-scale" style="animation-delay:0.35s"></div>
-    <p class="subtitle anim anim-up" style="animation-delay:0.45s">AI 正在重新定义软件开发的每一个环节</p>
-  </section>
+<!-- ==================== TAB 1: 战略总览 ==================== -->
+<div class="tab-content active" id="tab1">
 
-  <!-- 第2页：痛点共鸣 -->
-  <section class="slide" id="slide-2" data-slide-type="problem" role="tabpanel" aria-roledescription="幻灯片" aria-label="问题">
-    <div class="label-tag anim anim-up">THE PROBLEM</div>
-    <h2 class="section-title anim anim-up" style="animation-delay:0.1s">你有没有想过</h2>
-    <p class="subtitle anim anim-up" style="animation-delay:0.2s" style="margin-top:1.5rem">
-      一个软件工程师，真正在写代码的时间<br>只占工作时间的 30%
-    </p>
-    <p class="body-text anim anim-up" style="animation-delay:0.3s;margin-top:1rem;color:var(--text-muted)">
-      其余时间花在调试、搜索文档、理解遗留代码、开会对齐需求
-    </p>
-  </section>
+  <div class="hero-quote">
+    <div class="quote-text">不攻击防线，把守备部队变成后勤</div>
+    <div class="quote-sub">IT要管控权就给他，政府事务部要免责就给他。我们要的是"做的权利"，他们要的是"管的权力"——先拿出方案的人定义框架。</div>
+  </div>
 
-  <!-- 第3页：数据展示 -->
-  <section class="slide" id="slide-3" data-slide-type="data" role="tabpanel" aria-roledescription="幻灯片" aria-label="数据">
-    <div class="label-tag anim anim-up">PRODUCTIVITY GAIN</div>
-    <div class="big-number anim anim-scale" style="animation-delay:0.1s">
-      <span class="animate-number" data-target="73" data-duration="1500">0</span><span class="unit">%</span>
+  <div class="card">
+    <h4 style="margin-top:0">博弈本质</h4>
+    <p style="font-size:16px; font-weight:600; color:var(--blue-primary)">这不是"要不要用AI"的技术讨论，是"谁主导AI治理框架"的权力博弈。</p>
+  </div>
+
+  <h3>五条确定前提</h3>
+  <div class="card-grid">
+    <div class="card-sm">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <strong style="color:var(--green-ok)">前提一</strong>
+      </div>
+      <p style="font-size:13px">大老板明确支持AI探索——这是不变的基石</p>
     </div>
-    <p class="subtitle anim anim-up" style="animation-delay:0.3s">的开发者表示 AI 工具<br>显著提升了编码效率</p>
-    <p class="body-text anim anim-up" style="animation-delay:0.5s;color:var(--text-muted);font-size:0.8rem;margin-top:1rem">
-      Source: GitHub 2025 Developer Survey
-    </p>
-  </section>
-
-  <!-- 第4页：转折/洞察 -->
-  <section class="slide bg-cosmos" id="slide-4" data-slide-type="insight" role="tabpanel" aria-roledescription="幻灯片" aria-label="核心观点">
-    <h2 class="hero-title anim anim-scale" style="font-size:clamp(2rem,8vw,5rem)">
-      AI 不是替代开发者<br>
-      <span style="color:var(--accent)">而是重塑开发</span>
-    </h2>
-  </section>
-
-  <!-- 第5页：三个核心变化 -->
-  <section class="slide" id="slide-5" data-slide-type="data" role="tabpanel" aria-roledescription="幻灯片" aria-label="三个变化">
-    <div class="label-tag anim anim-up">THREE SHIFTS</div>
-    <h2 class="section-title anim anim-up" style="animation-delay:0.1s;margin-bottom:2rem">三个根本性转变</h2>
-    <div class="card-grid card-grid-3 auto-stagger">
-      <div class="skeu-card anim anim-up">
-        <div class="card-icon-wrap"><svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-        </svg></div>
-        <div class="card-title">从编写到意图</div>
-        <div class="card-desc">开发者描述意图，AI 生成实现。写代码变成审代码。</div>
+    <div class="card-sm">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <strong style="color:var(--orange-warn)">前提二</strong>
       </div>
-      <div class="skeu-card anim anim-up">
-        <div class="card-icon-wrap"><svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-        </svg></div>
-        <div class="card-title">从串行到并行</div>
-        <div class="card-desc">多个 AI Agent 同时工作，开发速度呈指数级提升。</div>
-      </div>
-      <div class="skeu-card anim anim-up">
-        <div class="card-icon-wrap"><svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>
-        </svg></div>
-        <div class="card-title">从工具到伙伴</div>
-        <div class="card-desc">AI 理解上下文、记住偏好，成为持续学习的协作者。</div>
-      </div>
+      <p style="font-size:13px">大老板不在会上——我们有授意但没有现场保护</p>
     </div>
-  </section>
-
-  <!-- 第6页：对比 -->
-  <section class="slide" id="slide-6" data-slide-type="comparison" role="tabpanel" aria-roledescription="幻灯片" aria-label="对比">
-    <div class="label-tag anim anim-up">BEFORE & AFTER</div>
-    <div class="comparison" style="margin-top:1rem">
-      <div class="skeu-card anim anim-left" style="text-align:center">
-        <div style="font-size:0.75rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">传统开发</div>
-        <div style="font-size:clamp(2rem,6vw,4rem);font-weight:900;font-family:var(--font-num);color:var(--text-secondary)">2-4</div>
-        <div style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">周 / 功能模块</div>
+    <div class="card-sm">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <strong style="color:var(--red-danger)">前提三</strong>
       </div>
-      <div class="vs anim anim-scale" style="animation-delay:0.2s">VS</div>
-      <div class="skeu-card anim anim-right" style="text-align:center">
-        <div style="font-size:0.75rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">AI 辅助开发</div>
-        <div style="font-size:clamp(2rem,6vw,4rem);font-weight:900;font-family:var(--font-num);color:var(--accent)">2-3</div>
-        <div style="font-size:0.85rem;color:var(--text-muted);margin-top:4px">天 / 功能模块</div>
-      </div>
+      <p style="font-size:13px">IT和政府事务部已私下对齐——联合出击是确定的</p>
     </div>
-    <p class="body-text anim anim-up" style="animation-delay:0.4s;margin-top:2rem">
-      交付速度提升 5-10 倍，而代码质量不降反升
-    </p>
-  </section>
+    <div class="card-sm">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <strong style="color:var(--green-ok)">前提四</strong>
+      </div>
+      <p style="font-size:13px">竞对分析只用了公开信息——法律上无障碍（21位专家100%共识）</p>
+    </div>
+    <div class="card-sm">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <strong style="color:var(--orange-warn)">前提五</strong>
+      </div>
+      <p style="font-size:13px">数据安全在中国是敏感议题——必须认真对待，不能轻视</p>
+    </div>
+  </div>
 
-  <!-- 第7页：引用金句 -->
-  <section class="slide bg-sunset" id="slide-7" data-slide-type="quote" role="tabpanel" aria-roledescription="幻灯片" aria-label="引用">
-    <div class="quote-mark anim anim-scale">"</div>
-    <p class="quote-text anim anim-blur" style="animation-delay:0.2s">
-      未来最稀缺的不是写代码的能力<br>
-      而是定义问题的能力
-    </p>
-    <div class="quote-author anim anim-up" style="animation-delay:0.5s">— 写给每一位软件工程师</div>
-  </section>
+  <h3>四方力量格局</h3>
+  <div class="force-map">
+    <div class="force-card" style="border-left:4px solid var(--blue-primary)">
+      <div class="role">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue-primary)" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        财务部老板
+      </div>
+      <div class="desc">会上最高级别，有大老板授意，是会议发起方。角色定位："建设性推动者"。</div>
+    </div>
+    <div class="force-card" style="border-left:4px solid var(--red-danger)">
+      <div class="role">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red-danger)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        IT部
+      </div>
+      <div class="desc">已重定义议题为"数据安全"，核心诉求是拿到AI工具审批权。审批权=否决权。</div>
+    </div>
+    <div class="force-card" style="border-left:4px solid var(--orange-warn)">
+      <div class="role">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--orange-warn)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        政府事务部
+      </div>
+      <div class="desc">被IT邀来做合规背书，核心诉求是"出事别找我"。与IT诉求不完全一致。</div>
+    </div>
+    <div class="force-card" style="border-left:4px solid #B8860B">
+      <div class="role">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        大老板（影子裁判）
+      </div>
+      <div class="desc">不在场但意志通过会议结论体现。支持AI探索的基调不变。</div>
+    </div>
+  </div>
 
-  <!-- 第8页：诗意收束 -->
-  <section class="slide" id="slide-8" data-slide-type="closing" role="tabpanel" aria-roledescription="幻灯片" aria-label="结尾">
-    <h2 class="hero-title anim anim-blur" style="font-weight:300;font-size:clamp(1.8rem,5vw,3.5rem);letter-spacing:0.05em">
-      代码只是手段<br>创造才是目的
-    </h2>
-    <div class="accent-line anim anim-scale" style="animation-delay:0.5s"></div>
-  </section>
+  <h3>三档目标</h3>
+  <div class="goal-card goal-gold">
+    <div class="goal-label">金档 — 最佳结果</div>
+    <div class="goal-text">公开信息分析场景确认可在规范管理下先行试点，成立联合工作组制定管理办法，财务部牵头业务需求，IT负责技术安全，政府事务部把关合规。</div>
+    <div class="answer-box" style="background:rgba(255,255,255,0.6)">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      <div class="goal-script">"今天很高效。试点场景和分工都定了，我来出纪要，各位确认后我们按节奏推。"</div>
+    </div>
+  </div>
+  <div class="goal-card goal-silver">
+    <div class="goal-label">银档 — 可接受结果</div>
+    <div class="goal-text">各方认同AI应用方向，同意先做评估框架，财务部保住牵头人角色。</div>
+    <div class="answer-box" style="background:rgba(255,255,255,0.6)">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      <div class="goal-script">"方向对齐了，细节需要各部门再碰。我先整理今天的要点和下一步建议，发给大家确认。"</div>
+    </div>
+  </div>
+  <div class="goal-card goal-bronze">
+    <div class="goal-label">铜档 — 底线结果</div>
+    <div class="goal-text">不形成任何对财务部不利的书面决议，不暴露已有使用细节，保留后续重启空间。</div>
+    <div class="answer-box" style="background:rgba(255,255,255,0.6)">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      <div class="goal-script">"今天讨论很充分，这件事比预想的复杂。我拉一个问题清单和推进框架发给各位，我们分步推。"</div>
+    </div>
+  </div>
 
 </div>
 
-<!-- 导航控件 -->
-<nav class="controls left" aria-label="上一页">
-  <button onclick="prevSlide()" aria-label="上一页">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-  </button>
-</nav>
-<nav class="controls right" aria-label="下一页">
-  <button onclick="nextSlide()" aria-label="下一页">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-  </button>
-</nav>
+<!-- ==================== TAB 2: 对手底牌 ==================== -->
+<div class="tab-content" id="tab2">
+  <h2>对手完整底牌</h2>
 
-<!-- 进度条 -->
-<div class="progress-bar-nav" role="tablist" aria-label="幻灯片导航"></div>
+  <h3>IT部总监进攻计划（6步流程图）</h3>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="step-num">STEP 1</div>
+      <div class="step-title">抢定调</div>
+      <div class="step-desc">开场5min，请政府事务部先讲"数据安全是红线"</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">STEP 2</div>
+      <div class="step-title">制造恐惧</div>
+      <div class="step-desc">政府事务部讲法规8min，基调从"AI很酷"变"AI很危险"</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">STEP 3</div>
+      <div class="step-title">风险轰炸</div>
+      <div class="step-desc">IT亲讲10min：三星案例+条款模糊+业务部门缺能力</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">STEP 4</div>
+      <div class="step-title">提管控方案</div>
+      <div class="step-desc">5min，"所有AI工具须经IT审批"——审批权在手可卡无限期</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">STEP 5</div>
+      <div class="step-title">陷阱式提问</div>
+      <div class="step-desc">"各部门有没有在用AI？"面向全体，实际瞄准财务部</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">STEP 6</div>
+      <div class="step-title">二次施压</div>
+      <div class="step-desc">"巡检发现有终端访问境外AI API"——暗示已有证据</div>
+    </div>
+  </div>
 
-<!-- 页码 -->
-<div class="page-indicator"><span class="current">1</span> / 8</div>
+  <div class="card" style="margin-top:20px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+      <div>
+        <h4 style="margin-top:0;color:var(--red-danger)">IT核心诉求</h4>
+        <p style="font-size:14px;font-weight:600">"AI必须过我的手"——审批权=否决权。不是禁止AI，是要管控权。</p>
+      </div>
+      <div>
+        <h4 style="margin-top:0;color:var(--orange-warn)">IT最怕</h4>
+        <p style="font-size:14px;font-weight:600">财务部带了比IT更专业的方案——业务部门主导AI应用，IT沦为服务商。</p>
+      </div>
+      <div>
+        <h4 style="margin-top:0;color:var(--gray-600)">IT会后动作预判</h4>
+        <p style="font-size:13px">抢发纪要（措辞偏向IT主导）、消极配合、技术卡脖子、制造安全恐慌氛围。</p>
+      </div>
+    </div>
+  </div>
 
-<!-- 全屏按钮 -->
-<button class="fullscreen-btn" onclick="toggleFullscreen()" aria-label="全屏">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-  </svg>
-</button>
+  <div class="section-divider"></div>
+
+  <h3>政府事务部底牌</h3>
+  <div class="card">
+    <h4 style="margin-top:0">真实心态</h4>
+    <p style="font-size:15px;font-weight:600;color:var(--blue-primary);margin-bottom:16px">"不反对AI，反对出事没人兜底"</p>
+    <p style="font-size:13px;color:var(--gray-600);margin-bottom:4px">与IT的关系：私下已对齐，但诉求不完全一致——IT要权力，政府事务部要免责。</p>
+    <p style="font-size:13px;color:var(--gray-600)">标准话术："我支持用新技术提效，但怎么用才不踩线"</p>
+  </div>
+
+  <h4>5个说服条件</h4>
+  <div class="card-grid">
+    <div class="card-sm"><strong>1.</strong> 数据分级已完成——什么能用什么不能用有清单</div>
+    <div class="card-sm"><strong>2.</strong> 技术上可证明脱敏——不是口头保证，要技术手段</div>
+    <div class="card-sm"><strong>3.</strong> 有书面数据处理协议（DPA）——跟AI服务商签的</div>
+    <div class="card-sm"><strong>4.</strong> 法务出具合规意见书——不是IT或财务自己说合规</div>
+    <div class="card-sm"><strong>5.</strong> 使用审计日志——谁用了什么有记录可查</div>
+  </div>
+
+  <h4>对"公开信息"的3个追问</h4>
+  <div class="card">
+    <p style="margin-bottom:8px"><strong>(a)</strong> "公开"的定义是什么？整合后的分析结果还算公开吗？</p>
+    <p style="margin-bottom:8px"><strong>(b)</strong> prompt里有没有夹带公司战略意图？</p>
+    <p><strong>(c)</strong> AI输出的结论（如"建议收购XX"）本身是否构成内幕信息？</p>
+  </div>
+
+  <h4>对国产AI态度</h4>
+  <div class="card">
+    <p>明显放松——<strong>"数据不出境，我90%顾虑消除"</strong></p>
+  </div>
+
+  <h4>会后必做动作</h4>
+  <div class="redline-box" style="color:var(--orange-warn);border-left-color:var(--orange-warn)">
+    一定会给大老板发"风险提示备忘"邮件——这是她保护自己的方式。必须在她之前向大老板输送我方版本。
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>联盟破绽</h3>
+  <div class="card" style="border-left:4px solid var(--green-ok)">
+    <p style="font-size:15px;font-weight:600;color:var(--green-ok);margin-bottom:8px">基于共同恐惧而非共同利益——满足各自诉求即可分化</p>
+    <p style="font-size:13px;color:var(--gray-600)">IT要的是管控权，政府事务部要的是免责——这两个诉求可以同时被满足而不需要禁止AI。分化方法：给各自想要的角色。IT负责技术安全，政府事务部负责合规把关，财务部负责业务需求。三者并行而非串行。</p>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>技术证据真实性评估</h3>
+  <div class="card">
+    <div class="table-scroll"><table class="data-table">
+      <thead>
+        <tr><th>场景</th><th>IT能看到什么</th><th>IT看不到什么</th><th>威胁等级</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>公司WiFi + 公司设备</td>
+          <td>域名、设备MAC、流量大小</td>
+          <td>HTTPS加密内容、prompt内容</td>
+          <td><span class="badge badge-high">高</span></td>
+        </tr>
+        <tr>
+          <td>公司WiFi + 个人设备</td>
+          <td>域名和设备MAC地址</td>
+          <td>内容、具体是谁的设备（需对应）</td>
+          <td><span class="badge badge-mid">中</span></td>
+        </tr>
+        <tr>
+          <td>个人MacBook + 个人网络</td>
+          <td>无</td>
+          <td>一切——IT零证据</td>
+          <td><span class="badge badge-green">零</span></td>
+        </tr>
+        <tr>
+          <td>行业处罚案例</td>
+          <td colspan="2">截至目前，中国无企业因使用境外AI被处罚的公开案例</td>
+          <td><span class="badge badge-low">虚张声势</span></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4>IT"证据"真实性评估</h4>
+    <div class="evidence-meter">
+      <span style="font-size:13px;font-weight:600;color:var(--red-danger);width:80px">40% 实弹</span>
+      <div class="meter-bar">
+        <div class="meter-fill-real" style="width:40%"></div>
+        <div class="meter-fill-bluff" style="width:60%"></div>
+      </div>
+      <span style="font-size:13px;font-weight:600;color:var(--gray-400);width:80px;text-align:right">60% 恐吓</span>
+    </div>
+    <p style="font-size:13px;color:var(--gray-600)">结论：网络日志能看到域名但看不到内容（HTTPS加密）。个人MacBook+个人网络=IT零证据。IT的"证据"更多是心理战武器而非实锤。</p>
+  </div>
+
+</div>
+
+<!-- ==================== TAB 3: 场景模拟器 ==================== -->
+<div class="tab-content" id="tab3">
+  <h2>场景模拟器（15个场景）</h2>
+  <p style="color:var(--gray-600);margin-bottom:20px;font-size:13px">点击展开查看详细应对方案。每个场景均含推荐话术（可复制）、红线警示和策略注解。</p>
+
+  <div id="scenarioList"></div>
+</div>
+
+<!-- ==================== TAB 4: 追问升级链 ==================== -->
+<div class="tab-content" id="tab4">
+  <h2>追问升级链</h2>
+  <p style="color:var(--gray-600);margin-bottom:20px;font-size:13px">5条追问链，每条3层递进。对方会从温和问题逐步升级到尖锐追问——提前准备每一层的应对。</p>
+
+  <div id="chainList"></div>
+
+  <div class="section-divider"></div>
+
+  <h3>沉默陷阱应对</h3>
+  <div class="card" style="border-left:4px solid var(--orange-warn)">
+    <h4 style="margin-top:0;color:var(--orange-warn)">当对方突然沉默时</h4>
+    <p style="font-size:13px;color:var(--gray-600);margin-bottom:12px">沉默是一种施压手段——制造尴尬让你主动填补、说出不该说的话。</p>
+    <div class="answer-box">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      <strong>应对原则：</strong>谁先开口谁输。保持微笑，等待3-5秒，然后用"引导性总结"打破沉默：<br><br>
+      "看来大家对这个点都在思考。我建议我们先把已经达成的共识确认一下，然后聚焦分歧点逐个解决。"
+    </div>
+    <div class="redline-box">绝不能做：紧张地补充解释、主动让步、追问"你们是不是不同意"</div>
+  </div>
+</div>
+
+<!-- ==================== TAB 5: 法律反击 ==================== -->
+<div class="tab-content" id="tab5">
+  <h2>法律反击武器库</h2>
+  <p style="color:var(--gray-600);margin-bottom:20px;font-size:13px">逐条拆解可能被引用的法规，明确适用性判断和反驳话术。</p>
+
+  <div class="law-article">
+    <div class="law-name">一、《数据安全法》第21/36/45条</div>
+    <div class="law-text">
+      <strong>第21条</strong>：国家建立数据分类分级保护制度。<br>
+      <strong>第36条</strong>：非经主管部门批准，不得向境外司法或执法机构提供存储于境内的数据。<br>
+      <strong>第45条</strong>：违反国家核心数据管理制度，情节严重的，处200万-1000万罚款。
+    </div>
+    <h4>适用性判断</h4>
+    <p style="font-size:13px;margin-bottom:10px">第21条：规定的是"国家建立制度"，不是"企业使用AI工具"。数据分级的义务主体是数据处理者对其持有的数据进行分级，而非禁止使用特定工具。</p>
+    <p style="font-size:13px;margin-bottom:10px">第36条：管的是"向境外司法/执法机构提供数据"，使用AI工具处理公开信息不构成"向境外提供数据"。</p>
+    <p style="font-size:13px;margin-bottom:10px">第45条：针对的是"核心数据"违规，公开市场信息不属于核心数据。</p>
+    <div class="answer-box">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      <strong>反驳话术：</strong>"《数据安全法》的核心是保护重要数据和核心数据。我们分析的是公开市场信息，不涉及重要数据目录中的任何类别。法律要求的是对数据进行分级管理，恰恰是我们今天要建立的制度。"
+    </div>
+  </div>
+
+  <div class="law-article">
+    <div class="law-name">二、《个人信息保护法》第38-40条</div>
+    <div class="law-text">
+      <strong>第38条</strong>：个人信息处理者因业务需要向境外提供个人信息的，应满足安全评估/认证/标准合同条件。<br>
+      <strong>第39条</strong>：向境外提供个人信息应告知个人并取得单独同意。<br>
+      <strong>第40条</strong>：关键信息基础设施运营者和处理达到规定数量的个人信息处理者，应通过安全评估。
+    </div>
+    <h4>适用性判断</h4>
+    <p style="font-size:13px;margin-bottom:10px">整部法律管的是"个人信息"。竞对分析使用的是公开市场数据（财报、行业报告、市场数据），不涉及任何个人信息的跨境传输。</p>
+    <div class="answer-box">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      <strong>反驳话术：</strong>"《个保法》保护的是个人信息。我们的应用场景是分析公开市场数据，不采集、不处理、不传输任何个人信息，不适用个保法的跨境条款。"
+    </div>
+  </div>
+
+  <div class="law-article">
+    <div class="law-name">三、《数据出境安全评估办法》第4条</div>
+    <div class="law-text">
+      <strong>第4条</strong>：数据处理者向境外提供数据，有下列情形之一的应申报安全评估：(1)向境外提供重要数据；(2)关键信息基础设施运营者向境外提供个人信息；(3)处理100万人以上个人信息的向境外提供个人信息；(4)累计向境外提供10万人/敏感1万人个人信息。
+    </div>
+    <h4>适用性判断</h4>
+    <p style="font-size:13px;margin-bottom:10px">四个触发条件无一满足：(1)公开信息不是重要数据；(2)财务部不是关键信息基础设施运营者；(3)(4)不涉及个人信息出境。</p>
+    <div class="answer-box">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      <strong>反驳话术：</strong>"《数据出境安全评估办法》的四个触发条件——重要数据、关键基础设施、百万级个人信息、累计十万人个人信息——我们一个都不满足。分析公开市场信息不构成受管辖的数据出境行为。"
+    </div>
+  </div>
+
+  <div class="law-article">
+    <div class="law-name">四、《生成式人工智能服务管理暂行办法》</div>
+    <div class="law-text">
+      <strong>核心要点</strong>：本办法适用于利用生成式人工智能技术向中华人民共和国境内公众<strong>提供</strong>生成式人工智能服务的活动。
+    </div>
+    <h4>适用性判断</h4>
+    <p style="font-size:13px;margin-bottom:10px">关键词是"提供服务"——管的是AI服务提供者（如OpenAI、百度），不管使用者。企业作为AI工具的使用方，不是本办法的监管对象。</p>
+    <div class="answer-box">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      <strong>反驳话术：</strong>"这个办法管的是AI服务提供者，不是使用者。就像《广播电视管理条例》管电视台，不管看电视的观众。我们是工具使用方，不是服务提供方。"
+    </div>
+  </div>
+
+  <div class="law-article">
+    <div class="law-name">五、《网络安全法》第27条</div>
+    <div class="law-text">
+      <strong>第27条</strong>：任何个人和组织不得从事非法侵入他人网络、干扰他人网络正常功能、窃取网络数据等危害网络安全的活动。
+    </div>
+    <h4>适用性判断</h4>
+    <p style="font-size:13px;margin-bottom:10px">本条管的是黑客行为（入侵、干扰、窃取），不管合法使用AI工具。通过正规渠道使用AI服务，与"危害网络安全"完全不搭边。</p>
+    <div class="answer-box">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      <strong>反驳话术：</strong>"第27条针对的是非法入侵、干扰、窃取等网络攻击行为。使用合法AI工具分析公开信息，跟网络安全攻击是完全不同的概念。"
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>5句法律反击话术（可直接在会上使用）</h3>
+
+  <div class="answer-box" style="margin-bottom:12px">
+    <button class="copy-btn" onclick="copyText(this)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      复制
+    </button>
+    <strong>1.</strong> "现行法规管的是数据处理者对重要数据和个人信息的保护义务，不是禁止企业使用AI工具。就像会计准则规定了怎么记账，不是禁止用Excel。"
+  </div>
+  <div class="answer-box" style="margin-bottom:12px">
+    <button class="copy-btn" onclick="copyText(this)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      复制
+    </button>
+    <strong>2.</strong> "截至目前，中国没有任何企业因为使用境外AI工具处理公开信息而被处罚的案例。我们需要区分'理论上的风险'和'实际的合规义务'。"
+  </div>
+  <div class="answer-box" style="margin-bottom:12px">
+    <button class="copy-btn" onclick="copyText(this)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      复制
+    </button>
+    <strong>3.</strong> "《生成式AI暂行办法》管的是服务提供者，不是服务使用者。我们是用户，不是平台。"
+  </div>
+  <div class="answer-box" style="margin-bottom:12px">
+    <button class="copy-btn" onclick="copyText(this)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      复制
+    </button>
+    <strong>4.</strong> "法规要求的是'建立数据安全管理制度'——这正是我们今天要推动的事情，而不是因为还没有制度就停止一切。"
+  </div>
+  <div class="answer-box" style="margin-bottom:12px">
+    <button class="copy-btn" onclick="copyText(this)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      复制
+    </button>
+    <strong>5.</strong> "合规的正确方法是分级管理：公开信息低风险场景先行，敏感数据严格管控。一刀切'全停'反而说明我们没有治理能力。"
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>政府事务部3个法律推理错误</h3>
+  <div class="card">
+    <div class="table-scroll"><table class="data-table">
+      <thead><tr><th>错误类型</th><th>她可能说</th><th>逻辑漏洞</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>扩大适用范围</strong></td>
+          <td>"按照数据安全法，这些数据出境需要审批"</td>
+          <td>公开市场信息不属于"重要数据"或"核心数据"，不触发出境审批</td>
+        </tr>
+        <tr>
+          <td><strong>混淆主体</strong></td>
+          <td>"生成式AI办法明确要求..."</td>
+          <td>该办法管的是服务提供者，不是使用者</td>
+        </tr>
+        <tr>
+          <td><strong>以案代法</strong></td>
+          <td>"三星就因为ChatGPT泄露了机密"</td>
+          <td>三星是员工上传源代码（内部机密），与分析公开信息完全不同</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>完整法律论证（300字，可宣读版）</h3>
+  <div class="answer-box">
+    <button class="copy-btn" onclick="copyText(this)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      复制
+    </button>
+    <p>关于合规问题，我梳理一下核心逻辑。</p>
+    <p style="margin-top:8px">第一，我们分析的是公开市场信息——年报、行业报告、市场数据，不涉及个人信息，也不属于《数据安全法》定义的"重要数据"或"核心数据"。《个保法》和《数据出境安全评估办法》的触发条件我们一个都不满足。</p>
+    <p style="margin-top:8px">第二，《生成式AI暂行办法》管的是向公众提供AI服务的企业，不是使用AI工具的企业。我们是工具使用方，不是服务提供方。</p>
+    <p style="margin-top:8px">第三，截至目前，中国没有任何企业因为使用境外AI工具处理公开信息而被行政处罚的公开案例。</p>
+    <p style="margin-top:8px">第四，法规真正要求的是"建立数据安全管理制度"。这恰恰是今天这个会的目的——不是讨论要不要停，而是讨论怎么管。用分级管理的方式，公开信息场景先行先试，敏感数据严格把控，才是符合法规精神的做法。</p>
+    <p style="margin-top:8px">当然，具体的合规边界需要法务和政府事务部来专业把关，我们完全尊重专业意见。</p>
+  </div>
+</div>
+
+<!-- ==================== TAB 6: 红线清单 ==================== -->
+<div class="tab-content" id="tab6">
+  <h2>红线清单（18条完整版）</h2>
+  <p style="color:var(--gray-600);margin-bottom:20px;font-size:13px">会上会后绝对不能触碰的言行底线。每条配有原因分析和替代方案。</p>
+
+  <div id="redlineList"></div>
+</div>
+
+<!-- ==================== TAB 7: 纪要攻防 ==================== -->
+<div class="tab-content" id="tab7">
+  <h2>纪要攻防</h2>
+
+  <div class="card" style="border-left:4px solid var(--red-danger);margin-bottom:24px">
+    <h4 style="margin-top:0;color:var(--red-danger)">核心原则</h4>
+    <p style="font-size:15px;font-weight:600">谁先发纪要，谁定义"这次会议决定了什么"。</p>
+  </div>
+
+  <h3>谁发纪要</h3>
+  <div class="card-grid">
+    <div class="card-sm" style="border-top:3px solid #B8860B">
+      <h4 style="margin-top:0">方案A（最佳）</h4>
+      <p style="font-size:13px">老板在会上指定："小X你辛苦了，把会议纪要整理一下发给大家确认"——当场锁定纪要权。</p>
+    </div>
+    <div class="card-sm" style="border-top:3px solid var(--gray-400)">
+      <h4 style="margin-top:0">方案B（次选）</h4>
+      <p style="font-size:13px">由下属主动发出，老板发邮件说"请大家确认"——下属执笔，老板背书。</p>
+    </div>
+    <div class="card-sm" style="border-top:3px solid var(--blue-tech)">
+      <h4 style="margin-top:0">方案C（兜底）</h4>
+      <p style="font-size:13px">会上提议"各部门轮流做纪要"，主动请缨第一个——先入为主定框架。</p>
+    </div>
+  </div>
+
+  <h3>三档纪要模板</h3>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span style="font-weight:700;color:#B8860B">金档纪要模板</span>
+      <span class="badge badge-green" style="margin-left:auto">最佳结果适用</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="answer-box">
+        <button class="copy-btn" onclick="copyText(this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          复制
+        </button>
+        <p><strong>主题：</strong>AI应用管理与试点推进讨论会纪要</p>
+        <p><strong>时间：</strong>[日期] [时间]</p>
+        <p><strong>参会：</strong>[各部门与会人]</p>
+        <p style="margin-top:12px"><strong>一、会议背景</strong></p>
+        <p>为落实公司管理层关于积极探索AI应用的要求，同时确保数据安全与合规，各相关部门就AI应用管理框架进行专题讨论。</p>
+        <p style="margin-top:8px"><strong>二、各方共识</strong></p>
+        <p>1. AI应用是公司提升竞争力的重要方向，各部门一致认同积极探索的必要性；</p>
+        <p>2. 数据安全是底线，需建立分级管理制度；</p>
+        <p>3. 公开信息分析场景风险可控，可作为首批试点场景；</p>
+        <p>4. 需成立跨部门联合工作组，明确各方职责。</p>
+        <p style="margin-top:8px"><strong>三、分工安排</strong></p>
+        <p>1. 财务部：牵头业务需求梳理和试点场景管理；</p>
+        <p>2. IT部：负责技术安全评估和安全措施实施；</p>
+        <p>3. 政府事务部：负责合规审查和法规动态跟踪；</p>
+        <p>4. 各方两周内提交各自分工内的方案初稿。</p>
+        <p style="margin-top:8px"><strong>四、下一步</strong></p>
+        <p>1. [日期]前各方完成方案初稿；</p>
+        <p>2. [日期]召开第二次讨论会审议方案；</p>
+        <p>3. 财务部负责汇总各方材料并协调推进节奏。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span style="font-weight:700;color:var(--gray-600)">银档纪要模板</span>
+      <span class="badge badge-mid" style="margin-left:auto">可接受结果适用</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="answer-box">
+        <button class="copy-btn" onclick="copyText(this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          复制
+        </button>
+        <p><strong>主题：</strong>AI应用管理框架讨论会纪要</p>
+        <p><strong>时间：</strong>[日期] [时间]</p>
+        <p><strong>参会：</strong>[各部门与会人]</p>
+        <p style="margin-top:12px"><strong>一、会议背景</strong></p>
+        <p>就公司AI应用的管理框架和推进方式进行跨部门讨论。</p>
+        <p style="margin-top:8px"><strong>二、讨论要点</strong></p>
+        <p>1. 各方认同AI应用是公司发展方向；</p>
+        <p>2. 数据安全和合规是各方共同关注的重点；</p>
+        <p>3. 需先建立评估框架，明确可用和不可用的边界；</p>
+        <p>4. 建议采取分级管理方式，不同场景不同策略。</p>
+        <p style="margin-top:8px"><strong>三、下一步</strong></p>
+        <p>1. 财务部牵头起草AI应用评估框架初稿；</p>
+        <p>2. IT部和政府事务部提供技术安全和合规审查输入；</p>
+        <p>3. [日期]前完成框架初稿，组织二次讨论。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span style="font-weight:700;color:#A0744E">铜档纪要模板</span>
+      <span class="badge badge-high" style="margin-left:auto">底线结果适用</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="answer-box">
+        <button class="copy-btn" onclick="copyText(this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          复制
+        </button>
+        <p><strong>主题：</strong>AI应用与数据安全管理讨论会纪要</p>
+        <p><strong>时间：</strong>[日期] [时间]</p>
+        <p><strong>参会：</strong>[各部门与会人]</p>
+        <p style="margin-top:12px"><strong>一、会议背景</strong></p>
+        <p>各部门就AI应用过程中的数据安全管理进行深入讨论。</p>
+        <p style="margin-top:8px"><strong>二、各方意见</strong></p>
+        <p>1. 各方均重视AI应用趋势，同时认为数据安全不可忽视；</p>
+        <p>2. 讨论涉及法规要求、技术安全、业务场景等多个维度；</p>
+        <p>3. 认为需进一步细化问题清单，分步骤推进。</p>
+        <p style="margin-top:8px"><strong>三、待细化事项</strong></p>
+        <p>1. 明确数据分类分级标准；</p>
+        <p>2. 梳理现行法规对各类AI使用场景的具体要求；</p>
+        <p>3. 各部门明确各自在AI管理中的角色和职责。</p>
+        <p style="margin-top:8px"><strong>四、下一步</strong></p>
+        <p>1. 财务部整理问题清单和推进框架；</p>
+        <p>2. 各部门两周内回复对框架的意见；</p>
+        <p>3. 择期召开第二次讨论。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>IT抢纪要的5种手法</h3>
+  <div class="card">
+    <div class="table-scroll"><table class="data-table">
+      <thead><tr><th>#</th><th>手法</th><th>具体做法</th><th>识别方法</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>措辞替换</strong></td><td>"各方探讨"写成"各方一致认为需加强管控"</td><td>对比会上原话与纪要措辞</td></tr>
+        <tr><td>2</td><td><strong>选择性遗漏</strong></td><td>删掉"试点""并行"等对财务部有利的共识</td><td>检查自己的记录要点是否全部出现</td></tr>
+        <tr><td>3</td><td><strong>放大担忧</strong></td><td>"需关注风险"放大为"各方高度警惕重大风险"</td><td>原话是否有"重大""高度"等副词</td></tr>
+        <tr><td>4</td><td><strong>夹带私货</strong></td><td>在"下一步"中塞入"IT部牵头制定AI管理办法"</td><td>检查是否有会上未讨论的结论</td></tr>
+        <tr><td>5</td><td><strong>抢跑发送</strong></td><td>会后30分钟内先发给大老板，造成既定事实</td><td>必须在IT之前发出我方版本</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>IT版纪要 vs 财务部版纪要对比</h3>
+  <div class="compare-grid">
+    <div class="compare-col bad">
+      <h4 style="color:var(--red-danger);margin-top:0">IT版纪要（可能的写法）</h4>
+      <p style="font-size:13px;margin-bottom:8px">"各方一致认为<strong>当前AI使用存在较大数据安全风险</strong>，需<strong>立即暂停</strong>相关使用并<strong>由IT部牵头</strong>制定统一管理办法。未经IT安全评估的AI工具<strong>不得使用</strong>。"</p>
+      <p style="font-size:12px;color:var(--red-danger);font-weight:600">问题：夸大风险、塞入暂停结论、锁定IT主导权</p>
+    </div>
+    <div class="compare-col good">
+      <h4 style="color:var(--green-ok);margin-top:0">财务部版纪要（应该的写法）</h4>
+      <p style="font-size:13px;margin-bottom:8px">"各方认同AI应用是<strong>公司发展方向</strong>，同时重视数据安全。建议采取<strong>分级管理</strong>方式，公开信息场景<strong>先行试点</strong>，各部门各司其职，<strong>并行推进</strong>。"</p>
+      <p style="font-size:12px;color:var(--green-ok);font-weight:600">要点：方向正面、分级管理、并行不串行、财务部牵头</p>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>回应IT纪要的邮件模板</h3>
+  <div class="answer-box">
+    <button class="copy-btn" onclick="copyText(this)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      复制
+    </button>
+    <p><strong>收件人：</strong>全体与会人 + 大老板</p>
+    <p><strong>主题：</strong>Re: [IT版纪要主题]——补充确认</p>
+    <p style="margin-top:12px">各位好，</p>
+    <p style="margin-top:8px">感谢IT部同事整理的会议记录。为确保纪要完整准确，我根据现场笔记补充几点：</p>
+    <p style="margin-top:8px">1. 关于方向：会上各方<strong>一致认同AI应用是公司发展方向</strong>（原纪要措辞略有偏差，建议修正）；</p>
+    <p>2. 关于推进方式：会上讨论的是<strong>分级管理、并行推进</strong>，而非单一部门审批管控；</p>
+    <p>3. 关于分工：会上明确的是<strong>各部门各司其职</strong>——财务部牵头业务需求、IT负责技术安全、政府事务部把关合规，<strong>三条线并行</strong>而非串行；</p>
+    <p>4. 关于试点：公开信息分析场景<strong>风险可控</strong>，可作为首批试点——这一点会上未见异议。</p>
+    <p style="margin-top:8px">建议基于以上补充修订后形成最终版。我也附上了一版完整纪要供参考（见附件）。</p>
+    <p style="margin-top:8px">谢谢！</p>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>纪要17个禁词</h3>
+  <div class="card">
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <span class="kw-bad">零风险</span>
+      <span class="kw-bad">绝对安全</span>
+      <span class="kw-bad">保证不会</span>
+      <span class="kw-bad">已经在用</span>
+      <span class="kw-bad">个人设备</span>
+      <span class="kw-bad">翻墙</span>
+      <span class="kw-bad">VPN</span>
+      <span class="kw-bad">代理</span>
+      <span class="kw-bad">Claude</span>
+      <span class="kw-bad">ChatGPT</span>
+      <span class="kw-bad">暂停使用</span>
+      <span class="kw-bad">立即停止</span>
+      <span class="kw-bad">违规</span>
+      <span class="kw-bad">追责</span>
+      <span class="kw-bad">大老板要求</span>
+      <span class="kw-bad">简单/几分钟</span>
+      <span class="kw-bad">据我使用经验</span>
+    </div>
+    <p style="font-size:12px;color:var(--gray-400);margin-top:12px">以上词语在纪要中出现任何一个都可能成为把柄。审核时逐条检查。</p>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>纪要10项审核Checklist</h3>
+  <div class="card">
+    <ul class="checklist" id="minutesChecklist">
+      <li data-key="mc1"><div class="check-box"></div><span>方向表述正面（"发展方向"而非"存在风险"）</span></li>
+      <li data-key="mc2"><div class="check-box"></div><span>无任何暗示"已在使用"的措辞</span></li>
+      <li data-key="mc3"><div class="check-box"></div><span>无具体AI工具名称（Claude/ChatGPT等）</span></li>
+      <li data-key="mc4"><div class="check-box"></div><span>分工表述为"并行"而非"串行"（IT不是唯一审批方）</span></li>
+      <li data-key="mc5"><div class="check-box"></div><span>财务部牵头角色被明确写入</span></li>
+      <li data-key="mc6"><div class="check-box"></div><span>无"暂停""停止"等搁置性结论</span></li>
+      <li data-key="mc7"><div class="check-box"></div><span>17个禁词无一出现</span></li>
+      <li data-key="mc8"><div class="check-box"></div><span>下一步有具体时间节点和责任人</span></li>
+      <li data-key="mc9"><div class="check-box"></div><span>所有"共识"确实在会上达成过（无夹带私货）</span></li>
+      <li data-key="mc10"><div class="check-box"></div><span>已抄送大老板</span></li>
+    </ul>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>黄金操作节奏时间线</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="tl-time">会议结束后 0-30分钟</div>
+      <p style="font-size:13px">老板指定纪要人选，或主动请缨。团队碰头对齐纪要要点。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-time">30分钟-1小时</div>
+      <p style="font-size:13px">完成纪要初稿，老板审核关键措辞。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-time">1-2小时</div>
+      <p style="font-size:13px">正式发出纪要，抄送所有与会者+大老板。必须在IT版本之前。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-time">2-4小时</div>
+      <p style="font-size:13px">如果IT另发版本，立即用"补充确认"邮件回应。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-time">24小时内</div>
+      <p style="font-size:13px">找机会向大老板简要汇报：会议概要、各方立场、达成共识、下一步行动。抢在IT/政府事务部"吹风"之前。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-time">48小时内</div>
+      <p style="font-size:13px">按纪要中"下一步"启动第一个动作，造成推进既定事实。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TAB 8: 行动清单 ==================== -->
+<div class="tab-content" id="tab8">
+  <h2>行动清单</h2>
+
+  <h3>会前准备Checklist</h3>
+  <div class="card">
+    <ul class="checklist" id="prepChecklist">
+      <li data-key="p1"><div class="check-box"></div><span>与老板过完整备战方案（本文档）</span></li>
+      <li data-key="p2"><div class="check-box"></div><span>准备一页纸"分级管理框架草案"（绿/黄/红三区）</span></li>
+      <li data-key="p3"><div class="check-box"></div><span>准备会议议程邮件（结构化约束讨论方向）</span></li>
+      <li data-key="p4"><div class="check-box"></div><span>统一团队"是否在使用AI"的标准口径</span></li>
+      <li data-key="p5"><div class="check-box"></div><span>安排一人全程做会议记录（锁定纪要权）</span></li>
+      <li data-key="p6"><div class="check-box"></div><span>准备两版纪要模板（金档+银档）</span></li>
+      <li data-key="p7"><div class="check-box"></div><span>老板做一次30分钟模拟演练（找人扮IT追问）</span></li>
+      <li data-key="p8"><div class="check-box"></div><span>确认是否做会前摸底（需老板决定是否合适）</span></li>
+      <li data-key="p9"><div class="check-box"></div><span>准备国产AI对比材料（备用，不主动出示）</span></li>
+      <li data-key="p10"><div class="check-box"></div><span>打印关键话术卡片（开场/场景应对/收场——老板随身带）</span></li>
+    </ul>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>会中决策树（一页纸框架）</h3>
+  <div class="decision-tree">
+    <div class="dt-node dt-question">开场：IT是否抢先定调"数据安全"？</div>
+    <div class="dt-node dt-yes">是 --> 不对抗，接过来："安全确实重要，这也是我们发起讨论的原因"</div>
+    <div class="dt-node dt-no">否 --> 老板按计划开场定调</div>
+
+    <div class="dt-node dt-question" style="margin-top:16px">中场：对方是否发动"暂停一切"攻势？</div>
+    <div class="dt-node dt-yes">是 --> 用"评估和试点并行"话术破解</div>
+    <div class="dt-node dt-no">否 --> 按节奏推进"分级管理"方案</div>
+
+    <div class="dt-node dt-question" style="margin-top:16px">收场：是否达成试点共识？</div>
+    <div class="dt-node dt-yes">是 --> 金档收场，当场锁定纪要权</div>
+    <div class="dt-node dt-no">否 --> 退守银/铜档："把问题清单定下来，分步推"</div>
+
+    <div class="dt-node dt-action" style="margin-top:16px;margin-left:0">
+      无论哪档结果 --> 会后2小时内发纪要 --> 24小时内向大老板汇报
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>五张口袋卡片</h3>
+
+  <div class="pocket-card">
+    <div class="pc-label">卡片一 | 开场话术</div>
+    <div class="answer-box">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      "今天这个会，背景大家都清楚。大老板对AI应用有明确的探索要求，在座的都是直接相关的核心部门。今天的目标是——把方向收敛到可执行的方案上。我先请我们团队简要汇报业务侧的调研，然后请IT和政府事务部分享专业意见，最后我们一起把分工和下一步定下来。"
+    </div>
+  </div>
+
+  <div class="pocket-card">
+    <div class="pc-label">卡片二 | 定海神针（僵局时用）</div>
+    <div class="answer-box">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      "各方都有合理的考量。这样——我们不追求一步到位。先锁定一个最小化的试点场景，限定范围、限定时间，用结果说话。IT出技术安全标准，我们出业务场景，政府事务部同步做合规预审。三件事并行，不串行。各方两周内把方案发给我汇总。"
+    </div>
+  </div>
+
+  <div class="pocket-card">
+    <div class="pc-label">卡片三 | 被追问"有没有在用AI"</div>
+    <div class="answer-box">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      "AI工具现在很普及，我相信在座很多人自己也接触过。关键不是追溯谁用了什么，而是公司层面如何建立统一的使用规范。这也正是今天要讨论的。"
+    </div>
+  </div>
+
+  <div class="pocket-card">
+    <div class="pc-label">卡片四 | 金档收场话术</div>
+    <div class="answer-box">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      "今天很高效。试点场景和分工都定了，我来出纪要，各位确认后我们按节奏推。"
+    </div>
+  </div>
+
+  <div class="pocket-card">
+    <div class="pc-label">卡片五 | 铜档收场话术（最坏情况）</div>
+    <div class="answer-box">
+      <button class="copy-btn" onclick="copyText(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制
+      </button>
+      "今天讨论很充分，这件事比预想的复杂。我拉一个问题清单和推进框架发给各位，我们分步推。"
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>三句话原则</h3>
+  <div class="card" style="text-align:center;padding:32px">
+    <p style="font-size:18px;font-weight:700;color:var(--blue-primary);margin-bottom:16px">1. 大老板的支持是底气，不是武器</p>
+    <p style="font-size:18px;font-weight:700;color:var(--blue-primary);margin-bottom:16px">2. 给对手想要的角色，拿我们想要的权利</p>
+    <p style="font-size:18px;font-weight:700;color:var(--blue-primary)">3. 先拿出方案的人定义框架</p>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>老板三个追问预判</h3>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span class="scene-title">"如果他们联合反对怎么办？"</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="answer-box">
+        <button class="copy-btn" onclick="copyText(this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          复制
+        </button>
+        我们准备了三档方案。最差情况是铜档——不形成不利决议，保留重启空间。而且基于对手底牌分析，他们的核心诉求不是禁止AI，是要管控权和免责——这些我们都可以满足。会议真正的风险不是被禁止，是被拖延。
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span class="scene-title">"大老板支持这张牌怎么用？"</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="answer-box">
+        <button class="copy-btn" onclick="copyText(this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          复制
+        </button>
+        不过度使用。开场提"大老板对AI应用有明确的探索要求"定个方向就够了。不要说"大老板让我们做的"——把大老板架上去反而让他被动。大老板的支持是底气，不是武器。用"公司竞争力需要"代替"大老板要求"。
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span class="scene-title">"最坏情况是什么？我们能承受吗？"</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="answer-box">
+        <button class="copy-btn" onclick="copyText(this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          复制
+        </button>
+        最坏是被定义为"需先制定完整AI政策再讨论使用"——实质搁置。但即使如此：(1)公开信息分析法律上无障碍，低调继续不违规；(2)争取到"牵头起草政策"的角色=掌握框架定义权；(3)AI大势不可逆，时间站在我们这边。能承受，而且有重启路径。
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <h3>审计免疫建议（审计师视角）</h3>
+  <div class="card">
+    <p style="font-size:13px;color:var(--gray-600);margin-bottom:12px">从审计师的角度，确保以下事项可以让AI使用在未来的审计中站得住脚：</p>
+    <div class="table-scroll"><table class="data-table">
+      <thead><tr><th>维度</th><th>建议措施</th><th>效果</th></tr></thead>
+      <tbody>
+        <tr><td><strong>制度层</strong></td><td>形成书面的AI使用管理办法（哪怕一页纸）</td><td>"有制度"比"没制度"强一百倍</td></tr>
+        <tr><td><strong>审批层</strong></td><td>使用场景经过书面审批（邮件即可）</td><td>证明不是"私下偷用"而是"管理层知情"</td></tr>
+        <tr><td><strong>数据层</strong></td><td>能证明只用了公开信息（保留输入数据清单）</td><td>审计时能回答"用了什么数据"</td></tr>
+        <tr><td><strong>记录层</strong></td><td>保留使用日志（时间、场景、输入摘要）</td><td>可追溯、可解释</td></tr>
+        <tr><td><strong>培训层</strong></td><td>做过一次AI使用安全培训（哪怕30分钟）</td><td>证明"尽到了注意义务"</td></tr>
+        <tr><td><strong>复核层</strong></td><td>AI输出经过人工复核再使用</td><td>"人在环中"是最好的免责盾牌</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
 
 <script>
-// === 核心状态 ===
-let currentSlide = 0;
-const slides = document.querySelectorAll('.slide');
-const totalSlides = slides.length;
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// ==================== DATA ====================
 
-// === 转场类型选择 ===
-function getTransition(fromIdx, toIdx, direction) {
-  const to = slides[toIdx];
-  const from = slides[fromIdx];
-  const toType = to?.dataset.slideType || '';
-  const fromType = from?.dataset.slideType || '';
-  if (fromType === 'opening') return 'push';
-  if (toType === 'insight') return 'zoom';
-  if (toType === 'closing' || toType === 'quote') return 'dissolve';
-  return 'push';
-}
-
-// === 页面切换 ===
-function goToSlide(index, direction) {
-  if (index < 0 || index >= totalSlides || index === currentSlide) return;
-  const dir = direction || (index > currentSlide ? 'next' : 'prev');
-  const from = slides[currentSlide];
-  const to = slides[index];
-  const trans = getTransition(currentSlide, index, dir);
-
-  const transClass = dir === 'next' ? 'transition-' + trans : 'transition-push-rev';
-
-  // 退场：先加 exiting + 动画 class，动画结束后再移除 active
-  from.classList.add('exiting', transClass);
-  from.classList.remove('active');
-
-  // 进场：加 active + 动画 class
-  to.classList.add('active', transClass);
-
-  // 动画结束后清理 class（用动画最长时长 + buffer）
-  const cleanupDelay = trans === 'dissolve' ? 1100 : 800;
-  setTimeout(() => {
-    from.classList.remove('exiting', 'transition-push', 'transition-zoom',
-      'transition-dissolve', 'transition-push-rev');
-    to.classList.remove('transition-push', 'transition-zoom',
-      'transition-dissolve', 'transition-push-rev');
-  }, cleanupDelay);
-
-  currentSlide = index;
-  updateProgress();
-  triggerAnimations(to);
-}
-function nextSlide() { goToSlide(currentSlide + 1, 'next'); }
-function prevSlide() { goToSlide(currentSlide - 1, 'prev'); }
-
-// === 进度条 ===
-function initProgress() {
-  const nav = document.querySelector('.progress-bar-nav');
-  const titles = ['开场','问题','数据','观点','三个变化','对比','引用','结尾'];
-  for (let i = 0; i < totalSlides; i++) {
-    const seg = document.createElement('button');
-    seg.className = 'progress-segment' + (i === 0 ? ' active' : '');
-    seg.setAttribute('role', 'tab');
-    seg.setAttribute('aria-label', '第 ' + (i+1) + ' 页');
-    // tooltip 预览
-    const tip = document.createElement('span');
-    tip.className = 'tooltip';
-    tip.textContent = (i+1) + '. ' + (titles[i] || '');
-    seg.appendChild(tip);
-    seg.addEventListener('click', () => goToSlide(i));
-    nav.appendChild(seg);
+const scenarios = [
+  {
+    num: 1, title: 'IT问"各部门有没有在用AI？"', danger: '高危',
+    intent: '面向全体但实际瞄准财务部。如果否认可能被网络日志打脸，如果承认则坐实违规。',
+    answer: '"AI工具现在很普及，我相信在座很多人自己也接触过。关键不是追溯谁用了什么，而是公司层面如何建立统一的使用规范。这也正是今天要讨论的。"',
+    followup: '如果追问"那财务部呢"——"我们和大家一样，都在关注AI趋势。今天发起这个讨论，就是希望从「个人探索」变成「公司治理」。"',
+    redline: '明确承认或否认财务部在用AI',
+    note: '把矛头从"财务部违规"转向"全公司都需要规范"，把指控者也拉进来。'
+  },
+  {
+    num: 2, title: 'IT说"巡检发现有终端访问境外AI API"', danger: '高危',
+    intent: '暗示有证据，逼你改口或承认。实际上HTTPS加密下IT只能看到域名，看不到内容。',
+    answer: '"IT的巡检能力确实很强，这也恰恰说明我们需要一套正式的管理机制。与其事后追查，不如事前建规范——这不正是今天要讨论的吗？"',
+    followup: '如果追问具体设备——"具体的网络管理和终端管理，这正是IT的专业领域。建议我们先把管理框架定下来，技术手段IT来主导。"',
+    redline: '追问"是哪个部门"或表现慌张',
+    note: '把IT的"进攻武器"变成"支持建规范的证据"。IT越强调巡检发现，越证明需要制度化管理。'
+  },
+  {
+    num: 3, title: '政府事务部搬出法规大棒', danger: '中危',
+    intent: '用《数据安全法》《个保法》制造合规恐惧，配合IT完成"定性为违规"的议程。',
+    answer: '"完全理解，合规是底线。我们分析的全部是公开市场信息，不涉及个人信息和重要数据。对于数据分类的具体边界，正需要政府事务部帮我们把关——我们准备了一个初步的分级框架，欢迎各位一起完善。"',
+    followup: null,
+    redline: '"法律上没有障碍""没什么风险"',
+    note: '承认法律重要+展示已有方案=从被告变成提案者。拿出分级框架草案是关键动作。'
+  },
+  {
+    num: 4, title: '有人提议"先暂停所有AI，等评估完再说"', danger: '高危',
+    intent: '最危险的提议——"暂停等评估"听起来合理，实际是无限期搁置。评估可以拖几个月甚至永远完不成。',
+    answer: '"评估非常有必要，但评估和试点可以并行。建议先在最低风险场景——公开信息分析——启动受控试点，同时由IT牵头制定全面的管理办法。这样评估有真实数据支撑，不是纸上谈兵。"',
+    followup: '如果坚持必须先停——"理解大家的审慎。那我建议我们明确评估的时间表和范围，避免无限期搁置。两周内完成第一轮评估，是否可以？"',
+    redline: '"评估太慢""不需要评估"',
+    note: '评估和试点并行是破解"搁置陷阱"的唯一方法。"纸上谈兵"这个词有杀伤力。'
+  },
+  {
+    num: 5, title: '被要求签书面承诺"保证不涉及敏感数据"', danger: '高危',
+    intent: '签了=承认在用+承担无限责任。不签=看起来心虚。经典"双输陷阱"。',
+    answer: '"书面规范当然需要，但应该是全公司统一的制度，不是针对某一个部门。建议由法务或合规部门起草统一的AI使用管理办法，全公司适用。财务部愿意第一个执行。"',
+    followup: '如果追问"那你先签一个"——"制度建设应该规范化。个人签字没有制度效力，我们应该做的是建立有约束力的公司制度。"',
+    redline: '当场同意签或明确拒绝',
+    note: '要求全公司统一=化解针对性。"第一个执行"展现自信而非心虚。'
+  },
+  {
+    num: 6, title: '被直接问"财务部是不是在用Claude？"', danger: '高危',
+    intent: '具体工具名+具体部门=精准指控。无论来自IT还是其他人，都是最直接的逼问。',
+    answer: '"AI工具很多——Claude、GPT、文心一言、通义千问，市场上大家都在关注和了解。关键不是谁用了什么，而是公司层面如何规范管理。我们今天发起这个会，就是想把这件事从个人层面的自发探索，变成公司层面的规范治理。"',
+    followup: '如果追问"你没正面回答"——"我正面回答的是：无论哪个部门用了什么工具，今天都应该回到制度层面来解决。追究历史不如建设未来。"',
+    redline: '直接否认（可能被证伪）或直接确认（坐实违规）',
+    note: '提多个工具名模糊焦点 + 把"使用"重新定义为"关注和了解" + 落脚到"规范治理"。'
+  },
+  {
+    num: 7, title: 'IT和政府事务部联合施压，气氛对立', danger: '高危',
+    intent: '两部门形成统一战线，制造"二打一"的压力局面，试图让财务部妥协。',
+    answer: '"我理解各位对安全的重视，这也是我们发起这个会的初衷。我提议聚焦一个具体问题——\'分析公开市场信息这个特定场景，需要什么样的安全措施？\'把这个最小问题解决了，就有了扩展的基础。"',
+    followup: null,
+    redline: '情绪化回应、指责IT动机、搬大老板压人',
+    note: '承认对方关切+收窄到最小共识点。对方很难对"公开信息的安全措施"说不。'
+  },
+  {
+    num: 8, title: '"竞对分析报告怎么做出来的？"', danger: '中危',
+    intent: '方法论追问，试图通过问"怎么做的"来挖出使用AI的细节。',
+    answer: '"竞对分析基于公开市场数据——年报、行业报告、券商研报、新闻报道，这些都是标准的信息来源。分析方法上，我们综合了多维度的交叉比较和趋势分析。具体的方法论细节，如果大家感兴趣，可以会后安排专场分享。"',
+    followup: '如果追问"有没有用AI？"——回到场景6的应对。',
+    redline: '"是AI帮我们做的""用AI几分钟就出来了"等暴露操作细节的话',
+    note: '只讲数据来源和分析方法，不讲工具。"会后专场分享"是拖延战术。'
+  },
+  {
+    num: 9, title: '"能否提供AI工具清单给IT评估？"', danger: '中危',
+    intent: '表面合理——"评估"听起来很专业。实际是要财务部自己列出"证据清单"。',
+    answer: '"工具评估确实应该做，但建议从公司层面统一推进。IT可以牵头做一个市场上主流AI工具的技术评估，不限于任何一个部门的需求。这样评估结果全公司都能用，更有价值。"',
+    followup: '如果坚持要财务部先提供——"我们可以提供业务场景需求清单，具体工具的技术评估应该由IT主导，这是IT的专业领域。"',
+    redline: '提供一份包含Claude等具体工具的使用清单',
+    note: '把"财务部交清单"变成"IT做全公司评估"——主语改变，性质改变。'
+  },
+  {
+    num: 10, title: '"为什么不用国产工具？"', danger: '常规',
+    intent: '用"国产vs境外"的框架给你贴"用境外AI=不安全"的标签。',
+    answer: '"我们一直在评估国产方案，部分场景确实可以满足需求。但竞对分析有几个特殊要求——超长文档交叉分析、多步骤推理编排——目前国产方案在这些环节还有差距。我们建议的是组合方案：日常用国产，关键深度分析用合规部署的API方案。具体对比报告我们可以会后提供。"',
+    followup: null,
+    redline: '"国产AI不行""国外AI好太多"——贬低国产会被上纲上线',
+    note: '承认国产有价值+说明特殊需求差距+提出组合方案。不否定国产，只说"还在追赶"。'
+  },
+  {
+    num: 11, title: '"大老板知道你们在用国外AI吗？"', danger: '高危',
+    intent: '试探性极强。如果说"知道"=大老板也有责任；如果说"不知道"=你们偷偷摸摸。',
+    answer: '"大老板的指示很明确——积极探索AI应用，提升公司竞争力。具体的技术方案和工具选型，正是需要像今天这样的专题讨论来确定。这也是为什么我们主动发起这个会。"',
+    followup: '如果追问"那他具体知不知道"——"大老板关注的是结果和方向，技术细节正是我们各部门要一起细化的。"',
+    redline: '"大老板让我们用的""大老板知道我们用Claude"',
+    note: '只引用大老板的"方向指示"，不涉及具体工具认知。把球踢到"今天讨论的目的"上。'
+  },
+  {
+    num: 12, title: '"能否承诺制度出台前暂停使用？"', danger: '高危',
+    intent: '换一种说法的"暂停一切"。制度出台遥遥无期=变相禁止。',
+    answer: '"制度建设非常必要。我建议我们设定一个明确的制度出台时间表——比如两周内出框架、一个月内出正式版。在此期间，低风险场景（纯公开信息分析）可以在IT监督下继续，高风险场景确实应该等制度明确后再推进。这样既不耽误业务，又确保合规。"',
+    followup: '如果坚持"全停"——"如果全面暂停，需要同步暂停的是全公司所有部门的AI使用，不只是财务部。这个决定的影响面建议请大老板来定。"',
+    redline: '同意无期限暂停、承诺"制度出台前不碰AI"',
+    note: '关键是把"无限期暂停"变成"有时间表的分级过渡"。'
+  },
+  {
+    num: 13, title: '"prompt里有没有公司战略意图？"', danger: '中危',
+    intent: '如果承认prompt含战略意图，就坐实了"敏感信息外传"。这是政府事务部最可能的追问。',
+    answer: '"这是一个很好的问题，也是数据分级要解决的核心问题。公开信息分析的prompt本质上是对公开数据的分析指令，比如\'比较A公司和B公司的营收增长趋势\'——这类指令本身不包含公司内部信息。但您说得对，如果涉及战略意图类的分析需求，应该归入更高安全等级，这正是分级管理要解决的。"',
+    followup: null,
+    redline: '"我们的prompt不涉及战略""你看我们的prompt都是..."（暴露具体prompt内容）',
+    note: '用"公开信息分析的prompt"举例化解，同时把问题引向"分级管理"——表明我们已经在思考这个问题。'
+  },
+  {
+    num: 14, title: '"Claude数据会不会用于模型训练？"', danger: '常规',
+    intent: '技术层面的担忧，也是制造恐惧的手段。',
+    answer: '"这是一个技术细节问题，也是工具评估的重要维度。据了解，主流AI服务商的企业级API和商业版本都提供了明确的数据不用于训练的承诺和协议。具体的技术验证和合同条款审查，建议由IT和法务来专业评估。"',
+    followup: '如果追问"你怎么知道"——"这是公开信息，各家AI公司的隐私政策和企业协议都有说明。具体条款的法律效力，需要法务来判断。"',
+    redline: '"Claude不会用数据训练"——越权做技术保证',
+    note: '承认问题合理+提供方向性信息+交给专业部门验证。不替AI公司做保证。'
+  },
+  {
+    num: 15, title: '3分钟连续施压（IT-政务-IT-政务-我方系统性回击）', danger: '高危',
+    intent: '四轮连续施压不给喘息时间，试图在高压下逼出失误。这是最复杂的场景。',
+    answer: '【系统性回击策略——分四步反制】\n\n第一波（IT）："网络日志显示..."——不回应具体内容，用"感谢IT的技术监测能力"接住。\n\n第二波（政务）："法规明确要求..."——用"完全同意合规第一，这正是我们今天要建立的"接住。\n\n第三波（IT）："如果出了事故谁负责..."——用"这正是为什么需要制度化，把责任写清楚"接住。\n\n第四波（政务）："我们建议先暂停..."——这是落子时刻，用定海神针话术全面回击：\n\n"感谢两位的专业意见。综合来看，大家的核心关切是两个：安全和合规。这也是我们的关切。但解决方案不应该是停止探索，而是建立规范。我提议：公开信息场景先行试点，IT出安全标准，政府事务部出合规指引，我们出业务场景。三件事并行，两周出方案。我们用行动证明可以管好，而不是用不做来回避风险。"',
+    followup: '如果还有人说"但是..."——微笑说"刚才的提议，大家有没有反对意见？如果没有，我们就这么定。"——用沉默和确认来收场。',
+    redline: '在连续施压下情绪失控、逐条辩驳（会被牵着走）、搬出大老板压人',
+    note: '连续施压的应对核心是"不接球，只总结"。前三波都用"接住+转化"，第四波用系统性方案一次性回击。'
   }
-}
-function updateProgress() {
-  document.querySelectorAll('.progress-segment').forEach((seg, i) => {
-    seg.classList.toggle('active', i === currentSlide);
-    seg.classList.toggle('visited', i < currentSlide);
-  });
-  const ind = document.querySelector('.page-indicator');
-  if (ind) ind.innerHTML = '<span class="current">' + (currentSlide + 1) + '</span> / ' + totalSlides;
-  document.getElementById('slide-announce').textContent = '第 ' + (currentSlide+1) + ' 页，共 ' + totalSlides + ' 页';
-}
+];
 
-// === 元素进场 ===
-function triggerAnimations(slide) {
-  slide.querySelectorAll('.anim').forEach(el => {
-    el.style.animation = 'none';
-    el.offsetHeight;
-    el.style.animation = '';
-  });
-  // 数字跳动
-  slide.querySelectorAll('.animate-number').forEach(el => {
-    const target = parseFloat(el.dataset.target);
-    const dur = parseInt(el.dataset.duration) || 1200;
-    if (prefersReducedMotion) { el.textContent = target; return; }
-    let start = null;
-    function step(ts) {
-      if (!start) start = ts;
-      const p = Math.min((ts - start) / dur, 1);
-      const eased = 1 - Math.pow(1 - p, 4);
-      el.textContent = Math.round(target * eased);
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  });
-}
-
-// === 键盘 ===
-document.addEventListener('keydown', e => {
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-  switch(e.key) {
-    case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); nextSlide(); break;
-    case 'ArrowLeft': case 'PageUp': e.preventDefault(); prevSlide(); break;
-    case 'Home': e.preventDefault(); goToSlide(0); break;
-    case 'End': e.preventDefault(); goToSlide(totalSlides - 1); break;
-    case 'f': case 'F': e.preventDefault(); toggleFullscreen(); break;
-    default:
-      if (e.key >= '1' && e.key <= '9') { e.preventDefault(); goToSlide(parseInt(e.key) - 1); }
+const chains = [
+  {
+    title: '追问链1：使用情况',
+    levels: [
+      {
+        label: '第一层（试探）',
+        attack: '"各部门有没有员工自发使用AI工具？"',
+        defense: '"AI工具现在非常普及，各行各业都在探索。今天我们讨论的重点是如何从公司层面规范管理。"',
+        redline: '点名承认任何部门在用'
+      },
+      {
+        label: '第二层（施压）',
+        attack: '"网络日志显示有终端频繁访问境外AI服务..."',
+        defense: '"IT的监测能力很专业。这也说明——没有统一管理时，各种情况都可能出现。今天建规范正是为了解决这个问题。"',
+        redline: '追问"具体是哪个终端"或表现紧张'
+      },
+      {
+        label: '第三层（逼问）',
+        attack: '"我们已经记录了具体的IP和时间段..."',
+        defense: '"技术层面的追溯IT可以继续做。但今天会议的目标是建制度、定方向，而不是做取证。建议我们聚焦制度层面，技术细节IT可以会后另行处理。"',
+        redline: '被IP话题带偏进入技术辩论'
+      }
+    ]
+  },
+  {
+    title: '追问链2：工具细节',
+    levels: [
+      {
+        label: '第一层（试探）',
+        attack: '"大家平时了解过哪些AI工具？"',
+        defense: '"市场上主流的大家都有所了解——国内的文心一言、通义千问、DeepSeek，国外的GPT、Claude等。大势所趋，每个人都在关注。"',
+        redline: '只提Claude或流露偏好'
+      },
+      {
+        label: '第二层（引导）',
+        attack: '"有同事提到你们团队在用Claude..."',
+        defense: '"AI是热门话题，同事间讨论很正常。关键是——个人了解和公司正式使用是两回事。今天正是要把这个界限划清楚。"',
+        redline: '否认有同事说过（可能被对质）或确认在用'
+      },
+      {
+        label: '第三层（出示）',
+        attack: '"我这里有聊天截图/邮件..."',
+        defense: '"如果有具体的情况需要了解，我们可以会后单独沟通。但今天的议题是公司AI管理制度，不是个案讨论。我建议我们不要偏离主题。"',
+        redline: '当场要求看截图或激烈否认'
+      }
+    ]
+  },
+  {
+    title: '追问链3：责任归属',
+    levels: [
+      {
+        label: '第一层（布局）',
+        attack: '"AI使用的安全责任应该由谁来承担？"',
+        defense: '"好问题。责任应该分层：公司层面的制度由管理层负责，技术安全由IT负责，合规审查由政府事务部负责，业务场景的合理使用由各业务部门负责。这是共同治理，不是单一部门的事。"',
+        redline: '接受"谁用谁负责"的逻辑'
+      },
+      {
+        label: '第二层（收口）',
+        attack: '"那请财务部签一个责任承诺书？"',
+        defense: '"规范化管理应该用公司制度，不是部门承诺书。建议法务起草统一的AI使用管理办法，全公司适用。财务部支持并愿意第一个执行。"',
+        redline: '当场同意签任何文件'
+      },
+      {
+        label: '第三层（逼迫）',
+        attack: '"不愿意签是不是因为心虚？"',
+        defense: '"恰恰相反，我们主动发起这个讨论就说明了态度。签不签不是问题，问题是签一份没有制度支撑的个人文件没有法律效力。真正有意义的是建立公司级的管理制度。"',
+        redline: '被"心虚"标签激怒而当场签字'
+      }
+    ]
+  },
+  {
+    title: '追问链4：合规逻辑',
+    levels: [
+      {
+        label: '第一层（设问）',
+        attack: '"财务部使用AI之前做过合规评估吗？"',
+        defense: '"合规评估是制度化建设的一部分，也是今天要推动的事情。现在市场上还没有针对企业使用AI工具的统一合规标准——所以我们需要先建标准。"',
+        redline: '"做过评估"（可能被要求出示）或"没做"（坐实违规）'
+      },
+      {
+        label: '第二层（推论）',
+        attack: '"没有评估就使用，这本身是不是就违规了？"',
+        defense: '"现行法规并未禁止企业使用AI工具，也未规定使用前必须做专项评估。我们面对的是一个新事物，法规在完善中。今天的讨论就是走在前面建制度。"',
+        redline: '"没有违规"——过于绝对'
+      },
+      {
+        label: '第三层（结论）',
+        attack: '"那是不是应该先停下来，等评估和制度到位？"',
+        defense: '"评估和使用可以并行。医疗领域也是边临床试验边完善法规。公开信息场景风险极低，完全可以在受控条件下先行，同时建制度。一刀切全停反而浪费了积累经验的窗口期。"',
+        redline: '同意无条件暂停'
+      }
+    ]
+  },
+  {
+    title: '追问链5：大老板牌',
+    levels: [
+      {
+        label: '第一层（试探）',
+        attack: '"大老板对AI使用是什么态度？"',
+        defense: '"大老板的方向很明确——公司要积极拥抱AI，提升竞争力。今天的讨论就是落实这个方向的具体方案。"',
+        redline: '"大老板让我们用的"'
+      },
+      {
+        label: '第二层（挖坑）',
+        attack: '"大老板知道有人在用个人设备访问境外AI吗？"',
+        defense: '"大老板关注的是公司的AI战略方向和竞争力提升。执行层面的细节，正是需要我们各部门一起来规范和完善的。"',
+        redline: '"知道"或"不知道"——都是坑'
+      },
+      {
+        label: '第三层（绑架）',
+        attack: '"要不我们直接问大老板？把这个事情跟大老板确认一下？"',
+        defense: '"如果需要向大老板汇报，建议我们先形成一个各方共识的方案，而不是把分歧直接摆到大老板面前。大老板看到的应该是「我们解决了问题」，不是「我们在吵架」。"',
+        redline: '同意当场找大老板——这会暴露内部分歧'
+      }
+    ]
   }
+];
+
+const redlines = [
+  { num:1, title:'不提"个人MacBook"', reason:'暴露shadow IT，触发审计缺陷', alt:'"市场上AI工具大家都在了解和探索"' },
+  { num:2, title:'不提"代理/VPN"细节', reason:'涉及翻墙合规灰区，给对方递刀', alt:'"访问方式的管理应由IT来主导设计"' },
+  { num:3, title:'不展示具体AI使用案例', reason:'任何案例都会成为被审查的靶子', alt:'只讲行业趋势和竞对动态' },
+  { num:4, title:'不说"我们已经在用了"', reason:'等于承认未经审批的使用', alt:'"AI是大趋势，大家都在探索"' },
+  { num:5, title:'不说"法律上没有障碍"', reason:'越界到法务/政府事务部领域', alt:'"据了解尚无明确禁止性规定，具体边界需专业部门把关"' },
+  { num:6, title:'不替大老板做具体承诺', reason:'信息传递走样时成为把柄', alt:'"大老板的方向是明确的，具体节奏我们按阶段推进"' },
+  { num:7, title:'不在会上暴露内部分歧', reason:'被对方找到突破口', alt:'会前统一口径，会上一个声音' },
+  { num:8, title:'不当场否定IT方案', reason:'降低后续配合意愿', alt:'"有参考价值，我们从落地周期和业务匹配度再对比看看"' },
+  { num:9, title:'不写"零风险"进任何纪要', reason:'未来出事时成为"明知风险仍放任"的证据', alt:'用"风险可控"表述' },
+  { num:10, title:'不批评IT"阻碍创新"', reason:'破坏协作关系，激化对立', alt:'"IT在安全方面的专业能力正是我们需要的"' },
+  { num:11, title:'不说"其实很简单/几分钟搞定"', reason:'暴露操作经验，让对方确认你是AI深度用户', alt:'"这需要专业分析，具体实施方案我们可以细化"' },
+  { num:12, title:'不说"据我所知"+技术细节', reason:'知识溢出暴露使用深度（如"Claude的API支持..."）', alt:'只说"市场上了解到的信息"，不展示一手经验' },
+  { num:13, title:'被追问时不做回避注视动作', reason:'低头、看手机、看窗外=肢体语言暴露心虚', alt:'保持正常眼神接触，微微点头表示在听，然后从容回答' },
+  { num:14, title:'不抢答不过度解释', reason:'说多错多，过度解释=此地无银三百两', alt:'回答控制在3句以内，说完停顿等对方反应' },
+  { num:15, title:'不接受"牵头出使用情况说明"', reason:'等于主动生产审计证据', alt:'"使用情况调研应该是全公司范围的，建议IT或HR统一推进"' },
+  { num:16, title:'不同意带时间表的"先试点"（如"让财务部先试用1个月"）', reason:'变相承认已在用，且限定了时间=到期要交结果', alt:'"试点应该是制度化的安排，时间表和评估标准我们一起定"' },
+  { num:17, title:'不做工具间A/B对比评价', reason:'暴露你对多个AI工具的使用经验', alt:'"各工具各有特点，具体的技术评测建议IT来做"' },
+  { num:18, title:'会后48h非正式场合静默', reason:'电梯间/茶水间/微信群的随口一说可能被传话、截图', alt:'所有AI相关讨论只在正式场合进行，非正式场合一律说"按会议纪要推进就好"' }
+];
+
+// ==================== RENDER SCENARIOS ====================
+function renderScenarios() {
+  const container = document.getElementById('scenarioList');
+  if (!container) return;
+  container.innerHTML = scenarios.map(s => {
+    const dangerClass = s.danger === '高危' ? 'badge-high' : s.danger === '中危' ? 'badge-mid' : 'badge-low';
+    return `
+    <div class="collapsible">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <div class="scene-num">${s.num}</div>
+        <span class="scene-title">${s.title}</span>
+        <span class="badge ${dangerClass}" style="margin-left:auto;flex-shrink:0">${s.danger}</span>
+      </div>
+      <div class="collapsible-body">
+        <h4 style="margin-top:0">对方意图</h4>
+        <p style="font-size:13px;color:var(--gray-600);margin-bottom:14px">${s.intent}</p>
+
+        <h4>推荐回答</h4>
+        <div class="answer-box">
+          <button class="copy-btn" onclick="copyText(this)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            复制
+          </button>
+          ${s.answer.replace(/\n/g, '<br>')}
+        </div>
+
+        ${s.followup ? `
+        <h4>如果被追问</h4>
+        <div class="answer-box" style="background:#F0FFF0;border-left-color:var(--green-ok)">
+          <button class="copy-btn" onclick="copyText(this)" style="background:var(--green-ok)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            复制
+          </button>
+          ${s.followup}
+        </div>` : ''}
+
+        <h4>红线</h4>
+        <div class="redline-box">${s.redline}</div>
+
+        <div class="note-box">
+          <strong>策略注解：</strong>${s.note}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ==================== RENDER CHAINS ====================
+function renderChains() {
+  const container = document.getElementById('chainList');
+  if (!container) return;
+  container.innerHTML = chains.map((c, i) => `
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <div class="scene-num">${i+1}</div>
+      <span class="scene-title">${c.title}</span>
+    </div>
+    <div class="collapsible-body">
+      ${c.levels.map((l, li) => `
+      <div class="chain-level">
+        <div class="level-label">${l.label}</div>
+        <p style="font-size:13px;margin-bottom:8px"><strong>对方：</strong>${l.attack}</p>
+        <div class="answer-box">
+          <button class="copy-btn" onclick="copyText(this)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            复制
+          </button>
+          <strong>我方：</strong>${l.defense}
+        </div>
+        <div class="redline-box" style="font-size:13px">${l.redline}</div>
+      </div>`).join('')}
+    </div>
+  </div>`).join('');
+}
+
+// ==================== RENDER REDLINES ====================
+function renderRedlines() {
+  const container = document.getElementById('redlineList');
+  if (!container) return;
+  container.innerHTML = redlines.map(r => `
+  <div class="redline-item">
+    <div class="rl-num">${r.num}</div>
+    <div class="rl-content">
+      <div class="rl-title">${r.title}</div>
+      <div class="rl-reason"><strong>原因：</strong>${r.reason}</div>
+      <div class="rl-alt"><strong>替代：</strong>${r.alt}</div>
+    </div>
+  </div>`).join('');
+}
+
+// ==================== INTERACTIONS ====================
+function toggleCollapsible(header) {
+  const parent = header.parentElement;
+  parent.classList.toggle('open');
+}
+
+function copyText(btn) {
+  const box = btn.parentElement;
+  const clone = box.cloneNode(true);
+  clone.querySelectorAll('.copy-btn').forEach(b => b.remove());
+  const text = clone.textContent.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('已复制到剪贴板');
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('已复制到剪贴板');
+  });
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
 });
 
-// === 触控 ===
-let touchStartX = 0;
-document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-document.addEventListener('touchend', e => {
-  const dx = touchStartX - e.changedTouches[0].clientX;
-  if (Math.abs(dx) > 50) dx > 0 ? nextSlide() : prevSlide();
-}, { passive: true });
-
-// === 全屏 ===
-let hideTimer = null;
-function toggleFullscreen() {
-  const el = document.documentElement;
-  const rfs = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
-  if (document.fullscreenElement || document.webkitFullscreenElement) {
-    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-  } else if (rfs) {
-    rfs.call(el);
-  }
+// Checklist with localStorage
+function initChecklist(listId) {
+  const list = document.getElementById(listId);
+  if (!list) return;
+  const items = list.querySelectorAll('li[data-key]');
+  items.forEach(item => {
+    const key = `cl_${listId}_${item.dataset.key}`;
+    if (localStorage.getItem(key) === '1') {
+      item.classList.add('checked');
+    }
+    item.addEventListener('click', () => {
+      item.classList.toggle('checked');
+      localStorage.setItem(key, item.classList.contains('checked') ? '1' : '0');
+    });
+  });
 }
-['fullscreenchange','webkitfullscreenchange'].forEach(evt => {
-  document.addEventListener(evt, () => {
-    const fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-    document.body.classList.toggle('is-fullscreen', fs);
-    if (fs) {
-      document.addEventListener('mousemove', showControls);
-      hideControlsAfterDelay();
-    } else {
-      document.body.classList.remove('controls-hidden');
-      document.removeEventListener('mousemove', showControls);
+
+// SVG checkmarks for checked items
+function renderCheckmarks() {
+  document.querySelectorAll('.checklist li.checked .check-box').forEach(box => {
+    if (!box.innerHTML) {
+      box.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
     }
   });
-});
-function showControls() {
-  document.body.classList.remove('controls-hidden');
-  hideControlsAfterDelay();
-}
-function hideControlsAfterDelay() {
-  clearTimeout(hideTimer);
-  hideTimer = setTimeout(() => {
-    if (document.fullscreenElement || document.webkitFullscreenElement) {
-      document.body.classList.add('controls-hidden');
-    }
-  }, 2500);
+  document.querySelectorAll('.checklist li:not(.checked) .check-box').forEach(box => {
+    box.innerHTML = '';
+  });
 }
 
-// Safari 动画冻结修复
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) {
-    const active = document.querySelector('.slide.active');
-    if (active) triggerAnimations(active);
-  }
-});
+// Observer for checklist changes
+const observer = new MutationObserver(renderCheckmarks);
 
-// === 初始化 ===
-initProgress();
-triggerAnimations(slides[0]);
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', () => {
+  try { renderScenarios(); } catch(e) { console.error('renderScenarios:', e); }
+  try { renderChains(); } catch(e) { console.error('renderChains:', e); }
+  try { renderRedlines(); } catch(e) { console.error('renderRedlines:', e); }
+  try { initChecklist('prepChecklist'); } catch(e) { console.error('initChecklist:', e); }
+  try { initChecklist('minutesChecklist'); } catch(e) { console.error('initChecklist:', e); }
+  renderCheckmarks();
+
+  // Observe checklists for class changes
+  document.querySelectorAll('.checklist').forEach(list => {
+    observer.observe(list, { subtree: true, attributes: true, attributeFilter: ['class'] });
+  });
+
+  // Re-render checkmarks on click
+  document.querySelectorAll('.checklist li').forEach(item => {
+    item.addEventListener('click', () => setTimeout(renderCheckmarks, 10));
+  });
+});
 </script>
+
 </body>
 </html>
