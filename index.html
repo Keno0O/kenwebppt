@@ -713,6 +713,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
     if(hash===AUTH_HASH){
       sessionStorage.setItem('kengit-authed','1');
+      if (window.kengitTrackVisit) window.kengitTrackVisit();
       gate.style.opacity='0';gate.style.transition='opacity .5s';
       setTimeout(()=>{
         gate.remove();
@@ -2148,5 +2149,24 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<!-- kengit analytics: GoatCounter (gated) -->
+<script>
+window.kengitTrackVisit = function() {
+  if (window._kengitTracked) return;
+  window._kengitTracked = true;
+  var s = document.createElement('script');
+  s.async = true;
+  s.setAttribute('data-goatcounter', 'https://kenno.goatcounter.com/count');
+  s.src = '//gc.zgo.at/count.js';
+  document.body.appendChild(s);
+};
+if (!document.getElementById('auth-gate') || sessionStorage.getItem('kengit-authed')==='1') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.kengitTrackVisit);
+  } else {
+    window.kengitTrackVisit();
+  }
+}
+</script>
 </body>
 </html>
