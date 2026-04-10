@@ -2149,16 +2149,22 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<!-- kengit analytics: GoatCounter (gated) -->
+<!-- kengit analytics: GoatCounter (gated, inline implementation, no CDN dependency) -->
 <script>
 window.kengitTrackVisit = function() {
   if (window._kengitTracked) return;
   window._kengitTracked = true;
-  var s = document.createElement('script');
-  s.async = true;
-  s.setAttribute('data-goatcounter', 'https://kenno.goatcounter.com/count');
-  s.src = '//gc.zgo.at/count.js';
-  document.body.appendChild(s);
+  try {
+    var url = 'https://kenno.goatcounter.com/count?' +
+      'p=' + encodeURIComponent(location.pathname + location.search) +
+      '&t=' + encodeURIComponent(document.title) +
+      '&r=' + encodeURIComponent(document.referrer) +
+      '&s=' + screen.width + ',' + screen.height + ',' + (window.devicePixelRatio || 1) +
+      '&rnd=' + Math.random();
+    // 用 Image pixel 方式，不会被 CORS 阻挡，兼容性最好
+    var img = new Image(1, 1);
+    img.src = url;
+  } catch(e) {}
 };
 if (!document.getElementById('auth-gate') || sessionStorage.getItem('kengit-authed')==='1') {
   if (document.readyState === 'loading') {
