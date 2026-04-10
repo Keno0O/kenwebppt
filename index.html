@@ -103,6 +103,8 @@ body {
   border-bottom-color: var(--blue-primary);
 }
 .tab-btn svg { width: 15px; height: 15px; }
+.tab-short { display: none; }
+.tab-full { display: inline; }
 /* Tab content */
 .tab-content { display: none; padding: 32px; max-width: 1100px; margin: 0 auto; }
 .tab-content.active { display: block; }
@@ -548,9 +550,11 @@ h4 {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .tab-nav { padding: 4px 4px; overflow-x: visible; flex-wrap: wrap; display: flex; justify-content: center; gap: 0; }
-  .tab-btn { padding: 7px 10px; font-size: 11px; gap: 3px; white-space: nowrap; }
-  .tab-btn svg { width: 0; height: 0; overflow: hidden; margin: 0; }
+  .tab-nav { padding: 0 4px; overflow-x: auto; flex-wrap: nowrap; }
+  .tab-short { display: inline; }
+  .tab-full { display: none; }
+  .tab-btn { padding: 10px 11px; font-size: 12px; gap: 4px; }
+  .tab-btn svg { width: 14px; height: 14px; }
   .tab-content { padding: 20px 16px; }
   .hero-quote { padding: 32px 24px; }
   .hero-quote .quote-text { font-size: 20px; }
@@ -564,7 +568,8 @@ h4 {
   .top-header h1 { font-size: 15px; }
 }
 @media (max-width: 480px) {
-  .tab-btn { padding: 6px 8px; font-size: 10px; }
+  .tab-btn { padding: 9px 9px; font-size: 11px; }
+  .tab-btn svg { width: 12px; height: 12px; }
   .answer-box .copy-btn { padding: 2px 5px; font-size: 10px; opacity: 0.35; min-height: 20px; }
 }
 
@@ -732,35 +737,35 @@ document.addEventListener('DOMContentLoaded', function(){
 <nav class="tab-nav" id="tabNav">
   <button class="tab-btn active" data-tab="tab1">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-    战略总览
+    <span class="tab-full">战略总览</span><span class="tab-short">总览</span>
   </button>
   <button class="tab-btn" data-tab="tab2">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-    对手底牌
+    <span class="tab-full">对手底牌</span><span class="tab-short">底牌</span>
   </button>
   <button class="tab-btn" data-tab="tab3">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-    场景模拟器
+    <span class="tab-full">场景模拟器</span><span class="tab-short">场景</span>
   </button>
   <button class="tab-btn" data-tab="tab4">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-    追问升级链
+    <span class="tab-full">追问升级链</span><span class="tab-short">追问</span>
   </button>
   <button class="tab-btn" data-tab="tab5">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    法律反击
+    <span class="tab-full">法律反击</span><span class="tab-short">法律</span>
   </button>
   <button class="tab-btn" data-tab="tab6">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    红线清单
+    <span class="tab-full">红线清单</span><span class="tab-short">红线</span>
   </button>
   <button class="tab-btn" data-tab="tab7">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-    纪要攻防
+    <span class="tab-full">纪要攻防</span><span class="tab-short">纪要</span>
   </button>
   <button class="tab-btn" data-tab="tab8">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-    行动清单
+    <span class="tab-full">行动清单</span><span class="tab-short">行动</span>
   </button>
 </nav>
 
@@ -807,7 +812,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         <strong style="color:var(--green-ok)">前提四</strong>
       </div>
-      <p style="font-size:13px">竞对分析只用了公开信息——法律上无障碍（21位专家100%共识）</p>
+      <p style="font-size:13px">竞对分析使用的是公开市场信息——公开法律分析普遍认为不触发数据出境评估</p>
     </div>
     <div class="card-sm">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
@@ -1554,7 +1559,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
         复制
       </button>
-      "今天这个会，背景大家都清楚。大老板对AI应用有明确的探索要求，在座的都是直接相关的核心部门。今天的目标是——把方向收敛到可执行的方案上。我先请我们团队简要汇报业务侧的调研，然后请IT和政府事务部分享专业意见，最后我们一起把分工和下一步定下来。"
+      "感谢各位抽时间参加今天的讨论。AI技术正在快速改变各行各业的工作方式——BCG报告显示全球75%的大型企业已在部署AI工具，国内同行也在公开场合频繁提到AI赋能。作为财务部，我们一直在思考：AI时代，财务分析的效率和深度怎么提升？但这件事不可能财务关起门来做——技术安全要靠IT、合规边界要靠政府事务部。所以今天请各位一起，看看公司在这个方向上应该怎么走、怎么管、怎么分工。"
     </div>
   </div>
 
@@ -1576,7 +1581,7 @@ document.addEventListener('DOMContentLoaded', function(){
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
         复制
       </button>
-      "AI工具现在很普及，我相信在座很多人自己也接触过。关键不是追溯谁用了什么，而是公司层面如何建立统一的使用规范。这也正是今天要讨论的。"
+      "AI工具现在很普及，我相信大家或多或少都在关注和了解。关键不是追溯谁用了什么，而是公司层面如何建立统一的使用规范。这也正是今天要讨论的。"
     </div>
   </div>
 
@@ -1689,7 +1694,7 @@ const scenarios = [
   {
     num: 1, title: 'IT问"各部门有没有在用AI？"', danger: '高危',
     intent: '面向全体但实际瞄准财务部。如果否认可能被网络日志打脸，如果承认则坐实违规。',
-    answer: '"AI工具现在很普及，我相信在座很多人自己也接触过。关键不是追溯谁用了什么，而是公司层面如何建立统一的使用规范。这也正是今天要讨论的。"',
+    answer: '"AI工具现在很普及，我相信大家或多或少都在关注和了解。关键不是追溯谁用了什么，而是公司层面如何建立统一的使用规范。这也正是今天要讨论的。"',
     followup: '如果追问"那财务部呢"——"我们和大家一样，都在关注AI趋势。今天发起这个讨论，就是希望从「个人探索」变成「公司治理」。"',
     redline: '明确承认或否认财务部在用AI',
     note: '把矛头从"财务部违规"转向"全公司都需要规范"，把指控者也拉进来。'
@@ -1761,7 +1766,7 @@ const scenarios = [
   {
     num: 10, title: '"为什么不用国产工具？"', danger: '常规',
     intent: '用"国产vs境外"的框架给你贴"用境外AI=不安全"的标签。',
-    answer: '"我们一直在评估国产方案，部分场景确实可以满足需求。但竞对分析有几个特殊要求——超长文档交叉分析、多步骤推理编排——目前国产方案在这些环节还有差距。我们建议的是组合方案：日常用国产，关键深度分析用合规部署的API方案。具体对比报告我们可以会后提供。"',
+    answer: '"国产AI发展非常快，我们也在关注。其实这恰恰说明——市面上工具太多了，哪些适合、哪些安全，需要专业评估。我建议IT牵头出一个AI工具推荐清单，评估过安全性和合规性，业务部门负责验证实用性，最后出一个大家都放心的方案。"',
     followup: null,
     redline: '"国产AI不行""国外AI好太多"——贬低国产会被上纲上线',
     note: '承认国产有价值+说明特殊需求差距+提出组合方案。不否定国产，只说"还在追赶"。'
@@ -1793,7 +1798,7 @@ const scenarios = [
   {
     num: 14, title: '"Claude数据会不会用于模型训练？"', danger: '常规',
     intent: '技术层面的担忧，也是制造恐惧的手段。',
-    answer: '"这是一个技术细节问题，也是工具评估的重要维度。据了解，主流AI服务商的企业级API和商业版本都提供了明确的数据不用于训练的承诺和协议。具体的技术验证和合同条款审查，建议由IT和法务来专业评估。"',
+    answer: '"这个问题问得很专业——数据处理条款确实是选择AI工具时必须关注的。但这恰恰是IT的专业领域，我作为财务人员不太适合做技术判断。建议IT可以建立一个AI工具安全评估标准清单，以后不管哪个部门想用什么工具，拿清单一对照就清楚了。"',
     followup: '如果追问"你怎么知道"——"这是公开信息，各家AI公司的隐私政策和企业协议都有说明。具体条款的法律效力，需要法务来判断。"',
     redline: '"Claude不会用数据训练"——越权做技术保证',
     note: '承认问题合理+提供方向性信息+交给专业部门验证。不替AI公司做保证。'
@@ -1805,6 +1810,14 @@ const scenarios = [
     followup: '如果还有人说"但是..."——微笑说"刚才的提议，大家有没有反对意见？如果没有，我们就这么定。"——用沉默和确认来收场。',
     redline: '在连续施压下情绪失控、逐条辩驳（会被牵着走）、搬出大老板压人',
     note: '连续施压的应对核心是"不接球，只总结"。前三波都用"接住+转化"，第四波用系统性方案一次性回击。'
+  },
+  {
+    num: 16, title: '追问prompt内容："你们prompt里有没有出现过公司名称、战略方向？"', danger: '高危',
+    intent: '这是对手最强的攻击点。"只用了公开信息"的整个防线建立在输入端纯净的前提上。对手追问prompt内容，试图证明即使分析公开信息，prompt本身也可能包含公司商业信息。',
+    answer: '"这个问题很好，恰恰说明了为什么我们需要一套使用规范。任何工具的使用——包括搜索引擎、邮件、即时通讯——都可能涉及公司信息的流转。关键不是禁止使用工具，而是建立明确的信息分级制度：哪些信息可以在哪些场景下使用。这正是今天要讨论的核心议题。"',
+    followup: '如果追问"你能保证prompt里从没出现过公司名称吗？"——"与其靠口头保证，不如建立技术手段。比如IT可以设计输入过滤规则，自动拦截敏感关键词。制度+技术双保险，比任何人的承诺都可靠。"',
+    redline: '不说"我们的prompt里只有公开数据"（等于承认用过prompt=承认用过AI）、不做任何绝对保证',
+    note: '这是最难回答的问题。核心策略：承认问题的合理性，但把它从"你们有没有做错"转化为"所有人都需要规范"的制度建设议题。把问题的解决方案推向IT（输入过滤）和制度（信息分级），而不是由财务部自证清白。'
   }
 ];
 
