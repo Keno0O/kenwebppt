@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tesla Model 3 vs Model Y 互动介绍</title>
+
+  <!-- ASSETS:
+       - inline procedural geometry: Three.js | Box/Torus 程序化构建车身/电池/电机/车轮，对比尺寸真实数据
+  -->
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='28' fill='%237b4bb4'/></svg>">
+
+  <style>
+    :root {
+      --accent: #7b4bb4;
+      --accent-soft: #ebe1f7;
+      --bg-0: #0b1120;
+      --bg-1: #111827;
+      --text-0: #f3f4f6;
+      --text-1: #9ca3af;
+      --border: rgba(255,255,255,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg-0); color: var(--text-0); font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+
+    .app-shell { position: relative; height: 100vh; display: grid; }
+
+    #stage-mount { position: fixed; inset: 0; z-index: 0; }
+
+    .hud { position: absolute; z-index: 10; pointer-events: none; }
+    .hud > * { pointer-events: auto; }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    button {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: inherit;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      font: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    button:hover { background: rgba(255,255,255,0.1); transform: translateY(-1px); }
+    button.is-active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+    .specimen-list, .part-list { display: flex; flex-direction: column; gap: 8px; }
+    .specimen-row, .part-row {
+      width: 100%; text-align: left; padding: 10px 12px;
+      display: flex; align-items: center; gap: 10px;
+      background: transparent; border: 1px solid transparent; border-radius: 10px;
+    }
+    .specimen-row:hover, .part-row:hover { background: rgba(255,255,255,0.04); }
+    .specimen-row.is-active, .part-row.is-active {
+      background: var(--accent-soft); border-color: var(--accent); color: var(--bg-0);
+    }
+
+    .left-rail { position: absolute; left: 16px; top: 16px; bottom: 16px; width: 280px; z-index: 10; display: flex; flex-direction: column; gap: 12px; }
+    .right-rail { position: absolute; right: 16px; top: 16px; bottom: 16px; width: 320px; z-index: 10; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+    .top-bar  { position: absolute; left: 50%; top: 16px; transform: translateX(-50%); z-index: 10; }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+    .meta { color: var(--text-1); font-size: 12px; }
+
+    input[type="range"] { -webkit-appearance: none; height: 4px; background: var(--border); border-radius: 2px; }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 16px; height: 16px;
+      background: var(--accent); border-radius: 50%;
+      cursor: pointer;
+    }
+
+    @media (max-width: 720px) {
+      .left-rail, .right-rail { width: calc(100vw - 32px); height: auto; }
+      .left-rail { top: auto; bottom: 16px; }
+      .right-rail { top: 16px; bottom: auto; max-height: 40vh; }
+    }
+  </style>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/",
+      "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm",
+      "tweakpane": "https://cdn.jsdelivr.net/npm/tweakpane@4.0.4/+esm",
+      "lucide": "https://cdn.jsdelivr.net/npm/lucide@0.460.0/+esm"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <div id="stage-mount"></div>
+
+    <header class="top-bar panel">
+      <strong>Tesla Model 3 vs Model Y 互动介绍</strong>
+      <span class="meta" style="margin-left:8px">潜在购车用户 / 科技爱好者</span>
+    </header>
+
+    <aside class="left-rail panel">
+      <div>
+        <strong>Specimens</strong>
+        <div class="meta">Click to switch</div>
+      </div>
+      <div class="specimen-list" id="specimen-list">
+        <!-- 由 JS 渲染 -->
+      </div>
+      <div style="margin-top: 8px;">
+        <strong>Parts</strong>
+      </div>
+      <div class="part-list" id="part-list">
+        <!-- 由 JS 渲染 -->
+      </div>
+    </aside>
+
+    <aside class="right-rail panel">
+      <div id="detail-hero">
+        <span class="dot" id="detail-dot"></span>
+        <h3 id="detail-title">流线车身</h3>
+        <p class="meta" id="detail-subtitle">Cd 0.219 风阻系数</p>
+      </div>
+      <p id="detail-note">Model 3 是世界上风阻系数最低的量产车之一 (Cd 0.219)，4694mm × 1850mm × 1443mm。</p>
+      <div style="display:flex; gap:8px; flex-wrap: wrap;">
+        <button id="btn-rotate" class="is-active"><i data-lucide="rotate-cw"></i>Rotate</button>
+        <button id="btn-focus"><i data-lucide="target"></i>Focus</button>
+        <button id="btn-cross"><i data-lucide="scissors"></i>Cross-section</button>
+        <button id="btn-reset"><i data-lucide="refresh-ccw"></i>Reset</button>
+      </div>
+      <div>
+        <label class="meta">Time</label>
+        <input id="timeline" type="range" min="0" max="1" step="0.001" value="0" style="width:100%;">
+      </div>
+    </aside>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import gsap from 'gsap';
+    import { createIcons, icons } from 'lucide';
+
+    // ============== DATA (replace with spec.json) ==============
+    const SPECIMENS = [{"id": "model3", "name": "Model 3", "type": "Performance Sedan", "accent": "#cc0000", "accentSoft": "#fbe0e0"}, {"id": "modely", "name": "Model Y", "type": "Crossover SUV", "accent": "#1c4eaa", "accentSoft": "#dbe6f5"}];
+    const PARTS_BY_SPECIMEN = {"model3": [{"id": "m3-body", "name": "流线车身", "subtitle": "Cd 0.219 风阻系数", "color": "#d9d9d9", "shape": "box", "params": {"w": 1.85, "h": 0.42, "d": 4.7}, "position": [0, 0.05, 0], "note": "Model 3 是世界上风阻系数最低的量产车之一 (Cd 0.219)，4694mm × 1850mm × 1443mm。"}, {"id": "m3-cabin", "name": "座舱玻璃", "subtitle": "全景玻璃车顶", "color": "#0a0a0a", "shape": "box", "params": {"w": 1.55, "h": 0.34, "d": 2.4}, "position": [0, 0.42, -0.1], "note": "一体式全景玻璃车顶，无 B 柱遮挡，UV/IR 涂层防热。"}, {"id": "m3-battery", "name": "电池组", "subtitle": "75 kWh / 60 kWh", "color": "#cc0000", "shape": "box", "params": {"w": 1.6, "h": 0.12, "d": 3.0}, "position": [0, -0.22, 0], "note": "底盘集成式电池组，CATL/LG/Panasonic 三供，长续航后驱版 NEDC 675 km。"}, {"id": "m3-frontmotor", "name": "前电机", "subtitle": "感应异步 (高性能版)", "color": "#7c7c7c", "shape": "torus", "params": {"r": 0.18, "tube": 0.08}, "position": [0, -0.05, 1.6], "note": "前置永磁/感应异步电机，最大 137 kW (高性能版前置 220 kW)。"}, {"id": "m3-rearmotor", "name": "后电机", "subtitle": "永磁同步主驱", "color": "#7c7c7c", "shape": "torus", "params": {"r": 0.2, "tube": 0.09}, "position": [0, -0.05, -1.6], "note": "后置永磁同步主驱电机，三种版本：194 / 211 / 250 kW。"}, {"id": "m3-wheel-fl", "name": "前左轮", "subtitle": "18″/19″ Aero 轮毂", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.34, "tube": 0.16}, "position": [-0.92, -0.32, 1.5], "note": "标配 18\" Aero 轮毂，Performance 版 19\" 锻造铝合金。"}, {"id": "m3-wheel-fr", "name": "前右轮", "subtitle": "对称配置", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.34, "tube": 0.16}, "position": [0.92, -0.32, 1.5], "note": "前右轮，与前左对称。"}, {"id": "m3-wheel-rl", "name": "后左轮", "subtitle": "驱动轮 (RWD)", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.34, "tube": 0.16}, "position": [-0.92, -0.32, -1.5], "note": "后驱版的主要驱动轮。"}, {"id": "m3-wheel-rr", "name": "后右轮", "subtitle": "驱动轮 (RWD)", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.34, "tube": 0.16}, "position": [0.92, -0.32, -1.5], "note": "后右驱动轮。"}], "modely": [{"id": "my-body", "name": "高大车身", "subtitle": "Cd 0.23 风阻 + 大空间", "color": "#d9d9d9", "shape": "box", "params": {"w": 1.92, "h": 0.62, "d": 4.75}, "position": [0, 0.15, 0], "note": "比 Model 3 高 181mm，4750 × 1921 × 1624mm。SUV 形态空间大但风阻略高 Cd 0.23。"}, {"id": "my-cabin", "name": "座舱玻璃", "subtitle": "全景天窗 + 选配 7 座", "color": "#0a0a0a", "shape": "box", "params": {"w": 1.65, "h": 0.45, "d": 2.7}, "position": [0, 0.62, -0.05], "note": "全景玻璃车顶，可选 7 座布局（第三排）。"}, {"id": "my-battery", "name": "电池组", "subtitle": "75 kWh / 长续航 78.4 kWh", "color": "#1c4eaa", "shape": "box", "params": {"w": 1.7, "h": 0.15, "d": 3.2}, "position": [0, -0.2, 0], "note": "Model Y 与 Model 3 共享电池架构，4680 大圆柱 (新版本) 或 2170 (旧版)。"}, {"id": "my-frontmotor", "name": "前电机", "subtitle": "AWD 双电机标配", "color": "#7c7c7c", "shape": "torus", "params": {"r": 0.2, "tube": 0.09}, "position": [0, -0.05, 1.7], "note": "Model Y 中国市场全系 AWD 双电机，前置感应异步 158 kW。"}, {"id": "my-rearmotor", "name": "后电机", "subtitle": "永磁同步主驱", "color": "#7c7c7c", "shape": "torus", "params": {"r": 0.22, "tube": 0.1}, "position": [0, -0.05, -1.7], "note": "后置永磁同步 220 kW，Performance 版 264 kW。"}, {"id": "my-trunk", "name": "尾箱空间", "subtitle": "854 L / 后排放倒 2158 L", "color": "#9aa1a8", "shape": "box", "params": {"w": 1.55, "h": 0.55, "d": 1.0}, "position": [0, 0.3, -2.0], "note": "后备厢 854 L，后排放倒可达 2158 L，远大于 Model 3 (594 L)。"}, {"id": "my-wheel-fl", "name": "前左轮", "subtitle": "19″/20″/21″ Induction", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.4, "tube": 0.2}, "position": [-0.97, -0.3, 1.5], "note": "标配 19\" Gemini，可选 20\" Induction 或 Performance 21\" Überturbine。"}, {"id": "my-wheel-fr", "name": "前右轮", "subtitle": "对称配置", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.4, "tube": 0.2}, "position": [0.97, -0.3, 1.5], "note": "前右轮，对称。"}, {"id": "my-wheel-rl", "name": "后左轮", "subtitle": "驱动轮", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.4, "tube": 0.2}, "position": [-0.97, -0.3, -1.5], "note": "AWD 后驱主轮。"}, {"id": "my-wheel-rr", "name": "后右轮", "subtitle": "驱动轮", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.4, "tube": 0.2}, "position": [0.97, -0.3, -1.5], "note": "AWD 后驱主轮。"}]};
+
+    // ============== STATE ==============
+    const state = {
+      selectedId: SPECIMENS[0]?.id ?? 'default',
+      activePart: null,
+      viewMode: 'mesh',
+      crossSection: false,
+      autoRotate: true,
+      time: 0,
+    };
+
+    // ============== SCENE ==============
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color('#080d1a');
+
+    const CAMERA_Z = 8.5;
+    const FOV = 32;
+    const STARFIELD_ON = true;
+    const camera = new THREE.PerspectiveCamera(FOV, window.innerWidth/window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0, CAMERA_Z);
+
+    // Glow stage ring (near camera, fills central frame for gameui/dataviz/cosmic)
+    let stageRing = null;
+    if (STARFIELD_ON) {
+      const ringGeom = new THREE.RingGeometry(2.0, 4.5, 96, 1);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0x4f8bff, transparent: true, opacity: 0.18, side: THREE.DoubleSide,
+      });
+      stageRing = new THREE.Mesh(ringGeom, ringMat);
+      stageRing.rotation.x = -Math.PI / 2;
+      stageRing.position.y = -1.2;
+      scene.add(stageRing);
+    }
+
+    // R7 simplification: removed 1500-point starfield — glow ring is sufficient
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.localClippingEnabled = true;
+    document.querySelector('#stage-mount').appendChild(renderer.domElement);
+
+    // Lights
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    const key = new THREE.DirectionalLight(0xffffff, 1.0);
+    key.position.set(3, 5, 4);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0x7b4bb4, 0.4);
+    fill.position.set(-4, -2, -3);
+    scene.add(fill);
+
+    // Clipping plane (cross-section)
+    const clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0);
+
+    // Specimen group
+    let specimenGroup = new THREE.Group();
+    scene.add(specimenGroup);
+
+    function buildSpecimen(spec) {
+      const g = new THREE.Group();
+      g.userData.id = spec.id;
+      const parts = PARTS_BY_SPECIMEN[spec.id] || [];
+      parts.forEach((part, i) => {
+        const geom = makeGeometry(part.shape || 'sphere', part.params || {});
+        const mat = new THREE.MeshStandardMaterial({
+          color: part.color, roughness: 0.66, metalness: 0.04,
+          transparent: true, opacity: 1,
+          clippingPlanes: state.crossSection ? [clipPlane] : [],
+        });
+        const m = new THREE.Mesh(geom, mat);
+        m.position.set(...(part.position || [0, 0, 0]));
+        m.userData = { partId: part.id, label: part.name };
+        g.add(m);
+      });
+      return g;
+    }
+
+    function makeGeometry(shape, p) {
+      switch (shape) {
+        case 'sphere': return new THREE.SphereGeometry(p.r ?? 1, 64, 64);
+        case 'box':    return new THREE.BoxGeometry(p.w ?? 1, p.h ?? 1, p.d ?? 1);
+        case 'torus':  return new THREE.TorusGeometry(p.r ?? 1, p.tube ?? 0.3, 32, 100);
+        case 'tube': {
+          const points = (p.points || []).map(([x,y,z]) => new THREE.Vector3(x, y, z));
+          if (points.length < 2) return new THREE.SphereGeometry(0.5, 16, 16);
+          const curve = new THREE.CatmullRomCurve3(points);
+          return new THREE.TubeGeometry(curve, 200, p.radius ?? 0.05, 16, false);
+        }
+        default: return new THREE.SphereGeometry(0.6, 32, 32);
+      }
+    }
+
+    const INITIAL_ROTATION_Y = 0.55;
+
+    function switchSpecimen(id) {
+      const spec = SPECIMENS.find(s => s.id === id);
+      if (!spec) return;
+      state.selectedId = id;
+      scene.remove(specimenGroup);
+      specimenGroup.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
+      specimenGroup = buildSpecimen(spec);
+      specimenGroup.rotation.y = INITIAL_ROTATION_Y;
+      scene.add(specimenGroup);
+      applyAccent(spec);
+      renderSpecimenList();
+      renderPartList();
+      const firstPart = (PARTS_BY_SPECIMEN[id] || [])[0];
+      highlightPart(firstPart?.id ?? null);
+      gsap.fromTo(specimenGroup.scale, { x: 0.6, y: 0.6, z: 0.6 }, { x: 1, y: 1, z: 1, duration: 0.6, ease: 'back.out(1.6)' });
+    }
+
+    function highlightPart(partId) {
+      state.activePart = partId;
+      specimenGroup.traverse(o => {
+        if (!o.isMesh) return;
+        const isActive = o.userData.partId === partId;
+        const dimmed = state.viewMode === 'focus' && !isActive;
+        o.material.opacity = dimmed ? 0.18 : 1;
+        o.material.emissive = new THREE.Color(isActive ? o.material.color : 0x000000);
+        o.material.emissiveIntensity = isActive ? 0.34 : 0;
+      });
+      const part = (PARTS_BY_SPECIMEN[state.selectedId] || []).find(p => p.id === partId);
+      if (part) {
+        document.querySelector('#detail-title').textContent = part.name;
+        document.querySelector('#detail-subtitle').textContent = part.subtitle || '';
+        document.querySelector('#detail-note').textContent = part.note || '';
+        document.querySelector('#detail-dot').style.background = part.color;
+      }
+      renderPartList();
+    }
+
+    function applyAccent(spec) {
+      if (!spec) return;
+      const root = document.documentElement;
+      if (spec.accent) root.style.setProperty('--accent', spec.accent);
+      if (spec.accentSoft) root.style.setProperty('--accent-soft', spec.accentSoft);
+      if (stageRing && spec.accent) stageRing.material.color.set(spec.accent);
+    }
+
+    function renderSpecimenList() {
+      const el = document.querySelector('#specimen-list');
+      el.innerHTML = SPECIMENS.map(s => `
+        <button class="specimen-row ${s.id === state.selectedId ? 'is-active' : ''}" data-specimen="${s.id}">
+          <span class="dot" style="background:${s.accent || '#7b4bb4'}"></span>
+          <span><strong>${s.name}</strong><br><span class="meta">${s.type || ''}</span></span>
+        </button>
+      `).join('');
+      el.querySelectorAll('[data-specimen]').forEach(btn => {
+        btn.addEventListener('click', () => switchSpecimen(btn.dataset.specimen));
+      });
+    }
+
+    function renderPartList() {
+      const el = document.querySelector('#part-list');
+      const parts = PARTS_BY_SPECIMEN[state.selectedId] || [];
+      el.innerHTML = parts.map(p => `
+        <button class="part-row ${p.id === state.activePart ? 'is-active' : ''}" data-part="${p.id}">
+          <span class="dot" style="background:${p.color}"></span>
+          <span>${p.name}</span>
+        </button>
+      `).join('');
+      el.querySelectorAll('[data-part]').forEach(btn => {
+        btn.addEventListener('click', () => highlightPart(btn.dataset.part));
+      });
+    }
+
+    // ============== CONTROLS ==============
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.autoRotate = state.autoRotate;
+    controls.autoRotateSpeed = 1.5;
+    controls.minDistance = 1.5;
+    controls.maxDistance = 12;
+
+    // ============== UI WIRING ==============
+    document.querySelector('#btn-rotate').addEventListener('click', (e) => {
+      state.autoRotate = !state.autoRotate;
+      controls.autoRotate = state.autoRotate;
+      e.currentTarget.classList.toggle('is-active', state.autoRotate);
+    });
+
+    document.querySelector('#btn-focus').addEventListener('click', (e) => {
+      state.viewMode = state.viewMode === 'focus' ? 'mesh' : 'focus';
+      e.currentTarget.classList.toggle('is-active', state.viewMode === 'focus');
+      highlightPart(state.activePart);
+      if (state.viewMode === 'focus') {
+        gsap.to(camera.position, { x: 0, y: 0, z: CAMERA_Z * 0.55, duration: 0.7, ease: 'power2.out' });
+      } else {
+        gsap.to(camera.position, { x: 0, y: 0, z: CAMERA_Z, duration: 0.7, ease: 'power2.out' });
+      }
+    });
+
+    document.querySelector('#btn-cross').addEventListener('click', (e) => {
+      state.crossSection = !state.crossSection;
+      e.currentTarget.classList.toggle('is-active', state.crossSection);
+      specimenGroup.traverse(o => {
+        if (o.material) {
+          o.material.clippingPlanes = state.crossSection ? [clipPlane] : [];
+          o.material.clipShadows = state.crossSection;
+          o.material.needsUpdate = true;
+        }
+      });
+    });
+
+    document.querySelector('#btn-reset').addEventListener('click', () => {
+      gsap.to(camera.position, { x: 0, y: 0, z: CAMERA_Z, duration: 0.6, ease: 'power2.out' });
+      controls.target.set(0, 0, 0);
+      state.time = 0;
+      document.querySelector('#timeline').value = 0;
+    });
+
+    document.querySelector('#timeline').addEventListener('input', (e) => {
+      state.time = parseFloat(e.target.value);
+      // Hook for archetype-specific time-driven animation
+      specimenGroup.rotation.y = state.time * Math.PI * 2;
+    });
+
+    // ============== RESIZE + ANIMATE ==============
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    let animTime = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      animTime += 0.008;
+      if (stageRing) stageRing.rotation.z = animTime * 0.4;
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    // ============== INIT ==============
+    switchSpecimen(state.selectedId);
+    createIcons({ icons });
+    animate();
+  </script>
+<!-- kengit analytics: GoatCounter (gated, inline implementation, no CDN dependency) -->
+<script>
+window.kengitTrackVisit = function() {
+  if (window._kengitTracked) return;
+  window._kengitTracked = true;
+  try {
+    var url = 'https://kenno.goatcounter.com/count?' +
+      'p=' + encodeURIComponent(location.pathname + location.search) +
+      '&t=' + encodeURIComponent(document.title) +
+      '&r=' + encodeURIComponent(document.referrer) +
+      '&s=' + screen.width + ',' + screen.height + ',' + (window.devicePixelRatio || 1) +
+      '&rnd=' + Math.random();
+    var img = new Image(1, 1);
+    img.src = url;
+  } catch(e) {}
+};
+if (!document.getElementById('auth-gate') || sessionStorage.getItem('kengit-authed')==='1') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.kengitTrackVisit);
+  } else {
+    window.kengitTrackVisit();
+  }
+}
+</script>
+</body>
+</html>
