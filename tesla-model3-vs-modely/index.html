@@ -1,400 +1,534 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Tesla Model 3 vs Model Y 互动介绍</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tesla Model 3 vs Model Y · Performance Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='28' fill='%23F97316'/></svg>">
 
-  <!-- ASSETS:
-       - inline procedural geometry: Three.js | Box/Torus 程序化构建车身/电池/电机/车轮，对比尺寸真实数据
-  -->
+<style>
+:root{
+  --bg:#050505;
+  --surface:#1A1C23;
+  --surface-2:#15171C;
+  --surface-3:#0B0C10;
+  --surface-4:#222530;
+  --ink:#FFFFFF;
+  --ink-2:#8B92A5;
+  --ink-3:#525252;
+  --ink-4:#2A2C33;
+  --orange:#F97316;
+  --orange-2:#FB923C;
+  --orange-glow:rgba(249,115,22,.55);
+  --red:#DC2626;
+  --red-2:#EF4444;
+  --red-glow:rgba(220,38,38,.55);
+  --cyan:#22D3EE;
+  --cyan-glow:rgba(34,211,238,.55);
+  --green:#10B981;
+  --line-soft:rgba(255,255,255,.05);
+  --line:rgba(255,255,255,.10);
+  --line-strong:rgba(255,255,255,.18);
+  --shadow-deep:rgba(255,255,255,.05) 0 1px 1px 0 inset, rgba(0,0,0,.6) 0 4px 8px 0, rgba(0,0,0,.8) 0 1px 0 0;
+  --shadow-glow-orange:0 0 20px rgba(249,115,22,.40), 0 0 40px rgba(249,115,22,.20);
+  --shadow-glow-red:0 0 20px rgba(220,38,38,.40), 0 0 40px rgba(220,38,38,.20);
+  --shadow-glow-cyan:0 0 20px rgba(34,211,238,.40), 0 0 40px rgba(34,211,238,.20);
+  --tap:cubic-bezier(.4,0,.2,1);
+}
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='28' fill='%237b4bb4'/></svg>">
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,"PingFang SC",sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--orange);color:#000}
 
-  <style>
-    :root {
-      --accent: #7b4bb4;
-      --accent-soft: #ebe1f7;
-      --bg-0: #0b1120;
-      --bg-1: #111827;
-      --text-0: #f3f4f6;
-      --text-1: #9ca3af;
-      --border: rgba(255,255,255,0.08);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg-0); color: var(--text-0); font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+#webgl{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 100% 80% at 50% 50%, rgba(20,20,24,.6), transparent 70%),
+             radial-gradient(ellipse 120% 60% at 50% 0%, rgba(249,115,22,.05), transparent 50%),
+             radial-gradient(ellipse 100% 60% at 50% 100%, rgba(34,211,238,.04), transparent 60%),
+             #050505;
+}
 
-    .app-shell { position: relative; height: 100vh; display: grid; }
+.shell{position:fixed;inset:0;display:grid;grid-template-rows:64px 1fr 184px;z-index:1}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--line-soft);background:linear-gradient(180deg,#0B0C10,#050505);box-shadow:var(--shadow-deep)}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-mark{width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,#F97316 0%,#DC2626 100%);box-shadow:var(--shadow-glow-orange);display:grid;place-items:center;font-weight:700;font-family:'JetBrains Mono',monospace;font-size:18px}
+.brand-name{font-weight:500;letter-spacing:.04em}
+.brand-sub{color:var(--ink-2);font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:.2em;text-transform:uppercase}
+.session-status{display:flex;gap:18px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-2);letter-spacing:.18em;text-transform:uppercase}
+.led{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.6s var(--tap) infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-    #stage-mount { position: fixed; inset: 0; z-index: 0; }
+.stage{position:relative;display:grid;grid-template-columns:1fr 360px;overflow:hidden;min-height:0}
+.hero{position:relative;overflow:hidden;background:#000}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 55%;opacity:0;transition:opacity 1.2s var(--tap), transform 14s linear}
+.hero-img.is-active{opacity:1;transform:scale(1.06)}
+.hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 100%, rgba(0,0,0,.85), transparent 80%), linear-gradient(180deg, rgba(0,0,0,.5) 0%, transparent 30%, transparent 60%, rgba(0,0,0,.7) 100%);pointer-events:none}
+.hero-scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg, transparent 0, transparent 3px, rgba(255,255,255,.012) 3px, rgba(255,255,255,.012) 4px);pointer-events:none}
 
-    .hud { position: absolute; z-index: 10; pointer-events: none; }
-    .hud > * { pointer-events: auto; }
+.hero-tag{position:absolute;top:36px;left:36px;display:flex;flex-direction:column;gap:6px;z-index:5}
+.hero-tag .label{font-family:Inter,sans-serif;font-size:9px;font-weight:600;letter-spacing:.40em;text-transform:uppercase;color:var(--ink-2);transition:color .55s var(--tap)}
+.hero-tag .label.is-red{color:var(--red-2)}
+.hero-tag .label.is-cyan{color:var(--cyan)}
+.hero-tag .display{font-family:Inter,sans-serif;font-weight:200;letter-spacing:-0.04em;line-height:1.04;font-size:clamp(48px,5.6vw,84px)}
+.hero-tag .script{font-family:'Great Vibes',cursive;font-size:clamp(36px,4vw,56px);background:linear-gradient(135deg,#FFF,#FCA5A5 50%,#F97316);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 24px rgba(249,115,22,.30));padding:.05em 0 .15em;display:inline-block;line-height:1.3;transition:filter .55s var(--tap)}
+.hero-tag .script.is-cyan{background:linear-gradient(135deg,#FFF,#A5F3FC 50%,#22D3EE);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 24px rgba(34,211,238,.30))}
 
-    .panel {
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-    }
+.switcher{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:6;display:flex;background:rgba(11,12,16,.85);border:1px solid var(--line);border-radius:12px;padding:6px;box-shadow:var(--shadow-deep);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.switcher button{appearance:none;border:0;background:transparent;color:var(--ink-2);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:10px 22px;border-radius:8px;cursor:pointer;transition:all .35s var(--tap);font-weight:500;position:relative}
+.switcher button.is-active{background:linear-gradient(180deg,#222530,#15171C);color:var(--ink);box-shadow:rgba(255,255,255,.08) 0 1px 0 inset, rgba(0,0,0,.5) 0 4px 8px}
+.switcher button.is-active.red{box-shadow:rgba(255,255,255,.08) 0 1px 0 inset, rgba(0,0,0,.5) 0 4px 8px, var(--shadow-glow-red);color:#FFD5D5}
+.switcher button.is-active.cyan{box-shadow:rgba(255,255,255,.08) 0 1px 0 inset, rgba(0,0,0,.5) 0 4px 8px, var(--shadow-glow-cyan);color:#CFFAFE}
+.switcher button:hover:not(.is-active){color:var(--ink)}
 
-    button {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      color: inherit;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.18s ease;
-      font: inherit;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    button:hover { background: rgba(255,255,255,0.1); transform: translateY(-1px); }
-    button.is-active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.inspector{background:linear-gradient(180deg,#0B0C10,#050505);border-left:1px solid var(--line);padding:24px 22px;overflow-y:auto;display:flex;flex-direction:column;gap:18px;min-height:0}
+.inspector::-webkit-scrollbar{width:6px}
+.inspector::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.inspector .section-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.32em;color:var(--ink-2);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.inspector .section-label::after{content:'';flex:1;height:1px;background:var(--line)}
+.parts{display:flex;flex-direction:column;gap:8px}
+.part{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--surface-3);border:1px solid var(--line-soft);border-radius:10px;cursor:pointer;transition:all .25s var(--tap);font:inherit;color:inherit;text-align:left;width:100%}
+.part:hover{border-color:var(--line);background:var(--surface-2);transform:translateY(-1px)}
+.part.is-active{border-color:var(--accent,var(--orange));background:var(--surface-2);box-shadow:0 0 0 1px var(--accent,var(--orange)) inset, 0 0 16px var(--accent-soft,rgba(249,115,22,.3))}
+.part-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-3);letter-spacing:.18em;min-width:28px;padding-top:2px}
+.part.is-active .part-num{color:var(--accent,var(--orange))}
+.part-body{flex:1;min-width:0}
+.part-name{font-size:13px;font-weight:500;letter-spacing:-0.005em;margin-bottom:3px}
+.part-sub{font-size:11px;color:var(--ink-2);font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+.part-detail{padding:14px;background:var(--surface-3);border:1px solid var(--line-soft);border-radius:10px;font-size:12px;line-height:1.65;color:var(--ink-2);min-height:88px}
+.part-detail strong{color:var(--ink);font-weight:500}
 
-    .specimen-list, .part-list { display: flex; flex-direction: column; gap: 8px; }
-    .specimen-row, .part-row {
-      width: 100%; text-align: left; padding: 10px 12px;
-      display: flex; align-items: center; gap: 10px;
-      background: transparent; border: 1px solid transparent; border-radius: 10px;
-    }
-    .specimen-row:hover, .part-row:hover { background: rgba(255,255,255,0.04); }
-    .specimen-row.is-active, .part-row.is-active {
-      background: var(--accent-soft); border-color: var(--accent); color: var(--bg-0);
-    }
+.console{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line-soft);border-top:1px solid var(--line);box-shadow:rgba(0,0,0,.6) 0 -8px 24px;min-height:0}
+.gauge{position:relative;background:linear-gradient(180deg,#0B0C10 0%,#050505 100%);padding:18px 20px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-height:0;overflow:hidden}
+.gauge::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent)}
+.gauge-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.32em;color:var(--ink-2);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.gauge-label .led{width:6px;height:6px}
+.gauge-value{display:flex;align-items:baseline;gap:4px;font-family:Inter,sans-serif;font-weight:200;letter-spacing:-0.035em;line-height:1;font-variant-numeric:tabular-nums}
+.gauge-value .v{font-size:clamp(28px,3vw,42px);color:var(--ink)}
+.gauge-value .u{font-size:13px;color:var(--ink-2);font-weight:300;letter-spacing:.04em;margin-left:2px}
+.hbar{height:3px;background:var(--ink-4);border-radius:2px;overflow:hidden;position:relative}
+.hbar::before{content:'';position:absolute;left:0;top:0;bottom:0;width:100%;background:linear-gradient(90deg,var(--accent,var(--orange)),var(--accent-2,var(--orange-2)));transform-origin:left;transform:scaleX(var(--bar,0));transition:transform 1.4s cubic-bezier(.22,1,.36,1)}
 
-    .left-rail { position: absolute; left: 16px; top: 16px; bottom: 16px; width: 280px; z-index: 10; display: flex; flex-direction: column; gap: 12px; }
-    .right-rail { position: absolute; right: 16px; top: 16px; bottom: 16px; width: 320px; z-index: 10; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
-    .top-bar  { position: absolute; left: 50%; top: 16px; transform: translateX(-50%); z-index: 10; }
+.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px, transparent 1px);background-size:48px 48px;pointer-events:none;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000,transparent 80%);opacity:.5;z-index:1}
 
-    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
-    .meta { color: var(--text-1); font-size: 12px; }
+.mini3d{position:absolute;bottom:36px;right:36px;width:220px;height:150px;border:1px solid var(--line);border-radius:10px;background:rgba(11,12,16,.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:5;overflow:hidden;box-shadow:var(--shadow-deep)}
+.mini3d canvas{display:block;width:100%;height:100%}
+.mini3d-label{position:absolute;top:6px;left:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.24em;color:var(--ink-2);text-transform:uppercase;pointer-events:none;z-index:1;text-shadow:0 1px 2px #000}
 
-    input[type="range"] { -webkit-appearance: none; height: 4px; background: var(--border); border-radius: 2px; }
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 16px; height: 16px;
-      background: var(--accent); border-radius: 50%;
-      cursor: pointer;
-    }
+.detail-img{position:absolute;top:36px;right:36px;width:300px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#000;box-shadow:var(--shadow-deep);z-index:5;opacity:0;transform:translateX(20px);transition:opacity .55s var(--tap), transform .55s var(--tap);pointer-events:none}
+.detail-img.is-visible{opacity:1;transform:translateX(0)}
+.detail-img img{display:block;width:100%;height:auto}
+.detail-img .caption{padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-2);letter-spacing:.18em;text-transform:uppercase;border-top:1px solid var(--line-soft);background:rgba(11,12,16,.95)}
 
-    @media (max-width: 720px) {
-      .left-rail, .right-rail { width: calc(100vw - 32px); height: auto; }
-      .left-rail { top: auto; bottom: 16px; }
-      .right-rail { top: 16px; bottom: auto; max-height: 40vh; }
-    }
-  </style>
+.brand-foot{position:absolute;bottom:36px;left:36px;z-index:5;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-3);letter-spacing:.24em;text-transform:uppercase;display:flex;flex-direction:column;gap:4px}
+.brand-foot .v{color:var(--orange);font-weight:500}
 
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/",
-      "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm",
-      "tweakpane": "https://cdn.jsdelivr.net/npm/tweakpane@4.0.4/+esm",
-      "lucide": "https://cdn.jsdelivr.net/npm/lucide@0.460.0/+esm"
-    }
+@media (max-width:980px){
+  .shell{grid-template-rows:56px 1fr 140px}
+  .stage{grid-template-columns:1fr}
+  .inspector{display:none}
+  .console{grid-template-columns:repeat(3,1fr)}
+  .console .gauge:nth-child(n+4){display:none}
+  .mini3d{display:none}
+  .detail-img{display:none}
+  .hero-tag{top:20px;left:20px}
+  .hero-tag .display{font-size:clamp(36px,8vw,56px)}
+  .switcher{bottom:20px}
+  .brand-foot{bottom:20px;left:20px}
+}
+</style>
+<script type="importmap">
+{
+  "imports":{
+    "three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "gsap":"https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm"
   }
-  </script>
+}
+</script>
 </head>
 <body>
-  <div class="app-shell">
-    <div id="stage-mount"></div>
-
-    <header class="top-bar panel">
-      <strong>Tesla Model 3 vs Model Y 互动介绍</strong>
-      <span class="meta" style="margin-left:8px">潜在购车用户 / 科技爱好者</span>
-    </header>
-
-    <aside class="left-rail panel">
-      <div>
-        <strong>Specimens</strong>
-        <div class="meta">Click to switch</div>
-      </div>
-      <div class="specimen-list" id="specimen-list">
-        <!-- 由 JS 渲染 -->
-      </div>
-      <div style="margin-top: 8px;">
-        <strong>Parts</strong>
-      </div>
-      <div class="part-list" id="part-list">
-        <!-- 由 JS 渲染 -->
-      </div>
-    </aside>
-
-    <aside class="right-rail panel">
-      <div id="detail-hero">
-        <span class="dot" id="detail-dot"></span>
-        <h3 id="detail-title">流线车身</h3>
-        <p class="meta" id="detail-subtitle">Cd 0.219 风阻系数</p>
-      </div>
-      <p id="detail-note">Model 3 是世界上风阻系数最低的量产车之一 (Cd 0.219)，4694mm × 1850mm × 1443mm。</p>
-      <div style="display:flex; gap:8px; flex-wrap: wrap;">
-        <button id="btn-rotate" class="is-active"><i data-lucide="rotate-cw"></i>Rotate</button>
-        <button id="btn-focus"><i data-lucide="target"></i>Focus</button>
-        <button id="btn-cross"><i data-lucide="scissors"></i>Cross-section</button>
-        <button id="btn-reset"><i data-lucide="refresh-ccw"></i>Reset</button>
-      </div>
-      <div>
-        <label class="meta">Time</label>
-        <input id="timeline" type="range" min="0" max="1" step="0.001" value="0" style="width:100%;">
-      </div>
-    </aside>
+<!-- 访问密码门 -->
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+  <div style="font-family:-apple-system,sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <input id="auth-input" type="password" placeholder="Access Code" autocomplete="off"
+      style="width:200px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:1rem;font-family:-apple-system,sans-serif;outline:none;text-align:center;letter-spacing:.1em;"
+      onfocus="this.style.borderColor='rgba(255,255,255,.2)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
   </div>
-
-  <script type="module">
-    import * as THREE from 'three';
-    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import gsap from 'gsap';
-    import { createIcons, icons } from 'lucide';
-
-    // ============== DATA (replace with spec.json) ==============
-    const SPECIMENS = [{"id": "model3", "name": "Model 3", "type": "Performance Sedan", "accent": "#cc0000", "accentSoft": "#fbe0e0"}, {"id": "modely", "name": "Model Y", "type": "Crossover SUV", "accent": "#1c4eaa", "accentSoft": "#dbe6f5"}];
-    const PARTS_BY_SPECIMEN = {"model3": [{"id": "m3-body", "name": "流线车身", "subtitle": "Cd 0.219 风阻系数", "color": "#d9d9d9", "shape": "box", "params": {"w": 1.85, "h": 0.42, "d": 4.7}, "position": [0, 0.05, 0], "note": "Model 3 是世界上风阻系数最低的量产车之一 (Cd 0.219)，4694mm × 1850mm × 1443mm。"}, {"id": "m3-cabin", "name": "座舱玻璃", "subtitle": "全景玻璃车顶", "color": "#0a0a0a", "shape": "box", "params": {"w": 1.55, "h": 0.34, "d": 2.4}, "position": [0, 0.42, -0.1], "note": "一体式全景玻璃车顶，无 B 柱遮挡，UV/IR 涂层防热。"}, {"id": "m3-battery", "name": "电池组", "subtitle": "75 kWh / 60 kWh", "color": "#cc0000", "shape": "box", "params": {"w": 1.6, "h": 0.12, "d": 3.0}, "position": [0, -0.22, 0], "note": "底盘集成式电池组，CATL/LG/Panasonic 三供，长续航后驱版 NEDC 675 km。"}, {"id": "m3-frontmotor", "name": "前电机", "subtitle": "感应异步 (高性能版)", "color": "#7c7c7c", "shape": "torus", "params": {"r": 0.18, "tube": 0.08}, "position": [0, -0.05, 1.6], "note": "前置永磁/感应异步电机，最大 137 kW (高性能版前置 220 kW)。"}, {"id": "m3-rearmotor", "name": "后电机", "subtitle": "永磁同步主驱", "color": "#7c7c7c", "shape": "torus", "params": {"r": 0.2, "tube": 0.09}, "position": [0, -0.05, -1.6], "note": "后置永磁同步主驱电机，三种版本：194 / 211 / 250 kW。"}, {"id": "m3-wheel-fl", "name": "前左轮", "subtitle": "18″/19″ Aero 轮毂", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.34, "tube": 0.16}, "position": [-0.92, -0.32, 1.5], "note": "标配 18\" Aero 轮毂，Performance 版 19\" 锻造铝合金。"}, {"id": "m3-wheel-fr", "name": "前右轮", "subtitle": "对称配置", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.34, "tube": 0.16}, "position": [0.92, -0.32, 1.5], "note": "前右轮，与前左对称。"}, {"id": "m3-wheel-rl", "name": "后左轮", "subtitle": "驱动轮 (RWD)", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.34, "tube": 0.16}, "position": [-0.92, -0.32, -1.5], "note": "后驱版的主要驱动轮。"}, {"id": "m3-wheel-rr", "name": "后右轮", "subtitle": "驱动轮 (RWD)", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.34, "tube": 0.16}, "position": [0.92, -0.32, -1.5], "note": "后右驱动轮。"}], "modely": [{"id": "my-body", "name": "高大车身", "subtitle": "Cd 0.23 风阻 + 大空间", "color": "#d9d9d9", "shape": "box", "params": {"w": 1.92, "h": 0.62, "d": 4.75}, "position": [0, 0.15, 0], "note": "比 Model 3 高 181mm，4750 × 1921 × 1624mm。SUV 形态空间大但风阻略高 Cd 0.23。"}, {"id": "my-cabin", "name": "座舱玻璃", "subtitle": "全景天窗 + 选配 7 座", "color": "#0a0a0a", "shape": "box", "params": {"w": 1.65, "h": 0.45, "d": 2.7}, "position": [0, 0.62, -0.05], "note": "全景玻璃车顶，可选 7 座布局（第三排）。"}, {"id": "my-battery", "name": "电池组", "subtitle": "75 kWh / 长续航 78.4 kWh", "color": "#1c4eaa", "shape": "box", "params": {"w": 1.7, "h": 0.15, "d": 3.2}, "position": [0, -0.2, 0], "note": "Model Y 与 Model 3 共享电池架构，4680 大圆柱 (新版本) 或 2170 (旧版)。"}, {"id": "my-frontmotor", "name": "前电机", "subtitle": "AWD 双电机标配", "color": "#7c7c7c", "shape": "torus", "params": {"r": 0.2, "tube": 0.09}, "position": [0, -0.05, 1.7], "note": "Model Y 中国市场全系 AWD 双电机，前置感应异步 158 kW。"}, {"id": "my-rearmotor", "name": "后电机", "subtitle": "永磁同步主驱", "color": "#7c7c7c", "shape": "torus", "params": {"r": 0.22, "tube": 0.1}, "position": [0, -0.05, -1.7], "note": "后置永磁同步 220 kW，Performance 版 264 kW。"}, {"id": "my-trunk", "name": "尾箱空间", "subtitle": "854 L / 后排放倒 2158 L", "color": "#9aa1a8", "shape": "box", "params": {"w": 1.55, "h": 0.55, "d": 1.0}, "position": [0, 0.3, -2.0], "note": "后备厢 854 L，后排放倒可达 2158 L，远大于 Model 3 (594 L)。"}, {"id": "my-wheel-fl", "name": "前左轮", "subtitle": "19″/20″/21″ Induction", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.4, "tube": 0.2}, "position": [-0.97, -0.3, 1.5], "note": "标配 19\" Gemini，可选 20\" Induction 或 Performance 21\" Überturbine。"}, {"id": "my-wheel-fr", "name": "前右轮", "subtitle": "对称配置", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.4, "tube": 0.2}, "position": [0.97, -0.3, 1.5], "note": "前右轮，对称。"}, {"id": "my-wheel-rl", "name": "后左轮", "subtitle": "驱动轮", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.4, "tube": 0.2}, "position": [-0.97, -0.3, -1.5], "note": "AWD 后驱主轮。"}, {"id": "my-wheel-rr", "name": "后右轮", "subtitle": "驱动轮", "color": "#1a1a1a", "shape": "torus", "params": {"r": 0.4, "tube": 0.2}, "position": [0.97, -0.3, -1.5], "note": "AWD 后驱主轮。"}]};
-
-    // ============== STATE ==============
-    const state = {
-      selectedId: SPECIMENS[0]?.id ?? 'default',
-      activePart: null,
-      viewMode: 'mesh',
-      crossSection: false,
-      autoRotate: true,
-      time: 0,
-    };
-
-    // ============== SCENE ==============
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#080d1a');
-
-    const CAMERA_Z = 8.5;
-    const FOV = 32;
-    const STARFIELD_ON = true;
-    const camera = new THREE.PerspectiveCamera(FOV, window.innerWidth/window.innerHeight, 0.1, 100);
-    camera.position.set(0, 0, CAMERA_Z);
-
-    // Glow stage ring (near camera, fills central frame for gameui/dataviz/cosmic)
-    let stageRing = null;
-    if (STARFIELD_ON) {
-      const ringGeom = new THREE.RingGeometry(2.0, 4.5, 96, 1);
-      const ringMat = new THREE.MeshBasicMaterial({
-        color: 0x4f8bff, transparent: true, opacity: 0.18, side: THREE.DoubleSide,
-      });
-      stageRing = new THREE.Mesh(ringGeom, ringMat);
-      stageRing.rotation.x = -Math.PI / 2;
-      stageRing.position.y = -1.2;
-      scene.add(stageRing);
+  <div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0;transition:opacity .3s">incorrect code</div>
+  <div style="font-size:.6rem;color:rgba(255,255,255,.15);margin-top:20px">Press Enter to continue</div>
+</div>
+<script>
+const AUTH_HASH = '81a1a2439b6d34b7e685086ca8d2f9c2bbe94950c04d1d3e97159b70bbe98c37';
+document.addEventListener('DOMContentLoaded', function(){
+  if(sessionStorage.getItem('kengit-authed')==='1'){document.getElementById('auth-gate').remove();return}
+  const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
+  const mainEls=Array.from(document.body.children).filter(el=>el.id!=='auth-gate'&&el.tagName!=='SCRIPT'&&el.tagName!=='SVG');
+  mainEls.forEach(el=>{el.dataset.kengitHidden='1';el.style.display='none';});
+  setTimeout(()=>input.focus(),100);
+  input.addEventListener('keydown',async e=>{
+    if(e.key!=='Enter')return;
+    const val=input.value;
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(val));
+    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hash===AUTH_HASH){
+      sessionStorage.setItem('kengit-authed','1');
+      if(window.kengitTrackVisit) window.kengitTrackVisit();
+      gate.style.opacity='0';gate.style.transition='opacity .5s';
+      setTimeout(()=>{
+        gate.remove();
+        document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});
+      },500);
+    }else{
+      err.style.opacity='1';input.value='';input.style.borderColor='#E74C3C';
+      setTimeout(()=>{err.style.opacity='0';input.style.borderColor='rgba(255,255,255,.1)'},2000);
     }
+  });
+});
+</script>
 
-    // R7 simplification: removed 1500-point starfield — glow ring is sufficient
+<div id="webgl"></div>
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.localClippingEnabled = true;
-    document.querySelector('#stage-mount').appendChild(renderer.domElement);
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">T</div>
+      <div>
+        <div class="brand-name">TESLA · COMPARE</div>
+        <div class="brand-sub">Performance Console v1</div>
+      </div>
+    </div>
+    <div class="session-status">
+      <span class="led"></span>
+      <span>SYS / ONLINE</span>
+      <span style="color:var(--orange)">SESSION 001</span>
+      <span id="clock">— : — : —</span>
+    </div>
+  </header>
 
-    // Lights
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-    const key = new THREE.DirectionalLight(0xffffff, 1.0);
-    key.position.set(3, 5, 4);
-    scene.add(key);
-    const fill = new THREE.DirectionalLight(0x7b4bb4, 0.4);
-    fill.position.set(-4, -2, -3);
-    scene.add(fill);
+  <main class="stage">
+    <section class="hero" id="hero">
+      <div class="bg-grid"></div>
+      <img class="hero-img" data-spec="model3" src="assets/tesla-model3-hero.png" alt="Tesla Model 3">
+      <img class="hero-img" data-spec="modely" src="assets/tesla-modely-hero.png" alt="Tesla Model Y">
+      <div class="hero-overlay"></div>
+      <div class="hero-scan"></div>
 
-    // Clipping plane (cross-section)
-    const clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0);
+      <div class="hero-tag">
+        <span class="label is-red" id="tag-label">SEDAN · PERFORMANCE</span>
+        <h1 class="display" id="tag-name">Model 3</h1>
+        <span class="script" id="tag-script">drive the future</span>
+      </div>
 
-    // Specimen group
-    let specimenGroup = new THREE.Group();
-    scene.add(specimenGroup);
+      <div class="brand-foot">
+        <div>POWERED BY DUAL MOTOR</div>
+        <div>BUILD <span class="v" id="build-id">M3·LR·2026</span></div>
+      </div>
 
-    function buildSpecimen(spec) {
-      const g = new THREE.Group();
-      g.userData.id = spec.id;
-      const parts = PARTS_BY_SPECIMEN[spec.id] || [];
-      parts.forEach((part, i) => {
-        const geom = makeGeometry(part.shape || 'sphere', part.params || {});
-        const mat = new THREE.MeshStandardMaterial({
-          color: part.color, roughness: 0.66, metalness: 0.04,
-          transparent: true, opacity: 1,
-          clippingPlanes: state.crossSection ? [clipPlane] : [],
-        });
-        const m = new THREE.Mesh(geom, mat);
-        m.position.set(...(part.position || [0, 0, 0]));
-        m.userData = { partId: part.id, label: part.name };
-        g.add(m);
-      });
-      return g;
-    }
+      <div class="detail-img" id="detail-img">
+        <img id="detail-img-src" src="" alt="">
+        <div class="caption" id="detail-img-cap">— · —</div>
+      </div>
 
-    function makeGeometry(shape, p) {
-      switch (shape) {
-        case 'sphere': return new THREE.SphereGeometry(p.r ?? 1, 64, 64);
-        case 'box':    return new THREE.BoxGeometry(p.w ?? 1, p.h ?? 1, p.d ?? 1);
-        case 'torus':  return new THREE.TorusGeometry(p.r ?? 1, p.tube ?? 0.3, 32, 100);
-        case 'tube': {
-          const points = (p.points || []).map(([x,y,z]) => new THREE.Vector3(x, y, z));
-          if (points.length < 2) return new THREE.SphereGeometry(0.5, 16, 16);
-          const curve = new THREE.CatmullRomCurve3(points);
-          return new THREE.TubeGeometry(curve, 200, p.radius ?? 0.05, 16, false);
-        }
-        default: return new THREE.SphereGeometry(0.6, 32, 32);
-      }
-    }
+      <div class="mini3d" id="mini3d">
+        <span class="mini3d-label">3D · ACTIVE PART</span>
+      </div>
 
-    const INITIAL_ROTATION_Y = 0.55;
+      <div class="switcher" role="tablist">
+        <button data-spec="model3" class="is-active red">MODEL 3</button>
+        <button data-spec="modely">MODEL Y</button>
+      </div>
+    </section>
 
-    function switchSpecimen(id) {
-      const spec = SPECIMENS.find(s => s.id === id);
-      if (!spec) return;
-      state.selectedId = id;
-      scene.remove(specimenGroup);
-      specimenGroup.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
-      specimenGroup = buildSpecimen(spec);
-      specimenGroup.rotation.y = INITIAL_ROTATION_Y;
-      scene.add(specimenGroup);
-      applyAccent(spec);
-      renderSpecimenList();
-      renderPartList();
-      const firstPart = (PARTS_BY_SPECIMEN[id] || [])[0];
-      highlightPart(firstPart?.id ?? null);
-      gsap.fromTo(specimenGroup.scale, { x: 0.6, y: 0.6, z: 0.6 }, { x: 1, y: 1, z: 1, duration: 0.6, ease: 'back.out(1.6)' });
-    }
+    <aside class="inspector">
+      <div class="section-label">PARTS · INSPECTOR</div>
+      <div class="parts" id="parts"></div>
+      <div class="section-label">DETAIL · NOTE</div>
+      <div class="part-detail" id="part-detail">Select a part to view detail.</div>
+    </aside>
+  </main>
 
-    function highlightPart(partId) {
-      state.activePart = partId;
-      specimenGroup.traverse(o => {
-        if (!o.isMesh) return;
-        const isActive = o.userData.partId === partId;
-        const dimmed = state.viewMode === 'focus' && !isActive;
-        o.material.opacity = dimmed ? 0.18 : 1;
-        o.material.emissive = new THREE.Color(isActive ? o.material.color : 0x000000);
-        o.material.emissiveIntensity = isActive ? 0.34 : 0;
-      });
-      const part = (PARTS_BY_SPECIMEN[state.selectedId] || []).find(p => p.id === partId);
-      if (part) {
-        document.querySelector('#detail-title').textContent = part.name;
-        document.querySelector('#detail-subtitle').textContent = part.subtitle || '';
-        document.querySelector('#detail-note').textContent = part.note || '';
-        document.querySelector('#detail-dot').style.background = part.color;
-      }
-      renderPartList();
-    }
+  <footer class="console" id="console"></footer>
+</div>
 
-    function applyAccent(spec) {
-      if (!spec) return;
-      const root = document.documentElement;
-      if (spec.accent) root.style.setProperty('--accent', spec.accent);
-      if (spec.accentSoft) root.style.setProperty('--accent-soft', spec.accentSoft);
-      if (stageRing && spec.accent) stageRing.material.color.set(spec.accent);
-    }
+<script type="module">
+import * as THREE from 'three';
+import gsap from 'gsap';
 
-    function renderSpecimenList() {
-      const el = document.querySelector('#specimen-list');
-      el.innerHTML = SPECIMENS.map(s => `
-        <button class="specimen-row ${s.id === state.selectedId ? 'is-active' : ''}" data-specimen="${s.id}">
-          <span class="dot" style="background:${s.accent || '#7b4bb4'}"></span>
-          <span><strong>${s.name}</strong><br><span class="meta">${s.type || ''}</span></span>
-        </button>
-      `).join('');
-      el.querySelectorAll('[data-specimen]').forEach(btn => {
-        btn.addEventListener('click', () => switchSpecimen(btn.dataset.specimen));
-      });
-    }
+const SPECS = {
+  model3: {
+    id:'model3', name:'Model 3', type:'SEDAN · PERFORMANCE', tagline:'drive the future',
+    accent:'#DC2626', accentSoft:'rgba(220,38,38,.55)', accent2:'#EF4444', script:'red', build:'M3·LR·2026',
+    metrics:[
+      {label:'0-100 km/h', value:'3.3', unit:'s', bar:.95},
+      {label:'Top Speed', value:'261', unit:'km/h', bar:.78},
+      {label:'Range NEDC', value:'675', unit:'km', bar:.85},
+      {label:'Drag Cd', value:'0.219', unit:'', bar:1.0},
+      {label:'Battery', value:'75', unit:'kWh', bar:.62},
+      {label:'Curb Weight', value:'1844', unit:'kg', bar:.55}
+    ],
+    parts:[
+      {id:'body', name:'Streamlined Body', sub:'Cd 0.219 · class-leading', note:'<strong>4694 × 1850 × 1443 mm.</strong> Lowest production-car drag coefficient on Earth — flush handles, smooth underbody, optimised A-pillar geometry.'},
+      {id:'battery', name:'Battery Pack', sub:'75 kWh · 4680 / 2170 cells', note:'<strong>Floor-integrated structural battery.</strong> CATL / LG / Panasonic tri-supplier. Long-Range RWD reaches 675 km NEDC. The skateboard chassis defines Tesla.'},
+      {id:'motors', name:'Dual Motor', sub:'Front induction · Rear PMSM', note:'<strong>Front 137 kW / Rear 194-250 kW.</strong> Performance variant pushes front to 220 kW. Sub-3.3-second 0-100 km/h.'},
+      {id:'wheels', name:'Aero Wheels', sub:'18″ Aero / 19″ Forged', note:'<strong>18″ Aero covers cut drag by 4 %.</strong> Performance models ship 19″ forged-aluminium for unsprung-mass savings.'},
+      {id:'cabin', name:'Glass Canopy', sub:'Single-piece panoramic roof', note:'<strong>UV / IR-coated tempered glass.</strong> No B-pillar obstruction; contributes meaningfully to torsional rigidity.', img:'assets/tesla-cabin-glass.png', cap:'CABIN · GLASS CANOPY'}
+    ]
+  },
+  modely: {
+    id:'modely', name:'Model Y', type:'CROSSOVER · UTILITY', tagline:'same skateboard, more headroom',
+    accent:'#22D3EE', accentSoft:'rgba(34,211,238,.55)', accent2:'#67E8F9', script:'cyan', build:'MY·LR·2026',
+    metrics:[
+      {label:'0-100 km/h', value:'3.7', unit:'s', bar:.88},
+      {label:'Top Speed', value:'250', unit:'km/h', bar:.74},
+      {label:'Range NEDC', value:'660', unit:'km', bar:.83},
+      {label:'Drag Cd', value:'0.230', unit:'', bar:.92},
+      {label:'Battery', value:'78.4', unit:'kWh', bar:.66},
+      {label:'Cargo', value:'2158', unit:'L', bar:1.0}
+    ],
+    parts:[
+      {id:'body', name:'SUV Body', sub:'Cd 0.23 · taller, roomier', note:'<strong>4750 × 1921 × 1624 mm.</strong> 181 mm taller than Model 3 — slight drag penalty pays you back in cargo and headroom.'},
+      {id:'battery', name:'Battery Pack', sub:'78.4 kWh · 4680 cells', note:'<strong>Shared skateboard architecture.</strong> Newer 4680 large-format cylindrical cells in latest Berlin / Austin builds. Structural pack reduces parts count.'},
+      {id:'motors', name:'Dual Motor AWD', sub:'Standard AWD in China market', note:'<strong>Front induction 158 kW + Rear PMSM 220 kW.</strong> Performance variant pushes rear to 264 kW for sub-3.7 s 0-100.'},
+      {id:'wheels', name:'Induction Wheels', sub:'19″ Gemini · 20″ Induction · 21″', note:'<strong>Standard 19″ Gemini.</strong> Optional 20″ Induction. Performance ships 21″ Überturbine forged aluminium.'},
+      {id:'cabin', name:'Panoramic Roof + 7-seat', sub:'Optional third row', note:'<strong>Same glass-canopy concept.</strong> Optional 7-seat configuration with foldable third row.', img:'assets/tesla-cabin-glass.png', cap:'CABIN · PANORAMIC ROOF'},
+      {id:'trunk', name:'Cargo Capacity', sub:'854 L · 2158 L folded', note:'<strong>Far exceeds Model 3 (594 L).</strong> Power tailgate standard. Front trunk adds another 117 L.'}
+    ]
+  }
+};
 
-    function renderPartList() {
-      const el = document.querySelector('#part-list');
-      const parts = PARTS_BY_SPECIMEN[state.selectedId] || [];
-      el.innerHTML = parts.map(p => `
-        <button class="part-row ${p.id === state.activePart ? 'is-active' : ''}" data-part="${p.id}">
-          <span class="dot" style="background:${p.color}"></span>
-          <span>${p.name}</span>
-        </button>
-      `).join('');
-      el.querySelectorAll('[data-part]').forEach(btn => {
-        btn.addEventListener('click', () => highlightPart(btn.dataset.part));
-      });
-    }
+const state = { spec:'model3', activePart:null };
+const el = (s)=>document.querySelector(s);
+const partsEl = el('#parts');
+const consoleEl = el('#console');
+const partDetailEl = el('#part-detail');
+const detailImgEl = el('#detail-img');
+const detailImgSrc = el('#detail-img-src');
+const detailImgCap = el('#detail-img-cap');
 
-    // ============== CONTROLS ==============
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.06;
-    controls.autoRotate = state.autoRotate;
-    controls.autoRotateSpeed = 1.5;
-    controls.minDistance = 1.5;
-    controls.maxDistance = 12;
-
-    // ============== UI WIRING ==============
-    document.querySelector('#btn-rotate').addEventListener('click', (e) => {
-      state.autoRotate = !state.autoRotate;
-      controls.autoRotate = state.autoRotate;
-      e.currentTarget.classList.toggle('is-active', state.autoRotate);
+function renderConsole(spec){
+  consoleEl.innerHTML = spec.metrics.map((m)=>`
+    <div class="gauge" style="--accent:${spec.accent};--accent-2:${spec.accent2}">
+      <div class="gauge-label"><span class="led" style="background:${spec.accent};box-shadow:0 0 8px ${spec.accentSoft}"></span>${m.label}</div>
+      <div class="gauge-value"><span class="v" data-target="${m.value}">0</span><span class="u">${m.unit}</span></div>
+      <div class="hbar" style="--bar:0"></div>
+    </div>
+  `).join('');
+  // Counter-up animation
+  consoleEl.querySelectorAll('[data-target]').forEach(node=>{
+    const target = parseFloat(node.dataset.target);
+    const decimals = (node.dataset.target.split('.')[1]||'').length;
+    gsap.fromTo(node, {textContent:0}, {
+      textContent:target, duration:1.6, ease:'power2.out', snap:{textContent:Math.pow(.1,decimals) || 1},
+      onUpdate(){ node.textContent = parseFloat(node.textContent).toFixed(decimals); }
     });
-
-    document.querySelector('#btn-focus').addEventListener('click', (e) => {
-      state.viewMode = state.viewMode === 'focus' ? 'mesh' : 'focus';
-      e.currentTarget.classList.toggle('is-active', state.viewMode === 'focus');
-      highlightPart(state.activePart);
-      if (state.viewMode === 'focus') {
-        gsap.to(camera.position, { x: 0, y: 0, z: CAMERA_Z * 0.55, duration: 0.7, ease: 'power2.out' });
-      } else {
-        gsap.to(camera.position, { x: 0, y: 0, z: CAMERA_Z, duration: 0.7, ease: 'power2.out' });
-      }
+  });
+  // Bar fill animation
+  consoleEl.querySelectorAll('.hbar').forEach((bar,i)=>{
+    const target = spec.metrics[i]?.bar || 0;
+    gsap.to(bar, {duration:1.4, delay:.1+i*.05, ease:'expo.out',
+      onUpdate(){ bar.style.setProperty('--bar', this.progress() * target); }
     });
+  });
+}
 
-    document.querySelector('#btn-cross').addEventListener('click', (e) => {
-      state.crossSection = !state.crossSection;
-      e.currentTarget.classList.toggle('is-active', state.crossSection);
-      specimenGroup.traverse(o => {
-        if (o.material) {
-          o.material.clippingPlanes = state.crossSection ? [clipPlane] : [];
-          o.material.clipShadows = state.crossSection;
-          o.material.needsUpdate = true;
-        }
-      });
+function renderParts(spec){
+  partsEl.innerHTML = spec.parts.map((p,i)=>`
+    <button class="part" data-part="${p.id}" style="--accent:${spec.accent};--accent-soft:${spec.accentSoft}">
+      <div class="part-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="part-body">
+        <div class="part-name">${p.name}</div>
+        <div class="part-sub">${p.sub}</div>
+      </div>
+    </button>
+  `).join('');
+  partsEl.querySelectorAll('[data-part]').forEach(btn=>{
+    btn.addEventListener('click', ()=> selectPart(btn.dataset.part));
+  });
+}
+
+function selectPart(partId){
+  state.activePart = partId;
+  const spec = SPECS[state.spec];
+  const part = spec.parts.find(p=>p.id===partId);
+  if(!part) return;
+  partsEl.querySelectorAll('[data-part]').forEach(b=> b.classList.toggle('is-active', b.dataset.part===partId));
+  partDetailEl.innerHTML = part.note;
+  if(part.img){
+    detailImgSrc.src = part.img;
+    detailImgCap.textContent = part.cap;
+    detailImgEl.classList.add('is-visible');
+  } else {
+    detailImgEl.classList.remove('is-visible');
+  }
+  if(window.highlightMesh) window.highlightMesh(partId);
+}
+
+const heroImgs = document.querySelectorAll('.hero-img');
+function applySpec(specId){
+  state.spec = specId;
+  const spec = SPECS[specId];
+  heroImgs.forEach(im=> im.classList.toggle('is-active', im.dataset.spec===specId));
+  el('#tag-label').textContent = spec.type;
+  el('#tag-label').classList.toggle('is-red', spec.script==='red');
+  el('#tag-label').classList.toggle('is-cyan', spec.script==='cyan');
+  el('#tag-name').textContent = spec.name;
+  el('#tag-script').textContent = spec.tagline;
+  el('#tag-script').classList.toggle('is-cyan', spec.script==='cyan');
+  el('#build-id').textContent = spec.build;
+  document.querySelectorAll('.switcher button').forEach(b=>{
+    const isActive = b.dataset.spec===specId;
+    b.classList.toggle('is-active', isActive);
+    b.classList.toggle('red', isActive && spec.script==='red');
+    b.classList.toggle('cyan', isActive && spec.script==='cyan');
+  });
+  renderConsole(spec);
+  renderParts(spec);
+  selectPart(spec.parts[0].id);
+  if(window._tintMesh) window._tintMesh(spec.accent);
+}
+
+document.querySelectorAll('.switcher button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    if(btn.dataset.spec===state.spec) return;
+    applySpec(btn.dataset.spec);
+  });
+});
+
+// =============== MINI 3D ===============
+const mini3d = el('#mini3d');
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(mini3d.clientWidth, mini3d.clientHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+mini3d.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(38, mini3d.clientWidth/mini3d.clientHeight, .1, 100);
+camera.position.set(2.6, 1.4, 3.4);
+camera.lookAt(0, .25, 0);
+
+// HDR-like env
+const pmrem = new THREE.PMREMGenerator(renderer);
+const envCanvas = document.createElement('canvas');
+envCanvas.width = 256; envCanvas.height = 256;
+const envCtx = envCanvas.getContext('2d');
+const grad = envCtx.createLinearGradient(0,0,0,256);
+grad.addColorStop(0,'#1a2540'); grad.addColorStop(.5,'#0a0f1f'); grad.addColorStop(1,'#000');
+envCtx.fillStyle = grad; envCtx.fillRect(0,0,256,256);
+envCtx.fillStyle = 'rgba(255,180,80,0.6)'; envCtx.fillRect(40,60,16,110);
+envCtx.fillStyle = 'rgba(120,200,255,0.5)'; envCtx.fillRect(200,80,14,90);
+const envTex = new THREE.CanvasTexture(envCanvas);
+envTex.mapping = THREE.EquirectangularReflectionMapping;
+const envMap = pmrem.fromEquirectangular(envTex).texture;
+scene.environment = envMap;
+envTex.dispose(); pmrem.dispose();
+
+scene.add(new THREE.AmbientLight(0xffffff,.18));
+const key3 = new THREE.DirectionalLight(0xfff0d8, 1.4); key3.position.set(3,4,3); scene.add(key3);
+const fill3 = new THREE.DirectionalLight(0x6ab8ff, .6); fill3.position.set(-3,1,-2); scene.add(fill3);
+const rim3 = new THREE.DirectionalLight(0xff7a4a, .9); rim3.position.set(0,2,-4); scene.add(rim3);
+
+const carGroup = new THREE.Group();
+function buildCar(accent){
+  while(carGroup.children.length) carGroup.remove(carGroup.children[0]);
+  const accentColor = new THREE.Color(accent);
+  const meshes = {};
+
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(2.6, .3, 1.1),
+    new THREE.MeshPhysicalMaterial({color:'#1a1a1a', roughness:.3, metalness:.7, clearcoat:.85, clearcoatRoughness:.12})
+  );
+  body.position.y = .25; meshes.body = body; carGroup.add(body);
+
+  const cabin = new THREE.Mesh(
+    new THREE.BoxGeometry(1.5, .26, .9),
+    new THREE.MeshPhysicalMaterial({color:'#0a0a0a', roughness:.15, metalness:.5, clearcoat:1, clearcoatRoughness:.08})
+  );
+  cabin.position.y = .54; meshes.cabin = cabin; carGroup.add(cabin);
+
+  const battery = new THREE.Mesh(
+    new THREE.BoxGeometry(2.4, .08, 1.0),
+    new THREE.MeshStandardMaterial({color:accentColor, roughness:.5, metalness:.3, emissive:accentColor, emissiveIntensity:.05})
+  );
+  battery.position.y = .04; meshes.battery = battery; carGroup.add(battery);
+
+  const wheelGeom = new THREE.TorusGeometry(.22,.10,16,32);
+  const wheelMat = new THREE.MeshStandardMaterial({color:'#0a0a0a', roughness:.4, metalness:.6});
+  const positions = [[-1.0,.18,.55],[1.0,.18,.55],[-1.0,.18,-.55],[1.0,.18,-.55]];
+  meshes.wheels = positions.map(p=>{
+    const w = new THREE.Mesh(wheelGeom, wheelMat); w.position.set(...p); w.rotation.y = Math.PI/2;
+    carGroup.add(w); return w;
+  });
+
+  const motorGeom = new THREE.CylinderGeometry(.14,.14,.4,16);
+  const motorMat = new THREE.MeshStandardMaterial({color:'#7c7c7c', roughness:.3, metalness:.85});
+  const mF = new THREE.Mesh(motorGeom, motorMat); mF.position.set(1.0,.2,0); mF.rotation.z = Math.PI/2;
+  const mR = new THREE.Mesh(motorGeom, motorMat); mR.position.set(-1.0,.2,0); mR.rotation.z = Math.PI/2;
+  meshes.motors = [mF, mR];
+  carGroup.add(mF); carGroup.add(mR);
+
+  const trunk = new THREE.Mesh(
+    new THREE.BoxGeometry(.6,.18,.9),
+    new THREE.MeshStandardMaterial({color:'#3a3a3a', roughness:.6, metalness:.2})
+  );
+  trunk.position.set(-1.0,.5,0); meshes.trunk = trunk; carGroup.add(trunk);
+
+  carGroup._meshes = meshes;
+}
+buildCar(SPECS.model3.accent);
+scene.add(carGroup);
+
+window.highlightMesh = function(partId){
+  const meshes = carGroup._meshes; if(!meshes) return;
+  const accent = SPECS[state.spec].accent;
+  const accentColor = new THREE.Color(accent);
+  Object.entries(meshes).forEach(([k, v])=>{
+    const arr = Array.isArray(v) ? v : [v];
+    arr.forEach(m=>{
+      if(!m || !m.material) return;
+      const isActive = (k===partId);
+      gsap.to(m.material, { emissiveIntensity: isActive ? .55 : (k==='battery'?.05:0), duration:.5 });
+      if(isActive){ m.material.emissive = accentColor.clone(); }
     });
+  });
+};
 
-    document.querySelector('#btn-reset').addEventListener('click', () => {
-      gsap.to(camera.position, { x: 0, y: 0, z: CAMERA_Z, duration: 0.6, ease: 'power2.out' });
-      controls.target.set(0, 0, 0);
-      state.time = 0;
-      document.querySelector('#timeline').value = 0;
-    });
+window._tintMesh = function(accent){
+  if(!carGroup._meshes) return;
+  const accentColor = new THREE.Color(accent);
+  carGroup._meshes.battery.material.color = accentColor.clone();
+  carGroup._meshes.battery.material.emissive = accentColor.clone();
+};
 
-    document.querySelector('#timeline').addEventListener('input', (e) => {
-      state.time = parseFloat(e.target.value);
-      // Hook for archetype-specific time-driven animation
-      specimenGroup.rotation.y = state.time * Math.PI * 2;
-    });
+function animate(){
+  requestAnimationFrame(animate);
+  carGroup.rotation.y += .005;
+  renderer.render(scene, camera);
+}
+animate();
 
-    // ============== RESIZE + ANIMATE ==============
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+window.addEventListener('resize', ()=>{
+  if(mini3d.clientWidth === 0) return;
+  renderer.setSize(mini3d.clientWidth, mini3d.clientHeight);
+  camera.aspect = mini3d.clientWidth / mini3d.clientHeight;
+  camera.updateProjectionMatrix();
+});
 
-    let animTime = 0;
-    function animate() {
-      requestAnimationFrame(animate);
-      animTime += 0.008;
-      if (stageRing) stageRing.rotation.z = animTime * 0.4;
-      controls.update();
-      renderer.render(scene, camera);
-    }
+// Clock
+function tick(){
+  const d = new Date();
+  el('#clock').textContent = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+tick(); setInterval(tick, 1000);
 
-    // ============== INIT ==============
-    switchSpecimen(state.selectedId);
-    createIcons({ icons });
-    animate();
-  </script>
-<!-- kengit analytics: GoatCounter (gated, inline implementation, no CDN dependency) -->
+// Init
+applySpec('model3');
+</script>
+
+<!-- kengit analytics: GoatCounter (gated, inline implementation) -->
 <script>
 window.kengitTrackVisit = function() {
   if (window._kengitTracked) return;
