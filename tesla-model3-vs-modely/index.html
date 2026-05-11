@@ -61,9 +61,24 @@ html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Inter,-a
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 .stage{position:relative;display:grid;grid-template-columns:1fr 360px;overflow:hidden;min-height:0}
-.hero{position:relative;overflow:hidden;background:#000}
-.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 55%;opacity:0;transition:opacity 1.2s var(--tap), transform 14s linear}
-.hero-img.is-active{opacity:1;transform:scale(1.06)}
+.hero{position:relative;overflow:hidden;background:#000;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.hero:active{cursor:grabbing}
+.hero-stage{position:absolute;inset:0;z-index:1}
+.hero-frame{position:absolute;inset:0;background-position:center 55%;background-size:cover;background-repeat:no-repeat;opacity:0;transition:opacity .18s ease-out;will-change:opacity;transform:scale(1.04)}
+.hero-frame.is-active{opacity:1}
+.hero-hotspots{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.hero-hotspots circle{transform-origin:center;transition:opacity .42s var(--tap), r .42s var(--tap), stroke-width .42s var(--tap)}
+.hero-hotspots .hot-ring-hero{fill:none;stroke:var(--accent,var(--orange));stroke-width:3.2;opacity:0;filter:drop-shadow(0 0 14px var(--accent,var(--orange)))}
+.hero-hotspots .hot-ring-hero.is-on{opacity:.92;animation:hotpulse-hero 1.8s var(--tap) infinite}
+.hero-hotspots .hot-dot-hero{fill:var(--accent,var(--orange));opacity:0;filter:drop-shadow(0 0 14px var(--accent,var(--orange)))}
+.hero-hotspots .hot-dot-hero.is-on{opacity:1;animation:hotpulse-dot 1.8s var(--tap) infinite}
+@keyframes hotpulse-hero{0%,100%{stroke-width:3.2;opacity:.92}50%{stroke-width:5.5;opacity:.55}}
+@keyframes hotpulse-dot{0%,100%{transform:scale(1)}50%{transform:scale(1.45)}}
+.hero-grab-hint{position:absolute;top:36px;right:36px;z-index:7;display:flex;align-items:center;gap:10px;padding:9px 16px;border:1px solid rgba(255,255,255,.10);border-radius:10px;background:rgba(8,8,12,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-2);letter-spacing:.18em;text-transform:uppercase;pointer-events:none;transition:opacity .4s var(--tap)}
+.hero-grab-hint.is-dimmed{opacity:.35}
+.hero-grab-hint .hgh-icon{color:var(--accent,var(--orange));font-size:14px;animation:spin-arrow 5s linear infinite}
+.hero-grab-hint .hgh-angle{color:var(--accent,var(--orange));font-variant-numeric:tabular-nums;font-weight:500;padding-left:8px;border-left:1px solid rgba(255,255,255,.10);margin-left:2px}
+@keyframes spin-arrow{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 100%, rgba(0,0,0,.85), transparent 80%), linear-gradient(180deg, rgba(0,0,0,.5) 0%, transparent 30%, transparent 60%, rgba(0,0,0,.7) 100%);pointer-events:none}
 .hero-scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg, transparent 0, transparent 3px, rgba(255,255,255,.012) 3px, rgba(255,255,255,.012) 4px);pointer-events:none}
 
@@ -198,7 +213,6 @@ document.addEventListener('DOMContentLoaded', function(){
       gate.style.opacity='0';gate.style.transition='opacity .5s';
       setTimeout(()=>{
         gate.remove();
-        document.querySelectorAll('[data-kengitHidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});
         document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});
       },500);
     }else{
@@ -230,10 +244,15 @@ document.addEventListener('DOMContentLoaded', function(){
   <main class="stage">
     <section class="hero" id="hero">
       <div class="bg-grid"></div>
-      <img class="hero-img" data-spec="model3" src="assets/tesla-model3-hero.png" alt="Tesla Model 3">
-      <img class="hero-img" data-spec="modely" src="assets/tesla-modely-hero.png" alt="Tesla Model Y">
+      <div class="hero-stage" id="hero-stage"><!-- 16 hero frames injected by JS --></div>
+      <svg class="hero-hotspots" id="hero-hotspots" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"><!-- hero hotspots injected by JS --></svg>
       <div class="hero-overlay"></div>
       <div class="hero-scan"></div>
+      <div class="hero-grab-hint" id="hero-grab-hint">
+        <span class="hgh-icon">↻</span>
+        <span class="hgh-text">DRAG TO ROTATE · 360°</span>
+        <span class="hgh-angle" id="hero-angle-deg">45°</span>
+      </div>
 
       <div class="hero-tag">
         <span class="label is-red" id="tag-label">SEDAN · PERFORMANCE</span>
@@ -404,11 +423,9 @@ function selectPart(partId){
   if(window.highlightMesh) window.highlightMesh(partId);
 }
 
-const heroImgs = document.querySelectorAll('.hero-img');
 function applySpec(specId){
   state.spec = specId;
   const spec = SPECS[specId];
-  heroImgs.forEach(im=> im.classList.toggle('is-active', im.dataset.spec===specId));
   el('#tag-label').textContent = spec.type;
   el('#tag-label').classList.toggle('is-red', spec.script==='red');
   el('#tag-label').classList.toggle('is-cyan', spec.script==='cyan');
@@ -435,9 +452,9 @@ document.querySelectorAll('.switcher button').forEach(btn=>{
   });
 });
 
-// =============== PHOTO TURNTABLE + PART HOTSPOTS ===============
-// 8 real labnana Tesla angle photos + drag-to-rotate frame swap +
-// SVG hotspot overlay (per-part per-frame visibility) + part click → snap rotate.
+// =============== PHOTO TURNTABLE + PART HOTSPOTS (v5: hero IS turntable) ===============
+// Hero stage + mini3d both run the same 8-frame turntable state.
+// Hero gets large hotspot rings drawn directly on the big car.
 const mini3d = el('#mini3d');
 const mini3dTT = el('#mini3d-turntable');
 const mini3dHotspots = el('#mini3d-hotspots');
@@ -445,25 +462,44 @@ const mini3dId = el('#mini3d-id');
 const mini3dHint = el('#mini3d-hint');
 const mini3dLabel = mini3d.querySelector('.mini3d-label');
 const angleDeg = el('#angle-deg');
+const heroAngleDeg = el('#hero-angle-deg');
 const framePips = el('#frame-pips');
+const heroEl = el('#hero');
+const heroStage = el('#hero-stage');
+const heroHotspots = el('#hero-hotspots');
+const heroGrabHint = el('#hero-grab-hint');
 const FRAME_COUNT = 8;
 const FRAME_STEP = 360 / FRAME_COUNT;
+
+// Hero-scale hotspot coords (1600x900 viewBox). Per-frame coords so the ring
+// follows the car part across rotations. Only frames listed in `coords` render the ring.
+const HERO_HOTSPOTS = {
+  // 'body' deliberately omitted — the hero IS the body, no ring needed.
+  cabin:   { coords: { 0: [800,360,170], 1: [830,350,160], 7: [770,350,160] }, preferredFrame: 1 },
+  battery: { coords: { 2: [820,680,200], 6: [780,680,200] }, preferredFrame: 2 },
+  motors:  { coords: { 0: [800,560,160], 1: [560,580,140], 7: [1040,580,140] }, preferredFrame: 1 },
+  wheels:  { coords: { 1: [440,720,120], 2: [400,720,120], 6: [1200,720,120], 7: [1160,720,120] }, preferredFrame: 2 },
+  trunk:   { coords: { 3: [580,560,140], 4: [800,560,160], 5: [1020,560,140] }, preferredFrame: 4 },
+};
 
 const tt = {
   spec: 'model3',
   curAngle: 45,    // start at front-left 3/4 (frame 1)
   targetAngle: 45,
   curFrame: 1,
-  frameEls: { model3: [], modely: [] },
+  frameEls: { model3: [], modely: [] },      // mini3d frames
+  heroFrameEls: { model3: [], modely: [] },  // hero frames
   hotspotEls: {},
+  heroHotspotEls: {},
   activePart: null,
   autoSpin: true,
   lastInteraction: 0
 };
 
-// Build frame divs per spec (background-image swap, GPU compositor)
+// Build frame divs per spec for BOTH mini3d (small) AND hero (large)
 function buildFrames(spec){
   spec.frames.forEach((url, idx)=>{
+    // mini3d frame
     const f = document.createElement('div');
     f.className = 'mini3d-frame';
     f.style.backgroundImage = `url('${url}')`;
@@ -473,6 +509,17 @@ function buildFrames(spec){
     f.style.display = (spec.id === 'model3') ? '' : 'none';
     mini3dTT.appendChild(f);
     tt.frameEls[spec.id].push(f);
+
+    // hero frame (full-bleed, same 8 angles, just scaled up)
+    const hf = document.createElement('div');
+    hf.className = 'hero-frame';
+    hf.style.backgroundImage = `url('${url}')`;
+    hf.dataset.frame = idx;
+    hf.dataset.spec = spec.id;
+    if(spec.id === 'model3' && idx === 1) hf.classList.add('is-active');
+    hf.style.display = (spec.id === 'model3') ? '' : 'none';
+    heroStage.appendChild(hf);
+    tt.heroFrameEls[spec.id].push(hf);
   });
 }
 buildFrames(SPECS.model3);
@@ -502,10 +549,12 @@ function updatePips(idx){
   });
 }
 
-// Build hotspot SVG circles
+// Build hotspot SVG circles for both mini3d (small) AND hero (large)
 function buildHotspots(){
   mini3dHotspots.innerHTML = '';
+  heroHotspots.innerHTML = '';
   Object.entries(PART_HOTSPOTS).forEach(([pid, h])=>{
+    // mini3d hotspot (small, fixed coords for frame 1 view)
     const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
     ring.setAttribute('class','hot-ring');
     ring.setAttribute('cx', h.cx); ring.setAttribute('cy', h.cy); ring.setAttribute('r', h.r);
@@ -518,11 +567,29 @@ function buildHotspots(){
     mini3dHotspots.appendChild(dot);
     tt.hotspotEls[pid] = { ring, dot };
   });
+  // Hero hotspots: per-frame coords, only render if HERO_HOTSPOTS has a matching frame
+  Object.entries(HERO_HOTSPOTS).forEach(([pid, h])=>{
+    const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    ring.setAttribute('class','hot-ring-hero');
+    ring.dataset.part = pid;
+    heroHotspots.appendChild(ring);
+    const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('class','hot-dot-hero');
+    dot.setAttribute('r', 9);
+    dot.dataset.part = pid;
+    heroHotspots.appendChild(dot);
+    tt.heroHotspotEls[pid] = { ring, dot };
+  });
 }
 buildHotspots();
 
 function showFrame(specId, frameIdx){
+  // mini3d
   tt.frameEls[specId].forEach((f, i)=>{
+    f.classList.toggle('is-active', i === frameIdx);
+  });
+  // hero
+  tt.heroFrameEls[specId].forEach((f, i)=>{
     f.classList.toggle('is-active', i === frameIdx);
   });
   updatePips(frameIdx);
@@ -531,17 +598,40 @@ function showFrame(specId, frameIdx){
 
 function updateHotspotsVisibility(frameIdx){
   if(!tt.activePart) return;
-  const h = PART_HOTSPOTS[tt.activePart];
-  if(!h) return;
-  const visible = h.visibleFrames.includes(frameIdx);
-  const {ring, dot} = tt.hotspotEls[tt.activePart];
-  ring.classList.toggle('is-on', visible);
-  dot.classList.toggle('is-on', visible);
+  // mini3d hotspot (visibleFrames list)
+  const mh = PART_HOTSPOTS[tt.activePart];
+  if(mh){
+    const visible = mh.visibleFrames.includes(frameIdx);
+    const {ring, dot} = tt.hotspotEls[tt.activePart];
+    ring.classList.toggle('is-on', visible);
+    dot.classList.toggle('is-on', visible);
+  }
+  // hero hotspot (per-frame coords)
+  const hh = HERO_HOTSPOTS[tt.activePart];
+  if(hh){
+    const coord = hh.coords[frameIdx];
+    const {ring, dot} = tt.heroHotspotEls[tt.activePart];
+    if(coord){
+      ring.setAttribute('cx', coord[0]);
+      ring.setAttribute('cy', coord[1]);
+      ring.setAttribute('r', coord[2]);
+      dot.setAttribute('cx', coord[0]);
+      dot.setAttribute('cy', coord[1]);
+      ring.classList.add('is-on');
+      dot.classList.add('is-on');
+    } else {
+      ring.classList.remove('is-on');
+      dot.classList.remove('is-on');
+    }
+  }
 }
 
 function setSpec(specId){
   tt.spec = specId;
   Object.entries(tt.frameEls).forEach(([sid, arr])=>{
+    arr.forEach(f=>{ f.style.display = (sid === specId) ? '' : 'none'; });
+  });
+  Object.entries(tt.heroFrameEls).forEach(([sid, arr])=>{
     arr.forEach(f=>{ f.style.display = (sid === specId) ? '' : 'none'; });
   });
   showFrame(specId, tt.curFrame);
@@ -552,11 +642,14 @@ function setSpec(specId){
 let dragging = false, lastX = 0, lastY = 0;
 const DRAG_PX_PER_DEG = 2.4;
 function dragStart(e){
+  // ignore drags that started on a button or switcher
+  if(e.target && (e.target.closest('button') || e.target.closest('.switcher') || e.target.closest('.mini3d-frame-pips') || e.target.closest('.mini3d-attr'))) return;
   dragging = true; tt.autoSpin = false; tt.lastInteraction = performance.now();
   mini3dHint.classList.add('is-dimmed');
+  heroGrabHint.classList.add('is-dimmed');
   const t = e.touches ? e.touches[0] : e;
   lastX = t.clientX; lastY = t.clientY;
-  if(e.preventDefault) e.preventDefault();
+  if(e.preventDefault && e.cancelable) e.preventDefault();
 }
 function dragMove(e){
   if(!dragging) return;
@@ -569,23 +662,31 @@ function dragMove(e){
 }
 function dragEnd(){ dragging = false; tt.lastInteraction = performance.now(); }
 mini3d.addEventListener('mousedown', dragStart);
+heroEl.addEventListener('mousedown', dragStart);
 window.addEventListener('mousemove', dragMove);
 window.addEventListener('mouseup', dragEnd);
 mini3d.addEventListener('touchstart', dragStart, {passive: false});
+heroEl.addEventListener('touchstart', dragStart, {passive: false});
 window.addEventListener('touchmove', dragMove, {passive: false});
 window.addEventListener('touchend', dragEnd);
-mini3d.addEventListener('wheel', (e)=>{
+const wheelHandler = (e)=>{
   e.preventDefault();
   tt.targetAngle += e.deltaY * 0.4;
   tt.lastInteraction = performance.now();
   tt.autoSpin = false;
-}, {passive: false});
+};
+mini3d.addEventListener('wheel', wheelHandler, {passive: false});
+heroEl.addEventListener('wheel', wheelHandler, {passive: false});
 
 // rAF: smooth angle, auto-spin idle
 function rafTurntable(now){
   const idleMs = now - tt.lastInteraction;
   if(tt.autoSpin && idleMs > 1800){ tt.targetAngle += 0.22; }
-  else if(idleMs > 4500){ tt.autoSpin = true; mini3dHint.classList.remove('is-dimmed'); }
+  else if(idleMs > 4500){
+    tt.autoSpin = true;
+    mini3dHint.classList.remove('is-dimmed');
+    heroGrabHint.classList.remove('is-dimmed');
+  }
   tt.curAngle += (tt.targetAngle - tt.curAngle) * 0.18;
   let normAngle = ((tt.curAngle % 360) + 360) % 360;
   const newFrame = Math.round(normAngle / FRAME_STEP) % FRAME_COUNT;
@@ -593,7 +694,9 @@ function rafTurntable(now){
     tt.curFrame = newFrame;
     showFrame(tt.spec, newFrame);
   }
-  angleDeg.textContent = `${Math.round(normAngle)}°`;
+  const angleStr = `${Math.round(normAngle)}°`;
+  angleDeg.textContent = angleStr;
+  if(heroAngleDeg) heroAngleDeg.textContent = angleStr;
   requestAnimationFrame(rafTurntable);
 }
 requestAnimationFrame(rafTurntable);
@@ -601,8 +704,11 @@ requestAnimationFrame(rafTurntable);
 // Part click → snap to preferredFrame + activate hotspot + paint pulse
 window.highlightMesh = function(partId){
   tt.activePart = partId;
-  // Hide all hotspots first
+  // Hide ALL hotspots first (both mini3d and hero)
   Object.values(tt.hotspotEls).forEach(({ring, dot})=>{
+    ring.classList.remove('is-on'); dot.classList.remove('is-on');
+  });
+  Object.values(tt.heroHotspotEls).forEach(({ring, dot})=>{
     ring.classList.remove('is-on'); dot.classList.remove('is-on');
   });
   const h = PART_HOTSPOTS[partId];
@@ -627,6 +733,8 @@ window._tintMesh = function(accent, specId){
   mini3dLabel.style.setProperty('--accent', accent);
   mini3dHotspots.style.setProperty('--accent', accent);
   framePips.style.setProperty('--accent', accent);
+  heroHotspots.style.setProperty('--accent', accent);
+  heroGrabHint.style.setProperty('--accent', accent);
 };
 
 // Clock
