@@ -112,9 +112,17 @@ html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Inter,-a
 
 .bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px, transparent 1px);background-size:48px 48px;pointer-events:none;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000,transparent 80%);opacity:.5;z-index:1}
 
-.mini3d{position:absolute;bottom:36px;right:36px;width:220px;height:150px;border:1px solid var(--line);border-radius:10px;background:rgba(11,12,16,.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:5;overflow:hidden;box-shadow:var(--shadow-deep)}
+.mini3d{position:absolute;bottom:36px;right:36px;width:320px;height:220px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg, rgba(28,31,40,.92), rgba(11,12,16,.92));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:5;overflow:hidden;box-shadow:var(--shadow-deep), 0 0 0 1px rgba(255,255,255,.04) inset}
 .mini3d canvas{display:block;width:100%;height:100%}
-.mini3d-label{position:absolute;top:6px;left:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.24em;color:var(--ink-2);text-transform:uppercase;pointer-events:none;z-index:1;text-shadow:0 1px 2px #000}
+.mini3d-label{position:absolute;top:8px;left:10px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.24em;color:var(--ink-2);text-transform:uppercase;pointer-events:none;z-index:2;text-shadow:0 1px 2px #000;display:flex;align-items:center;gap:6px}
+.mini3d-label .led{width:5px;height:5px;border-radius:50%;background:var(--orange);box-shadow:0 0 6px var(--orange);animation:pulse 1.6s var(--tap) infinite}
+.mini3d-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink-2);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;pointer-events:none;z-index:3;background:rgba(11,12,16,.6);transition:opacity .55s var(--tap)}
+.mini3d-loading.is-hidden{opacity:0;pointer-events:none}
+.mini3d-attr{position:absolute;bottom:6px;right:8px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;color:rgba(139,146,165,.55);pointer-events:auto;z-index:2;text-decoration:none}
+.mini3d-attr:hover{color:var(--ink-2)}
+.mini3d-spin{position:absolute;width:24px;height:24px;border:2px solid rgba(255,255,255,.1);border-top-color:var(--orange);border-radius:50%;animation:spin 1s linear infinite;margin:-12px 0 0 -12px;top:50%;left:50%;display:none}
+.mini3d-loading.is-loading .mini3d-spin{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 .detail-img{position:absolute;top:36px;right:36px;width:300px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#000;box-shadow:var(--shadow-deep);z-index:5;opacity:0;transform:translateX(20px);transition:opacity .55s var(--tap), transform .55s var(--tap);pointer-events:none}
 .detail-img.is-visible{opacity:1;transform:translateX(0)}
@@ -142,6 +150,7 @@ html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Inter,-a
 {
   "imports":{
     "three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/",
     "gsap":"https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm"
   }
 }
@@ -232,7 +241,9 @@ document.addEventListener('DOMContentLoaded', function(){
       </div>
 
       <div class="mini3d" id="mini3d">
-        <span class="mini3d-label">3D · ACTIVE PART</span>
+        <span class="mini3d-label"><span class="led"></span>PREMIUM · 3D SPECIMEN</span>
+        <div class="mini3d-loading is-loading" id="mini3d-loading"><span class="mini3d-spin"></span></div>
+        <a class="mini3d-attr" href="https://threejs.org/examples/?q=ferrari" target="_blank" rel="noopener">© Ferrari · three.js · CC-BY 3.0</a>
       </div>
 
       <div class="switcher" role="tablist">
@@ -254,6 +265,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <script type="module">
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import gsap from 'gsap';
 
 const SPECS = {
@@ -396,116 +410,239 @@ document.querySelectorAll('.switcher button').forEach(btn=>{
   });
 });
 
-// =============== MINI 3D ===============
+// =============== MINI 3D · PREMIUM SPECIMEN ===============
+// 5-light rig + RoomEnvironment + ContactShadows-equivalent + PBR clearcoat
+// Methodology: 3DCellForge + cell-architecture-studio (Dilum Sanjaya pipeline)
 const mini3d = el('#mini3d');
-const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+const miniLoading = el('#mini3d-loading');
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true, premultipliedAlpha:false});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.setSize(mini3d.clientWidth, mini3d.clientHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
+renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 mini3d.appendChild(renderer.domElement);
+
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(38, mini3d.clientWidth/mini3d.clientHeight, .1, 100);
-camera.position.set(2.6, 1.4, 3.4);
-camera.lookAt(0, .25, 0);
+scene.background = null;
 
-// HDR-like env
+// RoomEnvironment — studio-grade indirect lighting
 const pmrem = new THREE.PMREMGenerator(renderer);
-const envCanvas = document.createElement('canvas');
-envCanvas.width = 256; envCanvas.height = 256;
-const envCtx = envCanvas.getContext('2d');
-const grad = envCtx.createLinearGradient(0,0,0,256);
-grad.addColorStop(0,'#1a2540'); grad.addColorStop(.5,'#0a0f1f'); grad.addColorStop(1,'#000');
-envCtx.fillStyle = grad; envCtx.fillRect(0,0,256,256);
-envCtx.fillStyle = 'rgba(255,180,80,0.6)'; envCtx.fillRect(40,60,16,110);
-envCtx.fillStyle = 'rgba(120,200,255,0.5)'; envCtx.fillRect(200,80,14,90);
-const envTex = new THREE.CanvasTexture(envCanvas);
-envTex.mapping = THREE.EquirectangularReflectionMapping;
-const envMap = pmrem.fromEquirectangular(envTex).texture;
-scene.environment = envMap;
-envTex.dispose(); pmrem.dispose();
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-scene.add(new THREE.AmbientLight(0xffffff,.18));
-const key3 = new THREE.DirectionalLight(0xfff0d8, 1.4); key3.position.set(3,4,3); scene.add(key3);
-const fill3 = new THREE.DirectionalLight(0x6ab8ff, .6); fill3.position.set(-3,1,-2); scene.add(fill3);
-const rim3 = new THREE.DirectionalLight(0xff7a4a, .9); rim3.position.set(0,2,-4); scene.add(rim3);
+const camera = new THREE.PerspectiveCamera(26, mini3d.clientWidth/mini3d.clientHeight, .1, 100);
+camera.position.set(5.6, 1.05, 5.0);
+camera.lookAt(0, .55, 0);
+
+// 5-light rig (cell-architecture-studio params)
+scene.add(new THREE.AmbientLight(0xffffff, 1.28));
+const hemi = new THREE.HemisphereLight(0xfff8ea, 0xe3ded2, 1.18); scene.add(hemi);
+const keyL = new THREE.DirectionalLight(0xfff0d8, 2.4);
+keyL.position.set(4.2, 5.2, 5.8); keyL.castShadow = true;
+keyL.shadow.mapSize.set(1024, 1024); keyL.shadow.bias = -0.0005;
+keyL.shadow.camera.near = 0.5; keyL.shadow.camera.far = 20;
+keyL.shadow.camera.left = -4; keyL.shadow.camera.right = 4;
+keyL.shadow.camera.top = 4; keyL.shadow.camera.bottom = -4;
+scene.add(keyL);
+const fillL = new THREE.DirectionalLight(0x6ab8ff, 0.82); fillL.position.set(-4.4, 2.2, 3.6); scene.add(fillL);
+const spotL = new THREE.SpotLight(0xff7a4a, 1.45, 12, 0.42, 0.74); spotL.position.set(-3.6, 3.2, 4.6); spotL.target.position.set(0,0,0); scene.add(spotL, spotL.target);
+const pointL = new THREE.PointLight(0xffaaff, 0.6, 8); pointL.position.set(2.8, -1.2, 3.2); scene.add(pointL);
+
+// Contact-shadow-equivalent: dark soft circle plane below
+const shadowCanvas = document.createElement('canvas');
+shadowCanvas.width = 256; shadowCanvas.height = 256;
+const sctx = shadowCanvas.getContext('2d');
+const sgrad = sctx.createRadialGradient(128,128,0, 128,128,128);
+sgrad.addColorStop(0, 'rgba(0,0,0,.55)');
+sgrad.addColorStop(0.7, 'rgba(0,0,0,.05)');
+sgrad.addColorStop(1, 'rgba(0,0,0,0)');
+sctx.fillStyle = sgrad; sctx.fillRect(0,0,256,256);
+const shadowTex = new THREE.CanvasTexture(shadowCanvas);
+const shadowMat = new THREE.MeshBasicMaterial({map: shadowTex, transparent: true, depthWrite: false});
+const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 6.5), shadowMat);
+shadowPlane.rotation.x = -Math.PI/2; shadowPlane.position.y = -0.02;
+scene.add(shadowPlane);
+
+// Ground reflective floor (subtle)
+const floorMat = new THREE.MeshPhysicalMaterial({color:'#0a0a0d', roughness:0.42, metalness:0.5, clearcoat:0.4});
+const floor = new THREE.Mesh(new THREE.CircleGeometry(4.5, 64), floorMat);
+floor.rotation.x = -Math.PI/2; floor.position.y = -0.025; floor.receiveShadow = true;
+scene.add(floor);
 
 const carGroup = new THREE.Group();
-function buildCar(accent){
-  while(carGroup.children.length) carGroup.remove(carGroup.children[0]);
-  const accentColor = new THREE.Color(accent);
-  const meshes = {};
-
-  const body = new THREE.Mesh(
-    new THREE.BoxGeometry(2.6, .3, 1.1),
-    new THREE.MeshPhysicalMaterial({color:'#1a1a1a', roughness:.3, metalness:.7, clearcoat:.85, clearcoatRoughness:.12})
-  );
-  body.position.y = .25; meshes.body = body; carGroup.add(body);
-
-  const cabin = new THREE.Mesh(
-    new THREE.BoxGeometry(1.5, .26, .9),
-    new THREE.MeshPhysicalMaterial({color:'#0a0a0a', roughness:.15, metalness:.5, clearcoat:1, clearcoatRoughness:.08})
-  );
-  cabin.position.y = .54; meshes.cabin = cabin; carGroup.add(cabin);
-
-  const battery = new THREE.Mesh(
-    new THREE.BoxGeometry(2.4, .08, 1.0),
-    new THREE.MeshStandardMaterial({color:accentColor, roughness:.5, metalness:.3, emissive:accentColor, emissiveIntensity:.05})
-  );
-  battery.position.y = .04; meshes.battery = battery; carGroup.add(battery);
-
-  const wheelGeom = new THREE.TorusGeometry(.22,.10,16,32);
-  const wheelMat = new THREE.MeshStandardMaterial({color:'#0a0a0a', roughness:.4, metalness:.6});
-  const positions = [[-1.0,.18,.55],[1.0,.18,.55],[-1.0,.18,-.55],[1.0,.18,-.55]];
-  meshes.wheels = positions.map(p=>{
-    const w = new THREE.Mesh(wheelGeom, wheelMat); w.position.set(...p); w.rotation.y = Math.PI/2;
-    carGroup.add(w); return w;
-  });
-
-  const motorGeom = new THREE.CylinderGeometry(.14,.14,.4,16);
-  const motorMat = new THREE.MeshStandardMaterial({color:'#7c7c7c', roughness:.3, metalness:.85});
-  const mF = new THREE.Mesh(motorGeom, motorMat); mF.position.set(1.0,.2,0); mF.rotation.z = Math.PI/2;
-  const mR = new THREE.Mesh(motorGeom, motorMat); mR.position.set(-1.0,.2,0); mR.rotation.z = Math.PI/2;
-  meshes.motors = [mF, mR];
-  carGroup.add(mF); carGroup.add(mR);
-
-  const trunk = new THREE.Mesh(
-    new THREE.BoxGeometry(.6,.18,.9),
-    new THREE.MeshStandardMaterial({color:'#3a3a3a', roughness:.6, metalness:.2})
-  );
-  trunk.position.set(-1.0,.5,0); meshes.trunk = trunk; carGroup.add(trunk);
-
-  carGroup._meshes = meshes;
-}
-buildCar(SPECS.model3.accent);
 scene.add(carGroup);
 
-window.highlightMesh = function(partId){
-  const meshes = carGroup._meshes; if(!meshes) return;
-  const accent = SPECS[state.spec].accent;
-  const accentColor = new THREE.Color(accent);
-  Object.entries(meshes).forEach(([k, v])=>{
-    const arr = Array.isArray(v) ? v : [v];
-    arr.forEach(m=>{
-      if(!m || !m.material) return;
-      const isActive = (k===partId);
-      gsap.to(m.material, { emissiveIntensity: isActive ? .55 : (k==='battery'?.05:0), duration:.5 });
-      if(isActive){ m.material.emissive = accentColor.clone(); }
-    });
+// === GLB Loader: Ferrari (PBR/clearcoat, Draco-compressed) — premium specimen ===
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/libs/draco/gltf/');
+const loader = new GLTFLoader();
+loader.setDRACOLoader(dracoLoader);
+let carRoot = null, carPaintMat = null;
+const ferrariURL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/models/gltf/ferrari.glb';
+
+// Tint all paint-like body panels (not just one mat). Identifies via material name + size heuristic.
+const allPaintMats = new Set();
+function applyTintTo(material, accent){
+  // Single material override (backward compat)
+  if(material && material.color){
+    material.color.set(accent);
+  }
+  // Tint all collected paint materials
+  const c = new THREE.Color(accent);
+  allPaintMats.forEach(m=>{
+    if(m && m.color) m.color.copy(c);
   });
+}
+
+window._glbStatus = 'loading';
+loader.load(ferrariURL, (gltf)=>{
+  carRoot = gltf.scene;
+  // Ferrari demo uses an empty Object3D scene that holds a child group — find the actual model
+  const box = new THREE.Box3().setFromObject(carRoot);
+  const size = new THREE.Vector3(); box.getSize(size);
+  const longest = Math.max(size.x, size.y, size.z);
+  if(longest < 0.01){ // empty / failed
+    console.warn('Ferrari GLB empty bbox, falling back');
+    buildProceduralCar();
+    miniLoading.classList.add('is-hidden');
+    window._glbStatus = 'empty';
+    return;
+  }
+  const scaleFactor = 4.2 / longest;
+  carRoot.scale.setScalar(scaleFactor);
+  const recentered = new THREE.Box3().setFromObject(carRoot);
+  const center = new THREE.Vector3(); recentered.getCenter(center);
+  carRoot.position.x -= center.x;
+  carRoot.position.y -= recentered.min.y;
+  carRoot.position.z -= center.z;
+  // Initial 3/4 hero shot angle
+  carRoot.rotation.y = -0.55;
+  // Material polish — find paint by name + clearcoat heuristic
+  // Ferrari demo names: body, rim_fl/fr/rl/rr, glass (we want body only as paint)
+  carRoot.traverse((o)=>{
+    if(o.isMesh){
+      o.castShadow = true; o.receiveShadow = true;
+      if(o.material){
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        mats.forEach(m=>{
+          m.envMapIntensity = 1.35;
+          if(m.map){ m.map.anisotropy = 8; }
+        });
+      }
+      // Identify "paint" by mesh name (Ferrari demo: 'body', 'paint', or has high clearcoat)
+      const n = (o.name||'').toLowerCase();
+      const isPaint = /body|paint|fender|hood|door|panel/.test(n) ||
+                      (o.material && !Array.isArray(o.material) && o.material.clearcoat > 0.5);
+      if(isPaint && !Array.isArray(o.material)){
+        o.material.clearcoat = 0.95;
+        o.material.clearcoatRoughness = 0.08;
+        o.material.metalness = Math.max(o.material.metalness||0, 0.65);
+        o.material.roughness = Math.min(o.material.roughness||1, 0.32);
+        allPaintMats.add(o.material);
+        if(!carPaintMat) carPaintMat = o.material;
+      }
+    }
+  });
+  // Fallback: if no name match, use largest mesh
+  if(allPaintMats.size === 0){
+    let largestPaint = null, largestArea = 0;
+    carRoot.traverse((o)=>{
+      if(o.isMesh && o.material && !Array.isArray(o.material)){
+        const bb = new THREE.Box3().setFromObject(o);
+        const sz = new THREE.Vector3(); bb.getSize(sz);
+        const area = sz.x*sz.z;
+        if(area > largestArea){ largestArea = area; largestPaint = o.material; }
+      }
+    });
+    if(largestPaint){
+      allPaintMats.add(largestPaint);
+      carPaintMat = largestPaint;
+    }
+  }
+  carGroup.add(carRoot);
+  applyTintTo(carPaintMat, SPECS[state.spec].accent);
+  miniLoading.classList.remove('is-loading');
+  miniLoading.classList.add('is-hidden');
+  window._glbStatus = 'loaded';
+  window._glbMeshCount = 0;
+  window._glbMeshNames = [];
+  carRoot.traverse(o=>{ if(o.isMesh){ window._glbMeshCount++; if(window._glbMeshNames.length<12) window._glbMeshNames.push(o.name); } });
+  window._paintMatsCount = allPaintMats.size;
+}, (xhr)=>{ /* progress */ },
+(err)=>{
+  console.warn('GLB load failed, falling back to procedural:', err);
+  miniLoading.classList.add('is-hidden');
+  buildProceduralCar();
+  window._glbStatus = 'error';
+});
+
+// Highlight via halo ring (not emissive — preserves PBR look)
+const haloGeom = new THREE.RingGeometry(1.8, 2.1, 64);
+const haloMat = new THREE.MeshBasicMaterial({color:0xff7a4a, transparent:true, opacity:0, side:THREE.DoubleSide, depthWrite:false});
+const halo = new THREE.Mesh(haloGeom, haloMat);
+halo.rotation.x = -Math.PI/2; halo.position.y = 0.02;
+scene.add(halo);
+
+function buildProceduralCar(){
+  const bodyGeom = new THREE.BoxGeometry(2.8, .42, 1.18, 6, 4, 6);
+  // Round corners
+  const pos = bodyGeom.attributes.position;
+  const v = new THREE.Vector3();
+  for(let i=0;i<pos.count;i++){
+    v.fromBufferAttribute(pos,i);
+    const r = .08;
+    v.x = Math.sign(v.x) * Math.min(Math.abs(v.x), 1.4 - r) + Math.sign(v.x) * r * Math.min(Math.abs(v.x)/1.4, 1);
+    pos.setXYZ(i, v.x, v.y, v.z);
+  }
+  bodyGeom.computeVertexNormals();
+  const bodyMat = new THREE.MeshPhysicalMaterial({color:'#161616', roughness:.28, metalness:.45, clearcoat:.92, clearcoatRoughness:.08, envMapIntensity:1.3});
+  const body = new THREE.Mesh(bodyGeom, bodyMat); body.position.y = .35; body.castShadow = true; body.receiveShadow = true;
+  carGroup.add(body); carPaintMat = bodyMat;
+  applyTintTo(carPaintMat, SPECS[state.spec].accent);
+
+  const cabin = new THREE.Mesh(
+    new THREE.BoxGeometry(1.6, .34, .96),
+    new THREE.MeshPhysicalMaterial({color:'#040408', roughness:.06, metalness:.15, transmission:.4, thickness:0.3, clearcoat:1, clearcoatRoughness:.04, envMapIntensity:1.4})
+  );
+  cabin.position.y = .68; cabin.castShadow = true; carGroup.add(cabin);
+
+  // Wheels — high-poly torus + chrome rim
+  const wheelGeom = new THREE.TorusGeometry(.26,.11, 24, 64);
+  const wheelMat = new THREE.MeshPhysicalMaterial({color:'#070707', roughness:.62, metalness:.2});
+  const rimGeom = new THREE.CylinderGeometry(.16,.16,.12,24);
+  const rimMat = new THREE.MeshPhysicalMaterial({color:'#888', roughness:.18, metalness:.95, clearcoat:.6});
+  [[-1.05,.26,.62],[1.05,.26,.62],[-1.05,.26,-.62],[1.05,.26,-.62]].forEach(p=>{
+    const w = new THREE.Mesh(wheelGeom, wheelMat); w.position.set(...p); w.rotation.y=Math.PI/2; w.castShadow=true; carGroup.add(w);
+    const r = new THREE.Mesh(rimGeom, rimMat); r.position.set(...p); r.rotation.z=Math.PI/2; carGroup.add(r);
+  });
+  carGroup._procedural = true;
+}
+
+window.highlightMesh = function(partId){
+  // Halo ring pulse — preserves PBR paint look, no emissive
+  const accent = SPECS[state.spec].accent;
+  haloMat.color.set(accent);
+  gsap.killTweensOf(haloMat);
+  gsap.fromTo(haloMat, {opacity:0}, {opacity:.65, duration:.35, yoyo:true, repeat:1, ease:'sine.inOut'});
 };
 
 window._tintMesh = function(accent){
-  if(!carGroup._meshes) return;
-  const accentColor = new THREE.Color(accent);
-  carGroup._meshes.battery.material.color = accentColor.clone();
-  carGroup._meshes.battery.material.emissive = accentColor.clone();
+  if(carPaintMat) applyTintTo(carPaintMat, accent);
+  haloMat.color.set(accent);
 };
 
+let rotTime = 0;
+let paused = false;
+mini3d.addEventListener('mouseenter', ()=> paused = true);
+mini3d.addEventListener('mouseleave', ()=> paused = false);
 function animate(){
   requestAnimationFrame(animate);
-  carGroup.rotation.y += .005;
+  if(!paused) rotTime += 0.0028;  // slow turntable
+  if(carRoot || carGroup.children.length > 2){
+    carGroup.rotation.y = rotTime;
+  }
   renderer.render(scene, camera);
 }
 animate();
