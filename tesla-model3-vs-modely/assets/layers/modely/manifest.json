@@ -1,0 +1,51 @@
+{
+  "id": "modely",
+  "size": [
+    1280,
+    720
+  ],
+  "layers": [
+    {
+      "file": "L1_backdrop.png",
+      "z": -120,
+      "scale": 1.05,
+      "opacity": 1.0,
+      "parallaxX": 0.3,
+      "parallaxY": 0.3
+    },
+    {
+      "file": "L2_shadow.png",
+      "z": -40,
+      "scale": 1.02,
+      "opacity": 0.85,
+      "parallaxX": 0.5,
+      "parallaxY": 0.5
+    },
+    {
+      "file": "L3_car.png",
+      "z": 0,
+      "scale": 1.0,
+      "opacity": 1.0,
+      "parallaxX": 1.0,
+      "parallaxY": 1.0
+    },
+    {
+      "file": "L4_rim.png",
+      "z": 18,
+      "scale": 1.01,
+      "opacity": 0.85,
+      "parallaxX": 1.15,
+      "parallaxY": 1.15,
+      "blend": "screen"
+    },
+    {
+      "file": "L5_particles.png",
+      "z": 60,
+      "scale": 1.0,
+      "opacity": 0.6,
+      "parallaxX": 1.4,
+      "parallaxY": 1.4,
+      "blend": "screen"
+    }
+  ]
+}
