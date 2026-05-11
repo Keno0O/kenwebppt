@@ -112,16 +112,28 @@ html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Inter,-a
 
 .bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px, transparent 1px);background-size:48px 48px;pointer-events:none;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000,transparent 80%);opacity:.5;z-index:1}
 
-/* === Cinematic 8-layer Parallax (replaces Three.js mini-3D) === */
-.mini3d{position:absolute;bottom:36px;right:36px;width:360px;height:220px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg, rgba(28,31,40,.95), rgba(11,12,16,.98));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:5;overflow:hidden;box-shadow:var(--shadow-deep), 0 0 0 1px rgba(255,255,255,.04) inset;perspective:900px;perspective-origin:50% 50%;cursor:grab}
+/* === Interactive 8-frame Turntable + Part Hotspots === */
+.mini3d{position:absolute;bottom:36px;right:36px;width:380px;height:240px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg, rgba(28,31,40,.96), rgba(11,12,16,.99));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:5;overflow:hidden;box-shadow:var(--shadow-deep), 0 0 0 1px rgba(255,255,255,.04) inset;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none}
 .mini3d:active{cursor:grabbing}
-.mini3d-stage{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .35s var(--tap)}
-.mini3d-spec{position:absolute;inset:0;transform-style:preserve-3d;opacity:0;transition:opacity .65s var(--tap)}
-.mini3d-spec.is-active{opacity:1}
-.mini3d-layer{position:absolute;inset:0;width:100%;height:100%;background-position:center;background-size:cover;background-repeat:no-repeat;will-change:transform;transition:opacity .4s var(--tap)}
+.mini3d-turntable{position:absolute;inset:0;overflow:hidden;background:#000}
+.mini3d-frame{position:absolute;inset:0;background-position:center;background-size:cover;background-repeat:no-repeat;opacity:0;transition:opacity .18s ease-out}
+.mini3d-frame.is-active{opacity:1}
+.mini3d-frame-pips{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:10;padding:4px 8px;background:rgba(0,0,0,.4);border-radius:10px;backdrop-filter:blur(8px)}
+.mini3d-frame-pips .pip{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.25);transition:all .25s var(--tap);cursor:pointer}
+.mini3d-frame-pips .pip.is-on{background:var(--accent,var(--orange));box-shadow:0 0 6px var(--accent,var(--orange));width:14px;border-radius:3px}
+.mini3d-hotspots{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:8}
+.mini3d-hotspots circle{transform-origin:center;transition:opacity .35s var(--tap), r .35s var(--tap), stroke-width .35s var(--tap);transform-box:fill-box}
+.mini3d-hotspots .hot-ring{fill:none;stroke:var(--accent,var(--orange));stroke-width:1.5;opacity:0}
+.mini3d-hotspots .hot-ring.is-on{opacity:.85;animation:hotpulse 1.4s var(--tap) infinite}
+.mini3d-hotspots .hot-dot{fill:var(--accent,var(--orange));opacity:0;filter:drop-shadow(0 0 6px var(--accent,var(--orange)))}
+.mini3d-hotspots .hot-dot.is-on{opacity:.95}
+@keyframes hotpulse{0%,100%{stroke-width:1.5;opacity:.85}50%{stroke-width:3;opacity:.45}}
 .mini3d-label{position:absolute;top:10px;left:12px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.24em;color:var(--ink-2);text-transform:uppercase;pointer-events:none;z-index:10;text-shadow:0 1px 2px #000;display:flex;align-items:center;gap:6px}
 .mini3d-label .led{width:5px;height:5px;border-radius:50%;background:var(--accent,var(--orange));box-shadow:0 0 8px var(--accent,var(--orange));animation:pulse 1.6s var(--tap) infinite}
-.mini3d-hint{position:absolute;bottom:8px;left:12px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.18em;color:rgba(139,146,165,.45);pointer-events:none;z-index:10;text-transform:uppercase}
+.mini3d-angle-meter{position:absolute;top:10px;right:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-2);letter-spacing:.18em;display:flex;align-items:center;gap:6px;z-index:10;text-shadow:0 1px 2px #000;font-variant-numeric:tabular-nums}
+.mini3d-angle-meter .angle-arrow{color:var(--accent,var(--orange));font-size:11px}
+.mini3d-hint{position:absolute;bottom:8px;left:12px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.18em;color:rgba(139,146,165,.55);pointer-events:none;z-index:10;text-transform:uppercase;transition:opacity .3s var(--tap)}
+.mini3d-hint.is-dimmed{opacity:.25}
 .mini3d-attr{position:absolute;bottom:8px;right:12px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;color:rgba(139,146,165,.5);pointer-events:auto;z-index:10;text-decoration:none}
 .mini3d-attr:hover{color:var(--ink-2)}
 
@@ -182,10 +194,11 @@ document.addEventListener('DOMContentLoaded', function(){
     const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
     if(hash===AUTH_HASH){
       sessionStorage.setItem('kengit-authed','1');
-      if(window.kengitTrackVisit) window.kengitTrackVisit();
+      if (window.kengitTrackVisit) window.kengitTrackVisit();
       gate.style.opacity='0';gate.style.transition='opacity .5s';
       setTimeout(()=>{
         gate.remove();
+        document.querySelectorAll('[data-kengitHidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});
         document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});
       },500);
     }else{
@@ -195,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 </script>
-
 <div id="webgl"></div>
 
 <div class="shell">
@@ -240,25 +252,13 @@ document.addEventListener('DOMContentLoaded', function(){
       </div>
 
       <div class="mini3d" id="mini3d">
-        <span class="mini3d-label"><span class="led"></span><span id="mini3d-id">MODEL 3 · 3D INSPECTOR</span></span>
-        <div class="mini3d-stage" id="mini3d-stage">
-          <div class="mini3d-spec is-active" data-spec="model3">
-            <div class="mini3d-layer" style="background-image:url('assets/layers/model3/L1_backdrop.png');" data-depth="-120" data-parallax="0.3"></div>
-            <div class="mini3d-layer" style="background-image:url('assets/layers/model3/L2_shadow.png');opacity:.85;" data-depth="-40" data-parallax="0.5"></div>
-            <div class="mini3d-layer" style="background-image:url('assets/layers/model3/L3_car.png');" data-depth="0" data-parallax="1.0"></div>
-            <div class="mini3d-layer" style="background-image:url('assets/layers/model3/L4_rim.png');opacity:.85;mix-blend-mode:screen;" data-depth="18" data-parallax="1.15"></div>
-            <div class="mini3d-layer" style="background-image:url('assets/layers/model3/L5_particles.png');opacity:.6;mix-blend-mode:screen;" data-depth="60" data-parallax="1.4"></div>
-          </div>
-          <div class="mini3d-spec" data-spec="modely">
-            <div class="mini3d-layer" style="background-image:url('assets/layers/modely/L1_backdrop.png');" data-depth="-120" data-parallax="0.3"></div>
-            <div class="mini3d-layer" style="background-image:url('assets/layers/modely/L2_shadow.png');opacity:.85;" data-depth="-40" data-parallax="0.5"></div>
-            <div class="mini3d-layer" style="background-image:url('assets/layers/modely/L3_car.png');" data-depth="0" data-parallax="1.0"></div>
-            <div class="mini3d-layer" style="background-image:url('assets/layers/modely/L4_rim.png');opacity:.85;mix-blend-mode:screen;" data-depth="18" data-parallax="1.15"></div>
-            <div class="mini3d-layer" style="background-image:url('assets/layers/modely/L5_particles.png');opacity:.6;mix-blend-mode:screen;" data-depth="60" data-parallax="1.4"></div>
-          </div>
-        </div>
-        <span class="mini3d-hint">MOVE · CURSOR</span>
-        <span class="mini3d-attr">CINEMATIC · 8-LAYER</span>
+        <span class="mini3d-label"><span class="led"></span><span id="mini3d-id">MODEL 3 · 360° TURNTABLE</span></span>
+        <div class="mini3d-turntable" id="mini3d-turntable"><!-- frames injected by JS --></div>
+        <svg class="mini3d-hotspots" id="mini3d-hotspots" viewBox="0 0 380 240" preserveAspectRatio="xMidYMid meet"><!-- hotspot circles injected by JS --></svg>
+        <div class="mini3d-angle-meter" id="angle-meter"><span id="angle-deg">45°</span><span class="angle-arrow">↻</span></div>
+        <div class="mini3d-frame-pips" id="frame-pips"><!-- 8 pips --></div>
+        <span class="mini3d-hint" id="mini3d-hint">DRAG · TO · ROTATE · 360°</span>
+        <span class="mini3d-attr">8-FRAME · PHOTOREAL</span>
       </div>
 
       <div class="switcher" role="tablist">
@@ -281,10 +281,23 @@ document.addEventListener('DOMContentLoaded', function(){
 <script type="module">
 import gsap from 'gsap';
 
+// SVG viewBox is 360×220. Hotspot positions are tuned for front-left 3/4 view (frame 1).
+// preferredFrame: snap the turntable to this frame index when this part is clicked.
+// visibleFrames: which frames show the hotspot (others fade it out).
+const PART_HOTSPOTS = {
+  body:    { cx: 180, cy: 110, r: 56, preferredFrame: 1, visibleFrames: [0,1,2,3,4,5,6,7] },
+  battery: { cx: 180, cy: 160, r: 32, preferredFrame: 2, visibleFrames: [2,6] }, // side views only
+  motors:  { cx: 110, cy: 145, r: 22, preferredFrame: 1, visibleFrames: [0,1,7] }, // front-ish
+  wheels:  { cx:  82, cy: 170, r: 24, preferredFrame: 2, visibleFrames: [1,2,3,5,6,7] },
+  cabin:   { cx: 200, cy:  78, r: 30, preferredFrame: 1, visibleFrames: [0,1,2,3,4,5,6,7] },
+  trunk:   { cx: 270, cy: 130, r: 26, preferredFrame: 4, visibleFrames: [3,4,5] }, // rear views
+};
+
 const SPECS = {
   model3: {
     id:'model3', name:'Model 3', type:'SEDAN · PERFORMANCE', tagline:'drive the future',
     accent:'#DC2626', accentSoft:'rgba(220,38,38,.55)', accent2:'#EF4444', script:'red', build:'M3·LR·2026',
+    frames: ['assets/angles/m3-00.png','assets/angles/m3-01.png','assets/angles/m3-02.png','assets/angles/m3-03.png','assets/angles/m3-04.png','assets/angles/m3-05.png','assets/angles/m3-06.png','assets/angles/m3-07.png'],
     metrics:[
       {label:'0-100 km/h', value:'3.3', unit:'s', bar:.95},
       {label:'Top Speed', value:'261', unit:'km/h', bar:.78},
@@ -304,6 +317,7 @@ const SPECS = {
   modely: {
     id:'modely', name:'Model Y', type:'CROSSOVER · UTILITY', tagline:'same skateboard, more headroom',
     accent:'#22D3EE', accentSoft:'rgba(34,211,238,.55)', accent2:'#67E8F9', script:'cyan', build:'MY·LR·2026',
+    frames: ['assets/angles/my-00.png','assets/angles/my-01.png','assets/angles/my-02.png','assets/angles/my-03.png','assets/angles/my-04.png','assets/angles/my-05.png','assets/angles/my-06.png','assets/angles/my-07.png'],
     metrics:[
       {label:'0-100 km/h', value:'3.7', unit:'s', bar:.88},
       {label:'Top Speed', value:'250', unit:'km/h', bar:.74},
@@ -421,93 +435,198 @@ document.querySelectorAll('.switcher button').forEach(btn=>{
   });
 });
 
-// =============== CINEMATIC 8-LAYER PARALLAX ===============
-// Methodology: huangserva/3DCellForge App.jsx L940-1020 — Dilum Sanjaya AI Two-Stage Pipeline
-// Real labnana Tesla photo → rembg cutout → 5 layers (backdrop/shadow/car/rim/particles)
-// → CSS 3D translate-z stack + mouse-driven rotateY/rotateX
+// =============== PHOTO TURNTABLE + PART HOTSPOTS ===============
+// 8 real labnana Tesla angle photos + drag-to-rotate frame swap +
+// SVG hotspot overlay (per-part per-frame visibility) + part click → snap rotate.
 const mini3d = el('#mini3d');
-const mini3dStage = el('#mini3d-stage');
+const mini3dTT = el('#mini3d-turntable');
+const mini3dHotspots = el('#mini3d-hotspots');
 const mini3dId = el('#mini3d-id');
-const mini3dSpecs = mini3d.querySelectorAll('.mini3d-spec');
+const mini3dHint = el('#mini3d-hint');
 const mini3dLabel = mini3d.querySelector('.mini3d-label');
+const angleDeg = el('#angle-deg');
+const framePips = el('#frame-pips');
+const FRAME_COUNT = 8;
+const FRAME_STEP = 360 / FRAME_COUNT;
 
-// Per-layer parallax intensity — pre-cache attributes
-const allLayers = [];
-mini3dSpecs.forEach(specEl=>{
-  specEl.querySelectorAll('.mini3d-layer').forEach(layer=>{
-    allLayers.push({
-      el: layer,
-      depth: parseFloat(layer.dataset.depth) || 0,
-      parallax: parseFloat(layer.dataset.parallax) || 1.0,
-      specEl: specEl
+const tt = {
+  spec: 'model3',
+  curAngle: 45,    // start at front-left 3/4 (frame 1)
+  targetAngle: 45,
+  curFrame: 1,
+  frameEls: { model3: [], modely: [] },
+  hotspotEls: {},
+  activePart: null,
+  autoSpin: true,
+  lastInteraction: 0
+};
+
+// Build frame divs per spec (background-image swap, GPU compositor)
+function buildFrames(spec){
+  spec.frames.forEach((url, idx)=>{
+    const f = document.createElement('div');
+    f.className = 'mini3d-frame';
+    f.style.backgroundImage = `url('${url}')`;
+    f.dataset.frame = idx;
+    f.dataset.spec = spec.id;
+    if(spec.id === 'model3' && idx === 1) f.classList.add('is-active');
+    f.style.display = (spec.id === 'model3') ? '' : 'none';
+    mini3dTT.appendChild(f);
+    tt.frameEls[spec.id].push(f);
+  });
+}
+buildFrames(SPECS.model3);
+buildFrames(SPECS.modely);
+
+// Frame pips (8 dot indicators below)
+function buildPips(){
+  framePips.innerHTML = '';
+  for(let i=0; i<FRAME_COUNT; i++){
+    const p = document.createElement('div');
+    p.className = 'pip' + (i === 1 ? ' is-on' : '');
+    p.dataset.frame = i;
+    p.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      tt.targetAngle = i * FRAME_STEP;
+      tt.lastInteraction = performance.now();
+      tt.autoSpin = false;
     });
+    framePips.appendChild(p);
+  }
+}
+buildPips();
+
+function updatePips(idx){
+  framePips.querySelectorAll('.pip').forEach((p,i)=>{
+    p.classList.toggle('is-on', i === idx);
   });
-});
-
-let targetRX = 0, targetRY = 0;
-let curRX = 0, curRY = 0;
-const MAX_RY = 14; // ±14° rotation
-const MAX_RX = 6;
-const PARALLAX_OFFSET = 22;
-
-function pos(e){
-  const rect = mini3d.getBoundingClientRect();
-  let cx, cy;
-  if(e.touches && e.touches[0]){ cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
-  else { cx = e.clientX; cy = e.clientY; }
-  const nx = (cx - rect.left) / rect.width - 0.5;   // -0.5..0.5
-  const ny = (cy - rect.top) / rect.height - 0.5;
-  return { nx, ny };
 }
 
-mini3d.addEventListener('mousemove', (e)=>{
-  const { nx, ny } = pos(e);
-  targetRY = nx * MAX_RY * 2;
-  targetRX = -ny * MAX_RX * 2;
-});
-mini3d.addEventListener('touchmove', (e)=>{
+// Build hotspot SVG circles
+function buildHotspots(){
+  mini3dHotspots.innerHTML = '';
+  Object.entries(PART_HOTSPOTS).forEach(([pid, h])=>{
+    const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    ring.setAttribute('class','hot-ring');
+    ring.setAttribute('cx', h.cx); ring.setAttribute('cy', h.cy); ring.setAttribute('r', h.r);
+    ring.dataset.part = pid;
+    mini3dHotspots.appendChild(ring);
+    const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('class','hot-dot');
+    dot.setAttribute('cx', h.cx); dot.setAttribute('cy', h.cy); dot.setAttribute('r', 4);
+    dot.dataset.part = pid;
+    mini3dHotspots.appendChild(dot);
+    tt.hotspotEls[pid] = { ring, dot };
+  });
+}
+buildHotspots();
+
+function showFrame(specId, frameIdx){
+  tt.frameEls[specId].forEach((f, i)=>{
+    f.classList.toggle('is-active', i === frameIdx);
+  });
+  updatePips(frameIdx);
+  updateHotspotsVisibility(frameIdx);
+}
+
+function updateHotspotsVisibility(frameIdx){
+  if(!tt.activePart) return;
+  const h = PART_HOTSPOTS[tt.activePart];
+  if(!h) return;
+  const visible = h.visibleFrames.includes(frameIdx);
+  const {ring, dot} = tt.hotspotEls[tt.activePart];
+  ring.classList.toggle('is-on', visible);
+  dot.classList.toggle('is-on', visible);
+}
+
+function setSpec(specId){
+  tt.spec = specId;
+  Object.entries(tt.frameEls).forEach(([sid, arr])=>{
+    arr.forEach(f=>{ f.style.display = (sid === specId) ? '' : 'none'; });
+  });
+  showFrame(specId, tt.curFrame);
+  if(mini3dId) mini3dId.textContent = (specId === 'modely' ? 'MODEL Y' : 'MODEL 3') + ' · 360° TURNTABLE';
+}
+
+// Drag rotation
+let dragging = false, lastX = 0, lastY = 0;
+const DRAG_PX_PER_DEG = 2.4;
+function dragStart(e){
+  dragging = true; tt.autoSpin = false; tt.lastInteraction = performance.now();
+  mini3dHint.classList.add('is-dimmed');
+  const t = e.touches ? e.touches[0] : e;
+  lastX = t.clientX; lastY = t.clientY;
+  if(e.preventDefault) e.preventDefault();
+}
+function dragMove(e){
+  if(!dragging) return;
+  const t = e.touches ? e.touches[0] : e;
+  const dx = t.clientX - lastX;
+  lastX = t.clientX; lastY = t.clientY;
+  tt.targetAngle -= dx / DRAG_PX_PER_DEG;  // drag right = rotate counter-clockwise (so car spins toward right edge)
+  tt.lastInteraction = performance.now();
+  if(e.preventDefault && e.cancelable) e.preventDefault();
+}
+function dragEnd(){ dragging = false; tt.lastInteraction = performance.now(); }
+mini3d.addEventListener('mousedown', dragStart);
+window.addEventListener('mousemove', dragMove);
+window.addEventListener('mouseup', dragEnd);
+mini3d.addEventListener('touchstart', dragStart, {passive: false});
+window.addEventListener('touchmove', dragMove, {passive: false});
+window.addEventListener('touchend', dragEnd);
+mini3d.addEventListener('wheel', (e)=>{
   e.preventDefault();
-  const { nx, ny } = pos(e);
-  targetRY = nx * MAX_RY * 2;
-  targetRX = -ny * MAX_RX * 2;
+  tt.targetAngle += e.deltaY * 0.4;
+  tt.lastInteraction = performance.now();
+  tt.autoSpin = false;
 }, {passive: false});
-mini3d.addEventListener('mouseleave', ()=>{ targetRX = 0; targetRY = 0; });
-mini3d.addEventListener('touchend', ()=>{ targetRX = 0; targetRY = 0; });
 
-// rAF smoothing
-function tickParallax(){
-  curRX += (targetRX - curRX) * 0.085;
-  curRY += (targetRY - curRY) * 0.085;
-  mini3dStage.style.transform = `rotateX(${curRX.toFixed(2)}deg) rotateY(${curRY.toFixed(2)}deg)`;
-  // Per-layer offset (subtle counter-parallax) — only update if rotation visible
-  const offsetX = (curRY / MAX_RY) * PARALLAX_OFFSET;
-  const offsetY = (curRX / MAX_RX) * PARALLAX_OFFSET;
-  allLayers.forEach(l=>{
-    l.el.style.transform = `translateZ(${l.depth}px) translate(${-offsetX*l.parallax*0.4}px, ${-offsetY*l.parallax*0.4}px)`;
-  });
-  requestAnimationFrame(tickParallax);
+// rAF: smooth angle, auto-spin idle
+function rafTurntable(now){
+  const idleMs = now - tt.lastInteraction;
+  if(tt.autoSpin && idleMs > 1800){ tt.targetAngle += 0.22; }
+  else if(idleMs > 4500){ tt.autoSpin = true; mini3dHint.classList.remove('is-dimmed'); }
+  tt.curAngle += (tt.targetAngle - tt.curAngle) * 0.18;
+  let normAngle = ((tt.curAngle % 360) + 360) % 360;
+  const newFrame = Math.round(normAngle / FRAME_STEP) % FRAME_COUNT;
+  if(newFrame !== tt.curFrame){
+    tt.curFrame = newFrame;
+    showFrame(tt.spec, newFrame);
+  }
+  angleDeg.textContent = `${Math.round(normAngle)}°`;
+  requestAnimationFrame(rafTurntable);
 }
-requestAnimationFrame(tickParallax);
+requestAnimationFrame(rafTurntable);
 
-// Sync to current spec
+// Part click → snap to preferredFrame + activate hotspot + paint pulse
 window.highlightMesh = function(partId){
-  // 8-layer parallax doesn't need part highlight on its surface — handled by part list
-  // Could add a subtle pulse on rim layer if desired
-  const activeSpec = mini3d.querySelector('.mini3d-spec.is-active');
-  if(!activeSpec) return;
-  const rimLayer = activeSpec.querySelector('.mini3d-layer:nth-child(4)');
-  if(!rimLayer) return;
-  gsap.killTweensOf(rimLayer);
-  gsap.fromTo(rimLayer, {opacity: 0.85}, {opacity: 1.0, duration: 0.35, yoyo: true, repeat: 1, ease: 'sine.inOut'});
+  tt.activePart = partId;
+  // Hide all hotspots first
+  Object.values(tt.hotspotEls).forEach(({ring, dot})=>{
+    ring.classList.remove('is-on'); dot.classList.remove('is-on');
+  });
+  const h = PART_HOTSPOTS[partId];
+  if(!h) return;
+  const targetAngle = h.preferredFrame * FRAME_STEP;
+  const curNorm = ((tt.curAngle % 360) + 360) % 360;
+  let delta = targetAngle - curNorm;
+  if(delta > 180) delta -= 360;
+  if(delta < -180) delta += 360;
+  tt.targetAngle = tt.curAngle + delta;
+  tt.lastInteraction = performance.now();
+  tt.autoSpin = false;
+  setTimeout(()=>{
+    if(tt.activePart === partId){
+      updateHotspotsVisibility(h.preferredFrame);
+    }
+  }, 380);
 };
 
 window._tintMesh = function(accent, specId){
-  // Switch which layer-spec is visible
-  mini3dSpecs.forEach(s=>{
-    s.classList.toggle('is-active', s.dataset.spec === specId);
-  });
-  if(mini3dId) mini3dId.textContent = (specId === 'modely' ? 'MODEL Y' : 'MODEL 3') + ' · 3D INSPECTOR';
+  setSpec(specId);
   mini3dLabel.style.setProperty('--accent', accent);
+  mini3dHotspots.style.setProperty('--accent', accent);
+  framePips.style.setProperty('--accent', accent);
 };
 
 // Clock
@@ -520,8 +639,7 @@ tick(); setInterval(tick, 1000);
 // Init
 applySpec('model3');
 </script>
-
-<!-- kengit analytics: GoatCounter (gated, inline implementation) -->
+<!-- kengit analytics: GoatCounter (gated, inline implementation, no CDN dependency) -->
 <script>
 window.kengitTrackVisit = function() {
   if (window._kengitTracked) return;
