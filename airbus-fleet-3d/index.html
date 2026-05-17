@@ -1,0 +1,1341 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="gallery-dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Airbus Fleet · 真 3D 展厅</title>
+
+  <!-- ASSETS:
+       - inline procedural geometry
+  -->
+
+  <style>/* keninterapp v3 — Theme Token Library (10 themes)
+ *
+ * Each theme exposes the same CSS variable surface so any Console template
+ * can pick up any theme with zero JS changes:
+ *
+ *   --bg, --surface, --surface-strong, --accent, --accent-2,
+ *   --text, --muted, --border, --radius, --shadow, --grain,
+ *   --type-display, --type-body
+ *
+ * Apply by setting `document.documentElement.dataset.theme = "<slug>"`.
+ * Default (no data-theme) = performance-console for v1/v2 backwards compat.
+ */
+
+/* ----------------------------------------------------------------- */
+/* 1. PERFORMANCE CONSOLE — Tesla-style dark + dual-color gauges      */
+/* ----------------------------------------------------------------- */
+:root,
+[data-theme="performance-console"] {
+  --bg: #050507;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-strong: rgba(255, 255, 255, 0.08);
+  --accent: #ff7849;
+  --accent-2: #5ee2ff;
+  --text: #f1f3f7;
+  --muted: #7a8392;
+  --border: rgba(255, 255, 255, 0.08);
+  --radius: 14px;
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  --grain: 0;
+  --type-display: "Inter", "Space Grotesk", system-ui, sans-serif;
+  --type-body: "Inter", system-ui, sans-serif;
+  --type-mono: "JetBrains Mono", "SF Mono", monospace;
+}
+
+/* ----------------------------------------------------------------- */
+/* 2. REALITY CONSOLE — neutral 3D-model showcase                     */
+/* ----------------------------------------------------------------- */
+[data-theme="reality-console"] {
+  --bg: #0b0d12;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-strong: rgba(255, 255, 255, 0.10);
+  --accent: #c8b6ff;
+  --accent-2: #98d2ff;
+  --text: #ecedf2;
+  --muted: #8a8fa3;
+  --border: rgba(255, 255, 255, 0.10);
+  --radius: 16px;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  --grain: 0;
+  --type-display: "Inter", system-ui, sans-serif;
+  --type-body: "Inter", system-ui, sans-serif;
+  --type-mono: "JetBrains Mono", monospace;
+}
+
+/* ----------------------------------------------------------------- */
+/* 3. EDITORIAL MAGAZINE — serif typographic, b/w + red               */
+/* ----------------------------------------------------------------- */
+[data-theme="editorial-magazine"] {
+  --bg: #f7f5ef;
+  --surface: #ffffff;
+  --surface-strong: #ebe6dc;
+  --accent: #c1272d;          /* NYT-ish red */
+  --accent-2: #1a1a1a;
+  --text: #111111;
+  --muted: #6b6b6b;
+  --border: #1a1a1a;
+  --radius: 0px;              /* hard-edge editorial */
+  --shadow: none;
+  --grain: 0.06;
+  --type-display: "Playfair Display", "Source Serif Pro", Georgia, serif;
+  --type-body: "Source Serif Pro", Georgia, serif;
+  --type-mono: "IBM Plex Mono", monospace;
+}
+
+/* ----------------------------------------------------------------- */
+/* 4. LIQUID GLASS — Apple Vision Pro / iOS 26 depth-of-field         */
+/* ----------------------------------------------------------------- */
+[data-theme="liquid-glass"] {
+  --bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  --surface: rgba(255, 255, 255, 0.12);
+  --surface-strong: rgba(255, 255, 255, 0.22);
+  --accent: #e0e8ff;
+  --accent-2: #a0c4ff;
+  --text: #f4f7ff;
+  --muted: rgba(244, 247, 255, 0.62);
+  --border: rgba(255, 255, 255, 0.24);
+  --radius: 22px;
+  --shadow: 0 32px 100px rgba(15, 52, 96, 0.55),
+            inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  --grain: 0;
+  --glass-blur: 28px;
+  --type-display: "SF Pro Display", "Inter", system-ui, sans-serif;
+  --type-body: "SF Pro Text", "Inter", system-ui, sans-serif;
+  --type-mono: "SF Mono", monospace;
+}
+
+/* ----------------------------------------------------------------- */
+/* 5. CYBERPUNK TERMINAL — CRT scanline, phosphor green               */
+/* ----------------------------------------------------------------- */
+[data-theme="cyberpunk-terminal"] {
+  --bg: #06080a;
+  --surface: rgba(0, 255, 153, 0.04);
+  --surface-strong: rgba(0, 255, 153, 0.08);
+  --accent: #00ff99;            /* phosphor */
+  --accent-2: #ff2e88;           /* magenta */
+  --text: #c8ffd8;
+  --muted: #4f7a5d;
+  --border: rgba(0, 255, 153, 0.22);
+  --radius: 2px;
+  --shadow: 0 0 24px rgba(0, 255, 153, 0.35);
+  --grain: 0.08;
+  --scanline: 1;
+  --type-display: "JetBrains Mono", "Space Mono", "Courier New", monospace;
+  --type-body: "JetBrains Mono", "Courier New", monospace;
+  --type-mono: "JetBrains Mono", monospace;
+}
+
+/* ----------------------------------------------------------------- */
+/* 6. NEO-BRUTALIST — primary colors, oversized sans, hard shadow     */
+/* ----------------------------------------------------------------- */
+[data-theme="neo-brutalist"] {
+  --bg: #ffe900;                /* yellow flat */
+  --surface: #ffffff;
+  --surface-strong: #000000;
+  --accent: #1900ff;            /* electric blue */
+  --accent-2: #ff003c;            /* red */
+  --text: #000000;
+  --muted: #555555;
+  --border: #000000;
+  --radius: 0;
+  --shadow: 8px 8px 0 #000000;    /* hard offset */
+  --grain: 0;
+  --type-display: "Archivo Black", "Anton", "Inter", sans-serif;
+  --type-body: "Inter", system-ui, sans-serif;
+  --type-mono: "JetBrains Mono", monospace;
+}
+
+/* ----------------------------------------------------------------- */
+/* 7. BOTANICAL DARK — organic deep greens + gold                     */
+/* ----------------------------------------------------------------- */
+[data-theme="botanical-dark"] {
+  --bg: #0f1a14;
+  --surface: rgba(206, 168, 81, 0.06);
+  --surface-strong: rgba(206, 168, 81, 0.12);
+  --accent: #cea851;            /* aged gold */
+  --accent-2: #6db28a;           /* moss */
+  --text: #ebe3d0;
+  --muted: #8c8576;
+  --border: rgba(206, 168, 81, 0.18);
+  --radius: 12px;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  --grain: 0.04;
+  --type-display: "Cormorant Garamond", "Playfair Display", serif;
+  --type-body: "Inter", system-ui, sans-serif;
+  --type-mono: "JetBrains Mono", monospace;
+}
+
+/* ----------------------------------------------------------------- */
+/* 8. HOLOGRAPHIC — iridescent rainbow gradients                      */
+/* ----------------------------------------------------------------- */
+[data-theme="holographic"] {
+  --bg: radial-gradient(circle at 30% 20%, #ff6ec7 0%, #b393f4 35%, #6ad6ff 70%, #2bf6c2 100%);
+  --surface: rgba(255, 255, 255, 0.20);
+  --surface-strong: rgba(255, 255, 255, 0.40);
+  --accent: #ffffff;
+  --accent-2: #2a0e4d;
+  --text: #2a0e4d;
+  --muted: rgba(42, 14, 77, 0.65);
+  --border: rgba(255, 255, 255, 0.55);
+  --radius: 24px;
+  --shadow: 0 12px 48px rgba(106, 214, 255, 0.45);
+  --grain: 0;
+  --iridescent: 1;              /* signals JS to add prism overlay */
+  --type-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --type-body: "Inter", system-ui, sans-serif;
+  --type-mono: "JetBrains Mono", monospace;
+}
+
+/* ----------------------------------------------------------------- */
+/* 9. SWISS BAUHAUS — geometric grid, primary colors, helvetica       */
+/* ----------------------------------------------------------------- */
+[data-theme="swiss-bauhaus"] {
+  --bg: #f4f1ea;
+  --surface: #ffffff;
+  --surface-strong: #e6e2d8;
+  --accent: #d72631;            /* primary red */
+  --accent-2: #2e3192;           /* primary blue */
+  --accent-3: #f9c80e;           /* primary yellow */
+  --text: #1a1a1a;
+  --muted: #555555;
+  --border: #1a1a1a;
+  --radius: 0;
+  --shadow: none;
+  --grain: 0;
+  --grid: 1;                    /* signals 8-col grid overlay */
+  --type-display: "Helvetica Neue", "Inter", system-ui, sans-serif;
+  --type-body: "Helvetica Neue", "Inter", system-ui, sans-serif;
+  --type-mono: "JetBrains Mono", monospace;
+}
+
+/* ----------------------------------------------------------------- */
+/* 10. PASTEL CLAYMORPHISM — soft 3D, claymorphic shadows             */
+/* ----------------------------------------------------------------- */
+[data-theme="pastel-clay"] {
+  --bg: #f1ecff;
+  --surface: #ffffff;
+  --surface-strong: #ffe9d9;
+  --accent: #ff9bd2;            /* candy pink */
+  --accent-2: #87ceeb;           /* soft blue */
+  --accent-3: #ffd166;           /* mango */
+  --text: #2d1b69;
+  --muted: #7a7299;
+  --border: rgba(255, 255, 255, 0.8);
+  --radius: 28px;
+  --shadow: 12px 12px 24px rgba(180, 160, 220, 0.45),
+            -8px -8px 20px rgba(255, 255, 255, 0.95),
+            inset 0 -3px 6px rgba(180, 160, 220, 0.18);
+  --grain: 0;
+  --type-display: "Quicksand", "Comfortaa", "Inter", system-ui, sans-serif;
+  --type-body: "Quicksand", "Inter", system-ui, sans-serif;
+  --type-mono: "JetBrains Mono", monospace;
+}
+
+/* ----------------------------------------------------------------- */
+/* Universal helpers — apply automatically based on token signals     */
+/* ----------------------------------------------------------------- */
+
+/* Scanline overlay for cyberpunk-terminal */
+[data-theme="cyberpunk-terminal"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 255, 153, 0.04),
+    rgba(0, 255, 153, 0.04) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+}
+
+/* Grain overlay (used by editorial-magazine, botanical-dark) */
+[data-theme="editorial-magazine"]::after,
+[data-theme="botanical-dark"]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+  opacity: var(--grain, 0);
+  pointer-events: none;
+  z-index: 9998;
+  mix-blend-mode: multiply;
+}
+
+/* Iridescent prism for holographic */
+[data-theme="holographic"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 45%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: prism-sweep 8s ease-in-out infinite;
+}
+@keyframes prism-sweep {
+  0%, 100% { transform: translateX(-30%); }
+  50%      { transform: translateX(30%); }
+}
+
+/* Glass blur helper for liquid-glass */
+[data-theme="liquid-glass"] .panel,
+[data-theme="liquid-glass"] .console {
+  backdrop-filter: blur(var(--glass-blur, 28px)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur, 28px)) saturate(180%);
+}
+
+/* Brutalist box default */
+[data-theme="neo-brutalist"] .panel,
+[data-theme="neo-brutalist"] .console,
+[data-theme="neo-brutalist"] button {
+  border: 3px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
+  border-radius: var(--radius) !important;
+}
+
+/* ----------------------------------------------------------------- */
+/* 11. GALLERY DARK — museum-grade artifact showcase                  */
+/*     deep navy plinth + warm amber spotlight + serif display +     */
+/*     gold patina accent. Designed for `museum-artifact` archetype  */
+/*     (三星堆/Sanxingdui flagship).                                  */
+/* ----------------------------------------------------------------- */
+[data-theme="gallery-dark"] {
+  --bg: #0a0e14;               /* deep gallery navy-black */
+  --surface: rgba(255, 232, 191, 0.04);
+  --surface-strong: rgba(255, 232, 191, 0.08);
+  --accent: #c9a96e;            /* gold patina */
+  --accent-2: #e8c87a;          /* warm spotlight amber */
+  --text: #f0e6d2;              /* warm parchment */
+  --muted: #8a7e68;
+  --border: rgba(201, 169, 110, 0.18);
+  --radius: 4px;                /* hard-edge plaque */
+  --shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(201, 169, 110, 0.12);
+  --grain: 0.05;
+  --type-display: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  --type-body: "Noto Serif SC", "Source Han Serif SC", "Source Serif Pro", Georgia, serif;
+  --type-mono: "JetBrains Mono", "SF Mono", monospace;
+}
+
+/* Gallery-dark plinth + warm amber rim spotlight effect */
+[data-theme="gallery-dark"] body {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 35%,
+      rgba(232, 200, 122, 0.08) 0%,
+      rgba(232, 200, 122, 0.02) 35%,
+      transparent 70%),
+    radial-gradient(ellipse 100% 100% at 50% 100%,
+      rgba(201, 169, 110, 0.04) 0%,
+      transparent 60%),
+    var(--bg);
+}
+
+/* Gallery-dark serif emphasis on display text */
+[data-theme="gallery-dark"] h1,
+[data-theme="gallery-dark"] h2,
+[data-theme="gallery-dark"] .museum-title,
+[data-theme="gallery-dark"] .specimen-name {
+  font-family: var(--type-display);
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+
+/* Gallery-dark vignette overlay (museum darkroom) */
+[data-theme="gallery-dark"]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 100% 80% at 50% 50%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.55) 100%);
+  z-index: 1;
+}
+
+/* ----------------------------------------------------------------- */
+/* 12. MICROSCOPY DARK — fluorescence-microscope science instrument   */
+/*     near-black + cyan/blue bioluminescent glow + mono sci labels.  */
+/*     Designed for `science-sim` archetype (techartist_ E. coli /    */
+/*     Dilum turbofan / organism simulation aesthetic).               */
+/* ----------------------------------------------------------------- */
+[data-theme="microscopy-dark"] {
+  --bg: #03060a;                /* near-black microscope field */
+  --surface: rgba(63, 191, 255, 0.045);
+  --surface-strong: rgba(63, 191, 255, 0.10);
+  --accent: #3fbfff;            /* emissive cyan core */
+  --accent-2: #66e0ff;          /* membrane fresnel rim */
+  --accent-warm: #ffcf6b;       /* sparse organelle/nucleoid highlight (≤10%) */
+  --text: #d6ecf7;              /* cool cyan-white */
+  --muted: #5c7a8c;             /* desaturated teal-grey labels */
+  --border: rgba(63, 191, 255, 0.16);
+  --radius: 3px;                /* sharp instrument edges */
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(63, 191, 255, 0.10);
+  --grain: 0.03;                /* microscope sensor noise */
+  --type-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --type-body: "Inter", system-ui, sans-serif;
+  --type-mono: "JetBrains Mono", "SF Mono", "IBM Plex Mono", monospace;
+}
+
+/* Microscopy radial bioluminescent field (glow reads from center) */
+[data-theme="microscopy-dark"] body {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%,
+      rgba(63, 191, 255, 0.06) 0%,
+      rgba(63, 191, 255, 0.015) 40%,
+      transparent 72%),
+    var(--bg);
+}
+
+/* Microscopy mono uppercase labels (scientific instrument feel) */
+[data-theme="microscopy-dark"] .crumb,
+[data-theme="microscopy-dark"] .metric-label,
+[data-theme="microscopy-dark"] .data-key,
+[data-theme="microscopy-dark"] .taxon {
+  font-family: var(--type-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+/* Microscopy live-data readouts glow */
+[data-theme="microscopy-dark"] .data-val,
+[data-theme="microscopy-dark"] .gauge-num {
+  font-family: var(--type-mono);
+  color: var(--accent-2);
+  text-shadow: 0 0 12px rgba(102, 224, 255, 0.45);
+}
+
+/* Microscopy DOF vignette (shallow focal field) */
+[data-theme="microscopy-dark"]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 90% 75% at 50% 48%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.62) 100%);
+  z-index: 1;
+}
+</style>
+
+  <style>
+    /* === Museum Console — dark gallery 5-zone === */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; min-height: 100vh; overflow-x: hidden;
+      background: var(--bg); color: var(--text);
+      font-family: var(--type-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .museum {
+      position: relative; z-index: 2;
+      width: 100%; min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px 1fr 320px;
+      grid-template-rows: 64px 1fr 84px;
+      grid-template-areas:
+        "brand   brand    brand"
+        "vitrine stage    intel"
+        "control control  control";
+      gap: 14px; padding: 14px;
+    }
+
+    /* === Brand bar === */
+    .brand {
+      grid-area: brand;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-left { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      width: 8px; height: 30px;
+      background: var(--accent);
+      box-shadow: 0 0 14px var(--accent-2);
+    }
+    .brand-title {
+      font-family: var(--type-display);
+      font-size: 19px; font-weight: 600; letter-spacing: 0.04em;
+    }
+    .brand-sub {
+      color: var(--muted); font-size: 12px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .brand-right { display: flex; align-items: center; gap: 12px; }
+    .motion-badge {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px;
+      font-size: 12px; color: var(--muted);
+    }
+    .motion-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 8px var(--accent-2);
+      animation: pulse-warm 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse-warm {
+      0%, 100% { opacity: 0.55; transform: scale(0.85); }
+      50%      { opacity: 1;    transform: scale(1.15); }
+    }
+    .demo-toggle {
+      padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px;
+      background: transparent; color: var(--text); cursor: pointer;
+      font: inherit; font-size: 12px; letter-spacing: 0.06em;
+      transition: all 0.2s ease;
+    }
+    .demo-toggle:hover { border-color: var(--accent); }
+    .demo-toggle.is-on {
+      background: var(--accent); color: var(--bg); border-color: var(--accent);
+    }
+
+    /* === Vitrine (left artifact list) === */
+    .vitrine {
+      grid-area: vitrine;
+      background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 14px; overflow-y: auto;
+    }
+    .vitrine-head {
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 0.16em; text-transform: uppercase;
+      padding: 0 6px 12px; border-bottom: 1px solid var(--border); margin-bottom: 10px;
+    }
+    .artifact-row {
+      width: 100%; display: flex; align-items: center; gap: 12px;
+      padding: 12px 10px; margin-bottom: 6px;
+      background: transparent; border: 1px solid transparent; border-radius: 6px;
+      color: var(--text); font: inherit; cursor: pointer;
+      text-align: left; transition: all 0.18s ease;
+    }
+    .artifact-row:hover { background: var(--surface-strong); }
+    .artifact-row.is-active {
+      background: var(--surface-strong); border-color: var(--accent);
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+    .artifact-thumb {
+      width: 48px; height: 48px; flex-shrink: 0;
+      border-radius: 4px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      opacity: 0.6;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--type-display); font-size: 18px; font-weight: 700;
+      color: var(--bg);
+    }
+    .artifact-info { flex: 1; min-width: 0; }
+    .artifact-name {
+      font-family: var(--type-display); font-size: 14px; font-weight: 500;
+      color: var(--text); margin-bottom: 3px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .artifact-cat {
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 0.04em;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* === Stage (center hero turntable) === */
+    .stage {
+      grid-area: stage; position: relative;
+      background: radial-gradient(ellipse at 50% 40%, rgba(232, 200, 122, 0.09) 0%, transparent 65%);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #stage-mount {
+      position: absolute; inset: 0;
+      cursor: grab; touch-action: none;
+    }
+    #stage-mount.is-dragging { cursor: grabbing; }
+    .hero-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 55%;
+      background: var(--bg);
+      transition: opacity 0.45s ease;
+      will-change: opacity;
+    }
+    .hero-img.is-current { opacity: 1; }
+    .hero-img.is-pending { opacity: 0; }
+    .hero-svg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    /* Sketchfab embed iframe (true 3D path, primary) */
+    .stage-embed {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: 0;
+      background: var(--bg);
+      z-index: 3;
+    }
+    .stage-attribution {
+      position: absolute; bottom: 10px; right: 14px; z-index: 6;
+      padding: 5px 10px;
+      background: rgba(10, 14, 20, 0.65);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border); border-radius: 999px;
+      font-size: 10px; color: var(--muted);
+      letter-spacing: 0.06em; line-height: 1.4;
+      max-width: 60%; text-align: right;
+    }
+    .stage-attribution a {
+      color: var(--accent-2); text-decoration: none;
+      border-bottom: 1px dotted var(--accent-2);
+    }
+    .stage-attribution a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Spotlights overlay */
+    .stage::before, .stage::after {
+      content: ""; position: absolute; pointer-events: none; z-index: 2;
+    }
+    .stage::before {
+      top: -20%; left: 30%; width: 40%; height: 80%;
+      background: radial-gradient(ellipse, rgba(232, 200, 122, 0.18) 0%, transparent 60%);
+      filter: blur(40px);
+    }
+    .stage::after {
+      bottom: -10%; left: 50%; transform: translateX(-50%);
+      width: 60%; height: 30%;
+      background: radial-gradient(ellipse, rgba(201, 169, 110, 0.20) 0%, transparent 70%);
+      filter: blur(30px);
+    }
+
+    /* Stage status badge */
+    .stage-status {
+      position: absolute; top: 16px; left: 16px; z-index: 5;
+      padding: 6px 12px;
+      background: rgba(10, 14, 20, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border); border-radius: 4px;
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 0.08em;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .stage-status .icon-mark {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent-2);
+    }
+
+    /* === Intelligence (right info rail) === */
+    .intel {
+      grid-area: intel;
+      background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 18px; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    .intel-section { display: flex; flex-direction: column; gap: 8px; }
+    .intel-section h3 {
+      font-size: 10px; color: var(--muted);
+      letter-spacing: 0.16em; text-transform: uppercase;
+      font-weight: 500; font-family: var(--type-body);
+    }
+    .intel-name {
+      font-family: var(--type-display); font-size: 22px;
+      letter-spacing: 0.02em; line-height: 1.3;
+    }
+    .intel-meta {
+      font-size: 12px; color: var(--muted);
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .intel-meta b { color: var(--text); font-weight: 500; }
+    .intel-quote {
+      padding: 14px; border-left: 2px solid var(--accent);
+      background: var(--surface-strong);
+      font-family: var(--type-display); font-style: italic;
+      font-size: 13px; line-height: 1.6; color: var(--text);
+    }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      padding: 4px 10px;
+      background: var(--surface-strong); border: 1px solid var(--border); border-radius: 999px;
+      font-size: 11px; color: var(--text);
+    }
+    .scene-card {
+      padding: 10px 12px; border: 1px solid var(--border); border-radius: 4px;
+      background: rgba(232, 200, 122, 0.04);
+    }
+    .scene-card .label {
+      font-size: 11px; color: var(--accent-2);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;
+    }
+    .scene-card .summary { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* === Control bar (bottom) === */
+    .control {
+      grid-area: control;
+      background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px;
+    }
+    .control-group { display: flex; align-items: center; gap: 12px; }
+    .control-stop { display: flex; flex-direction: column; gap: 2px; padding: 0 14px; }
+    .control-stop .lbl {
+      color: var(--muted); font-size: 10px;
+      text-transform: uppercase; letter-spacing: 0.10em;
+    }
+    .control-stop .val {
+      font-family: var(--type-display); font-size: 16px; font-weight: 600;
+      color: var(--text);
+    }
+    .control-stop + .control-stop {
+      border-left: 1px solid var(--border);
+    }
+    .ctrl-btn {
+      padding: 8px 14px; border: 1px solid var(--border); border-radius: 4px;
+      background: transparent; color: var(--text); cursor: pointer;
+      font: inherit; font-size: 12px; letter-spacing: 0.06em;
+      transition: all 0.18s ease;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .ctrl-btn.is-on {
+      background: var(--accent); color: var(--bg); border-color: var(--accent);
+    }
+    .ctrl-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+
+    /* === Demo Mode (kiosk) === */
+    body.demo-mode .vitrine,
+    body.demo-mode .intel,
+    body.demo-mode .control,
+    body.demo-mode .brand-right {
+      display: none !important;
+    }
+    body.demo-mode .museum {
+      grid-template-columns: 1fr; grid-template-rows: 64px 1fr;
+      grid-template-areas: "brand" "stage";
+    }
+    body.demo-mode .stage-status {
+      top: 24px; left: 24px;
+      font-size: 13px; padding: 8px 16px;
+    }
+
+    /* === Inspection focus dots (interactive hotspots) === */
+    .focus-dot {
+      position: absolute; z-index: 4;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: rgba(232, 200, 122, 0.9);
+      border: 2px solid rgba(10, 14, 20, 0.5);
+      box-shadow: 0 0 20px rgba(232, 200, 122, 0.5);
+      cursor: pointer; pointer-events: auto;
+      transform: translate(-50%, -50%);
+      animation: focus-breathe 2.8s ease-in-out infinite;
+    }
+    .focus-dot:hover {
+      transform: translate(-50%, -50%) scale(1.3);
+      background: var(--accent-2);
+    }
+    @keyframes focus-breathe {
+      0%, 100% { box-shadow: 0 0 12px rgba(232, 200, 122, 0.4); }
+      50%      { box-shadow: 0 0 28px rgba(232, 200, 122, 0.85); }
+    }
+
+    /* === Mobile fallback === */
+    @media (max-width: 920px) {
+      .museum {
+        grid-template-columns: 1fr;
+        grid-template-rows: 60px 220px 56vh auto auto;
+        grid-template-areas:
+          "brand"
+          "vitrine"
+          "stage"
+          "intel"
+          "control";
+      }
+      .vitrine { display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden; }
+      .vitrine .vitrine-head { display: none; }
+      .artifact-row { flex-shrink: 0; width: 200px; margin: 0; }
+      .control { flex-wrap: wrap; padding: 12px 14px; height: auto; }
+    }
+  </style>
+</head>
+<body>
+<!-- 访问密码门 -->
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+  <div style="font-family:-apple-system,sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <input id="auth-input" type="password" placeholder="Access Code" autocomplete="off"
+      style="width:200px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:1rem;font-family:-apple-system,sans-serif;outline:none;text-align:center;letter-spacing:.1em;"
+      onfocus="this.style.borderColor='rgba(255,255,255,.2)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+  </div>
+  <div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0;transition:opacity .3s">incorrect code</div>
+  <div style="font-size:.6rem;color:rgba(255,255,255,.15);margin-top:20px">Press Enter to continue</div>
+</div>
+<script>
+const AUTH_HASH = 'c8332b7b1873902c8cc92836d20181503cac1fd19d427809f2b99e3b7ce49713';
+document.addEventListener('DOMContentLoaded', function(){
+  if(sessionStorage.getItem('kengit-authed')==='1'){document.getElementById('auth-gate').remove();return}
+  const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
+  const mainEls=Array.from(document.body.children).filter(el=>el.id!=='auth-gate'&&el.tagName!=='SCRIPT'&&el.tagName!=='SVG');
+  mainEls.forEach(el=>{el.dataset.kengitHidden='1';el.style.display='none';});
+  setTimeout(()=>input.focus(),100);
+  input.addEventListener('keydown',async e=>{
+    if(e.key!=='Enter')return;
+    const val=input.value;
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(val));
+    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hash===AUTH_HASH){
+      sessionStorage.setItem('kengit-authed','1');
+      if (window.kengitTrackVisit) window.kengitTrackVisit();
+      gate.style.opacity='0';gate.style.transition='opacity .5s';
+      setTimeout(()=>{
+        gate.remove();
+        document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});
+      },500);
+    }else{
+      err.style.opacity='1';input.value='';input.style.borderColor='#E74C3C';
+      setTimeout(()=>{err.style.opacity='0';input.style.borderColor='rgba(255,255,255,.1)'},2000);
+    }
+  });
+});
+</script>
+  <div class="museum">
+    <header class="brand">
+      <div class="brand-left">
+        <div class="brand-mark"></div>
+        <div>
+          <div class="brand-title">Airbus Fleet · 真 3D 展厅</div>
+          <div class="brand-sub"></div>
+        </div>
+      </div>
+      <div class="brand-right">
+        <div class="motion-badge" id="motion-badge">
+          <div class="dot"></div><span id="motion-label">Museum turntable · 9.0s</span>
+        </div>
+        <button class="demo-toggle" id="demo-toggle" aria-pressed="false">DEMO MODE</button>
+      </div>
+    </header>
+
+    <aside class="vitrine" aria-label="Artifact list">
+      <div class="vitrine-head">Vitrine · 馆藏</div>
+      <div id="artifact-list"></div>
+    </aside>
+
+    <main class="stage" id="stage">
+      <div class="stage-status" id="stage-status">
+        <span class="icon-mark"></span><span id="status-text">Loading…</span>
+      </div>
+      <iframe class="stage-embed" id="stage-embed" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" style="display:none"></iframe>
+      <div id="stage-mount">
+        <!-- hero images injected here when no embed -->
+      </div>
+      <svg class="hero-svg" id="hero-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"></svg>
+      <div class="stage-attribution" id="stage-attribution" style="display:none"></div>
+    </main>
+
+    <aside class="intel" id="intel-panel">
+      <section class="intel-section">
+        <h3>Specimen</h3>
+        <div class="intel-name" id="intel-name">Airbus Fleet · 真 3D 展厅</div>
+        <div class="intel-meta" id="intel-meta-top">
+          <div><b id="intel-period"></b></div>
+        </div>
+      </section>
+
+      <section class="intel-section">
+        <h3>Asset Category</h3>
+        <div class="scene-card">
+          <div class="label" id="intel-cat-label">Museum Artifact · auto</div>
+          <div class="summary" id="intel-scene-summary">Dark gallery stage, warm spotlights, close material inspection.</div>
+        </div>
+      </section>
+
+      <section class="intel-section">
+        <h3>Inspection Focus</h3>
+        <div class="chip-row" id="intel-focus-chips"></div>
+      </section>
+
+      <section class="intel-section">
+        <h3>Material</h3>
+        <div class="intel-meta"><span id="intel-material">—</span></div>
+      </section>
+
+      <section class="intel-section">
+        <h3>Curator Note</h3>
+        <div class="intel-quote" id="intel-note"></div>
+      </section>
+
+      <section class="intel-section">
+        <h3>Tags</h3>
+        <div class="chip-row" id="intel-tag-chips"></div>
+      </section>
+    </aside>
+
+    <footer class="control">
+      <div class="control-group">
+        <div class="control-stop">
+          <div class="lbl">Motion Profile</div>
+          <div class="val" id="ctrl-profile">artifact</div>
+        </div>
+        <div class="control-stop">
+          <div class="lbl">Duration</div>
+          <div class="val" id="ctrl-duration">9000 ms</div>
+        </div>
+        <div class="control-stop">
+          <div class="lbl">Scene</div>
+          <div class="val" id="ctrl-scene">Museum turntable</div>
+        </div>
+      </div>
+      <div class="control-group">
+        <button class="ctrl-btn" id="ctrl-rotate" aria-pressed="false">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+          AUTO ROTATE
+        </button>
+        <button class="ctrl-btn" id="ctrl-reset">
+          <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+          RESET
+        </button>
+        <button class="ctrl-btn" id="ctrl-fullscreen">
+          <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+          FULL
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // === Asset Intelligence (port of huangserva/3DCellForge:src/lib/assetIntelligence.js) ===
+    const ASSET_CATEGORIES = [
+      {
+        id: "artifact", label: "Museum Artifact",
+        motionProfile: "artifact", sceneProfile: "artifact",
+        keywords: ["artifact","bronze","gold mask","golden mask","mask","statue","relic","sanxingdui","三星堆","青铜","金器","金面","黄金面具","面具","文物","器物","人像"],
+        strongKeywords: ["sanxingdui","三星堆","bronze mask","gold mask","golden mask","青铜人头像","戴金面罩","黄金面具"],
+        material: "Metal, patina, carved relief, and aged surface detail",
+        inspectionFocus: ["silhouette","patina","relief","edge profile"],
+        tags: ["artifact","patina","relief detail","museum display","inspection"],
+      },
+      {
+        id: "road", label: "Performance Vehicle",
+        motionProfile: "road", sceneProfile: "road",
+        keywords: ["supercar","sports car","race car","ferrari","lamborghini","porsche","vehicle","automobile","car","truck","suv","motorcycle","跑车","赛车","汽车","法拉利","兰博基尼","保时捷","卡车","摩托"],
+        strongKeywords: ["supercar","sports car","race car","ferrari","lamborghini","porsche","跑车","赛车","法拉利","兰博基尼","保时捷"],
+        material: "Painted body panels, glass, rubber, alloy, and dark trim",
+        inspectionFocus: ["stance","wheels","glass canopy","front profile"],
+        tags: ["vehicle","road pass","low camera","paint gloss","showcase"],
+      },
+      {
+        id: "vessel", label: "Naval Vessel",
+        motionProfile: "vessel", sceneProfile: "vessel",
+        keywords: ["aircraft carrier","aircraft car","carrier","warship","destroyer","ship","vessel","naval","submarine","航母","航空母舰","军舰","驱逐舰","舰","船","潜艇"],
+        strongKeywords: ["aircraft carrier","aircraft car","航母","航空母舰","warship","destroyer"],
+        material: "Painted steel, deck surfaces, tower forms, antenna detail, and waterline mass",
+        inspectionFocus: ["hull length","deck plane","island tower","waterline"],
+        tags: ["naval","hull","deck","waterline","slow cruise"],
+      },
+      {
+        id: "aircraft", label: "Aircraft",
+        motionProfile: "aircraft", sceneProfile: "aircraft",
+        keywords: ["fighter jet","fighter","airplane","aeroplane","aircraft","plane","jet","drone","helicopter","missile","战斗机","飞机","歼","轰炸机","无人机","直升机","导弹"],
+        strongKeywords: ["fighter jet","fighter","airplane","aircraft","战斗机","飞机","无人机"],
+        material: "Painted fuselage, canopy glass, wing edges, intakes, and exhaust geometry",
+        inspectionFocus: ["fuselage","wings","tail","canopy"],
+        tags: ["aircraft","flight pass","banking","canopy","aero form"],
+      },
+      {
+        id: "specimen", label: "Organic Specimen",
+        motionProfile: "specimen", sceneProfile: "specimen",
+        keywords: ["cell","biology","biological","organism","specimen","plant","neuron","bacteria","blood","epithelial","muscle","mosquito","细胞","生物","植物","神经","细菌","肌肉"],
+        strongKeywords: ["cell","biology","biological","specimen","细胞","生物"],
+        material: "Soft translucent surfaces, organic volume, color-separated internal forms",
+        inspectionFocus: ["overall volume","translucent surface","internal clusters"],
+        tags: ["specimen","organic","inspection orbit","soft volume","education"],
+      },
+      {
+        id: "product", label: "Product Object",
+        motionProfile: "product", sceneProfile: "product",
+        keywords: ["watch","phone","camera","shoe","bag","chair","lamp","bottle","headphone","jewelry","ring","手表","手机","相机","鞋","包","椅子","灯","瓶","耳机","戒指"],
+        strongKeywords: ["watch","phone","camera","shoe","handbag","手表","手机","相机"],
+        material: "Mixed product materials, edge highlights, texture breaks, and brand-like surface zones",
+        inspectionFocus: ["silhouette","material zones","feature layout"],
+        tags: ["product","turntable","studio light","material zones","detail pause"],
+      },
+    ];
+
+    const SCENE_PROFILES = {
+      artifact: { label: "Museum Turntable", summary: "Dark gallery stage, warm spotlights, and close material inspection.", badges: ["spotlight","patina","close orbit"] },
+      road:     { label: "Road Showcase",    summary: "Low road deck, moving lane marks, and front push-in camera.",       badges: ["low camera","moving lane","gloss read"] },
+      aircraft: { label: "Sky Flight Pass",  summary: "Bright sky volume, contrail streaks, and banked fly-by motion.",    badges: ["banking","contrails","forward drift"] },
+      vessel:   { label: "Naval Waterline",  summary: "Water plane, broad wake, and slow side-tracking camera.",            badges: ["wake","side cruise","heavy scale"] },
+      product:  { label: "Studio Turntable", summary: "Clean reflective studio floor, softboxes, and product reveal.",      badges: ["turntable","reflection","detail pause"] },
+      specimen: { label: "Specimen Lab",     summary: "Soft lab volume, microscope-style depth lines, and close orbit.",    badges: ["rim light","inspection","soft volume"] },
+    };
+
+    const MOTION_PROFILES = {
+      artifact: { label: "Museum turntable", durationMs: 9000 },
+      road:     { label: "Road push-in",     durationMs: 7800 },
+      aircraft: { label: "Flight pass",      durationMs: 7200 },
+      vessel:   { label: "Naval cruise",     durationMs: 8600 },
+      specimen: { label: "Specimen orbit",   durationMs: 8200 },
+      product:  { label: "Studio reveal",    durationMs: 7600 },
+    };
+
+    function normalize(arr) {
+      return arr.filter(Boolean).join(" ").toLowerCase();
+    }
+    function scoreKeywords(text, words, weight) {
+      let s = 0;
+      for (const w of words) if (text.includes(String(w).toLowerCase())) s += weight;
+      return s;
+    }
+    function inferAssetCategory(item) {
+      if (item.intelligence?.categoryId) {
+        const r = ASSET_CATEGORIES.find(c => c.id === item.intelligence.categoryId);
+        if (r) return r;
+      }
+      const primary = normalize([item.id, item.name, item.fullName, item.type, item.template]);
+      const secondary = normalize([item.referenceSummary, item.note, item.subtitle]);
+      const scored = ASSET_CATEGORIES.map(rule => {
+        let score =
+          scoreKeywords(primary,   rule.keywords,        6) +
+          scoreKeywords(secondary, rule.keywords,        2) +
+          scoreKeywords(primary,   rule.strongKeywords, 18) +
+          scoreKeywords(secondary, rule.strongKeywords,  5);
+        // disambiguation overrides
+        if (rule.id === "vessel"   && /aircraft carrier|航母|航空母舰/.test(primary)) score += 32;
+        if (rule.id === "aircraft" && /aircraft carrier|航母|航空母舰/.test(primary)) score -= 18;
+        return { rule, score };
+      }).sort((a, b) => b.score - a.score);
+      return scored[0]?.score > 0 ? scored[0].rule : ASSET_CATEGORIES.find(c => c.id === "product");
+    }
+
+    // === Spec data injection ===
+    const SPECIMENS = [{"id": "a220", "name": "A220-300", "subtitle": "Single-aisle · Regional · 2× PW1500G GTF", "type": "Clean-sheet narrowbody", "accent": "#2DD4BF", "accentSoft": "rgba(45,212,191,0.45)", "material": "Aluminium-lithium fuselage · composite RTM wing · 5-abreast", "inspectionFocus": ["Composite wing", "PW1500G GTF", "5-abreast nose", "T-tail"], "tags": ["A220", "ex-CSeries", "regional", "geared turbofan"], "intelligence": {"categoryId": "aircraft"}, "note": "Range ~6,300 km · 145 pax (2-class) · MTOW 70.9 t · wingspan 35.1 m · first flight 2013. The only all-new small narrowbody of its generation (ex-Bombardier CSeries), with the widest economy seats in class and ~20% lower fuel burn than previous-generation regional jets. Drag the model to orbit; pinch/scroll to zoom.", "embedSrc": "https://sketchfab.com/models/ce4fbb839e6b4bb989422426bfc8fd1c/embed?autostart=1&autospin=0.4&ui_infos=0&ui_inspector=0&ui_settings=0&ui_help=0&ui_vr=0&ui_ar=0&ui_annotations=0&ui_stop=0&ui_loading=0", "attribution": "3D 模型 · <a href='https://sketchfab.com/3d-models/airbus-a220-ce4fbb839e6b4bb989422426bfc8fd1c' target='_blank'>BlueMesh (Sketchfab)</a> · 嵌入展示，版权归原作者"}, {"id": "a320neo", "name": "A320neo", "subtitle": "Single-aisle · Best-seller · LEAP-1A / PW1100G", "type": "New engine option narrowbody", "accent": "#3B82F6", "accentSoft": "rgba(59,130,246,0.45)", "material": "Aluminium fuselage · sharklet wingtips · 6-abreast", "inspectionFocus": ["Sharklet wingtips", "LEAP-1A nacelle", "6-abreast body", "Vertical stabiliser"], "tags": ["A320neo", "best-seller", "sharklets", "neo"], "intelligence": {"categoryId": "aircraft"}, "note": "Range ~6,500 km · 165 pax (2-class) · MTOW 79 t · wingspan 35.8 m · first flight 2014. The most-ordered airliner family in history; the neo keeps the proven A320 airframe and adds new-generation engines plus sharklets for ~20% lower fuel burn. Drag to orbit; scroll to zoom.", "embedSrc": "https://sketchfab.com/models/bfa8e0aa111f442da6b4a292cc877a0c/embed?autostart=1&autospin=0.4&ui_infos=0&ui_inspector=0&ui_settings=0&ui_help=0&ui_vr=0&ui_ar=0&ui_annotations=0&ui_stop=0&ui_loading=0", "attribution": "3D 模型 · <a href='https://sketchfab.com/3d-models/airbus-a320neo-bfa8e0aa111f442da6b4a292cc877a0c' target='_blank'>xylohopper (Sketchfab)</a> · 嵌入展示，版权归原作者"}, {"id": "a321lr", "name": "A321LR · 吉祥航空涂装", "subtitle": "Single-aisle · Long Range · Juneyao Air spec", "type": "Long-range narrowbody (3D = representative A321neo)", "accent": "#0EA5E9", "accentSoft": "rgba(14,165,233,0.45)", "material": "Stretched A321 fuselage · up to 3 Additional Centre Tanks", "inspectionFocus": ["Stretched fuselage", "Centre tanks (ACT)", "Sharklets", "Long-haul cabin"], "tags": ["A321LR", "Juneyao Air", "long-range narrowbody", "ACT"], "intelligence": {"categoryId": "aircraft"}, "note": "Range ~7,400 km · 206 pax (2-class) · MTOW 97 t · first flight 2018. Flown by 吉祥航空 (Juneyao Air) from its Shanghai hub on long thin sectors that used to need a widebody — optional auxiliary fuel tanks extend range. NOTE: Sketchfab has no Juneyao-livery model; the 3D shown is a representative A321neo airframe (Delta livery) — type-accurate, livery differs from the spec above.", "embedSrc": "https://sketchfab.com/models/a217b16402584c8a9e97790991293132/embed?autostart=1&autospin=0.4&ui_infos=0&ui_inspector=0&ui_settings=0&ui_help=0&ui_vr=0&ui_ar=0&ui_annotations=0&ui_stop=0&ui_loading=0", "attribution": "3D 模型 · <a href='https://sketchfab.com/3d-models/airbus-a321neo-delta-airlines-a217b16402584c8a9e97790991293132' target='_blank'>omny3d (Sketchfab)</a> · 代表性 A321neo，Editorial license，版权归原作者"}, {"id": "a321xlr", "name": "A321XLR · Wizz Air 涂装", "subtitle": "Single-aisle · Xtra Long Range · Wizz Air spec", "type": "Xtra-long-range narrowbody (3D = representative A321neo)", "accent": "#EC4899", "accentSoft": "rgba(236,72,153,0.45)", "material": "A321XLR fuselage · permanent 12,900 L Rear Centre Tank", "inspectionFocus": ["Rear Centre Tank", "Reinforced gear", "Sharklets", "High-density cabin"], "tags": ["A321XLR", "Wizz Air", "longest-range narrowbody", "RCT"], "intelligence": {"categoryId": "aircraft"}, "note": "Range ~8,700 km · 200 pax (2-class) · MTOW 101 t · first flight 2022. The longest-range single-aisle ever — a built-in rear fuel tank opens 11-hour routes on low-cost economics, ordered by Wizz Air. NOTE: Sketchfab has no Wizz-Air-livery model; the 3D shown is a representative A321neo airframe (easyJet livery) — type-accurate, livery differs from the spec above.", "embedSrc": "https://sketchfab.com/models/e48a038dc3124d759f168e9199f3edbb/embed?autostart=1&autospin=0.4&ui_infos=0&ui_inspector=0&ui_settings=0&ui_help=0&ui_vr=0&ui_ar=0&ui_annotations=0&ui_stop=0&ui_loading=0", "attribution": "3D 模型 · <a href='https://sketchfab.com/3d-models/airbus-a321neo-easyjet-airlines-e48a038dc3124d759f168e9199f3edbb' target='_blank'>omny3d (Sketchfab)</a> · 代表性 A321neo，Editorial license，版权归原作者"}, {"id": "a330neo", "name": "A330-900neo", "subtitle": "Widebody twin · Mid-range · 2× Trent 7000", "type": "Re-engined widebody", "accent": "#8B5CF6", "accentSoft": "rgba(139,92,246,0.45)", "material": "Aluminium widebody · A350-derived curved winglets · 8-abreast", "inspectionFocus": ["Curved winglets", "Trent 7000", "8-abreast body", "Tall fin"], "tags": ["A330neo", "widebody", "Trent 7000", "CC-BY"], "intelligence": {"categoryId": "aircraft"}, "note": "Range ~13,334 km · 287 pax (2-class) · MTOW 251 t · wingspan 64 m · first flight 2017. Lowest seat-mile cost of any mid-size widebody — re-engined evolution of the proven A330 with A350-derived curved winglets and ~14% lower fuel burn per seat.", "embedSrc": "https://sketchfab.com/models/40982f2a3f2442c9aa37f6a5caafffbc/embed?autostart=1&autospin=0.4&ui_infos=0&ui_inspector=0&ui_settings=0&ui_help=0&ui_vr=0&ui_ar=0&ui_annotations=0&ui_stop=0&ui_loading=0", "attribution": "3D 模型 · <a href='https://sketchfab.com/3d-models/airbus-a330neo-40982f2a3f2442c9aa37f6a5caafffbc' target='_blank'>mhmdshwatahmdmhdy922 (Sketchfab)</a> · CC-BY 4.0 署名"}, {"id": "a350", "name": "A350-1000", "subtitle": "Widebody twin · Long-haul flagship · 2× Trent XWB-97", "type": "Carbon-fibre flagship", "accent": "#06B6D4", "accentSoft": "rgba(6,182,212,0.45)", "material": "53% CFRP airframe · adaptive trailing-edge wing · blade tips", "inspectionFocus": ["CFRP fuselage", "Blade wingtips", "Trent XWB-97", "6-wheel bogies"], "tags": ["A350-1000", "carbon-fibre", "XWB", "CC-BY-NC-SA"], "intelligence": {"categoryId": "aircraft"}, "note": "Range ~16,100 km · 410 pax (2-class) · MTOW 322 t · wingspan 64.75 m · first flight 2016. Carbon-fibre fuselage and wing enable higher cabin pressure/humidity for reduced jet-lag; the most efficient large aero engine in service (Trent XWB-97). The long-haul flagship of the current Airbus line.", "embedSrc": "https://sketchfab.com/models/97577f60b81140e995d27dbb0ca36181/embed?autostart=1&autospin=0.4&ui_infos=0&ui_inspector=0&ui_settings=0&ui_help=0&ui_vr=0&ui_ar=0&ui_annotations=0&ui_stop=0&ui_loading=0", "attribution": "3D 模型 · <a href='https://sketchfab.com/3d-models/airbus-a350-1000-97577f60b81140e995d27dbb0ca36181' target='_blank'>outpiston (Sketchfab)</a> · CC-BY-NC-SA 4.0 署名·非商业·相同方式共享"}, {"id": "a380", "name": "A380-800", "subtitle": "Double-deck quad · Flagship · 4× Trent 900", "type": "Full double-deck jumbo", "accent": "#F59E0B", "accentSoft": "rgba(245,158,11,0.45)", "material": "Full-length two decks · 79.75 m GLARE wing · quad engines", "inspectionFocus": ["Double-deck body", "79.75 m wing", "Four engines", "22-wheel gear"], "tags": ["A380", "double-deck", "quad", "CC-BY"], "intelligence": {"categoryId": "aircraft"}, "note": "Range ~14,800 km · 525 pax (3-class, up to 853) · MTOW 575 t · wingspan 79.75 m · first flight 2005. The only full-length double-deck airliner — the largest cabin floor area ever flown, with space for bars, suites and showers. 22 wheels spread 575 tonnes within standard pavement limits.", "embedSrc": "https://sketchfab.com/models/98d21f9c8104445f814cef47ef992889/embed?autostart=1&autospin=0.4&ui_infos=0&ui_inspector=0&ui_settings=0&ui_help=0&ui_vr=0&ui_ar=0&ui_annotations=0&ui_stop=0&ui_loading=0", "attribution": "3D 模型 · <a href='https://sketchfab.com/3d-models/airbus-a380-98d21f9c8104445f814cef47ef992889' target='_blank'>davidbroutian (Sketchfab)</a> · CC-BY 4.0 署名"}];
+    const PARTS = {"a220": [], "a320neo": [], "a321lr": [], "a321xlr": [], "a330neo": [], "a350": [], "a380": []};
+
+    let active = SPECIMENS[0] || { id: "blank", name: "—", subtitle: "", note: "" };
+    let autoRotate = false;
+    let demoMode = false;
+    let rotateRAF = null;
+    let rotateAngle = 0;
+
+    // === DOM refs ===
+    const $list = document.getElementById("artifact-list");
+    const $stage = document.getElementById("stage");
+    const $stageMount = document.getElementById("stage-mount");
+    const $stageEmbed = document.getElementById("stage-embed");
+    const $stageAttribution = document.getElementById("stage-attribution");
+    const $heroSvg = document.getElementById("hero-svg");
+    const $statusText = document.getElementById("status-text");
+    const $motionLabel = document.getElementById("motion-label");
+    const $intelName = document.getElementById("intel-name");
+    const $intelPeriod = document.getElementById("intel-period");
+    const $intelCatLabel = document.getElementById("intel-cat-label");
+    const $intelSceneSummary = document.getElementById("intel-scene-summary");
+    const $intelFocusChips = document.getElementById("intel-focus-chips");
+    const $intelMaterial = document.getElementById("intel-material");
+    const $intelNote = document.getElementById("intel-note");
+    const $intelTagChips = document.getElementById("intel-tag-chips");
+    const $ctrlProfile = document.getElementById("ctrl-profile");
+    const $ctrlDuration = document.getElementById("ctrl-duration");
+    const $ctrlScene = document.getElementById("ctrl-scene");
+    const $ctrlRotate = document.getElementById("ctrl-rotate");
+    const $ctrlReset = document.getElementById("ctrl-reset");
+    const $ctrlFullscreen = document.getElementById("ctrl-fullscreen");
+    const $demoToggle = document.getElementById("demo-toggle");
+
+    // === Render artifact list ===
+    function renderList() {
+      $list.innerHTML = "";
+      SPECIMENS.forEach(item => {
+        const cat = inferAssetCategory(item);
+        const initial = (item.name || item.id || "?").trim().charAt(0).toUpperCase();
+        const row = document.createElement("button");
+        row.className = "artifact-row" + (item.id === active.id ? " is-active" : "");
+        row.dataset.id = item.id;
+        row.innerHTML = `
+          <div class="artifact-thumb">${initial}</div>
+          <div class="artifact-info">
+            <div class="artifact-name">${escapeHtml(item.name || item.id)}</div>
+            <div class="artifact-cat">${cat.label}${item.subtitle ? " · " + escapeHtml(item.subtitle) : ""}</div>
+          </div>
+        `;
+        row.addEventListener("click", () => setActive(item.id));
+        $list.appendChild(row);
+      });
+    }
+
+    // === Render stage — Sketchfab iframe path OR 8-angle photo fallback ===
+    let currentFrame = 1;
+    let imgEls = [];
+    let usingEmbed = false;
+    function renderStage() {
+      $stageMount.innerHTML = "";
+      imgEls = [];
+      $heroSvg.innerHTML = "";
+
+      // Path A: real 3D via Sketchfab embed (preferred when embedSrc set)
+      if (active.embedSrc) {
+        usingEmbed = true;
+        // load on demand (only swap src when changing artifact)
+        if ($stageEmbed.dataset.activeId !== active.id) {
+          $stageEmbed.src = active.embedSrc;
+          $stageEmbed.dataset.activeId = active.id;
+        }
+        $stageEmbed.style.display = "block";
+        $stageMount.style.display = "none";
+        $heroSvg.style.display = "none";
+        // attribution badge (license honor + author credit)
+        if (active.attribution) {
+          $stageAttribution.innerHTML = active.attribution;
+          $stageAttribution.style.display = "block";
+        } else {
+          $stageAttribution.style.display = "none";
+        }
+        // disable hero-image-related controls
+        return;
+      }
+
+      // Path B: 8-angle photo fallback
+      usingEmbed = false;
+      $stageEmbed.style.display = "none";
+      $stageEmbed.src = "about:blank";
+      $stageEmbed.dataset.activeId = "";
+      $stageMount.style.display = "block";
+      $heroSvg.style.display = "block";
+      $stageAttribution.style.display = "none";
+      const id = active.id;
+      const baseDir = active.assetsDir || "assets/angles";
+      for (let i = 1; i <= 8; i++) {
+        const img = document.createElement("img");
+        img.className = "hero-img" + (i === 1 ? " is-current" : " is-pending");
+        img.src = `${baseDir}/${id}-${String(i - 1).padStart(2, "0")}.png`;
+        img.alt = `${active.name || id} angle ${i}`;
+        img.dataset.frame = i;
+        img.loading = i === 1 ? "eager" : "lazy";
+        img.addEventListener("error", () => { img.style.display = "none"; });
+        $stageMount.appendChild(img);
+        imgEls.push(img);
+      }
+      currentFrame = 1;
+      drawHotspots();
+    }
+
+    function showFrame(frame) {
+      const f = ((frame - 1) % 8 + 8) % 8 + 1;
+      if (f === currentFrame) return;
+      imgEls.forEach((el, idx) => {
+        const isCurrent = (idx + 1) === f;
+        el.classList.toggle("is-current", isCurrent);
+        el.classList.toggle("is-pending", !isCurrent);
+      });
+      currentFrame = f;
+      drawHotspots();
+    }
+
+    // === Hotspot rendering (per-frame coords from PARTS) ===
+    function drawHotspots() {
+      $heroSvg.innerHTML = "";
+      const partList = PARTS[active.id] || [];
+      partList.forEach(part => {
+        const coords = part.coords || part.hotspots || {};
+        const c = coords[currentFrame] || coords[1] || part.position;
+        if (!c) return;
+        const [cx, cy, r] = Array.isArray(c) ? c : [c.x, c.y, c.r || 24];
+        const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        dot.setAttribute("cx", cx);
+        dot.setAttribute("cy", cy);
+        dot.setAttribute("r", r || 24);
+        dot.setAttribute("fill", "rgba(232, 200, 122, 0.85)");
+        dot.setAttribute("stroke", "rgba(10, 14, 20, 0.5)");
+        dot.setAttribute("stroke-width", "2");
+        dot.setAttribute("class", "focus-dot-svg");
+        dot.style.cursor = "pointer";
+        dot.style.pointerEvents = "auto";
+        dot.addEventListener("mouseenter", () => dot.setAttribute("fill", "rgba(232, 200, 122, 1)"));
+        dot.addEventListener("mouseleave", () => dot.setAttribute("fill", "rgba(232, 200, 122, 0.85)"));
+        dot.addEventListener("click", () => {
+          $intelNote.textContent = part.note || part.subtitle || part.name;
+        });
+        $heroSvg.appendChild(dot);
+      });
+    }
+
+    // === Set active artifact + intelligence panel ===
+    function setActive(id) {
+      const item = SPECIMENS.find(s => s.id === id) || SPECIMENS[0];
+      active = item;
+      const cat = inferAssetCategory(item);
+      const mp = MOTION_PROFILES[cat.motionProfile] || MOTION_PROFILES.product;
+      const sp = SCENE_PROFILES[cat.sceneProfile] || SCENE_PROFILES.product;
+      const focusList = item.inspectionFocus || cat.inspectionFocus;
+      const tagList = item.tags || cat.tags;
+
+      $intelName.textContent = item.name || item.id;
+      $intelPeriod.textContent = item.subtitle || "";
+      $intelCatLabel.textContent = `${cat.label} · ${item.intelligence?.categoryId ? "override" : "auto"}`;
+      $intelSceneSummary.textContent = sp.summary;
+      $intelMaterial.textContent = item.material || cat.material;
+      $intelNote.textContent = item.note || "";
+      $intelFocusChips.innerHTML = focusList.map(f => `<span class="chip">${escapeHtml(f)}</span>`).join("");
+      $intelTagChips.innerHTML = tagList.map(t => `<span class="chip">${escapeHtml(t)}</span>`).join("");
+
+      $ctrlProfile.textContent = cat.motionProfile;
+      $ctrlDuration.textContent = `${mp.durationMs} ms`;
+      $ctrlScene.textContent = sp.label;
+      $motionLabel.textContent = `${mp.label} · ${(mp.durationMs / 1000).toFixed(1)}s`;
+      $statusText.textContent = `${item.name || item.id} · ${sp.label}`;
+
+      renderList();
+      renderStage();
+    }
+
+    // === Drag rotation (cursor:grab on stage) — only used in 8-angle photo path
+    let isDragging = false, dragStartX = 0, dragStartFrame = 1;
+    $stageMount.addEventListener("pointerdown", e => {
+      if (usingEmbed) return;
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragStartFrame = currentFrame;
+      $stageMount.classList.add("is-dragging");
+      $stageMount.setPointerCapture(e.pointerId);
+      stopAutoRotate();
+    });
+    $stageMount.addEventListener("pointermove", e => {
+      if (usingEmbed || !isDragging) return;
+      const dx = e.clientX - dragStartX;
+      const stepPx = $stageMount.clientWidth / 8;
+      const delta = Math.round(dx / stepPx);
+      const frame = ((dragStartFrame - 1 - delta) % 8 + 8) % 8 + 1;
+      showFrame(frame);
+    });
+    $stageMount.addEventListener("pointerup", e => {
+      isDragging = false;
+      $stageMount.classList.remove("is-dragging");
+    });
+    $stageMount.addEventListener("pointercancel", () => { isDragging = false; });
+
+    // === Auto rotate (artifact 9s = 1125ms per frame) — embed path delegates to Sketchfab
+    function startAutoRotate() {
+      if (usingEmbed) {
+        // Sketchfab autospin via URL param `autospin=0.4` already enabled in embedSrc
+        $ctrlRotate.classList.add("is-on");
+        $ctrlRotate.setAttribute("aria-pressed", "true");
+        return;
+      }
+      if (rotateRAF) return;
+      const cat = inferAssetCategory(active);
+      const mp = MOTION_PROFILES[cat.motionProfile] || MOTION_PROFILES.product;
+      const msPerFrame = mp.durationMs / 8;
+      let last = performance.now();
+      let acc = 0;
+      const loop = (now) => {
+        acc += now - last; last = now;
+        while (acc >= msPerFrame) {
+          showFrame(currentFrame + 1);
+          acc -= msPerFrame;
+        }
+        rotateRAF = requestAnimationFrame(loop);
+      };
+      rotateRAF = requestAnimationFrame(loop);
+      $ctrlRotate.classList.add("is-on");
+      $ctrlRotate.setAttribute("aria-pressed", "true");
+    }
+    function stopAutoRotate() {
+      if (rotateRAF) {
+        cancelAnimationFrame(rotateRAF);
+        rotateRAF = null;
+      }
+      $ctrlRotate.classList.remove("is-on");
+      $ctrlRotate.setAttribute("aria-pressed", "false");
+    }
+    $ctrlRotate.addEventListener("click", () => {
+      autoRotate = !autoRotate;
+      if (autoRotate) startAutoRotate(); else stopAutoRotate();
+    });
+
+    // === Reset ===
+    $ctrlReset.addEventListener("click", () => {
+      stopAutoRotate();
+      autoRotate = false;
+      if (usingEmbed) {
+        // re-init iframe (Sketchfab API would need postMessage; simplest = reload src)
+        $stageEmbed.src = $stageEmbed.src;
+      } else {
+        showFrame(1);
+      }
+    });
+
+    // === Fullscreen ===
+    $ctrlFullscreen.addEventListener("click", () => {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    });
+
+    // === Demo mode toggle ===
+    $demoToggle.addEventListener("click", () => {
+      demoMode = !demoMode;
+      document.body.classList.toggle("demo-mode", demoMode);
+      $demoToggle.classList.toggle("is-on", demoMode);
+      $demoToggle.setAttribute("aria-pressed", String(demoMode));
+      if (demoMode && !autoRotate) {
+        autoRotate = true; startAutoRotate();
+      }
+    });
+
+    // === Idle auto-rotate after 1.8s of inactivity (only photo path; iframe handles via autospin URL param)
+    let idleTimer = null;
+    function scheduleIdle() {
+      clearTimeout(idleTimer);
+      if (usingEmbed) return; // Sketchfab autospin already running via URL param
+      idleTimer = setTimeout(() => {
+        if (!autoRotate && !isDragging) {
+          autoRotate = true; startAutoRotate();
+        }
+      }, 1800);
+    }
+    document.addEventListener("pointermove", () => {
+      if (usingEmbed) return;
+      if (autoRotate && !demoMode) { stopAutoRotate(); autoRotate = false; }
+      scheduleIdle();
+    });
+
+    // === HTML escape ===
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    // === Boot ===
+    setActive(active.id);
+    scheduleIdle();
+  </script>
+<!-- kengit analytics: GoatCounter (gated, inline implementation, no CDN dependency) -->
+<script>
+window.kengitTrackVisit = function() {
+  if (window._kengitTracked) return;
+  window._kengitTracked = true;
+  try {
+    var url = 'https://kenno.goatcounter.com/count?' +
+      'p=' + encodeURIComponent(location.pathname + location.search) +
+      '&t=' + encodeURIComponent(document.title) +
+      '&r=' + encodeURIComponent(document.referrer) +
+      '&s=' + screen.width + ',' + screen.height + ',' + (window.devicePixelRatio || 1) +
+      '&rnd=' + Math.random();
+    var img = new Image(1, 1);
+    img.src = url;
+  } catch(e) {}
+};
+if (!document.getElementById('auth-gate') || sessionStorage.getItem('kengit-authed')==='1') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.kengitTrackVisit);
+  } else {
+    window.kengitTrackVisit();
+  }
+}
+</script>
+</body>
+</html>
