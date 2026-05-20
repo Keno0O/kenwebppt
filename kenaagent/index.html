@@ -84,6 +84,10 @@ a{color:#00A0DF}
 .qc-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.5px}
 .qc-PASS{background:var(--greenLight);color:var(--green);border:1px solid #B3E5CC}
 .qc-UNVERIFIED{background:var(--redPale);color:var(--redMuted);border:1px solid #F5BBB1}
+.qc-FALLBACK{background:var(--amberLight);color:var(--amber);border:1px solid #F0D89A}
+.fallback-tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;letter-spacing:.5px;background:var(--amberLight);color:var(--amber);border:1px solid #F0D89A;margin-left:6px}
+.fb-banner{background:var(--amberLight);border:1px solid #F0D89A;border-left:4px solid var(--amber);border-radius:6px;padding:10px 14px;margin-bottom:14px;font-size:11px;color:#8C5C13;line-height:1.65}
+.fb-banner b{color:var(--amber);font-weight:700}
 
 .stop-cell{font-size:10px;color:var(--textLight);max-width:280px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;cursor:help}
 .risk-cell{font-size:10px;color:var(--textLight);max-width:280px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
@@ -289,8 +293,8 @@ const BATCH = /*BATCH_START*/{};/*BATCH_END*/
 {
   "schema": "kenaagent.batch/1",
   "asof": "20260520",
-  "generated_at": "2026-05-20T23:00:49",
-  "disclaimer": "本看板由 kenaagent v1 多 Agent 对抗式 pipeline 生成, 为 LLM 基于历史数据的意见, 非校准信号、非投资建议、不对价格方向作任何预测保证。无 walk-forward/样本外 oracle 校验研判逻辑; 13 Agent 由同一底层模型扮演, 对抗为约束驱动 (role-play opposition) 非认知独立 (epistemic opposition); QC 门只校验论据数值溯源, 不校验研判逻辑; 妖股阈值、streak hard_veto、kensss hit rate 均为外部先验未经本地校准; 仓位/止损为情景示意非校准风险参数。禁止进入任何自动化下单链路, 禁止反喂 kentdstock 矩阵作训练/调参输入。使用者须独立决策并自负全部后果。",
+  "generated_at": "2026-05-20T23:32:22",
+  "disclaimer": "本看板由 kenaagent v1 多 Agent 对抗式 pipeline 生成, 为 LLM 基于历史数据的意见, 非校准信号、非投资建议、不对价格方向作任何预测保证。无 walk-forward/样本外 oracle 校验研判逻辑; 13 Agent 由同一底层模型扮演, 对抗为约束驱动 (role-play opposition) 非认知独立 (epistemic opposition); QC 门只校验论据数值溯源, 不校验研判逻辑; 妖股阈值、streak hard_veto、kensss hit rate 均为外部先验未经本地校准; 仓位/止损为情景示意非校准风险参数。【⚠ 降级标注】本批补充 3 只票 (002272/000809/600604) 因 Claude API 529 持续过载, 走主 agent 综合 4 视角 + 模拟 bull/bear 的降级模式, 非真正 13 agent 对抗式 pipeline; evidence 数值严谨度保持但缺多 agent 独立性, 信心度比前 2 只票 (000417/603779) 低一档. 禁止进入任何自动化下单链路, 禁止反喂 kentdstock 矩阵作训练/调参输入。使用者须独立决策并自负全部后果。",
   "pipeline_meta": {
     "source": "/t1board today → kensss batch lookup → /kenaagent",
     "filter": "T1 梯队 + kensss hit_prob ≥ 50%",
@@ -404,7 +408,8 @@ const BATCH = /*BATCH_START*/{};/*BATCH_END*/
           "claim": "妖股属性 hits=2/4（precursor+pressure 命中，consolidation=0.0 已破位，hotspot=null）",
           "ref": "evidence.json:yaogu.value.hits/subscores"
         }
-      ]
+      ],
+      "via_fallback": false
     },
     {
       "code": "603779.SH",
@@ -521,7 +526,353 @@ const BATCH = /*BATCH_START*/{};/*BATCH_END*/
           "claim": "research-manager 5 项分歧 bear 胜 4，综合中性偏空 conf 0.72",
           "ref": "research-manager.md:关键分歧裁决"
         }
-      ]
+      ],
+      "via_fallback": false
+    },
+    {
+      "code": "002272.SZ",
+      "name": "川润股份",
+      "industry": "机械基件",
+      "verdict": "HOLD",
+      "confidence": "中",
+      "confidence_score": 0.61,
+      "position_pct": 0,
+      "position_pct_held": 0,
+      "stop_loss": "无仓: HOLD-不追新仓。持仓: (a) 集合竞价 +3% 即 trim 50%; (b) 余下跌破 ma5=21.23 全清; (c) LHB 第 3 日中断或液冷板块退潮即清; (d) ma20=19.61 二段已迟不再保留。",
+      "horizon": "T+1~3",
+      "yaogu_hits": 2,
+      "yaogu_detail": "precursor[✓]顶格1.0(22日涨停4次量峰1.94x) + pressure[✓]顶格(站6/6均线无压打开), consolidation[×]振幅31%已脱平台, hotspot[?]null需 sector",
+      "key_risks": [
+        "PB 8.29 显著高估 (机械基件行业 PB 通常 2-4x), ROE -2.09% 亏损不支撑估值",
+        "KDJ-J=109.9 极端超买 + close 越 BOLL upper +7.8% + close/MA5 偏离 +17.5%",
+        "振幅 31% 已脱平台 (consolidation=0), 是高位接力非启动",
+        "液冷业务占比仅 12.87% — 主业是机械基件, 题材投射限制天花板",
+        "本研判走 API 529 降级模式 (主 agent 综合 4 视角 + bull/bear 模拟), 非真正 13 agent 对抗式 pipeline, 信心度比 000417/603779 低一档"
+      ],
+      "analysts": {
+        "fundamental": {
+          "verdict": "卖出（偏空）",
+          "confidence": 0.65,
+          "summary": "PB 8.29 显著高估同行(机械基件 PB 通常 2-4x), ROE -2.09% 主业亏损; 净利同比 -10.34% 持续恶化; 营收 +5.27% 微增不足以撑估值; 液冷业务占营收仅 12.87% (公司 5/19 公告自陈), 是题材投射非主业转型; 资产负债率 58.66% 偏高。"
+        },
+        "technical": {
+          "verdict": "中性偏卖",
+          "confidence": 0.68,
+          "summary": "KDJ-J=109.9 极端超买; RSI14=71.85 温和超买; close 24.94 越 BOLL upper=23.13 +7.8%; close/MA5=21.23 偏离 +17.5%; 振幅 31% 已脱平台 (consolidation=0); MACD 金叉 hist +0.99 多头但已末端; 3 连板高位接力风险。"
+        },
+        "sentiment": {
+          "verdict": "乐观（偏中性上沿）",
+          "confidence": 0.65,
+          "summary": "液冷题材真实热点 (科创50半日 +2% 半导体产业链领涨); LHB 连续 2 日 (5/19+5/20) 净 +2.93 亿大单游资接力; main_net_5d +7.23 亿真金; 22 日涨停 4 次妖股属性; 但 RETREAT 期延续 + 3 连板已是短线高位接力。"
+        },
+        "news": {
+          "verdict": "中性偏多",
+          "confidence": 0.62,
+          "summary": "10 条 news 含 2 日 LHB + 公司自陈液冷占比 12.87% (5/19) + 单/双相技术储备公告 (5/18) + 行业 'AI 液冷千亿市场' 共振; '豪取 3 连板' 已是新闻标题级关注 (顶部信号); 公司透明披露占比是利好-利空双刃 (避免炒作监管 vs 题材热度受限于占比)。"
+        }
+      },
+      "debate": {
+        "bull": [
+          "液冷题材真实非自证伪 — 公司公告占营收 12.87% + 单/双相技术储备 (news[2][4][7])",
+          "LHB 连续 2 日大单游资接力, 净 +2.93 亿元 (moneyflow.lhb_net_amount)",
+          "主力 5 日 +7.23 亿真金净买 (moneyflow.main_net_5d_wan 72261 万)",
+          "妖股 precursor 顶格 1.0 (22 日涨停 4 次 + 量峰 1.94x), pressure 顶格 (无压打开)",
+          "科创50 + 半导体产业链 5/20 强势, 液冷板块逆势爆发"
+        ],
+        "bear": [
+          "PB 8.29 显著高估 (机械基件行业 PB 通常 2-4x), ROE -2.09% 亏损不支撑估值",
+          "KDJ-J=109.9 极端超买 + close 越 BOLL upper +7.8% + close/MA5 偏离 +17.5%",
+          "振幅 31% 已脱平台 (consolidation=0), 是高位接力非启动",
+          "液冷业务占比仅 12.87% — 主业是机械基件, 题材投射限制天花板",
+          "news 标题已出现 '豪取 3 连板' 是顶部信号 (媒体关注度顶峰常对应回调)",
+          "RETREAT 期延续, 3 连板已进入短线 hard_veto 区边缘 (V2 阈值 ≥5)"
+        ],
+        "bull_confidence": 0.62,
+        "bear_confidence": 0.66,
+        "manager": "中性偏空 0.62 — 液冷题材真实+LHB 连续大单+主力真金强势 (bull 0.62) vs 极端超买+高估+占比仅 12.87%+3 连板顶部信号 (bear 0.66) 略占优; 短线 trim/不追, 回踩 ma5 ±3% 才考虑试探。"
+      },
+      "trader_thesis": "液冷题材真实 (公司公告占营收 12.87% + 单双相技术储备, news[2][4]) + LHB 连续 2 日净 +2.93 亿 + main_5d +7.23 亿真金 (moneyflow) — 但 KDJ-J 109.9 极端超买 + close 越 BOLL upper 7.8% + 振幅 31% 已脱平台 + PB 8.29 高估 + 3 连板顶部信号. R/R 不对称 (上方阻力近, 下方 MA5=21.23 距现价 -14.9% 真空), 终裁 HOLD-不追新仓, 持仓回踩 MA5 减仓; 入场窗口仅在 ma5 ±3% 且伴 LHB 持续才允小仓。",
+      "risk_debate": {
+        "aggressive": "推荐 5% 试探仓 (条件: 5/21 不一字 + 回踩 ma5=21.23 ±3% + LHB 第 3 日继续大单 + 液冷板块未退潮); 妖股 precursor 顶格 + LHB 双确认是真热点不是纯炒作; 题材外溢空间 vs 12.87% 占比仍有想象 (industry 升级路径)。",
+        "conservative": "AVOID 新仓 0%, 持仓 trim 50% 集合竞价高开 ≥+3% 即兑现; 3 连板高位 + 振幅脱平台 + KDJ-J 109.9 是典型派发信号; 跌破 ma5=21.23 全清剩 50%; 不期权对冲 (小盘流动性差)。",
+        "neutral": "0-3% 试探仓 (默认 0%); 液冷主题真实但占比 12.87% 限制估值天花板, 不属于纯证伪也不算业绩驱动; 风控以 ma5 为唯一止损线, 不打两段止损以免连续滑点。"
+      },
+      "portfolio_decision": "HOLD-LEAN-AVOID 综合裁决: 液冷题材真实 + LHB 连续大单 + 主力真金构成 bull 真硬料 (区别于 000417 题材自证伪); 但 KDJ-J 109.9 + close 越 BOLL upper + 振幅 31% 脱平台 + PB 8.29 高估是典型短线顶部信号. 终裁 不追新仓 (0%); 仅在 5/21 回踩 ma5=21.23 ±3% 且 LHB 持续才允 3-5% 试探; 持仓 trim. **vs 603779 区别**: 川润是 '真题材+短线顶' vs 威龙是 '题材证伪+高位接力'; 川润 R/R 比威龙稍好。",
+      "qc": {
+        "status": "PASS-FALLBACK",
+        "verified_count": 9,
+        "unverified_count": 0,
+        "unverified": []
+      },
+      "evidence_refs": [
+        {
+          "claim": "PB 8.29 显著高估机械基件行业",
+          "ref": "evidence.json:fundamentals.pb=8.2877"
+        },
+        {
+          "claim": "ROE -2.09% 主业亏损, 净利同比 -10.34%",
+          "ref": "evidence.json:fundamentals.roe/netprofit_yoy"
+        },
+        {
+          "claim": "KDJ-J=109.91 极端超买",
+          "ref": "evidence.json:technical.kdj.j=109.9138"
+        },
+        {
+          "claim": "close 24.94 越 BOLL upper=23.13 约 +7.8%",
+          "ref": "evidence.json:technical.close/boll.upper"
+        },
+        {
+          "claim": "close/MA5=21.23 偏离 +17.5%",
+          "ref": "evidence.json:technical.ma.ma5=21.228"
+        },
+        {
+          "claim": "振幅 31% 已脱平台 consolidation=0",
+          "ref": "evidence.json:yaogu.value.subscores.consolidation/detail"
+        },
+        {
+          "claim": "妖股 precursor 顶格 1.0 (22 日涨停 4 次, 量峰 1.94x)",
+          "ref": "evidence.json:yaogu.value.subscores.precursor/detail"
+        },
+        {
+          "claim": "LHB 净 +2.93 亿元 + 连续 2 日 (5/19+5/20) 上榜",
+          "ref": "evidence.json:moneyflow.lhb_net_amount=293376497 + news[0][1]"
+        },
+        {
+          "claim": "公司自陈液冷业务占营收 12.87%",
+          "ref": "evidence.json:news[2][4]"
+        }
+      ],
+      "via_fallback": true
+    },
+    {
+      "code": "000809.SZ",
+      "name": "和展能源",
+      "industry": "电气设备",
+      "verdict": "AVOID",
+      "confidence": "中",
+      "confidence_score": 0.63,
+      "position_pct": 0,
+      "position_pct_held": 0,
+      "stop_loss": "无仓: AVOID-观察。等 5/21 收购方背景明确公告 (国资 vs 个人 vs 产业资本) 或一字打开破板才能评估; 不参与 '王海波是谁' 的盲盒博弈; 持仓跌破 ma5=4.00 全清, 等收购方案具体细节。",
+      "horizon": "T+1~5",
+      "yaogu_hits": 2,
+      "yaogu_detail": "precursor 0.7(22日涨停1次量峰2.34x) + pressure[✓]顶格(站6/6均线), consolidation 0.234(振幅15.3%平台尾部), hotspot[?]null",
+      "key_risks": [
+        "实控人变更为 **王海波个人** 而非国资 (news[4]), 与 603779 淄博财政局国资入主性质不同, 重组想象空间小",
+        "news 直接标 '连亏 7 年现金流持续失血' (news[5]), 主业看不到拐点",
+        "Q1 扭亏净利仅 333 万绝对值微弱, 营收 yoy +9340% 是低基数虚高非真增长",
+        "main_5d 仅 +1141 万 (资金规模比 603779 +1.07 亿差 10x, 比川润 +7.23 亿差 60x)",
+        "本研判走 API 529 降级模式 (主 agent 综合 4 视角 + bull/bear 模拟), 非真正 13 agent 对抗式 pipeline, 信心度比 000417/603779 低一档"
+      ],
+      "analysts": {
+        "fundamental": {
+          "verdict": "中性偏空",
+          "confidence": 0.62,
+          "summary": "ROE 0.13% 微利, PB 1.36 估值合理, 净利同比 +122.86% 扭亏为盈但绝对值仅 333 万 (含金量低); 营收同比 +9339.72% 是低基数效应 (前期几乎无营收); news 直接标 '连亏 7 年现金流持续失血'; 资产负债率 34.58% 健康; 总市值 36 亿小盘股, 壳价值存在但流动性差。"
+        },
+        "technical": {
+          "verdict": "中性",
+          "confidence": 0.6,
+          "summary": "close 4.37 一字封板 (og=+10.08), RSI14=71.24 温和超买, KDJ-J=89.35 顶背离风险; close/MA5=4.00 偏离 +9.2%, close 越 BOLL upper=4.24 +3%; 振幅 15.3% 仍在平台尾部 (consolidation=0.234 优于川润); 站 6/6 均线打开; MACD 金叉 hist +0.075 多头。"
+        },
+        "sentiment": {
+          "verdict": "中性偏多",
+          "confidence": 0.6,
+          "summary": "5/19 实控人变更公告 = 资本运作预期; 一字封板 turnover 仅 2.11% (跟风盘无车上); main_5d 仅 +1141 万 (资金规模微弱, 不足以判断主力锁仓); LHB on_list=false (一字封单堵死 vs 资金规模不足两种可能); 比 603779 同类事件资金规模差 100 倍。"
+        },
+        "news": {
+          "verdict": "中性偏多 (个人收购非国资)",
+          "confidence": 0.7,
+          "summary": "5/19 实控人拟变更为 **王海波 (个人非国资)** [news 5][3], 与 603779 淄博财政局 (国资入主) 性质完全不同, 个人收购想象空间显著小; 公司 '连亏 7 年现金流失血' 是 news 直接标注的硬伤 [news 6]; Q1 扭亏为盈 333 万 (news[0][1]) 但绝对值微弱, 是题材而非业绩驱动。"
+        }
+      },
+      "debate": {
+        "bull": [
+          "实控人拟变更 (5/19 公告 news[2][3][4]) = 资本运作预期, 小盘 36 亿壳价值",
+          "Q1 扭亏为盈 (净利同比 +122.86%, 净利 333 万 news[0][1])",
+          "PB 1.36 估值合理 (不像 603779 PB 8.95 或 川润 PB 8.29 高估)",
+          "站 6/6 均线打开 (yaogu.pressure 顶格), consolidation 0.234 仍在平台尾部",
+          "总市值 36 亿小盘壳, 流动性紧带来情绪溢价空间"
+        ],
+        "bear": [
+          "实控人变更为 **王海波个人** 而非国资 (news[4]), 与 603779 淄博财政局国资入主性质不同, 重组想象空间小",
+          "news 直接标 '连亏 7 年现金流持续失血' (news[5]), 主业看不到拐点",
+          "Q1 扭亏净利仅 333 万绝对值微弱, 营收 yoy +9340% 是低基数虚高非真增长",
+          "main_5d 仅 +1141 万 (资金规模比 603779 +1.07 亿差 10x, 比川润 +7.23 亿差 60x)",
+          "一字 turnover 仅 2.11% 跟风盘无车上, 接力盘衰减时无买盘承接",
+          "RETREAT 期 + KDJ-J 89.35 顶背离风险"
+        ],
+        "bull_confidence": 0.55,
+        "bear_confidence": 0.68,
+        "manager": "中性偏空 0.65 — 实控人变更是个人收购非国资 (vs 603779 国资入主) 想象空间小, 资金规模微弱 +1141 万远小于同类妖股, '连亏 7 年' 硬伤明示; 但 PB 估值合理 + Q1 扭亏方向对 + 小盘壳价值给一定 floor; 终裁 不追 (一字买不到), 跟踪 5/21 是否有具体收购方案落地。"
+      },
+      "trader_thesis": "实控人拟变更但接盘方是 **王海波个人** (news[4]) 而非国资, 重组想象显著弱于 603779 淄博财政局案例; main_5d 仅 +1141 万资金规模微弱 (vs 603779 +1.07 亿差 10x); '连亏 7 年现金流失血' 主业硬伤 (news[5]); Q1 扭亏 333 万含金量低; 一字封板 turnover 2.11% 跟风无车上, 接力盘衰减时无承接. 终裁 AVOID-观察, 等 5/21 收购方案具体细节或破板再决策。",
+      "risk_debate": {
+        "aggressive": "推荐 2-3% 试探仓 (条件: 5/21 不一字 + 集合竞价回踩 ma5=4.00 ±5% + 收购方公告具体计划); 小盘壳 + 实控人变更基线想象空间 +PB 估值合理, 不像 603779 高估;但接盘方个人非国资降一档.",
+        "conservative": "AVOID 0%; '连亏 7 年' 主业硬伤 + 个人接盘想象空间小 + 资金规模微弱; 不参与 '王海波是谁' 的盲盒博弈; 跌破 ma5=4.00 即视为题材证伪。",
+        "neutral": "0-2% 试探仓 (默认 0%, 仅在收购方背景明确公告后才考虑); 个人接盘 vs 国资接盘是关键二分变量, 缺乏背景信息下默认风险更高。"
+      },
+      "portfolio_decision": "AVOID-观察综合裁决: 实控人变更题材真实但接盘方是 **个人 (王海波) 非国资**, 与 603779 淄博财政局国资入主完全不同性质, 重组想象空间显著小; 资金规模 main_5d 仅 +1141 万微弱 (差 603779 一个数量级); '连亏 7 年现金流失血' 主业硬伤是 news 标题级硬伤; Q1 扭亏 333 万含金量低. 一字封板买不到, 等 5/21 收购方案具体细节或破板才能评估。",
+      "qc": {
+        "status": "PASS-FALLBACK",
+        "verified_count": 9,
+        "unverified_count": 0,
+        "unverified": []
+      },
+      "evidence_refs": [
+        {
+          "claim": "实控人拟变更为王海波 (个人非国资)",
+          "ref": "evidence.json:news[4]+news[2][3]"
+        },
+        {
+          "claim": "公司连亏 7 年现金流持续失血",
+          "ref": "evidence.json:news[5]"
+        },
+        {
+          "claim": "Q1 扭亏净利 333 万 (净利同比 +122.86%)",
+          "ref": "evidence.json:fundamentals.netprofit_yoy=122.86 + news[0][1]"
+        },
+        {
+          "claim": "main_net_5d +1141 万 (资金规模微弱)",
+          "ref": "evidence.json:moneyflow.main_net_5d_wan=1140.64"
+        },
+        {
+          "claim": "LHB on_list=false",
+          "ref": "evidence.json:moneyflow.lhb_on_list=False"
+        },
+        {
+          "claim": "PB 1.36 估值合理",
+          "ref": "evidence.json:fundamentals.pb=1.3564"
+        },
+        {
+          "claim": "close/MA5=4.00 偏离 +9.2%, close 越 BOLL upper +3%",
+          "ref": "evidence.json:technical.ma.ma5/boll.upper"
+        },
+        {
+          "claim": "yaogu 2/4 (precursor 0.7 + pressure 1.0)",
+          "ref": "evidence.json:yaogu.value.hits/subscores"
+        },
+        {
+          "claim": "总市值 36 亿小盘壳",
+          "ref": "evidence.json:fundamentals.total_mv=360433.79 (万)"
+        }
+      ],
+      "via_fallback": true
+    },
+    {
+      "code": "600604.SH",
+      "name": "市北高新",
+      "industry": "园区开发",
+      "verdict": "AVOID",
+      "confidence": "高",
+      "confidence_score": 0.73,
+      "position_pct": 0,
+      "position_pct_held": 0,
+      "stop_loss": "无仓: AVOID 强裁决。持仓: (a) 集合竞价 +3% 即 trim 50%; (b) 余下跌破 BOLL upper=5.20 全清; (c) 跌破 ma20=4.92 全清 (距 -8.9% 真空); (d) 若 5/21 出长江存储 IPO 或大基金重磅且站稳 ma250=5.47 收盘, 才考虑 2% 微试探。",
+      "horizon": "T+1~3",
+      "yaogu_hits": 2,
+      "yaogu_detail": "precursor 0.7(22日涨停1次量峰2.59x) + pressure 0.833(站5/6均线非6/6), consolidation 0.301(振幅14%平台尾), hotspot[?]null",
+      "key_risks": [
+        "净利同比 -94.61% (Q1 净利 -7645 万) + 营收同比 -35.83% 腰斩, **基本面崩坏**",
+        "公司主动公告 '拟清算注销控股孙公司' + '核心项目收尾后收入断层' (news[6]) 是业务收缩信号",
+        "长江存储概念是 **题材外挂** — 主业园区开发 vs 长江存储零产业交集, 关联仅地理 (上海)",
+        "close 5.40 距 ma250=5.47 仅 -1.3% — 上方年线关键压力位, 一字撞墙",
+        "本研判走 API 529 降级模式 (主 agent 综合 4 视角 + bull/bear 模拟), 非真正 13 agent 对抗式 pipeline, 信心度比 000417/603779 低一档"
+      ],
+      "analysts": {
+        "fundamental": {
+          "verdict": "卖出 (基本面崩坏)",
+          "confidence": 0.78,
+          "summary": "ROE -1.26% 亏损, 净利同比 -94.61% 接近全部亏损 (Q1 净利 -7645 万 news[0]), 营收同比 -35.83% 腰斩; '核心项目收尾后收入断层' (news[6]) + '拟清算注销控股孙公司' (news[6]) 是公司主动披露的业务收缩信号; 资产负债率 60.6% 偏高; PB 1.68 看似合理但配 ROE -1.26% 实际仍偏贵。"
+        },
+        "technical": {
+          "verdict": "中性偏卖 (距年线压力)",
+          "confidence": 0.68,
+          "summary": "close 5.40 距 ma250=5.47 仅 -1.3% (上方年线关键压力位); close 越 BOLL upper=5.20 +3.8%; KDJ-J=91.66 顶背离风险; RSI14=64.42 偏温和; 站 5/6 均线 (pressure 0.833 非顶格); 振幅 14% 平台尾部 (consolidation 0.301); 一字 og=+9.98 但接近年线撞墙。"
+        },
+        "sentiment": {
+          "verdict": "悲观 (题材外挂)",
+          "confidence": 0.7,
+          "summary": "长江存储概念 sit=6 是题材外挂 (公司主业园区开发 vs 长江存储零产业交集, 关联仅地理位置上海); 一字 turnover 1.46% 跟风盘无车上; main_5d +6032 万规模中等 (比川润 +7.23 亿差 12x); LHB on_list=false; 房地产板块资金流出 9.45 亿 (5/13 news[2]) + 板块整体压制; RETREAT 期延续。"
+        },
+        "news": {
+          "verdict": "强压制 (业绩崩 + 业务收缩)",
+          "confidence": 0.75,
+          "summary": "10 条 news 6 条是负面: Q1 亏损扩大至 7645 万 (news[0][3]); 营收同比 -35.8% 腰斩 (news[3]); '核心项目收尾后收入断层, 营收腰斩, 由盈转亏, 拟清算注销控股孙公司' (news[6] 标题直接点名); 房地产板块资金流出 (news[2]); 仅 5/20 一条涨停股名单算中性. 业绩崩坏 + 主动业务收缩 + 板块压制三层负面共振。"
+        }
+      },
+      "debate": {
+        "bull": [
+          "一字 og=+9.98, 长江存储概念 sit=6 (T2 梯队), kensss 决策树 Top 1 历史 hit 70-78%",
+          "main_net_5d +6032 万真金净买, MA 站 5/6 均线",
+          "总市值 101 亿 (相对 603779/000809 中盘略大), 不像微盘易操纵",
+          "MACD 金叉 hist +0.092 多头转折"
+        ],
+        "bear": [
+          "净利同比 -94.61% (Q1 净利 -7645 万) + 营收同比 -35.83% 腰斩, **基本面崩坏**",
+          "公司主动公告 '拟清算注销控股孙公司' + '核心项目收尾后收入断层' (news[6]) 是业务收缩信号",
+          "长江存储概念是 **题材外挂** — 主业园区开发 vs 长江存储零产业交集, 关联仅地理 (上海)",
+          "close 5.40 距 ma250=5.47 仅 -1.3% — 上方年线关键压力位, 一字撞墙",
+          "房地产板块 5/13 资金流出 9.45 亿 (news[2]), 行业 β 压制",
+          "ROE -1.26% + PB 1.68 配亏损实际仍偏贵",
+          "一字 turnover 1.46% 跟风盘无车上, 接力盘衰减时无买盘"
+        ],
+        "bull_confidence": 0.5,
+        "bear_confidence": 0.78,
+        "manager": "卖出 0.74 — 基本面崩坏 (净利 -94.6% / 营收 -35.8%) + 公司主动业务收缩 + 题材外挂 (长江存储零产业关联) + 距年线 ma250 撞墙 -1.3% + 房地产 β 压制 五重负面共振; 终裁 AVOID (一字买不到也不该买), 持仓集合竞价 +3% trim, 跌破 BOLL upper=5.20 全清。"
+      },
+      "trader_thesis": "净利同比 -94.61% (Q1 -7645 万) + 营收同比 -35.83% + 公司公告拟清算注销控股孙公司 (news[6]) 业绩崩坏三重共振; 长江存储概念 sit=6 是 **题材外挂** (主业园区开发, 主业 vs 概念零产业交集仅地理关联); close 5.40 距 ma250=5.47 仅 -1.3% 撞年线压力; 房地产 β 压制 + RETREAT 期延续. R/R 严重不对称 (上方年线即墙, 下方 ma20=4.92 距 -8.9% 真空), 终裁 AVOID, 不参与题材外挂博弈。",
+      "risk_debate": {
+        "aggressive": "AVOID — 即使激进派也无法接受 '净利 -94.6% + 营收腰斩 + 拟清算孙公司' 这种基本面崩坏 + 题材外挂的组合; 一字买不到也不该买; 唯一 0-2% 窗口: 5/21 真出长江存储 IPO 或大基金重磅催化 + 距 ma250 突破有效 (站稳 5.47 收盘), 但属假设性条件。",
+        "conservative": "AVOID 0% 强烈反对任何仓位; '拟清算注销控股孙公司' 是公司主动披露的业务收缩信号, 监管层级最高的硬伤; 持仓集合竞价 +3% 即兑现 50%, 余下跌破 BOLL upper=5.20 全清; 房地产行业资金流出板块共振。",
+        "neutral": "AVOID 0%; 长江存储概念是地理关联型题材外挂 (上海高新区 vs 长江存储张江) 不是产业关联; '核心项目收尾后收入断层' 是公司主动披露不是市场推测, 比 000417 间接证伪更直接; 距年线压力 + 板块 β 双层压制。"
+      },
+      "portfolio_decision": "AVOID 强裁决: 基本面崩坏 (净利 -94.6% / 营收 -35.8% / Q1 净利 -7645 万) + 公司主动公告业务收缩 ('拟清算注销控股孙公司' news[6]) + 长江存储概念是地理关联型题材外挂 (主业园区开发零产业交集) + close 距 ma250=5.47 仅 -1.3% 撞年线 + 房地产 β 压制 = **五重负面共振**. **vs 000417**: 市北的题材外挂 + 基本面崩坏比合百集团更严重 (合百仅业绩弱不至于业务收缩); 持仓集合竞价立即 trim, 跌破 BOLL upper=5.20 全清。",
+      "qc": {
+        "status": "PASS-FALLBACK",
+        "verified_count": 9,
+        "unverified_count": 0,
+        "unverified": []
+      },
+      "evidence_refs": [
+        {
+          "claim": "净利同比 -94.61% (Q1 净利 -7645 万)",
+          "ref": "evidence.json:fundamentals.netprofit_yoy=-94.6096 + news[0]"
+        },
+        {
+          "claim": "营收同比 -35.83% 腰斩",
+          "ref": "evidence.json:fundamentals.or_yoy=-35.8342 + news[3]"
+        },
+        {
+          "claim": "公司公告拟清算注销控股孙公司 + 核心项目收尾收入断层",
+          "ref": "evidence.json:news[6]"
+        },
+        {
+          "claim": "close 5.40 距 ma250=5.4703 仅 -1.3% (上方年线压力)",
+          "ref": "evidence.json:technical.close/ma.ma250"
+        },
+        {
+          "claim": "close 越 BOLL upper=5.20 约 +3.8%",
+          "ref": "evidence.json:technical.close/boll.upper=5.1997"
+        },
+        {
+          "claim": "KDJ-J=91.66 顶背离风险",
+          "ref": "evidence.json:technical.kdj.j=91.6636"
+        },
+        {
+          "claim": "yaogu 2/4 (precursor 0.7 + pressure 0.833 非顶格)",
+          "ref": "evidence.json:yaogu.value.hits/subscores"
+        },
+        {
+          "claim": "房地产板块 5/13 资金流出 9.45 亿",
+          "ref": "evidence.json:news[2]"
+        },
+        {
+          "claim": "ROE -1.26% 配 PB 1.68 估值偏贵",
+          "ref": "evidence.json:fundamentals.roe/pb"
+        }
+      ],
+      "via_fallback": true
     }
   ]
 }
@@ -573,6 +924,18 @@ function yaoguDots(hits){
     '</span>';
 }
 
+/* ── QC badge helper (handles PASS / PASS-FALLBACK / UNVERIFIED) ── */
+function qcBadge(s, compact){
+  const st = s.qc.status||'UNVERIFIED';
+  const isPass = st === 'PASS';
+  const isFB = st === 'PASS-FALLBACK';
+  const cls = isPass ? 'qc-PASS' : (isFB ? 'qc-FALLBACK' : 'qc-UNVERIFIED');
+  const icon = isPass ? '[✓]' : (isFB ? '[~]' : '[!]');
+  const total = (s.qc.verified_count||0)+(s.qc.unverified_count||0);
+  const txt = compact ? (s.qc.verified_count+'/'+total) : (st+' '+s.qc.verified_count+'/'+total);
+  return '<span class="qc-badge '+cls+'" title="'+st+'">'+icon+' '+txt+'</span>';
+}
+
 /* ── Tabs ─────────────────────────────────────────────── */
 const tabs=[{id:'overview',label:'总览对比'}, ...BATCH.stocks.map(s=>({id:'stk-'+s.code.split('.')[0], label:s.code.split('.')[0]+' '+s.name}))];
 const tabBar=document.getElementById('tab-bar');
@@ -606,7 +969,7 @@ function renderOverview(){
       <td><span class="pos-pct">${s.position_pct}%</span><div style="font-size:9px;color:var(--textMuted);margin-top:2px">无仓口径</div></td>
       <td class="tip-host"><div class="stop-cell">${stop}</div><div class="tip-pop">${stop}</div></td>
       <td>${yaoguDots(s.yaogu_hits)}<div style="font-size:9px;color:var(--textMuted);margin-top:3px">${s.yaogu_hits}/4</div></td>
-      <td><span class="qc-badge qc-${s.qc.status}">[${s.qc.status==='PASS'?'✓':'!'}] ${s.qc.status} ${s.qc.verified_count}/${s.qc.verified_count+s.qc.unverified_count}</span></td>
+      <td>${qcBadge(s)} ${s.via_fallback?'<span class="fallback-tag" title="走主 agent 综合降级模式 (API 529)">FB</span>':''}</td>
       <td class="tip-host"><div class="risk-cell">${topRisk}</div><div class="tip-pop">${topRisk}</div></td>
       <td><a href="#" class="go-detail" data-go="stk-${s.code.split('.')[0]}">详情 ›</a></td>
     </tr>`;
@@ -668,10 +1031,13 @@ function renderDetail(s){
       <div class="ref tip-host">${e.ref}<div class="tip-pop">溯源路径: ${e.ref}</div></div>
     </div>`).join('');
 
+  const fbBanner = s.via_fallback ? `<div class="fb-banner"><b>[FB] 降级模式标注</b> · 本票因 Claude API 529 持续过载, 走主 agent 综合 4 视角 + 模拟 bull/bear 的降级研判, 非真正 13 agent 对抗式 pipeline. evidence 数值严谨度保持但缺多 agent 独立性, 信心度比 000417/603779 (完整 pipeline) 低一档.</div>` : '';
+
   return `<div class="view" data-id="stk-${code}">
+    ${fbBanner}
     <div class="stock-head">
       <div class="left">
-        <h2>${s.code} · ${s.name}</h2>
+        <h2>${s.code} · ${s.name} ${s.via_fallback?'<span class="fallback-tag">FB</span>':''}</h2>
         <div class="meta">行业 ${ind} · 时间窗 ${s.horizon} · 妖股 ${s.yaogu_hits}/4 (${stripEmoji(s.yaogu_detail||'')})</div>
       </div>
       <div class="right">
@@ -679,7 +1045,7 @@ function renderDetail(s){
         <div class="stat"><div class="k">置信度</div><div class="v">${(s.confidence_score*100).toFixed(0)}%</div></div>
         <div class="stat"><div class="k">无仓口径</div><div class="v">${s.position_pct}%</div></div>
         <div class="stat"><div class="k">持仓口径</div><div class="v">${s.position_pct_held}%</div></div>
-        <div class="stat"><div class="k">QC</div><div class="v" style="font-size:10px"><span class="qc-badge qc-${s.qc.status}">[${s.qc.status==='PASS'?'✓':'!'}] ${s.qc.verified_count}/${s.qc.verified_count+s.qc.unverified_count}</span></div></div>
+        <div class="stat"><div class="k">QC</div><div class="v" style="font-size:10px">${qcBadge(s,true)}</div></div>
       </div>
     </div>
 
@@ -786,5 +1152,6 @@ if (!document.getElementById('auth-gate') || sessionStorage.getItem('kengit-auth
   }
 }
 </script>
+
 </body>
 </html>
