@@ -1,210 +1,194 @@
-<!-- Layout: A Classic Tab -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>kenaagent · A 股对抗式深度研判 · 2026-05-20</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kenaagent — A股对抗式深度研判看板 20260522</title>
 <style>
 :root{
-  --blue:#1226AA;--techBlue:#00A0DF;--blueDeep:#091252;--blueMid:#2E4FD0;
-  --blueLight:#E8EEFF;--bluePale:#F4F6FF;--techLight:#E0F4FC;--techPale:#CCF0FF;
-  --green:#0EA573;--greenLight:#E6F9F0;--amber:#E89820;--amberLight:#FFF8E6;
-  --redMuted:#C85040;--redPale:#FFF0EE;
-  --bg:#F5F7FC;--white:#FFFFFF;--dark:#1A1A2E;
-  --textMid:#3A3F5C;--textLight:#6B7094;--textMuted:#9098B8;
+  --blue:#1226AA; --techBlue:#00A0DF; --blueDeep:#091252; --blueMid:#2E4FD0;
+  --blueLight:#E8EEFF; --bluePale:#F4F6FF;
+  --green:#0EA573; --greenLight:#E6F9F0;
+  --amber:#E89820; --amberLight:#FFF8E6;
+  --red:#C85040; --redPale:#FFF0EE;
+  --gold:#C9A227; --silver:#8C92A8; --bronze:#B0703C;
+  --white:#fff; --bg:#F5F7FC;
+  --textMid:#3A3F5C; --textLight:#6B7094; --textMuted:#9098B8;
   --border:#D8E2F0;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{min-height:100%;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;font-size:13px;color:var(--textMid);line-height:1.55}
-::selection{background:#1226AA;color:#fff}
-a{color:#00A0DF}
+html,body{background:var(--bg);color:var(--textMid);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.mono{font-family:"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:0 18px 60px}
 
-/* ── Header ─────────────────────────────────────────── */
-.app-head{background:linear-gradient(135deg,var(--blueDeep) 0%,var(--blue) 100%);color:#fff;padding:18px 24px}
-.app-head .row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.app-head h1{font-size:16px;font-weight:700;letter-spacing:.5px}
-.app-head .sub{font-size:10px;opacity:.7;margin-top:4px;font-weight:400}
-.head-meta{display:flex;gap:8px;align-items:center;font-size:9px;color:var(--techPale);letter-spacing:.4px}
-.head-meta .pill{padding:3px 8px;border:1px solid rgba(255,255,255,.2);border-radius:10px;background:rgba(255,255,255,.06);text-transform:uppercase}
+/* Header */
+.header{background:linear-gradient(135deg,#091252,#1226AA);color:#fff;padding:22px 18px 20px}
+.header-inner{max-width:1180px;margin:0 auto}
+.header h1{font-size:21px;font-weight:800;letter-spacing:.2px}
+.header .sub{font-size:12.5px;color:#C5CEF5;margin-top:4px}
+.kpis{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.kpi{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+  border-radius:10px;padding:9px 14px;min-width:96px}
+.kpi .k-label{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:#AEBAF0;font-weight:700}
+.kpi .k-val{font-size:22px;font-weight:800;color:#fff;margin-top:2px}
+.kpi .k-val small{font-size:11px;font-weight:600;color:#C5CEF5}
+.kpi.retreat .k-val{color:#FFD89A}
+.bhs{display:flex;gap:6px;align-items:baseline}
+.bhs span{font-size:18px;font-weight:800}
+.bhs .b{color:#7BE3BD} .bhs .h{color:#AEBAF0} .bhs .s{color:#FFA99C}
+.bhs em{font-size:10px;color:#AEBAF0;font-style:normal}
 
-/* ── Epistemic banner (P0, 不可关闭) ─────────────────── */
-.epistemic{background:var(--amberLight);color:var(--amber);border-bottom:1px solid #F0D89A;padding:11px 24px;font-size:11px;line-height:1.7;display:flex;gap:10px;align-items:flex-start}
-.epistemic .tag{flex:0 0 auto;font-weight:700;letter-spacing:.6px;font-size:9px;text-transform:uppercase;background:var(--amber);color:#fff;padding:2px 7px;border-radius:3px;margin-top:1px}
-.epistemic .txt{flex:1;font-weight:500}
+/* Epistemic banner */
+.banner{background:var(--amberLight);color:var(--amber);border-top:1px solid #F0D9A8;
+  border-bottom:1px solid #F0D9A8;padding:11px 18px}
+.banner-inner{max-width:1180px;margin:0 auto;display:flex;gap:10px;align-items:flex-start}
+.banner .tag{flex:0 0 auto;font-size:9px;font-weight:800;letter-spacing:.6px;
+  background:var(--amber);color:#fff;border-radius:4px;padding:3px 7px;margin-top:1px}
+.banner .txt{font-size:11.5px;line-height:1.5;font-weight:600}
 
-/* ── Pipeline meta chips ────────────────────────────── */
-.meta-bar{background:var(--white);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.meta-bar .label{font-size:9px;color:var(--textMuted);letter-spacing:.7px;text-transform:uppercase;margin-right:6px}
-.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:11px;background:var(--bluePale);border:1px solid var(--border);font-size:10px;color:var(--textMid);font-weight:500}
-.chip.k{background:var(--blueLight);color:var(--blue);border-color:#C8D6F4;font-weight:600}
-.chip .dot{width:5px;height:5px;border-radius:50%;background:var(--techBlue)}
+/* Section heads */
+.sec{margin-top:30px}
+.sec-head{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+.sec-head .no{font-size:12px;font-weight:800;color:var(--techBlue)}
+.sec-head h2{font-size:15px;font-weight:800;color:var(--blueDeep)}
+.sec-head .hint{font-size:11px;color:var(--textLight)}
 
-/* ── Tabs ───────────────────────────────────────────── */
-.tabs{background:var(--white);border-bottom:1px solid var(--border);display:flex;padding:0 24px;overflow-x:auto;gap:2px}
-.tab{padding:11px 18px;font-size:11px;font-weight:500;color:var(--textLight);border-bottom:2px solid transparent;cursor:pointer;letter-spacing:.4px;transition:all .15s ease;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;white-space:nowrap}
-.tab:hover{color:var(--blue);background:var(--bluePale)}
-.tab.active{color:var(--blue);font-weight:700;border-bottom-color:var(--blue);background:var(--blueLight)}
-.tab:focus-visible{outline:2px solid var(--techBlue);outline-offset:-2px}
+/* Top3 */
+.note-bar{background:var(--amberLight);border:1px solid #F0D9A8;border-left:3px solid var(--amber);
+  border-radius:8px;padding:9px 12px;font-size:12px;color:#8a5e12;margin-bottom:14px;font-weight:600}
+.top3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.t3card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 16px 14px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);position:relative;overflow:hidden}
+.t3card .rankbar{position:absolute;top:0;left:0;width:4px;height:100%}
+.t3card.r1 .rankbar{background:var(--gold)} .t3card.r2 .rankbar{background:var(--silver)} .t3card.r3 .rankbar{background:var(--bronze)}
+.t3top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.rankmedal{font-size:10px;font-weight:800;letter-spacing:.5px;color:#fff;border-radius:4px;padding:3px 8px}
+.r1 .rankmedal{background:var(--gold)} .r2 .rankmedal{background:var(--silver)} .r3 .rankmedal{background:var(--bronze)}
+.t3card .nm{font-size:13.5px;font-weight:800;color:var(--blueDeep)}
+.t3card .cd{font-size:11px;color:var(--textLight)}
+.t3mid{display:flex;align-items:baseline;gap:10px;margin:10px 0 8px}
+.composite{font-size:34px;font-weight:800;color:var(--blue);line-height:1}
+.composite small{font-size:11px;font-weight:600;color:var(--textMuted)}
+.t3meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.kensss{font-size:11px;font-weight:700;color:var(--techBlue);background:#E6F6FC;border-radius:4px;padding:2px 7px}
+.t3reason{font-size:11px;color:var(--textLight);margin-top:9px;line-height:1.45}
 
-/* ── Content ────────────────────────────────────────── */
-.content{padding:18px 24px;max-width:1400px;margin:0 auto}
-.view{display:none}
-.view.active{display:block}
+/* Verdict blocks */
+.vb{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.4px;border-radius:4px;padding:2px 8px;color:#fff}
+.vb.BUY{background:var(--green)} .vb.HOLD{background:#6B7094} .vb.SELL{background:var(--red)}
+.conf{font-size:10.5px;font-weight:700;border-radius:4px;padding:2px 7px}
+.conf.高{background:var(--greenLight);color:#0a7a55} .conf.中{background:var(--blueLight);color:var(--blue)} .conf.低{background:#F0F1F6;color:var(--textLight)}
 
-/* ── Overview table ─────────────────────────────────── */
-.overview-card{background:var(--white);border:1px solid var(--border);border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden;border-top:4px solid var(--blue)}
-.overview-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.overview-head h2{font-size:13px;color:var(--blue);font-weight:700;letter-spacing:.5px}
-.overview-head .hint{font-size:10px;color:var(--textLight)}
-.tbl{width:100%;border-collapse:collapse;font-size:11px}
-.tbl thead th{background:var(--blueDeep);color:#fff;text-align:left;padding:9px 12px;font-weight:700;font-size:9px;text-transform:uppercase;letter-spacing:.7px;position:sticky;top:0;z-index:5}
-.tbl tbody td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
-.tbl tbody tr:nth-child(even) td{background:var(--bluePale)}
-.tbl tbody tr:hover td{background:var(--blueLight)}
-.tbl .code{font-weight:700;color:var(--blue);font-family:"SF Mono",ui-monospace,monospace;letter-spacing:.4px}
-.tbl .name{font-weight:600;color:var(--textMid)}
-.tbl .ind{font-size:9px;color:var(--textLight);background:var(--bluePale);padding:2px 6px;border-radius:3px;display:inline-block;margin-left:6px}
+/* Filters */
+.filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.chip{font-size:11.5px;font-weight:700;border:1px solid var(--border);background:#fff;color:var(--textLight);
+  border-radius:16px;padding:5px 13px;cursor:pointer;transition:all .2s ease}
+.chip:hover{border-color:var(--techBlue);color:var(--blue)}
+.chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 
-.verdict-block{display:inline-flex;padding:4px 10px;border-radius:5px;font-size:10px;font-weight:700;letter-spacing:.6px;color:#fff}
-.verdict-AVOID{background:#5A6177}
-.verdict-BUY{background:var(--green)}
-.verdict-HOLD{background:#7C84A8}
-.verdict-SELL{background:var(--redMuted)}
+/* Overview table */
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+table.ov{width:100%;border-collapse:collapse;min-width:880px}
+table.ov thead th{background:var(--blueDeep);color:#fff;font-size:9px;text-transform:uppercase;letter-spacing:.6px;
+  font-weight:700;padding:10px 12px;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;position:relative}
+table.ov thead th.nosort{cursor:default}
+table.ov thead th .arr{font-size:8px;opacity:.5;margin-left:3px}
+table.ov tbody tr{border-top:1px solid var(--border);cursor:pointer;transition:background .2s ease}
+table.ov tbody tr:nth-child(even){background:var(--bluePale)}
+table.ov tbody tr:hover{background:var(--blueLight)}
+table.ov tbody tr.open{background:var(--blueLight)}
+table.ov td{padding:11px 12px;font-size:12.5px;vertical-align:middle}
+.td-name{font-weight:700;color:var(--blueDeep);white-space:nowrap}
+.td-name .cd{display:block;font-size:10.5px;font-weight:600;color:var(--textLight)}
+.td-ind{font-size:11px;color:var(--textLight);white-space:nowrap}
+.dots{display:inline-flex;gap:3px;align-items:center}
+.dot{width:9px;height:9px;border-radius:50%;background:#E1E6F2}
+.dot.on{background:var(--amber)}
+.dots .n{font-size:10px;color:var(--textLight);margin-left:4px}
+.risk-sum{font-size:11px;color:var(--textLight);max-width:340px;line-height:1.4}
+.expand-ind{font-size:10px;color:var(--techBlue);font-weight:700;white-space:nowrap}
+.qc-badge{font-size:9.5px;font-weight:800;border-radius:4px;padding:2px 7px;white-space:nowrap}
+.qc-badge.pass{background:var(--greenLight);color:#0a7a55}
+.qc-badge.fail{background:var(--redPale);color:var(--red)}
 
-.conf-ring{display:inline-flex;align-items:center;gap:7px}
-.conf-ring svg{width:30px;height:30px;flex:0 0 30px}
-.conf-ring .lbl{font-size:10px;color:var(--textLight)}
-.conf-ring .lbl b{color:var(--textMid);font-size:11px}
+/* Detail panel */
+tr.detail-row td{padding:0;background:#fff!important;cursor:default}
+.detail{padding:18px 18px 22px;border-top:2px solid var(--blue);background:var(--bluePale)}
+.detail-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.detail-head .dh-name{font-size:15px;font-weight:800;color:var(--blueDeep)}
+.detail-head .dh-meta{font-size:11px;color:var(--textLight)}
+.dlabel{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--blue);margin:18px 0 9px}
+.dlabel:first-child{margin-top:0}
+.analysts{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+.acard{background:#fff;border:1px solid var(--border);border-radius:10px;padding:13px 14px}
+.acard .ah{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.acard .ah .ai{font-size:9px;font-weight:800;color:#fff;border-radius:4px;padding:2px 7px;letter-spacing:.4px}
+.ai.tech{background:var(--blue)} .ai.fund{background:var(--techBlue)} .ai.news{background:#6B7094} .ai.sent{background:var(--blueMid)}
+.acard .ah .at{font-size:11.5px;font-weight:700;color:var(--blueDeep)}
+.acard .abody{font-size:11.5px;color:var(--textMid);line-height:1.55}
 
-.yaogu-dots{display:inline-flex;gap:3px}
-.yaogu-dots .dot{width:9px;height:9px;border-radius:50%;background:var(--border);border:1px solid var(--border)}
-.yaogu-dots .dot.on{background:var(--techBlue);border-color:var(--techBlue);box-shadow:0 0 0 2px rgba(0,160,223,.15)}
+/* Debate */
+.debate{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.dcol{border-radius:10px;padding:13px 14px}
+.dcol.bull{background:var(--greenLight);border:1px solid #BCEBD6}
+.dcol.bear{background:var(--redPale);border:1px solid #F3CFC9}
+.dcol .dch{font-size:10px;font-weight:800;letter-spacing:.5px;margin-bottom:8px;text-transform:uppercase}
+.dcol.bull .dch{color:#0a7a55} .dcol.bear .dch{color:var(--red)}
+.dcol ul{list-style:none}
+.dcol li{font-size:11px;line-height:1.5;color:var(--textMid);padding:5px 0 5px 13px;position:relative;border-top:1px dashed rgba(0,0,0,.06)}
+.dcol li:first-child{border-top:none}
+.dcol li:before{content:"";position:absolute;left:2px;top:11px;width:5px;height:5px;border-radius:50%}
+.dcol.bull li:before{background:var(--green)} .dcol.bear li:before{background:var(--red)}
+.manager{margin-top:11px;background:var(--blueLight);border:1px solid #C3D2F5;border-left:4px solid var(--blue);
+  border-radius:8px;padding:11px 14px;font-size:12px;color:var(--blueDeep);font-weight:600}
+.manager .mlab{font-size:9px;font-weight:800;letter-spacing:.6px;color:var(--blue);display:block;margin-bottom:3px;text-transform:uppercase}
 
-.qc-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.5px}
-.qc-PASS{background:var(--greenLight);color:var(--green);border:1px solid #B3E5CC}
-.qc-UNVERIFIED{background:var(--redPale);color:var(--redMuted);border:1px solid #F5BBB1}
-.qc-FALLBACK{background:var(--amberLight);color:var(--amber);border:1px solid #F0D89A}
-.fallback-tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;letter-spacing:.5px;background:var(--amberLight);color:var(--amber);border:1px solid #F0D89A;margin-left:6px}
-.fb-banner{background:var(--amberLight);border:1px solid #F0D89A;border-left:4px solid var(--amber);border-radius:6px;padding:10px 14px;margin-bottom:14px;font-size:11px;color:#8C5C13;line-height:1.65}
-.fb-banner b{color:var(--amber);font-weight:700}
+/* Trader */
+.trader{background:#fff;border:1px solid var(--border);border-radius:10px;padding:13px 14px;font-size:11.5px;line-height:1.55;color:var(--textMid)}
 
-.stop-cell{font-size:10px;color:var(--textLight);max-width:280px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;cursor:help}
-.risk-cell{font-size:10px;color:var(--textLight);max-width:280px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+/* Risk debate */
+.risk3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.rcard{background:#fff;border:1px solid var(--border);border-radius:10px;padding:13px 14px}
+.rcard .rh{font-size:10px;font-weight:800;letter-spacing:.4px;margin-bottom:7px;border-radius:4px;padding:3px 8px;display:inline-block;color:#fff}
+.rh.agg{background:var(--red)} .rh.con{background:var(--blue)} .rh.neu{background:#6B7094}
+.rcard .rbody{font-size:11px;line-height:1.5;color:var(--textMid)}
 
-.pos-pct{font-weight:700;color:var(--blue);font-family:"SF Mono",ui-monospace,monospace}
-.go-detail{font-size:10px;color:var(--techBlue);text-decoration:none;font-weight:600;border-bottom:1px solid transparent;transition:border-color .15s}
-.go-detail:hover{border-bottom-color:var(--techBlue)}
+/* Final decision */
+.final{background:linear-gradient(0deg,#fff,#fff);border:1.5px solid var(--blue);border-radius:10px;
+  padding:14px 16px;box-shadow:0 2px 8px rgba(18,38,170,.1)}
+.final .flab{font-size:9px;font-weight:800;letter-spacing:.7px;color:var(--blue);text-transform:uppercase;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.final .ftxt{font-size:12px;line-height:1.6;color:var(--textMid)}
 
-/* ── Detail panel ───────────────────────────────────── */
-.stock-head{background:var(--white);border:1px solid var(--border);border-top:4px solid var(--blue);border-radius:10px;padding:16px 18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;align-items:flex-start}
-.stock-head .left h2{font-size:18px;color:var(--blue);font-weight:700}
-.stock-head .left .meta{font-size:10px;color:var(--textLight);margin-top:5px;letter-spacing:.3px}
-.stock-head .right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.stock-head .stat{text-align:center;background:var(--bluePale);border:1px solid var(--border);border-radius:6px;padding:8px 12px;min-width:78px}
-.stock-head .stat .k{font-size:9px;color:var(--textMuted);letter-spacing:.5px;text-transform:uppercase}
-.stock-head .stat .v{font-size:13px;color:var(--blue);font-weight:700;margin-top:3px;font-family:"SF Mono",ui-monospace,monospace}
+/* Evidence table */
+.evi-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.evi-table th{background:var(--blueDeep);color:#fff;font-size:9px;text-transform:uppercase;letter-spacing:.5px;padding:8px 11px;text-align:left;font-weight:700}
+.evi-table td{padding:8px 11px;font-size:11px;border-top:1px solid var(--border);color:var(--textMid);vertical-align:top}
+.evi-table tr:nth-child(even) td{background:var(--bluePale)}
+.evi-table tr:hover td{background:var(--blueLight)}
+.evi-table .ek{color:var(--blue);font-weight:600}
+.evi-table .ev{color:var(--blueDeep);font-weight:700}
+.evi-info{font-size:11px;color:var(--textLight);margin-bottom:8px}
+.qc-detail{font-size:11px;color:var(--textMid);margin-top:9px}
+.qc-detail .un{color:var(--red);font-weight:600}
+.qc-detail ul{margin:5px 0 0 18px}
+.qc-detail li{font-size:11px;line-height:1.5}
 
-.section{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);border-top:4px solid var(--techBlue)}
-.section h3{font-size:11px;color:var(--blue);font-weight:700;letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
-.section h3 .num{background:var(--blue);color:#fff;width:18px;height:18px;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:9px}
+footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--border);font-size:11px;color:var(--textMuted);text-align:center}
 
-/* Analysts 2x2 */
-.analyst-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.analyst-card{border:1px solid var(--border);border-radius:6px;padding:10px 12px;background:var(--bluePale)}
-.analyst-card .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.analyst-card .role{font-size:9px;font-weight:700;color:var(--blue);letter-spacing:.6px;text-transform:uppercase}
-.analyst-card .verd{font-size:10px;font-weight:600;color:var(--redMuted);background:var(--redPale);padding:1px 6px;border-radius:3px}
-.analyst-card .verd.pos{color:var(--green);background:var(--greenLight)}
-.analyst-card .verd.neu{color:var(--textLight);background:var(--bluePale);border:1px solid var(--border)}
-.analyst-card .conf{font-size:9px;color:var(--textMuted);font-family:"SF Mono",ui-monospace,monospace;margin-left:6px}
-.analyst-card .sum{font-size:11px;color:var(--textMid);line-height:1.6}
-
-/* Debate split */
-.debate-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.debate-side{border:1px solid var(--border);border-radius:6px;padding:11px 12px}
-.debate-side.bull{background:var(--greenLight);border-color:#B3E5CC}
-.debate-side.bear{background:var(--redPale);border-color:#F5BBB1}
-.debate-side .hd{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center}
-.debate-side.bull .hd{color:var(--green)}
-.debate-side.bear .hd{color:var(--redMuted)}
-.debate-side .conf{font-family:"SF Mono",ui-monospace,monospace;font-size:9px;opacity:.8}
-.debate-side ul{list-style:none;font-size:11px;line-height:1.65}
-.debate-side ul li{padding:4px 0 4px 14px;position:relative;border-bottom:1px dashed rgba(0,0,0,.07)}
-.debate-side ul li:last-child{border-bottom:none}
-.debate-side ul li::before{content:"›";position:absolute;left:2px;top:4px;font-weight:700;color:inherit}
-.manager-bar{background:var(--blueLight);border:1px solid #C8D6F4;border-radius:6px;padding:10px 14px;margin-top:10px;font-size:11px;color:var(--blueDeep);font-weight:500;border-left:4px solid var(--blue)}
-.manager-bar b{color:var(--blue);font-weight:700;margin-right:5px}
-
-/* Trader thesis */
-.thesis-block{background:var(--bluePale);border-left:4px solid var(--blue);padding:11px 14px;border-radius:0 6px 6px 0;font-size:11px;line-height:1.7;color:var(--textMid)}
-
-/* Risk 3 cols */
-.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.risk-col{border:1px solid var(--border);border-radius:6px;padding:10px 12px;background:var(--white);position:relative}
-.risk-col.aggr{border-top:3px solid var(--amber)}
-.risk-col.cons{border-top:3px solid var(--redMuted)}
-.risk-col.neu{border-top:3px solid var(--techBlue)}
-.risk-col .hd{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px}
-.risk-col.aggr .hd{color:var(--amber)}
-.risk-col.cons .hd{color:var(--redMuted)}
-.risk-col.neu .hd{color:var(--techBlue)}
-.risk-col p{font-size:11px;line-height:1.65;color:var(--textMid)}
-
-/* Portfolio decision highlight */
-.portfolio-box{background:linear-gradient(135deg,var(--blueDeep) 0%,var(--blue) 100%);color:#fff;border-radius:8px;padding:14px 18px}
-.portfolio-box .hd{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--techPale);margin-bottom:7px}
-.portfolio-box p{font-size:12px;line-height:1.7;color:#fff}
-
-/* QC + risks lists */
-.qc-row{display:flex;gap:10px;align-items:center;font-size:11px}
-.qc-row .lbl{color:var(--textLight)}
-.risk-list{list-style:none}
-.risk-list li{padding:7px 10px 7px 26px;font-size:11px;color:var(--textMid);background:var(--bluePale);border:1px solid var(--border);border-radius:4px;margin-bottom:6px;position:relative;line-height:1.55}
-.risk-list li::before{content:"!";position:absolute;left:10px;top:7px;font-weight:800;color:var(--amber);width:14px;height:14px;background:var(--amberLight);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:10px}
-
-/* Evidence refs collapsible */
-.ev-toggle{background:var(--bluePale);border:1px solid var(--border);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:11px;color:var(--blue);font-weight:600;width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;font-family:inherit;transition:all .15s ease}
-.ev-toggle:hover{background:var(--blueLight)}
-.ev-toggle:focus-visible{outline:2px solid var(--techBlue);outline-offset:2px}
-.ev-toggle .arr{transition:transform .15s ease;font-size:10px}
-.ev-toggle.open .arr{transform:rotate(90deg)}
-.ev-list{display:none;margin-top:8px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
-.ev-list.open{display:block}
-.ev-item{padding:9px 12px;border-bottom:1px solid var(--border);background:var(--white);font-size:11px;display:flex;gap:10px;align-items:flex-start}
-.ev-item:last-child{border-bottom:none}
-.ev-item:nth-child(even){background:var(--bluePale)}
-.ev-item .clm{flex:1;color:var(--textMid);line-height:1.55}
-.ev-item .ref{flex:0 0 auto;font-family:"SF Mono",ui-monospace,monospace;font-size:9px;color:var(--blue);background:var(--blueLight);padding:2px 7px;border-radius:3px;cursor:help;border:1px solid #C8D6F4}
-
-/* Footer */
-.app-foot{border-top:1px solid var(--border);background:var(--white);padding:12px 24px;font-size:9px;color:var(--textMuted);letter-spacing:.4px;text-align:center}
-.app-foot b{color:var(--textLight);font-weight:600}
-
-/* Tooltip */
-.tip-host{position:relative;cursor:help}
-.tip-host:hover .tip-pop{display:block}
-.tip-pop{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:7px 11px;border-radius:5px;font-size:10px;line-height:1.55;white-space:normal;width:260px;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,.18);font-weight:400;letter-spacing:.3px}
-.tip-pop::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--dark)}
-
-/* Empty/loading reserved (not used here but spec compliance) */
-.empty-box{border:1px dashed var(--border);border-radius:8px;padding:30px;text-align:center;color:var(--textMuted);font-size:11px}
-
-@media (max-width:1024px){
-  .analyst-grid,.debate-grid,.risk-grid{grid-template-columns:1fr}
-  .tbl{font-size:10px}
-  .tbl thead th,.tbl tbody td{padding:7px 8px}
-  .stop-cell,.risk-cell{max-width:200px;-webkit-line-clamp:3}
-  .content{padding:14px 14px}
-  .app-head,.epistemic,.meta-bar,.tabs{padding-left:16px;padding-right:16px}
-}
-@media (prefers-reduced-motion:reduce){
-  *{transition-duration:0.01ms!important;animation-duration:0.01ms!important}
+@media (max-width:768px){
+  .header h1{font-size:17px}
+  .top3{grid-template-columns:1fr}
+  .analysts{grid-template-columns:1fr}
+  .debate{grid-template-columns:1fr}
+  .risk3{grid-template-columns:1fr}
+  .kpi{flex:1 1 calc(50% - 5px);min-width:0}
+  .risk-sum{max-width:240px}
 }
 </style>
 </head>
 <body>
-
 <!-- 访问密码门 -->
 <div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
   <div style="font-family:-apple-system,sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div>
@@ -219,7 +203,7 @@ a{color:#00A0DF}
 <script>
 const AUTH_HASH = '7d153d2a4423e402868a5eb0cbe8bbdefa87bd0888eef1ea6febd769152bc0d3';
 document.addEventListener('DOMContentLoaded', function(){
-  if(sessionStorage.getItem('kengit-authed')==='1'){document.getElementById('auth-gate').remove();return}
+  if(sessionStorage.getItem('kengit-authed')==='1'){var g=document.getElementById('auth-gate'); if(g) g.remove();return}
   const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
   const mainEls=Array.from(document.body.children).filter(el=>el.id!=='auth-gate'&&el.tagName!=='SCRIPT'&&el.tagName!=='SVG');
   mainEls.forEach(el=>{el.dataset.kengitHidden='1';el.style.display='none';});
@@ -244,891 +228,275 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 </script>
-
-<header class="app-head">
-  <div class="row">
-    <div>
-      <h1>kenaagent · A 股对抗式深度研判</h1>
-      <div class="sub">2026-05-20 · 13 Agent Pipeline · 来源 /t1board → /kensss → /kenaagent</div>
-    </div>
-    <div class="head-meta">
-      <span class="pill" id="meta-gen">GEN 2026-05-20 23:00</span>
-      <span class="pill">13 AGENTS</span>
-      <span class="pill">DEBATE × 2</span>
-    </div>
+<header class="header"><div class="header-inner">
+  <h1>kenaagent — A股对抗式深度研判看板</h1>
+  <div class="sub">基准日 20260522 · universe: ken1tstock T1(5) + kensss≥45% non-T1(2) = 7 去重</div>
+  <div class="kpis">
+    <div class="kpi"><div class="k-label">股票数</div><div class="k-val">7</div></div>
+    <div class="kpi"><div class="k-label">BUY · HOLD · SELL</div><div class="k-val"><span class="bhs" id="kpiBHS"></span></div></div>
+    <div class="kpi retreat"><div class="k-label">市场体制</div><div class="k-val">RETREAT</div></div>
   </div>
-</header>
+</div></header>
 
-<!-- Epistemic banner (P0, 不可关闭, 逐字渲染 batch.disclaimer) -->
-<div class="epistemic" role="note" aria-label="Epistemic disclaimer">
-  <span class="tag">EPISTEMIC</span>
-  <span class="txt" id="epistemic-text"></span>
-</div>
+<div class="banner"><div class="banner-inner">
+  <span class="tag">认知边界</span>
+  <span class="txt">本输出由 LLM 基于历史数据生成，不构成投资建议，不对价格方向作任何预测保证。无策略级回测/walk-forward/样本外 oracle；QC 门只校验论据数值溯源，不校验研判逻辑正确性；13 Agent 由同一底层模型扮演，对抗为约束驱动非认知独立；妖股阈值为设定值未经回测校准，仓位/止损为情景示意非校准风险参数。使用者须独立决策并自负全部后果。</span>
+</div></div>
 
-<div class="meta-bar">
-  <span class="label">PIPELINE</span>
-  <span class="chip k"><span class="dot"></span><span id="mc-source"></span></span>
-  <span class="chip"><b style="color:var(--blue);margin-right:4px">FILTER</b><span id="mc-filter"></span></span>
-  <span class="chip"><b style="color:var(--blue);margin-right:4px">SENTIMENT</b><span id="mc-sent"></span></span>
-  <span class="chip"><b style="color:var(--blue);margin-right:4px">AGENTS</b><span id="mc-ag"></span></span>
-  <span class="chip"><b style="color:var(--blue);margin-right:4px">ROUNDS</b><span id="mc-rd"></span></span>
-  <span class="chip"><b style="color:var(--blue);margin-right:4px">QC</b><span id="mc-qc"></span></span>
-</div>
+<div class="wrap">
 
-<nav class="tabs" id="tab-bar" role="tablist"></nav>
+  <section class="sec">
+    <div class="sec-head"><span class="no">⓪</span><h2>次日可买 Top 3</h2>
+      <span class="hint">综合评分意见排序，非验证级买入信号</span></div>
+    <div class="note-bar">⚠ 本批无 composite≥60 的强候选，Top 3 仅为「相对最不差」。退潮期(RETREAT)全员高位超买，5 SELL / 2 HOLD / 0 BUY，无验证级买入信号。kensss 为 inline 决策树近似(非全量查表)。</div>
+    <div class="top3"><div class="t3card r1"><div class="rankbar"></div><div class="t3top"><div><div class="nm">鹏鼎控股</div><div class="cd mono">002938</div></div><span class="rankmedal">金 · 第1</span></div><div class="t3mid"><span class="composite">53.85<small> /100</small></span><span class="vb HOLD">HOLD</span></div><div class="t3meta"><span class="kensss">kensss 77%</span></div><div class="t3reason">采纳中立风控为主、保守风控为辅。维持 trader HOLD/8% 博弈性轻仓，止损 MA5=94.4(technica</div></div><div class="t3card r2"><div class="rankbar"></div><div class="t3top"><div><div class="nm">恒林股份</div><div class="cd mono">603661</div></div><span class="rankmedal">银 · 第2</span></div><div class="t3mid"><span class="composite">47.85<small> /100</small></span><span class="vb HOLD">HOLD</span></div><div class="t3meta"><span class="kensss">kensss 77%</span></div><div class="t3reason">终裁 HOLD，置信低，position_pct=8%（采纳 neutral 折中，介于 aggressive 12% </div></div><div class="t3card r3"><div class="rankbar"></div><div class="t3top"><div><div class="nm">大众交通</div><div class="cd mono">600611</div></div><span class="rankmedal">铜 · 第3</span></div><div class="t3mid"><span class="composite">38.25<small> /100</small></span><span class="vb SELL">SELL</span></div><div class="t3meta"><span class="kensss">kensss 77%</span></div><div class="t3reason">终裁SELL/回避,position_pct=0,confidence中。采纳保守风控为主、中立风控折中为辅:激进的5%</div></div></div>
+  </section>
 
-<main class="content" id="content"></main>
-
-<footer class="app-foot">
-  <b>kenaagent v1</b> · 6 阶段 Pipeline (Brief → Data → Analysts × 4 → Debate × 2 → Trader+QC → Risk × 3 + Portfolio)
-  · QC 模式: 算术溯源(数值/事实容差) 不验研判逻辑 · 输出仅供讨论, 非投资建议
-</footer>
-
-<script>
-/* 数据 inline (batch.json) */
-const BATCH = /*BATCH_START*/{};/*BATCH_END*/
-</script>
-
-<script id="data-payload" type="application/json">
-{
-  "schema": "kenaagent.batch/1",
-  "asof": "20260520",
-  "generated_at": "2026-05-20T23:32:22",
-  "disclaimer": "本看板由 kenaagent v1 多 Agent 对抗式 pipeline 生成, 为 LLM 基于历史数据的意见, 非校准信号、非投资建议、不对价格方向作任何预测保证。无 walk-forward/样本外 oracle 校验研判逻辑; 13 Agent 由同一底层模型扮演, 对抗为约束驱动 (role-play opposition) 非认知独立 (epistemic opposition); QC 门只校验论据数值溯源, 不校验研判逻辑; 妖股阈值、streak hard_veto、kensss hit rate 均为外部先验未经本地校准; 仓位/止损为情景示意非校准风险参数。【⚠ 降级标注】本批补充 3 只票 (002272/000809/600604) 因 Claude API 529 持续过载, 走主 agent 综合 4 视角 + 模拟 bull/bear 的降级模式, 非真正 13 agent 对抗式 pipeline; evidence 数值严谨度保持但缺多 agent 独立性, 信心度比前 2 只票 (000417/603779) 低一档. 禁止进入任何自动化下单链路, 禁止反喂 kentdstock 矩阵作训练/调参输入。使用者须独立决策并自负全部后果。",
-  "pipeline_meta": {
-    "source": "/t1board today → kensss batch lookup → /kenaagent",
-    "filter": "T1 梯队 + kensss hit_prob ≥ 50%",
-    "sentiment_context": "prev (5/19) RETREAT, today 延续概率高",
-    "agents_count": 13,
-    "debate_rounds": 2,
-    "qc_mode": "算术溯源 (数值/事实容差) 不验研判逻辑"
-  },
-  "stocks": [
-    {
-      "code": "000417.SZ",
-      "name": "合百集团",
-      "industry": "百货",
-      "verdict": "AVOID",
-      "confidence": "中",
-      "confidence_score": 0.62,
-      "position_pct": 0,
-      "position_pct_held": 0,
-      "stop_loss": "无仓: 不建仓。已持仓: (a) T+1 集合竞价高开 ≤+3% 且开盘 30 分钟内破板 → 任意价清仓; (b) 盘中硬止损升级 -5% (替代原 ma5=-14.7% 软止损, 解决一字封板无法成交问题); (c) 盘前问询函/特别风险提示/停牌核查任一触发 → 跌停价挂单出清不等盘中。",
-      "horizon": "T+1~3",
-      "yaogu_hits": 2,
-      "yaogu_detail": "precursor✅ + pressure✅, consolidation❌(振幅36.3%已脱平台), hotspot⚠(题材已自证伪)",
-      "key_risks": [
-        "尾部炸板/一字跌停风险：澄清密度 48h x4 接近 A 股历史监管警示前奏模式，5/21 可能出问询函/风险提示",
-        "若 5/21 长鑫存储板块出新增重大催化（IPO 申报/大基金加持）且无监管动作，AVOID 误判，错失题材重启",
-        "若 5/21 大盘 sentiment 切换 NORMAL/HEAT+，连板接力链强度回升，空头'接力链断'论点弱化",
-        "kensss 63.9% 是唯一回测硬信号，人工折扣 ×0.7 未经尾部样本独立校准，存在系统性低估多头概率风险",
-        "13 Agent 同源模型扮演非认知独立，多空对抗存在底层模型偏差，本决策非概率预测"
-      ],
-      "analysts": {
-        "fundamental": {
-          "verdict": "卖出（偏空）",
-          "confidence": 0.72,
-          "summary": "PE_TTM 49.8 / PB 1.56 对百货行业显著高估; ROE 仅 1.36%, 营收/净利双降 16.86%/14.58%; 长鑫科技概念被公司公告自承间接持股仅 0.0487% 主动证伪。"
-        },
-        "technical": {
-          "verdict": "中性偏卖",
-          "confidence": 0.65,
-          "summary": "趋势完好但短期超买严重: RSI14=82.47 / KDJ J=107.26 / 突破布林上轨; 振幅 36.3% 已脱离平台; 阻力 8.71, 支撑 ma20=7.06。"
-        },
-        "sentiment": {
-          "verdict": "悲观（偏中性下沿）",
-          "confidence": 0.62,
-          "summary": "板块共振 +0 档 (题材自证伪打平 hot concept), close 触一字阈值但 turnover=12.56% 未爆发; RSI/KDJ 三共振超买; lhb_on_list=false 无锁仓游资席位。"
-        },
-        "news": {
-          "verdict": "有压制",
-          "confidence": 0.62,
-          "summary": "5/19-5/20 连续 4 条公告主动撇清长鑫关系 (间接 0.0487% 无业务往来); 同日仍封涨停说明纯资金情绪驱动; 主业百货 vs 存储概念零产业交集, 典型'监管警示前奏'模式。"
-        }
-      },
-      "debate": {
-        "bull": [
-          "kensss 决策树 Top 2 (63.9% hit / lift 2.85×) 是唯一带 2.8 年回测 oracle 的硬信号",
-          "主力 5 日净流入 +2.02 亿真金, 均线 6/6 全多头, 月内空间 36.5%",
-          "澄清当日仍封板, 证明资金博弈合肥半导体区域外溢非长鑫直接持股"
-        ],
-        "bear": [
-          "题材已被发行人主动证伪 (0.0487% 间接持股 + 48h 4 份澄清)",
-          "三共振超买 (RSI 82 / KDJ J 107 / 突破布林上轨) + 振幅 36.3% 已脱平台",
-          "RETREAT 区制 + lhb_on_list=false 无锁仓接力席位 + 业绩双降",
-          "5/19-5/20 4 次澄清是典型监管警示前奏模式"
-        ],
-        "bull_confidence": 0.55,
-        "bear_confidence": 0.74,
-        "manager": "AVOID 0.68 — 空头权重 0.66 vs 多头 0.34, 6 项分歧 5.5 票 bear, 题材自证伪+超买+RETREAT+无LHB锁仓+kensss 63.9% 不足以对冲尾部炸板/一字跌停风险。"
-      },
-      "trader_thesis": "题材层 48h 内 4 次澄清自证伪（间接持股仅 0.0487%，news[2-5]）+ 技术超买三共振（rsi14=82.47/kdj.j=107.26/收盘 9.53 较 boll.upper=8.71 偏离 +9.5%，月内距 ma20=7.06 透支 +35%）+ RETREAT 区制下 lhb_on_list=false 接力链断 + 基本面零承接（pe_ttm=49.80/netprofit_yoy=-14.58%/or_yoy=-16.86%/roe=1.36%），五维风险共振；kensss 63.9% 命中率对'48h 4 次澄清'尾部样本无校准（×0.7 折扣后不足以覆盖一字跌停尾部风险），不接力第 4 板，已持仓 T+1 集合竞价兑现/清仓。",
-      "risk_debate": {
-        "aggressive": "罕见同意 AVOID, position=0; R/R 加权净期望仅 +0.22% 且方差极大 (≤1.2:1 不及激进派 2:1 门槛); lhb_on_list=false + RETREAT 双重断接力链。",
-        "conservative": "升级 SELL (持仓口径); 警告 ma5=-14.7% 软止损在一字跌停场景根本无法成交; 收紧至单日浮亏 -5% 无条件清仓; 最坏 5/21 问询函+3 个一字跌停 -27%~-33% 无法出货。",
-        "neutral": "无仓 0% / 已持仓 0-5%; 提醒 PM 风控三方共同收紧止损; 同源 13 Agent 系统性偏差 + 单日分笔/北向缺失, 置信度 0.68 风控加权后应再打折至 ~0.55。"
-      },
-      "portfolio_decision": "三方风控罕见一致 AVOID + QC PASS 8/8。题材被发行人 48h 内 4 次自证伪 (间接持股仅 0.0487%) + 三共振超买 (RSI 82/J 107/越 BOLL+9.5%) + RETREAT 区制下无 LHB 锁仓接力链断 + 基本面零承接, 五维风险共振; kensss 63.9% 在 '48h 4 次澄清' 尾部样本无校准。无仓 0% (avoid), 已持仓应在 T+1 集合竞价或破板时机械兑现。",
-      "qc": {
-        "status": "PASS",
-        "verified_count": 8,
-        "unverified_count": 0,
-        "unverified": []
-      },
-      "evidence_refs": [
-        {
-          "claim": "题材自证伪：间接持股仅 0.0487%，公司 48h 内 4 次澄清与长鑫科技无业务往来",
-          "ref": "evidence.json:news.value[2,3,4,5]"
-        },
-        {
-          "claim": "技术超买三共振：RSI14=82.47 + KDJ.J=107.26 + 收盘 9.53 突破 boll.upper=8.71（+9.5% 偏离）",
-          "ref": "evidence.json:technical.rsi14/kdj/boll/close"
-        },
-        {
-          "claim": "月内空间已透支：收盘 9.53 距 ma20=7.0575 偏离 +35%，consolidation 子分=0.0（10 日振幅 36.3%）已脱离平台",
-          "ref": "evidence.json:technical.ma/yaogu.value.subscores.consolidation"
-        },
-        {
-          "claim": "RETREAT 区制下无 LHB 锁仓：lhb_on_list=false，接力链解读偏弱",
-          "ref": "evidence.json:moneyflow.lhb_on_list / research-manager.md:四.分歧2"
-        },
-        {
-          "claim": "基本面零承接：PE_TTM=49.80、ROE=1.36%、净利同比 -14.58%、营收同比 -16.86%",
-          "ref": "evidence.json:fundamentals.pe_ttm/roe/netprofit_yoy/or_yoy"
-        },
-        {
-          "claim": "research-manager 统一研判 AVOID 0.68，空头权重 0.66 vs 多头 0.34，6 项分歧 5.5 票 bear",
-          "ref": "research-manager.md:一.评级 / 二.总权重 / 四.关键分歧裁定"
-        },
-        {
-          "claim": "kensss 63.9% 命中率对'48h 4 次澄清'尾部样本无校准，oracle 折扣 ×0.7 后不足以对冲尾部风险",
-          "ref": "research-manager.md:二.统计 oracle 行 / 四.分歧4"
-        },
-        {
-          "claim": "妖股属性 hits=2/4（precursor+pressure 命中，consolidation=0.0 已破位，hotspot=null）",
-          "ref": "evidence.json:yaogu.value.hits/subscores"
-        }
-      ],
-      "via_fallback": false
-    },
-    {
-      "code": "603779.SH",
-      "name": "威龙股份",
-      "industry": "红黄酒",
-      "verdict": "AVOID",
-      "confidence": "中",
-      "confidence_score": 0.68,
-      "position_pct": 0,
-      "position_pct_held": 0,
-      "stop_loss": "无仓: NO-CHASE 一字/烂板。已持仓 (conservative 路径): (a) 集合竞价高开 ≥+5% 立即分批 trim 50%; (b) 剩余 50% 跌破 MA5=11.01 收盘全清; (c) 破 MA10=9.11 二段已迟不再保留; (d) 盘前关注函/特停 → 集合竞价直接砍仓。",
-      "horizon": "T+1~3",
-      "yaogu_hits": 2,
-      "yaogu_detail": "precursor✅(顶格1.0,但右侧滞后) + pressure✅, consolidation❌(振幅77.8% 末端非起点), hotspot⚠(国资入主已price-in)",
-      "key_risks": [
-        "次日出现新实质性资产注入公告（重组方案落地）→ 二阶接力推翻末端假设",
-        "streak=6 hard_veto 为外部先验未本地回测校准，可能误杀小样本妖股",
-        "evidence.json 缺 lhb_seat_breakdown / northbound / 重组方案三项关键数据，置信被结构性压制",
-        "卖出后高开低走幅度有限被打脸的踏空风险（澄清非腰斩）",
-        "同一底层模型扮演 13 Agent，对抗为约束驱动非认知独立，多专家结构不构成 oracle"
-      ],
-      "analysts": {
-        "fundamental": {
-          "verdict": "质地差/高估",
-          "confidence": 0.82,
-          "summary": "ROE -1.52%, 净利同比 -186%, 营收 -26% (主业亏损且恶化); PB 8.95 行业 2-3x 溢价; 13.2 元 6 连板纯靠'实控人变更为淄博财政局'题材, 但 5/20 20:03 已澄清无算力注入。"
-        },
-        "technical": {
-          "verdict": "HOLD-LEAN-SELL",
-          "confidence": 0.72,
-          "summary": "四重超买共振: RSI14=93.4 + KDJ-J=105.6 + close>BOLL+9.7% + close/MA5=+19.9%; 6 板末端利好兑现; LHB 连续 4 次末端换手; kensss Top 1 80% 是 OOD 区 (streak=6 维度训练样本稀疏)。"
-        },
-        "sentiment": {
-          "verdict": "RETREAT-延续 / 派发警戒",
-          "confidence": 0.7,
-          "summary": "6 板末端接力盘衰减 + 游资派发抬头 + 跟风盘畏高; 换手 1.54% + 一字封 → 跟风盘无车上; 5 日主力 +1.07 亿 vs 今日 LHB 净 +2928 万 → 边际加仓节奏放缓; 葡萄酒板块孤狼 hotspot=null。"
-        },
-        "news": {
-          "verdict": "中性偏多",
-          "confidence": 0.72,
-          "summary": "evidence.news 完整 (10 条, 5/13-5/20 公告/龙虎榜/媒体三类); 6 板主因子=国资入主淄博财政局 (5/13 一字板起点); 次因子=算力题材 5/20 澄清击穿; 第三因子=游资 4 次 LHB 接力。"
-        }
-      },
-      "debate": {
-        "bull": [
-          "实控人变更为淄博市财政局 (5/13 公告) 是已确认的国资入主, 非概念炒作",
-          "综合 (v32) 63/100 🟢 + kensss 决策树 Top 1 (80% hit / lift 3.57×)",
-          "43.8 亿小盘壳价值 + 主力 5 日 +1.07 亿 + LHB +2928 万真金净买",
-          "MA 全打开站 MA120M, 月高 +20.3% 空间, 妖股 precursor 顶格 1.0"
-        ],
-        "bear": [
-          "streak=6 V2 high_relay hard_veto (RETREAT × ≥5 板历史 0/3 假突破)",
-          "5/20 20:03 公司澄清'无算力注入计划' = 次子题材证伪节点 (T+1 高开低走/炸板风险)",
-          "四重独立超买共振: RSI 93.4 + KDJ J 105.6 + 越 BOLL+9.7% + close/MA5 +19.9%",
-          "业绩深坑 ROE -1.52% / 净利 -186% / 营收 -26%, PB 8.95 远超行业 2-4x",
-          "下方 MA5=11.01 距现价 -16.6% 真空 → R/R 1:1.66 严重不对称",
-          "kensss Top 1 是 OOD (streak=6 训练样本稀疏)"
-        ],
-        "bull_confidence": 0.68,
-        "bear_confidence": 0.78,
-        "manager": "中性偏空 0.72 — 6 连板末端 + 国资入主真利好已 price-in + 算力题材证伪三层耦合, R/R 严重不对称; 短线 NO-CHASE 一字, 持仓分批 trim, 跌破 MA5 全清。"
-      },
-      "trader_thesis": "6 连板末端 + 国资入主真利好已 price-in + 算力题材被官方澄清证伪三层耦合：上方 RSI14=93.4 / J=105.6 / close 越 BOLL upper 9.7% / 站 6/6 均线四重超买压制 (technical)，下方第一支撑 MA5=11.01 距现价 -16.6% 真空 (technical.ma)，叠加 ROE -1.52% / 净利同比 -186% / 营收 -26% / PB 8.95 远超行业 2-4x (fundamentals) 缺产业逻辑支撑。risk/reward 严重不对称，短线 NO-CHASE，持仓跌破 MA5=11.01 全清。",
-      "risk_debate": {
-        "aggressive": "推荐 5% 试探仓 (国资入主真硬料 news[8][9] + bull 0.38 权重 × 13% 基准); 但禁追一字烂板, 只回踩 MA5=11.01 ±3% 入场, 跌破 MA5 收盘全清; T+1~3 无发酵主动出场。",
-        "conservative": "升级 SELL (持仓口径); 集合竞价 +5% trim 50%, 剩余 50% 跌破 MA5 全清; 不融券/不期权对冲; 最坏一字+关注函 T+3 累计 -25%~-30% 无量跌停无法出货。",
-        "neutral": "0-2% 三条件门 (默认 0%, AND 全满足才允 2% 微试探); 激进 5% 在 streak=6 + RETREAT + technical 0.72 三层硬约束下远超 evidence 实证强度 (投票权重错当贝叶斯后验); 保守把 bull 资金面数值弱胜强制归零违反综合裁定。"
-      },
-      "portfolio_decision": "三层风险耦合: 6 连板末端 (V2 hard_veto) + 国资入主 5/13 已 price-in + 5/20 20:03 澄清算力证伪。上方四重独立超买 (RSI 93.4 / J 105.6 / 越 BOLL+9.7% / 站 6/6 均线乖离 +19.9%), 下方第一支撑 MA5=11.01 距现价 -16.6% 真空, risk/reward 严重不对称。终裁 AVOID (默认 0%), 仅在三条件全满足时允 2% 微试探仓; 持仓者按 conservative 路径分段 trim+清仓。",
-      "qc": {
-        "status": "PASS",
-        "verified_count": 10,
-        "unverified_count": 0,
-        "unverified": []
-      },
-      "evidence_refs": [
-        {
-          "claim": "RSI14=93.395 极度超买",
-          "ref": "evidence.json:technical.rsi14"
-        },
-        {
-          "claim": "KDJ J=105.59 顶背离信号",
-          "ref": "evidence.json:technical.kdj"
-        },
-        {
-          "claim": "close 13.2 越 BOLL upper 12.03 约 9.7%",
-          "ref": "evidence.json:technical.close + technical.boll"
-        },
-        {
-          "claim": "close/MA5=11.01 乖离 +19.9%，下方支撑真空 -16.6%",
-          "ref": "evidence.json:technical.ma"
-        },
-        {
-          "claim": "ROE -1.52% / 净利同比 -186% / 营收 -26% 基本面深坑",
-          "ref": "evidence.json:fundamentals.roe + netprofit_yoy + or_yoy"
-        },
-        {
-          "claim": "PB 8.95 远超红黄酒板块 2-4x 经验区间",
-          "ref": "evidence.json:fundamentals.pb"
-        },
-        {
-          "claim": "5/20 20:03 公司澄清无算力计划，次子题材证伪",
-          "ref": "evidence.json:news[0]"
-        },
-        {
-          "claim": "实控人变更淄博财政局已 5/13 公告，国资入主已 price-in",
-          "ref": "evidence.json:news[8][9]"
-        },
-        {
-          "claim": "妖股 hits=2/4，consolidation=0 + hotspot=null，结构为末端非起点",
-          "ref": "evidence.json:yaogu.subscores"
-        },
-        {
-          "claim": "research-manager 5 项分歧 bear 胜 4，综合中性偏空 conf 0.72",
-          "ref": "research-manager.md:关键分歧裁决"
-        }
-      ],
-      "via_fallback": false
-    },
-    {
-      "code": "002272.SZ",
-      "name": "川润股份",
-      "industry": "机械基件",
-      "verdict": "HOLD",
-      "confidence": "中",
-      "confidence_score": 0.61,
-      "position_pct": 0,
-      "position_pct_held": 0,
-      "stop_loss": "无仓: HOLD-不追新仓。持仓: (a) 集合竞价 +3% 即 trim 50%; (b) 余下跌破 ma5=21.23 全清; (c) LHB 第 3 日中断或液冷板块退潮即清; (d) ma20=19.61 二段已迟不再保留。",
-      "horizon": "T+1~3",
-      "yaogu_hits": 2,
-      "yaogu_detail": "precursor[✓]顶格1.0(22日涨停4次量峰1.94x) + pressure[✓]顶格(站6/6均线无压打开), consolidation[×]振幅31%已脱平台, hotspot[?]null需 sector",
-      "key_risks": [
-        "PB 8.29 显著高估 (机械基件行业 PB 通常 2-4x), ROE -2.09% 亏损不支撑估值",
-        "KDJ-J=109.9 极端超买 + close 越 BOLL upper +7.8% + close/MA5 偏离 +17.5%",
-        "振幅 31% 已脱平台 (consolidation=0), 是高位接力非启动",
-        "液冷业务占比仅 12.87% — 主业是机械基件, 题材投射限制天花板",
-        "本研判走 API 529 降级模式 (主 agent 综合 4 视角 + bull/bear 模拟), 非真正 13 agent 对抗式 pipeline, 信心度比 000417/603779 低一档"
-      ],
-      "analysts": {
-        "fundamental": {
-          "verdict": "卖出（偏空）",
-          "confidence": 0.65,
-          "summary": "PB 8.29 显著高估同行(机械基件 PB 通常 2-4x), ROE -2.09% 主业亏损; 净利同比 -10.34% 持续恶化; 营收 +5.27% 微增不足以撑估值; 液冷业务占营收仅 12.87% (公司 5/19 公告自陈), 是题材投射非主业转型; 资产负债率 58.66% 偏高。"
-        },
-        "technical": {
-          "verdict": "中性偏卖",
-          "confidence": 0.68,
-          "summary": "KDJ-J=109.9 极端超买; RSI14=71.85 温和超买; close 24.94 越 BOLL upper=23.13 +7.8%; close/MA5=21.23 偏离 +17.5%; 振幅 31% 已脱平台 (consolidation=0); MACD 金叉 hist +0.99 多头但已末端; 3 连板高位接力风险。"
-        },
-        "sentiment": {
-          "verdict": "乐观（偏中性上沿）",
-          "confidence": 0.65,
-          "summary": "液冷题材真实热点 (科创50半日 +2% 半导体产业链领涨); LHB 连续 2 日 (5/19+5/20) 净 +2.93 亿大单游资接力; main_net_5d +7.23 亿真金; 22 日涨停 4 次妖股属性; 但 RETREAT 期延续 + 3 连板已是短线高位接力。"
-        },
-        "news": {
-          "verdict": "中性偏多",
-          "confidence": 0.62,
-          "summary": "10 条 news 含 2 日 LHB + 公司自陈液冷占比 12.87% (5/19) + 单/双相技术储备公告 (5/18) + 行业 'AI 液冷千亿市场' 共振; '豪取 3 连板' 已是新闻标题级关注 (顶部信号); 公司透明披露占比是利好-利空双刃 (避免炒作监管 vs 题材热度受限于占比)。"
-        }
-      },
-      "debate": {
-        "bull": [
-          "液冷题材真实非自证伪 — 公司公告占营收 12.87% + 单/双相技术储备 (news[2][4][7])",
-          "LHB 连续 2 日大单游资接力, 净 +2.93 亿元 (moneyflow.lhb_net_amount)",
-          "主力 5 日 +7.23 亿真金净买 (moneyflow.main_net_5d_wan 72261 万)",
-          "妖股 precursor 顶格 1.0 (22 日涨停 4 次 + 量峰 1.94x), pressure 顶格 (无压打开)",
-          "科创50 + 半导体产业链 5/20 强势, 液冷板块逆势爆发"
-        ],
-        "bear": [
-          "PB 8.29 显著高估 (机械基件行业 PB 通常 2-4x), ROE -2.09% 亏损不支撑估值",
-          "KDJ-J=109.9 极端超买 + close 越 BOLL upper +7.8% + close/MA5 偏离 +17.5%",
-          "振幅 31% 已脱平台 (consolidation=0), 是高位接力非启动",
-          "液冷业务占比仅 12.87% — 主业是机械基件, 题材投射限制天花板",
-          "news 标题已出现 '豪取 3 连板' 是顶部信号 (媒体关注度顶峰常对应回调)",
-          "RETREAT 期延续, 3 连板已进入短线 hard_veto 区边缘 (V2 阈值 ≥5)"
-        ],
-        "bull_confidence": 0.62,
-        "bear_confidence": 0.66,
-        "manager": "中性偏空 0.62 — 液冷题材真实+LHB 连续大单+主力真金强势 (bull 0.62) vs 极端超买+高估+占比仅 12.87%+3 连板顶部信号 (bear 0.66) 略占优; 短线 trim/不追, 回踩 ma5 ±3% 才考虑试探。"
-      },
-      "trader_thesis": "液冷题材真实 (公司公告占营收 12.87% + 单双相技术储备, news[2][4]) + LHB 连续 2 日净 +2.93 亿 + main_5d +7.23 亿真金 (moneyflow) — 但 KDJ-J 109.9 极端超买 + close 越 BOLL upper 7.8% + 振幅 31% 已脱平台 + PB 8.29 高估 + 3 连板顶部信号. R/R 不对称 (上方阻力近, 下方 MA5=21.23 距现价 -14.9% 真空), 终裁 HOLD-不追新仓, 持仓回踩 MA5 减仓; 入场窗口仅在 ma5 ±3% 且伴 LHB 持续才允小仓。",
-      "risk_debate": {
-        "aggressive": "推荐 5% 试探仓 (条件: 5/21 不一字 + 回踩 ma5=21.23 ±3% + LHB 第 3 日继续大单 + 液冷板块未退潮); 妖股 precursor 顶格 + LHB 双确认是真热点不是纯炒作; 题材外溢空间 vs 12.87% 占比仍有想象 (industry 升级路径)。",
-        "conservative": "AVOID 新仓 0%, 持仓 trim 50% 集合竞价高开 ≥+3% 即兑现; 3 连板高位 + 振幅脱平台 + KDJ-J 109.9 是典型派发信号; 跌破 ma5=21.23 全清剩 50%; 不期权对冲 (小盘流动性差)。",
-        "neutral": "0-3% 试探仓 (默认 0%); 液冷主题真实但占比 12.87% 限制估值天花板, 不属于纯证伪也不算业绩驱动; 风控以 ma5 为唯一止损线, 不打两段止损以免连续滑点。"
-      },
-      "portfolio_decision": "HOLD-LEAN-AVOID 综合裁决: 液冷题材真实 + LHB 连续大单 + 主力真金构成 bull 真硬料 (区别于 000417 题材自证伪); 但 KDJ-J 109.9 + close 越 BOLL upper + 振幅 31% 脱平台 + PB 8.29 高估是典型短线顶部信号. 终裁 不追新仓 (0%); 仅在 5/21 回踩 ma5=21.23 ±3% 且 LHB 持续才允 3-5% 试探; 持仓 trim. **vs 603779 区别**: 川润是 '真题材+短线顶' vs 威龙是 '题材证伪+高位接力'; 川润 R/R 比威龙稍好。",
-      "qc": {
-        "status": "PASS-FALLBACK",
-        "verified_count": 9,
-        "unverified_count": 0,
-        "unverified": []
-      },
-      "evidence_refs": [
-        {
-          "claim": "PB 8.29 显著高估机械基件行业",
-          "ref": "evidence.json:fundamentals.pb=8.2877"
-        },
-        {
-          "claim": "ROE -2.09% 主业亏损, 净利同比 -10.34%",
-          "ref": "evidence.json:fundamentals.roe/netprofit_yoy"
-        },
-        {
-          "claim": "KDJ-J=109.91 极端超买",
-          "ref": "evidence.json:technical.kdj.j=109.9138"
-        },
-        {
-          "claim": "close 24.94 越 BOLL upper=23.13 约 +7.8%",
-          "ref": "evidence.json:technical.close/boll.upper"
-        },
-        {
-          "claim": "close/MA5=21.23 偏离 +17.5%",
-          "ref": "evidence.json:technical.ma.ma5=21.228"
-        },
-        {
-          "claim": "振幅 31% 已脱平台 consolidation=0",
-          "ref": "evidence.json:yaogu.value.subscores.consolidation/detail"
-        },
-        {
-          "claim": "妖股 precursor 顶格 1.0 (22 日涨停 4 次, 量峰 1.94x)",
-          "ref": "evidence.json:yaogu.value.subscores.precursor/detail"
-        },
-        {
-          "claim": "LHB 净 +2.93 亿元 + 连续 2 日 (5/19+5/20) 上榜",
-          "ref": "evidence.json:moneyflow.lhb_net_amount=293376497 + news[0][1]"
-        },
-        {
-          "claim": "公司自陈液冷业务占营收 12.87%",
-          "ref": "evidence.json:news[2][4]"
-        }
-      ],
-      "via_fallback": true
-    },
-    {
-      "code": "000809.SZ",
-      "name": "和展能源",
-      "industry": "电气设备",
-      "verdict": "AVOID",
-      "confidence": "中",
-      "confidence_score": 0.63,
-      "position_pct": 0,
-      "position_pct_held": 0,
-      "stop_loss": "无仓: AVOID-观察。等 5/21 收购方背景明确公告 (国资 vs 个人 vs 产业资本) 或一字打开破板才能评估; 不参与 '王海波是谁' 的盲盒博弈; 持仓跌破 ma5=4.00 全清, 等收购方案具体细节。",
-      "horizon": "T+1~5",
-      "yaogu_hits": 2,
-      "yaogu_detail": "precursor 0.7(22日涨停1次量峰2.34x) + pressure[✓]顶格(站6/6均线), consolidation 0.234(振幅15.3%平台尾部), hotspot[?]null",
-      "key_risks": [
-        "实控人变更为 **王海波个人** 而非国资 (news[4]), 与 603779 淄博财政局国资入主性质不同, 重组想象空间小",
-        "news 直接标 '连亏 7 年现金流持续失血' (news[5]), 主业看不到拐点",
-        "Q1 扭亏净利仅 333 万绝对值微弱, 营收 yoy +9340% 是低基数虚高非真增长",
-        "main_5d 仅 +1141 万 (资金规模比 603779 +1.07 亿差 10x, 比川润 +7.23 亿差 60x)",
-        "本研判走 API 529 降级模式 (主 agent 综合 4 视角 + bull/bear 模拟), 非真正 13 agent 对抗式 pipeline, 信心度比 000417/603779 低一档"
-      ],
-      "analysts": {
-        "fundamental": {
-          "verdict": "中性偏空",
-          "confidence": 0.62,
-          "summary": "ROE 0.13% 微利, PB 1.36 估值合理, 净利同比 +122.86% 扭亏为盈但绝对值仅 333 万 (含金量低); 营收同比 +9339.72% 是低基数效应 (前期几乎无营收); news 直接标 '连亏 7 年现金流持续失血'; 资产负债率 34.58% 健康; 总市值 36 亿小盘股, 壳价值存在但流动性差。"
-        },
-        "technical": {
-          "verdict": "中性",
-          "confidence": 0.6,
-          "summary": "close 4.37 一字封板 (og=+10.08), RSI14=71.24 温和超买, KDJ-J=89.35 顶背离风险; close/MA5=4.00 偏离 +9.2%, close 越 BOLL upper=4.24 +3%; 振幅 15.3% 仍在平台尾部 (consolidation=0.234 优于川润); 站 6/6 均线打开; MACD 金叉 hist +0.075 多头。"
-        },
-        "sentiment": {
-          "verdict": "中性偏多",
-          "confidence": 0.6,
-          "summary": "5/19 实控人变更公告 = 资本运作预期; 一字封板 turnover 仅 2.11% (跟风盘无车上); main_5d 仅 +1141 万 (资金规模微弱, 不足以判断主力锁仓); LHB on_list=false (一字封单堵死 vs 资金规模不足两种可能); 比 603779 同类事件资金规模差 100 倍。"
-        },
-        "news": {
-          "verdict": "中性偏多 (个人收购非国资)",
-          "confidence": 0.7,
-          "summary": "5/19 实控人拟变更为 **王海波 (个人非国资)** [news 5][3], 与 603779 淄博财政局 (国资入主) 性质完全不同, 个人收购想象空间显著小; 公司 '连亏 7 年现金流失血' 是 news 直接标注的硬伤 [news 6]; Q1 扭亏为盈 333 万 (news[0][1]) 但绝对值微弱, 是题材而非业绩驱动。"
-        }
-      },
-      "debate": {
-        "bull": [
-          "实控人拟变更 (5/19 公告 news[2][3][4]) = 资本运作预期, 小盘 36 亿壳价值",
-          "Q1 扭亏为盈 (净利同比 +122.86%, 净利 333 万 news[0][1])",
-          "PB 1.36 估值合理 (不像 603779 PB 8.95 或 川润 PB 8.29 高估)",
-          "站 6/6 均线打开 (yaogu.pressure 顶格), consolidation 0.234 仍在平台尾部",
-          "总市值 36 亿小盘壳, 流动性紧带来情绪溢价空间"
-        ],
-        "bear": [
-          "实控人变更为 **王海波个人** 而非国资 (news[4]), 与 603779 淄博财政局国资入主性质不同, 重组想象空间小",
-          "news 直接标 '连亏 7 年现金流持续失血' (news[5]), 主业看不到拐点",
-          "Q1 扭亏净利仅 333 万绝对值微弱, 营收 yoy +9340% 是低基数虚高非真增长",
-          "main_5d 仅 +1141 万 (资金规模比 603779 +1.07 亿差 10x, 比川润 +7.23 亿差 60x)",
-          "一字 turnover 仅 2.11% 跟风盘无车上, 接力盘衰减时无买盘承接",
-          "RETREAT 期 + KDJ-J 89.35 顶背离风险"
-        ],
-        "bull_confidence": 0.55,
-        "bear_confidence": 0.68,
-        "manager": "中性偏空 0.65 — 实控人变更是个人收购非国资 (vs 603779 国资入主) 想象空间小, 资金规模微弱 +1141 万远小于同类妖股, '连亏 7 年' 硬伤明示; 但 PB 估值合理 + Q1 扭亏方向对 + 小盘壳价值给一定 floor; 终裁 不追 (一字买不到), 跟踪 5/21 是否有具体收购方案落地。"
-      },
-      "trader_thesis": "实控人拟变更但接盘方是 **王海波个人** (news[4]) 而非国资, 重组想象显著弱于 603779 淄博财政局案例; main_5d 仅 +1141 万资金规模微弱 (vs 603779 +1.07 亿差 10x); '连亏 7 年现金流失血' 主业硬伤 (news[5]); Q1 扭亏 333 万含金量低; 一字封板 turnover 2.11% 跟风无车上, 接力盘衰减时无承接. 终裁 AVOID-观察, 等 5/21 收购方案具体细节或破板再决策。",
-      "risk_debate": {
-        "aggressive": "推荐 2-3% 试探仓 (条件: 5/21 不一字 + 集合竞价回踩 ma5=4.00 ±5% + 收购方公告具体计划); 小盘壳 + 实控人变更基线想象空间 +PB 估值合理, 不像 603779 高估;但接盘方个人非国资降一档.",
-        "conservative": "AVOID 0%; '连亏 7 年' 主业硬伤 + 个人接盘想象空间小 + 资金规模微弱; 不参与 '王海波是谁' 的盲盒博弈; 跌破 ma5=4.00 即视为题材证伪。",
-        "neutral": "0-2% 试探仓 (默认 0%, 仅在收购方背景明确公告后才考虑); 个人接盘 vs 国资接盘是关键二分变量, 缺乏背景信息下默认风险更高。"
-      },
-      "portfolio_decision": "AVOID-观察综合裁决: 实控人变更题材真实但接盘方是 **个人 (王海波) 非国资**, 与 603779 淄博财政局国资入主完全不同性质, 重组想象空间显著小; 资金规模 main_5d 仅 +1141 万微弱 (差 603779 一个数量级); '连亏 7 年现金流失血' 主业硬伤是 news 标题级硬伤; Q1 扭亏 333 万含金量低. 一字封板买不到, 等 5/21 收购方案具体细节或破板才能评估。",
-      "qc": {
-        "status": "PASS-FALLBACK",
-        "verified_count": 9,
-        "unverified_count": 0,
-        "unverified": []
-      },
-      "evidence_refs": [
-        {
-          "claim": "实控人拟变更为王海波 (个人非国资)",
-          "ref": "evidence.json:news[4]+news[2][3]"
-        },
-        {
-          "claim": "公司连亏 7 年现金流持续失血",
-          "ref": "evidence.json:news[5]"
-        },
-        {
-          "claim": "Q1 扭亏净利 333 万 (净利同比 +122.86%)",
-          "ref": "evidence.json:fundamentals.netprofit_yoy=122.86 + news[0][1]"
-        },
-        {
-          "claim": "main_net_5d +1141 万 (资金规模微弱)",
-          "ref": "evidence.json:moneyflow.main_net_5d_wan=1140.64"
-        },
-        {
-          "claim": "LHB on_list=false",
-          "ref": "evidence.json:moneyflow.lhb_on_list=False"
-        },
-        {
-          "claim": "PB 1.36 估值合理",
-          "ref": "evidence.json:fundamentals.pb=1.3564"
-        },
-        {
-          "claim": "close/MA5=4.00 偏离 +9.2%, close 越 BOLL upper +3%",
-          "ref": "evidence.json:technical.ma.ma5/boll.upper"
-        },
-        {
-          "claim": "yaogu 2/4 (precursor 0.7 + pressure 1.0)",
-          "ref": "evidence.json:yaogu.value.hits/subscores"
-        },
-        {
-          "claim": "总市值 36 亿小盘壳",
-          "ref": "evidence.json:fundamentals.total_mv=360433.79 (万)"
-        }
-      ],
-      "via_fallback": true
-    },
-    {
-      "code": "600604.SH",
-      "name": "市北高新",
-      "industry": "园区开发",
-      "verdict": "AVOID",
-      "confidence": "高",
-      "confidence_score": 0.73,
-      "position_pct": 0,
-      "position_pct_held": 0,
-      "stop_loss": "无仓: AVOID 强裁决。持仓: (a) 集合竞价 +3% 即 trim 50%; (b) 余下跌破 BOLL upper=5.20 全清; (c) 跌破 ma20=4.92 全清 (距 -8.9% 真空); (d) 若 5/21 出长江存储 IPO 或大基金重磅且站稳 ma250=5.47 收盘, 才考虑 2% 微试探。",
-      "horizon": "T+1~3",
-      "yaogu_hits": 2,
-      "yaogu_detail": "precursor 0.7(22日涨停1次量峰2.59x) + pressure 0.833(站5/6均线非6/6), consolidation 0.301(振幅14%平台尾), hotspot[?]null",
-      "key_risks": [
-        "净利同比 -94.61% (Q1 净利 -7645 万) + 营收同比 -35.83% 腰斩, **基本面崩坏**",
-        "公司主动公告 '拟清算注销控股孙公司' + '核心项目收尾后收入断层' (news[6]) 是业务收缩信号",
-        "长江存储概念是 **题材外挂** — 主业园区开发 vs 长江存储零产业交集, 关联仅地理 (上海)",
-        "close 5.40 距 ma250=5.47 仅 -1.3% — 上方年线关键压力位, 一字撞墙",
-        "本研判走 API 529 降级模式 (主 agent 综合 4 视角 + bull/bear 模拟), 非真正 13 agent 对抗式 pipeline, 信心度比 000417/603779 低一档"
-      ],
-      "analysts": {
-        "fundamental": {
-          "verdict": "卖出 (基本面崩坏)",
-          "confidence": 0.78,
-          "summary": "ROE -1.26% 亏损, 净利同比 -94.61% 接近全部亏损 (Q1 净利 -7645 万 news[0]), 营收同比 -35.83% 腰斩; '核心项目收尾后收入断层' (news[6]) + '拟清算注销控股孙公司' (news[6]) 是公司主动披露的业务收缩信号; 资产负债率 60.6% 偏高; PB 1.68 看似合理但配 ROE -1.26% 实际仍偏贵。"
-        },
-        "technical": {
-          "verdict": "中性偏卖 (距年线压力)",
-          "confidence": 0.68,
-          "summary": "close 5.40 距 ma250=5.47 仅 -1.3% (上方年线关键压力位); close 越 BOLL upper=5.20 +3.8%; KDJ-J=91.66 顶背离风险; RSI14=64.42 偏温和; 站 5/6 均线 (pressure 0.833 非顶格); 振幅 14% 平台尾部 (consolidation 0.301); 一字 og=+9.98 但接近年线撞墙。"
-        },
-        "sentiment": {
-          "verdict": "悲观 (题材外挂)",
-          "confidence": 0.7,
-          "summary": "长江存储概念 sit=6 是题材外挂 (公司主业园区开发 vs 长江存储零产业交集, 关联仅地理位置上海); 一字 turnover 1.46% 跟风盘无车上; main_5d +6032 万规模中等 (比川润 +7.23 亿差 12x); LHB on_list=false; 房地产板块资金流出 9.45 亿 (5/13 news[2]) + 板块整体压制; RETREAT 期延续。"
-        },
-        "news": {
-          "verdict": "强压制 (业绩崩 + 业务收缩)",
-          "confidence": 0.75,
-          "summary": "10 条 news 6 条是负面: Q1 亏损扩大至 7645 万 (news[0][3]); 营收同比 -35.8% 腰斩 (news[3]); '核心项目收尾后收入断层, 营收腰斩, 由盈转亏, 拟清算注销控股孙公司' (news[6] 标题直接点名); 房地产板块资金流出 (news[2]); 仅 5/20 一条涨停股名单算中性. 业绩崩坏 + 主动业务收缩 + 板块压制三层负面共振。"
-        }
-      },
-      "debate": {
-        "bull": [
-          "一字 og=+9.98, 长江存储概念 sit=6 (T2 梯队), kensss 决策树 Top 1 历史 hit 70-78%",
-          "main_net_5d +6032 万真金净买, MA 站 5/6 均线",
-          "总市值 101 亿 (相对 603779/000809 中盘略大), 不像微盘易操纵",
-          "MACD 金叉 hist +0.092 多头转折"
-        ],
-        "bear": [
-          "净利同比 -94.61% (Q1 净利 -7645 万) + 营收同比 -35.83% 腰斩, **基本面崩坏**",
-          "公司主动公告 '拟清算注销控股孙公司' + '核心项目收尾后收入断层' (news[6]) 是业务收缩信号",
-          "长江存储概念是 **题材外挂** — 主业园区开发 vs 长江存储零产业交集, 关联仅地理 (上海)",
-          "close 5.40 距 ma250=5.47 仅 -1.3% — 上方年线关键压力位, 一字撞墙",
-          "房地产板块 5/13 资金流出 9.45 亿 (news[2]), 行业 β 压制",
-          "ROE -1.26% + PB 1.68 配亏损实际仍偏贵",
-          "一字 turnover 1.46% 跟风盘无车上, 接力盘衰减时无买盘"
-        ],
-        "bull_confidence": 0.5,
-        "bear_confidence": 0.78,
-        "manager": "卖出 0.74 — 基本面崩坏 (净利 -94.6% / 营收 -35.8%) + 公司主动业务收缩 + 题材外挂 (长江存储零产业关联) + 距年线 ma250 撞墙 -1.3% + 房地产 β 压制 五重负面共振; 终裁 AVOID (一字买不到也不该买), 持仓集合竞价 +3% trim, 跌破 BOLL upper=5.20 全清。"
-      },
-      "trader_thesis": "净利同比 -94.61% (Q1 -7645 万) + 营收同比 -35.83% + 公司公告拟清算注销控股孙公司 (news[6]) 业绩崩坏三重共振; 长江存储概念 sit=6 是 **题材外挂** (主业园区开发, 主业 vs 概念零产业交集仅地理关联); close 5.40 距 ma250=5.47 仅 -1.3% 撞年线压力; 房地产 β 压制 + RETREAT 期延续. R/R 严重不对称 (上方年线即墙, 下方 ma20=4.92 距 -8.9% 真空), 终裁 AVOID, 不参与题材外挂博弈。",
-      "risk_debate": {
-        "aggressive": "AVOID — 即使激进派也无法接受 '净利 -94.6% + 营收腰斩 + 拟清算孙公司' 这种基本面崩坏 + 题材外挂的组合; 一字买不到也不该买; 唯一 0-2% 窗口: 5/21 真出长江存储 IPO 或大基金重磅催化 + 距 ma250 突破有效 (站稳 5.47 收盘), 但属假设性条件。",
-        "conservative": "AVOID 0% 强烈反对任何仓位; '拟清算注销控股孙公司' 是公司主动披露的业务收缩信号, 监管层级最高的硬伤; 持仓集合竞价 +3% 即兑现 50%, 余下跌破 BOLL upper=5.20 全清; 房地产行业资金流出板块共振。",
-        "neutral": "AVOID 0%; 长江存储概念是地理关联型题材外挂 (上海高新区 vs 长江存储张江) 不是产业关联; '核心项目收尾后收入断层' 是公司主动披露不是市场推测, 比 000417 间接证伪更直接; 距年线压力 + 板块 β 双层压制。"
-      },
-      "portfolio_decision": "AVOID 强裁决: 基本面崩坏 (净利 -94.6% / 营收 -35.8% / Q1 净利 -7645 万) + 公司主动公告业务收缩 ('拟清算注销控股孙公司' news[6]) + 长江存储概念是地理关联型题材外挂 (主业园区开发零产业交集) + close 距 ma250=5.47 仅 -1.3% 撞年线 + 房地产 β 压制 = **五重负面共振**. **vs 000417**: 市北的题材外挂 + 基本面崩坏比合百集团更严重 (合百仅业绩弱不至于业务收缩); 持仓集合竞价立即 trim, 跌破 BOLL upper=5.20 全清。",
-      "qc": {
-        "status": "PASS-FALLBACK",
-        "verified_count": 9,
-        "unverified_count": 0,
-        "unverified": []
-      },
-      "evidence_refs": [
-        {
-          "claim": "净利同比 -94.61% (Q1 净利 -7645 万)",
-          "ref": "evidence.json:fundamentals.netprofit_yoy=-94.6096 + news[0]"
-        },
-        {
-          "claim": "营收同比 -35.83% 腰斩",
-          "ref": "evidence.json:fundamentals.or_yoy=-35.8342 + news[3]"
-        },
-        {
-          "claim": "公司公告拟清算注销控股孙公司 + 核心项目收尾收入断层",
-          "ref": "evidence.json:news[6]"
-        },
-        {
-          "claim": "close 5.40 距 ma250=5.4703 仅 -1.3% (上方年线压力)",
-          "ref": "evidence.json:technical.close/ma.ma250"
-        },
-        {
-          "claim": "close 越 BOLL upper=5.20 约 +3.8%",
-          "ref": "evidence.json:technical.close/boll.upper=5.1997"
-        },
-        {
-          "claim": "KDJ-J=91.66 顶背离风险",
-          "ref": "evidence.json:technical.kdj.j=91.6636"
-        },
-        {
-          "claim": "yaogu 2/4 (precursor 0.7 + pressure 0.833 非顶格)",
-          "ref": "evidence.json:yaogu.value.hits/subscores"
-        },
-        {
-          "claim": "房地产板块 5/13 资金流出 9.45 亿",
-          "ref": "evidence.json:news[2]"
-        },
-        {
-          "claim": "ROE -1.26% 配 PB 1.68 估值偏贵",
-          "ref": "evidence.json:fundamentals.roe/pb"
-        }
-      ],
-      "via_fallback": true
-    }
-  ]
-}
-</script>
-
-<script>
-const _payload = JSON.parse(document.getElementById('data-payload').textContent);
-Object.assign(BATCH, _payload);
-
-/* ── Strip emoji helper (kenhtml NO EMOJI rule) ───────── */
-function stripEmoji(s){
-  if(!s) return s;
-  return s
-    .replace(/✅/g,'[✓]').replace(/❌/g,'[×]').replace(/⚠️?/g,'[!]')
-    .replace(/\uD83D[\uDD34-\uDFFF]|\uD83C[\uDF00-\uDFFF]|✨|\uD83D[\uDC00-\uDFFF]/g,'')
-    .replace(/[\u{1F300}-\u{1FAFF}]/gu,'').replace(/[\u{1F000}-\u{1F2FF}]/gu,'');
-}
-
-/* ── Render Epistemic banner ──────────────────────────── */
-document.getElementById('epistemic-text').textContent = BATCH.disclaimer;
-
-/* ── Meta bar ─────────────────────────────────────────── */
-const pm = BATCH.pipeline_meta || {};
-document.getElementById('mc-source').textContent = pm.source || '';
-document.getElementById('mc-filter').textContent = pm.filter || '';
-document.getElementById('mc-sent').textContent = pm.sentiment_context || '';
-document.getElementById('mc-ag').textContent = pm.agents_count;
-document.getElementById('mc-rd').textContent = pm.debate_rounds;
-document.getElementById('mc-qc').textContent = pm.qc_mode || '';
-document.getElementById('meta-gen').textContent = 'GEN ' + (BATCH.generated_at||'').replace('T',' ').slice(0,16);
-
-/* ── Confidence ring SVG ──────────────────────────────── */
-function ring(score){
-  const r=12, cx=15, cy=15, c=2*Math.PI*r;
-  const pct = Math.max(0,Math.min(1,score));
-  const off = c*(1-pct);
-  return `<svg viewBox="0 0 30 30" aria-label="confidence ${(pct*100).toFixed(0)}%">
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#E8EEFF" stroke-width="3"/>
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#1226AA" stroke-width="3" stroke-linecap="round"
-      stroke-dasharray="${c}" stroke-dashoffset="${off}" transform="rotate(-90 ${cx} ${cy})"/>
-    <text x="${cx}" y="${cy+3}" text-anchor="middle" font-size="8" font-weight="700" fill="#1226AA" font-family="SF Mono,monospace">${Math.round(pct*100)}</text>
-  </svg>`;
-}
-
-/* ── Yaogu dots ───────────────────────────────────────── */
-function yaoguDots(hits){
-  return '<span class="yaogu-dots" aria-label="妖股 '+hits+'/4">'+
-    Array.from({length:4},(_,i)=>'<span class="dot'+(i<hits?' on':'')+'"></span>').join('')+
-    '</span>';
-}
-
-/* ── QC badge helper (handles PASS / PASS-FALLBACK / UNVERIFIED) ── */
-function qcBadge(s, compact){
-  const st = s.qc.status||'UNVERIFIED';
-  const isPass = st === 'PASS';
-  const isFB = st === 'PASS-FALLBACK';
-  const cls = isPass ? 'qc-PASS' : (isFB ? 'qc-FALLBACK' : 'qc-UNVERIFIED');
-  const icon = isPass ? '[✓]' : (isFB ? '[~]' : '[!]');
-  const total = (s.qc.verified_count||0)+(s.qc.unverified_count||0);
-  const txt = compact ? (s.qc.verified_count+'/'+total) : (st+' '+s.qc.verified_count+'/'+total);
-  return '<span class="qc-badge '+cls+'" title="'+st+'">'+icon+' '+txt+'</span>';
-}
-
-/* ── Tabs ─────────────────────────────────────────────── */
-const tabs=[{id:'overview',label:'总览对比'}, ...BATCH.stocks.map(s=>({id:'stk-'+s.code.split('.')[0], label:s.code.split('.')[0]+' '+s.name}))];
-const tabBar=document.getElementById('tab-bar');
-tabs.forEach((t,i)=>{
-  const b=document.createElement('button');
-  b.className='tab'+(i===0?' active':'');b.dataset.id=t.id;b.textContent=t.label;
-  b.setAttribute('role','tab');b.setAttribute('aria-selected', i===0?'true':'false');
-  b.onclick=()=>switchTab(t.id);
-  tabBar.appendChild(b);
-});
-
-function switchTab(id){
-  document.querySelectorAll('.tab').forEach(t=>{
-    const a=t.dataset.id===id;t.classList.toggle('active',a);t.setAttribute('aria-selected',a?'true':'false');
-  });
-  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.dataset.id===id));
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-/* ── Render Overview ──────────────────────────────────── */
-function renderOverview(){
-  const rows = BATCH.stocks.map(s=>{
-    const verdC = 'verdict-'+s.verdict;
-    const ind = s.industry || '';
-    const stop = stripEmoji(s.stop_loss||'');
-    const topRisk = stripEmoji((s.key_risks||[''])[0]);
-    return `<tr>
-      <td><span class="code">${s.code}</span><div class="name">${s.name}<span class="ind">${ind}</span></div></td>
-      <td><span class="verdict-block ${verdC}">${s.verdict}</span></td>
-      <td><span class="conf-ring">${ring(s.confidence_score)}<span class="lbl"><b>${s.confidence}</b><br/>${(s.confidence_score*100).toFixed(0)}%</span></span></td>
-      <td><span class="pos-pct">${s.position_pct}%</span><div style="font-size:9px;color:var(--textMuted);margin-top:2px">无仓口径</div></td>
-      <td class="tip-host"><div class="stop-cell">${stop}</div><div class="tip-pop">${stop}</div></td>
-      <td>${yaoguDots(s.yaogu_hits)}<div style="font-size:9px;color:var(--textMuted);margin-top:3px">${s.yaogu_hits}/4</div></td>
-      <td>${qcBadge(s)} ${s.via_fallback?'<span class="fallback-tag" title="走主 agent 综合降级模式 (API 529)">FB</span>':''}</td>
-      <td class="tip-host"><div class="risk-cell">${topRisk}</div><div class="tip-pop">${topRisk}</div></td>
-      <td><a href="#" class="go-detail" data-go="stk-${s.code.split('.')[0]}">详情 ›</a></td>
-    </tr>`;
-  }).join('');
-
-  return `<div class="view active" data-id="overview">
-    <div class="overview-card">
-      <div class="overview-head">
-        <h2>研判总览 (${BATCH.stocks.length} 只)</h2>
-        <div class="hint">默认按 置信度→仓位 降序 · 行可点击进入详情</div>
-      </div>
-      <div style="overflow-x:auto">
-      <table class="tbl">
+  <section class="sec">
+    <div class="sec-head"><span class="no">①</span><h2>总览对比</h2>
+      <span class="hint">点击任意行展开逐股详情 · 表头可排序</span></div>
+    <div class="filters">
+      <span class="chip active" data-f="ALL">全部 7</span>
+      <span class="chip" data-f="BUY">BUY</span>
+      <span class="chip" data-f="HOLD">HOLD</span>
+      <span class="chip" data-f="SELL">SELL</span>
+    </div>
+    <div class="table-wrap">
+      <table class="ov">
         <thead><tr>
-          <th>代码 / 名称</th><th>终裁</th><th>置信度</th><th>建议仓位</th>
-          <th>止损规则</th><th>妖股要件</th><th>QC</th><th>关键风险</th><th></th>
+          <th data-sk="name">代码·名称<span class="arr">↕</span></th>
+          <th class="nosort">行业</th>
+          <th data-sk="verdict">终裁评级<span class="arr">↕</span></th>
+          <th data-sk="conf">置信度<span class="arr">▼</span></th>
+          <th data-sk="pos">仓位%<span class="arr">↕</span></th>
+          <th data-sk="stop">止损价<span class="arr">↕</span></th>
+          <th data-sk="yaogu">妖股命中<span class="arr">↕</span></th>
+          <th class="nosort">QC</th>
+          <th class="nosort">关键风险摘要</th>
+          <th class="nosort"></th>
         </tr></thead>
-        <tbody>${rows}</tbody>
+        <tbody id="ovbody"></tbody>
       </table>
-      </div>
     </div>
-  </div>`;
+  </section>
+
+  <footer>
+    kenaagent.batch/1 · generated 2026-05-22T22:03:41.485276 · 本看板仅作研究参考，不构成投资建议
+  </footer>
+</div>
+
+<script>window.__BATCH__ = {"schema":"kenaagent.batch/1","asof":"20260522","generated_at":"2026-05-22T22:03:41.485276","universe_source":"ken1tstock T1(5) + kensss≥45% non-T1(2) = 7 去重","disclaimer":"本输出由 LLM 基于历史数据生成，不构成投资建议，不对价格方向作任何预测保证。无策略级回测/walk-forward/样本外 oracle；QC 门只校验论据数值溯源，不校验研判逻辑正确性；13 Agent 由同一底层模型扮演，对抗为约束驱动非认知独立；妖股阈值为设定值未经回测校准，仓位/止损为情景示意非校准风险参数。使用者须独立决策并自负全部后果。","top3_buy_next_day":[{"rank":1,"code":"002938","name":"鹏鼎控股","composite":53.85,"parts":{"verdict_w":0.6,"conf_n":0.6,"pos_n":0.08,"kensss_n":0.77,"qc_mult":1.0},"verdict":"HOLD","kensss_pct":77,"reason":"采纳中立风控为主、保守风控为辅。维持 trader HOLD/8% 博弈性轻仓，止损 MA5=94.4(technica"},{"rank":2,"code":"603661","name":"恒林股份","composite":47.85,"parts":{"verdict_w":0.6,"conf_n":0.3,"pos_n":0.08,"kensss_n":0.77,"qc_mult":1.0},"verdict":"HOLD","kensss_pct":77,"reason":"终裁 HOLD，置信低，position_pct=8%（采纳 neutral 折中，介于 aggressive 12% "},{"rank":3,"code":"600611","name":"大众交通","composite":38.25,"parts":{"verdict_w":0.2,"conf_n":0.6,"pos_n":0.0,"kensss_n":0.77,"qc_mult":1.0},"verdict":"SELL","kensss_pct":77,"reason":"终裁SELL/回避,position_pct=0,confidence中。采纳保守风控为主、中立风控折中为辅:激进的5%"}],"top3_note":"本批无 composite≥60 的强候选，Top 3 仅为「相对最不差」。退潮期(RETREAT)全员高位超买，5 SELL / 2 HOLD / 0 BUY，无验证级买入信号。kensss 为 inline 决策树近似(非全量查表)。","stocks":[{"code":"002421","name":"达实智能","industry":"软件服务","verdict":"SELL","confidence":"中","position_pct":0,"stop_loss":4.0,"horizon":"短线(1-5个交易日内规避/离场)","yaogu_hits":2,"key_risks":["退潮期高位接力风险:RSI14=76.26、KDJ d=85.01 极度超买,close 4.36 已突破 BOLL 上轨 4.2221,量峰/中位=12.71x 显示主升浪后段(yaogu.detail.precursor),换手 32.32% 筹码涣散(fundamentals.turnover_rate),随时一字/天量调整","基本面无法支撑炒作:roe=-0.5956、roe_dt=-0.6977 仍亏损(报告期20260331),pe/pe_ttm 缺失[数据缺失:pe],pb=3.40、ps_ttm=4.40 偏贵,debt_to_assets=62.52% 偏高","消息面纯利空+不确定:连发交易异常波动风险提示(news20260521/20260519),控股股东股份质押(news20260519),无业绩/订单实质催化,northbound 缺失[数据缺失:northbound]"],"analysts":{"technical":"趋势: 多头(但极致高位+顶背离风险)。妖股: 2/4 (precursor 1.0=22日涨停5次·量峰/中位12.71x / consol 0.0=近10日振幅51.2% / hotspot 文字:软件服务无板块合力证据,单股不可判 / pressure 1.0=站上6/6均线 clear_top=true)。支撑: ma5=4.0(technical.ma.ma5)、BOLL中轨3.189(technical.boll.mid);压力: BOLL上轨4.2221(technical.boll.upper,close 4.36 已上破→无现成压力但极度透支)。要点:①close 4.36>ma5 4.0>ma10 3.514>ma20 3.189 全多头排列(technical.ma);②MACD金叉 hist=+0.2844、dif 0.3337>dea 0.1915(technical.macd)但已高位钝化;③RSI14=76.26 超买(technical.rsi14)、KDJ k82.23/d85.01 高位(technical.kdj);④close 4.36 突破 BOLL 上轨 4.2221(technical.boll.upper)即布林开口顶部,统计上回归概率高;⑤consolidation=0(yaogu.subscores.consolidation)振幅51.2% 无平台,纯拉升非蓄势。风险:顶部超买+龙虎榜上榜(moneyflow.lhb_on_list=true)显示游资博弈,退潮期高位接力极易被一字闷杀;hits=2 未达强妖,但破位即刹车。","fundamental":"质地: 差。估值: 高估/存疑。要点:①roe=-0.5956、roe_dt=-0.6977(fundamentals.roe/roe_dt,报告期20260331)仍为负,盈利能力差;②netprofit_yoy=60.89(fundamentals.netprofit_yoy)同比改善但仍亏损基数,or_yoy=17.945 营收增速一般;③pe/pe_ttm 缺失[数据缺失:pe](亏损公司无 PE),pb=3.4047(fundamentals.pb)、ps_ttm=4.396(fundamentals.ps_ttm)对软件服务亏损股偏贵;④debt_to_assets=62.52%(fundamentals.debt_to_assets)杠杆偏高;⑤grossprofit_margin=24.69%(fundamentals.grossprofit_margin)毛利一般;dv_ttm=0.1147(fundamentals.dv_ttm)股息几无。是否支撑现价: 否——亏损+负ROE+缺PE,基本面无法支撑 4.36 的拉升,纯资金/题材博弈。风险:净利负基数下yoy失真;一季报滞后,二季度未知。","news":"催化: 弱/无实质。板块: 软件服务,无 evidence 显示板块轮动(yaogu.hotspot=null,本系统不评估板块合力)。利好:暂无实质利好,股东会决议(news20260519)、投资者关系活动(news20260429)均为常规。利空:①连续两次交易异常波动风险提示公告(news20260521、news20260519)——交易所/公司主动警示,典型见顶信号;②控股股东股份质押(news20260519)隐含资金压力;③2026一季报(news20260430)对应 roe 仍负。风险:风险提示公告后若再出特停/核查函,易触发高位跳水。","sentiment":"资金: 流入(短期游资博弈)。情绪: 亢奋(过热)。要点:①主力近5日净流入+1.49亿(moneyflow.main_net_5d_wan=14850.81万);②龙虎榜上榜且净买+3.49亿(moneyflow.lhb_on_list=true, moneyflow.lhb_net_amount=349123399.8)显著游资介入;③换手率32.32%(fundamentals.turnover_rate)极高,筹码高度松动、分歧巨大;④northbound 缺失[数据缺失:northbound],无市场级资金参照。游资迹象: 有(龙虎榜+量峰12.71x+高换手,但席位不进妖股打分、无法区分锁仓vs对倒出货)。风险:高换手+龙虎榜在退潮期常是接力末端,主力净额可随时反转,32%换手意味短线客占主导,流动性反转一日即变。"},"debate":{"bull":["技术全多头:close 4.36 站上6/6均线 clear_top=true(yaogu.pressure=1.0),MACD金叉 hist=+0.2844(technical.macd.hist),趋势仍向上未破位","资金真金白银:主力5日净流入+1.49亿(moneyflow.main_net_5d_wan=14850.81),龙虎榜净买+3.49亿(moneyflow.lhb_net_amount=349123399.8),游资明确做多","precursor 命中:22日5次涨停、量峰/中位12.71x(yaogu.detail.precursor),强势资金惯性仍在","盈利边际改善:netprofit_yoy=+60.89%(fundamentals.netprofit_yoy)、营收 or_yoy=+17.95%(fundamentals.or_yoy),亏损收窄叙事","[第2轮反驳bear] 承认超买,但 hist 仍正、未死叉,趋势未坏不宜提前空;承认ROE负,但市场炒的是边际改善与资金,非当期盈利","[第2轮反驳bear] 风险提示公告是常规高位警示非利空实锤,龙虎榜净买说明资金不惧;质押属存量信息已知"],"bear":["极度超买:RSI14=76.26(technical.rsi14)、KDJ d=85.01(technical.kdj.d),close 4.36 上破 BOLL 上轨4.2221(technical.boll.upper),统计回归压力大","基本面崩坏:roe=-0.5956、roe_dt=-0.6977(fundamentals.roe/roe_dt 20260331)仍亏损,pb=3.40/ps=4.40偏贵,debt62.52%(fundamentals.debt_to_assets),纯估值泡沫","消息面纯利空:两连交易异常波动风险提示(news20260521/0519)+控股股东质押(news0519),无实质催化","退潮期+高换手:换手32.32%(fundamentals.turnover_rate)筹码涣散,量峰12.71x(yaogu.detail.precursor)主升后段,接力末端一字风险","无板块支撑:hotspot=null(yaogu.subscores.hotspot),软件服务无轮动证据,孤立个股妖难持续","[第2轮反驳bull] 主力5日净流入/龙虎榜净买是滞后数据,退潮期高位龙虎榜常为对倒出货掩护,席位不进妖打分本就无法证伪;hits仅2非强妖,precursor是滞后右侧确认非启动信号"],"manager":"统一研判: 看空——退潮期顶部超买、基本面亏损、消息纯利空风险提示,资金流入属滞后博弈不足以对冲下行风险。"},"trader_thesis":"SELL/规避。close 4.36 已上破 BOLL 上轨 4.2221(technical.boll.upper),RSI14=76.26(technical.rsi14)、KDJ d=85.01(technical.kdj.d)极度超买;近10日振幅51.2% 无平台、consolidation=0(yaogu.subscores.consolidation=0.0),纯拉升后段(量峰/中位12.71x,yaogu.detail.precursor)。基本面 roe=-0.5956(fundamentals.roe)仍亏损、pb=3.40(fundamentals.pb)偏贵、debt 62.52%(fundamentals.debt_to_assets)。消息面连发交易异常波动风险提示(news20260521/0519)+控股股东质押。虽主力5日净流入+1.49亿(moneyflow.main_net_5d_wan=14850.81)、龙虎榜净买+3.49亿(moneyflow.lhb_net_amount=349123399.8),但换手32.32%(fundamentals.turnover_rate)筹码涣散,退潮期高位博弈不接力。空仓规避,持仓者跌破 ma5=4.0(technical.ma.ma5)止损离场。","risk_debate":{"aggressive":"过保守点:趋势全多头站6/6均线 clear_top=true(yaogu.pressure=1.0)、MACD未死叉 hist=+0.2844(technical.macd.hist)、龙虎榜净买+3.49亿(moneyflow.lhb_net_amount=349123399.8)、主力净流入+1.49亿(moneyflow.main_net_5d_wan=14850.81),空仓0%可能踏空惯性反包。更积极建议:仅限超短打板客可博弈性试仓≤5%,止损 ma5=4.0(technical.ma.ma5)即出,严守纪律。仍需警惕:RSI76.26(technical.rsi14)超买,一旦放量滞涨立即清。","conservative":"风险过大点:roe=-0.5956(fundamentals.roe)亏损+pb3.40(fundamentals.pb)估值贵+debt62.52%(fundamentals.debt_to_assets),close 4.36 破 BOLL 上轨4.2221(technical.boll.upper)极致超买,换手32.32%(fundamentals.turnover_rate)+连续风险提示公告(news20260521/0519),任何敞口都过大。稳健建议:仓位0%坚决观望,持仓者立即减至空仓,不博反弹。最坏情形:风险提示后特停/核查,高位连续一字跌停无法出逃。","neutral":"对激进评判:MACD未死叉、龙虎榜净买有 evidence 支撑,但忽视超买顶背离与基本面亏损,5%试仓也是退潮期逆风操作。对保守评判:0%观望与紧止损完全有据,roe负+连续风险提示+破上轨证据扎实。折中风控:仓位0%为主(空仓规避),最多投机客≤5%且止损 ma5=4.0(technical.ma.ma5),周期≤3日;调仓触发:放量滞涨/跌破ma5即清,出现特停或核查函直接归零。关键前提:northbound[数据缺失:northbound]+pe[数据缺失:pe]缺失,按更保守处理。"},"portfolio_decision":"终裁 SELL/规避,position_pct=0,止损 4.0(=ma5),周期短线1-5日。采纳保守风控为主+中立风控折中:证据一边倒——顶部超买(RSI76.26/KDJ d85.01/破BOLL上轨4.2221)、基本面亏损(roe=-0.5956)、消息纯利空(连续交易异常波动风险提示+控股股东质押),资金流入虽真但属退潮期高位滞后博弈,无法对冲下行。对 trader 决策:维持 SELL 方向、维持 stop_loss=4.0,激进派≤5%试仓建议不予采纳(退潮期RETREAT逆风,机会成本远低于一字跌停代价),空仓为正解。QC 提示:全部论据已 verified,但 pe/pe_ttm 与 northbound 缺失[数据缺失],基本面与市场级资金信号不完整,故 confidence 定为'中'非'高'。yaogu hits=2 未达强妖阈值3,无需博弈仓位特例。","qc":{"status":"PASS","verified":["close=4.36 上破 BOLL 上轨 (technical.boll.upper=4.2221)","RSI14 超买 (technical.rsi14=76.2618)","KDJ d 高位 (technical.kdj.d=85.0087)","MACD hist 正 (technical.macd.hist=0.2844)","站上6/6均线 ma5=4.0 (technical.ma.ma5=4.0, yaogu.subscores.pressure=1.0, yaogu.clear_top=true)","consolidation=0 振幅51.2% (yaogu.subscores.consolidation=0.0, yaogu.detail.consolidation)","precursor 量峰/中位12.71x (yaogu.detail.precursor)","roe=-0.5956 (fundamentals.roe.value, 20260331)","pb=3.4047 (fundamentals.pb.value)","debt_to_assets=62.52% (fundamentals.debt_to_assets.value=62.5187)","turnover_rate=32.32% (fundamentals.turnover_rate.value=32.3232)","主力5日净流入+1.49亿 (moneyflow.main_net_5d_wan.value=14850.81)","龙虎榜净买+3.49亿 (moneyflow.lhb_net_amount.value=349123399.8, lhb_on_list=true)","连续交易异常波动风险提示+控股股东质押 (news 20260521/20260519)"],"unverified":[],"confidence_downgraded":false},"evidence_refs":[{"claim":"close 上破 BOLL 上轨，极致超买","key":"technical.boll.upper","value":"4.2221 (close=4.36)"},{"claim":"RSI14 超买","key":"technical.rsi14","value":"76.2618"},{"claim":"KDJ d 高位","key":"technical.kdj.d","value":"85.0087"},{"claim":"MACD 金叉但高位钝化","key":"technical.macd.hist","value":"0.2844"},{"claim":"站上6/6均线 clear_top","key":"yaogu.value.subscores.pressure","value":"1.0"},{"claim":"止损位=ma5","key":"technical.ma.ma5","value":"4.0"},{"claim":"无平台纯拉升","key":"yaogu.value.subscores.consolidation","value":"0.0"},{"claim":"ROE 仍亏损","key":"fundamentals.roe","value":"-0.5956 (20260331)"},{"claim":"估值偏贵","key":"fundamentals.pb","value":"3.4047"},{"claim":"杠杆偏高","key":"fundamentals.debt_to_assets","value":"62.5187"},{"claim":"换手极高筹码涣散","key":"fundamentals.turnover_rate","value":"32.3232"},{"claim":"主力5日净流入","key":"moneyflow.main_net_5d_wan","value":"14850.81"},{"claim":"龙虎榜游资净买","key":"moneyflow.lhb_net_amount","value":"349123399.8"},{"claim":"PE 缺失(亏损股)","key":"fundamentals.pe_ttm","value":"null [数据缺失]"},{"claim":"北向缺失","key":"moneyflow.northbound_net_yi","value":"null [数据缺失]"}]},{"code":"600611","name":"大众交通","industry":"公共交通","verdict":"SELL","confidence":"中","position_pct":0,"stop_loss":5.5,"horizon":"短线（1-2周内不参与/持仓者逢高减）","yaogu_hits":2,"key_risks":["RSI14=81.22 + KDJ j=122.38 极度超买，close=6.13 已突破 BOLL 上轨(upper=5.5762, +9.93%)且较 ma5=5.168 偏离+18.61%，退潮期均值回归/一字跌停风险高","基本面暴雷：roe=-1.7075% 净亏损、netprofit_yoy=-360.625%、pe=200.16 极度高估，pe_ttm[数据缺失]无法交叉验证盈利估值","2.35亿主力5日净流入+4310万龙虎榜净买入靠游资接力支撑，无实质题材催化(news全常规公告含异常波动公告)，资金一旦撤离无基本面承接"],"analysts":{"technical":"趋势:多头(短期过热)。close=6.13站上全部6均线(yaogu.pressure=1.0, clear_top=true)，多头排列ma5>ma10>ma20(technical.ma)。MACD金叉hist=+0.3156(technical.macd.hist)动能仍正。但RSI14=81.22(technical.rsi14)严重超买、KDJ j=122.38(technical.kdj.j)极端超买，close已突破BOLL上轨upper=5.5762(technical.boll.upper)且较ma5偏离+18.61%，呈抛物线加速。妖股2/4：precursor=1.0(22日3涨停/量峰7.65x)、pressure=1.0(无压打开)命中；consolidation=0(近10日振幅37.2%过大未横盘)；hotspot弱(公共交通防御行业,news无题材,本系统不评估板块合力)。支撑:ma5=5.168/BOLL上轨5.5762。压力:无技术压力但情绪压力极大。风险:超买叠加退潮，急跌/一字跌停概率高;龙虎榜资金性质难辨(锁仓vs对倒)。","fundamental":"质地:差 估值:严重高估。pe=200.16(fundamentals.pe)、ps_ttm=7.1544(fundamentals.ps_ttm)极高;pb=1.5135(fundamentals.pb)尚可但盈利端崩塌。roe=-1.7075%(fundamentals.roe,20260331)净亏损、roe_dt=-0.4278%(fundamentals.roe_dt)、netprofit_yoy=-360.625%(fundamentals.netprofit_yoy)利润暴跌、or_yoy=-12.15%(fundamentals.or_yoy)营收下滑、毛利率仅12.83%(fundamentals.grossprofit_margin)。debt_to_assets=45.43%(fundamentals.debt_to_assets)杠杆中性。dv_ttm=0.8157%(fundamentals.dv_ttm)股息薄。[数据缺失:pe_ttm]无法以TTM口径交叉验证。是否支撑现价:否——亏损公司给200倍PE，纯资金/情绪定价，基本面不支撑6.13。风险:一季报已亏损,后续若延续暴雷;高PE无安全垫。","news":"催化:弱。板块:公共交通(传统防御行业,无轮动迹象)。利好:无实质性利好;20260430提质增效重回报方案(news[3])为治理表态非业绩催化。利空:20260522股票交易异常波动公告(news[0])——交易所点名异动,常伴随核查/降温信号;一季报(news[4])已确认亏损。其余为债券兑付/对外担保/私募基金合作进展等常规公告,无并购重组订单题材。本系统不评估板块合力。风险:异动公告后情绪降温/监管关注风险。","sentiment":"资金:流入 情绪:亢奋(过热)。主力近5日净流入+2.35亿(moneyflow.main_net_5d_wan=23482.79万);龙虎榜在榜(moneyflow.lhb_on_list=true)净买入+4310万(moneyflow.lhb_net_amount=43103708)。turnover_rate=3.74%(fundamentals.turnover_rate)中等,circ_mv=95.83亿(fundamentals.circ_mv)非小盘,游资拉抬成本不低。游资迹象:有(龙虎榜在榜+净买入)。但[数据缺失:northbound_net_yi]缺市场级方向信号。风险:资金亢奋叠加RSI81超买,接力盘一旦松动,无基本面承接,情绪退潮即砸盘。"},"debate":{"bull":["技术全面多头:close=6.13站上全部6均线、clear_top=true无压打开(yaogu.pressure=1.0),MACD金叉hist=+0.3156(technical.macd.hist)动能未衰","资金真金白银:主力5日净流入+2.35亿(moneyflow.main_net_5d_wan=23482.79)、龙虎榜净买入+4310万(moneyflow.lhb_net_amount=43103708),游资强势锁仓","妖股属性具备2要件:precursor=1.0(22日3涨停/量峰7.65x)+pressure=1.0,趋势右侧确认","pb仅1.5135(fundamentals.pb)未到泡沫区,资产端有支撑;debt_to_assets=45.43%(fundamentals.debt_to_assets)杠杆可控","[推测]异常波动公告(news[0])常出现在主升浪中段,不必然终结行情(降权,无evidence量化)"],"bear":["极度超买:RSI14=81.22(technical.rsi14)、KDJ j=122.38(technical.kdj.j),close突破BOLL上轨upper=5.5762(technical.boll.upper)+9.93%,均值回归压力极大","基本面崩塌:roe=-1.7075%(fundamentals.roe)净亏损、netprofit_yoy=-360.625%(fundamentals.netprofit_yoy)、pe=200.16(fundamentals.pe)无盈利支撑的天价估值","无题材承接:公共交通防御行业,news全常规公告无并购订单催化(news),hotspot弱,纯资金博弈","consolidation=0(yaogu.subscores.consolidation):近10日振幅37.2%剧烈,无健康平台,典型情绪冲高非蓄势","退潮期+异动公告(news[0])双杀:监管降温信号下,4310万龙虎榜净买难辨锁仓vs对倒出货","close较ma5偏离+18.61%,一旦回踩ma5=5.168即-15.7%,一字跌停流动性风险"],"manager":"统一研判:看空——亏损股200倍PE靠游资拉至极度超买,退潮期无题材承接,均值回归风险压倒动能。"},"trader_thesis":"SELL/回避。技术极度超买(rsi14=81.22, kdj.j=122.38),close=6.13突破BOLL上轨(boll.upper=5.5762,+9.93%)且偏离ma5=5.168达+18.61%,RETREAT退潮期均值回归风险高。基本面崩塌:净亏损(roe=-1.7075%)、利润暴跌(netprofit_yoy=-360.625%)、pe=200.16天价估值无盈利支撑。上涨纯靠主力2.35亿(main_net_5d_wan=23482.79)+龙虎榜4310万(lhb_net_amount=43103708)游资接力,公共交通防御行业无题材催化,且20260522异动公告(news[0])预示降温。妖股仅2/4(consolidation=0振幅37.2%),非健康平台。不参与,持仓者逢高减,止损5.50(跌破即趋势走坏)。","risk_debate":{"aggressive":"过保守点:trader给0仓位忽视动能未衰——MACD金叉hist=+0.3156(technical.macd.hist)、主力5日净流入+2.35亿(moneyflow.main_net_5d_wan)、龙虎榜净买+4310万(moneyflow.lhb_net_amount),游资在场情绪未崩。更积极建议:激进者可极小博弈仓≤5%试错,止损ma5=5.168(跌破即走),博一波情绪余热。仍需警惕:RSI14=81.22(technical.rsi14)超买,任何接力松动即闪崩,绝不补仓。","conservative":"风险过大点:任何多头仓位都嫌重。基本面roe=-1.7075%净亏损(fundamentals.roe)、pe=200.16(fundamentals.pe)、netprofit_yoy=-360.625%(fundamentals.netprofit_yoy)无安全垫;RETREAT退潮+异动公告(news[0])+RSI14=81.22(technical.rsi14)三杀。稳健建议:0仓位/坚决回避,持仓者立即逢高减,不赌龙虎榜锁仓。最坏情形:游资对倒出货,一字跌停连续无法出逃,从+18.61%偏离回踩ma5即-15.7%。","neutral":"对激进评判:动能未衰、资金在场有evidence支撑(macd.hist=+0.3156/main_net_5d=2.35亿),但5%试错在亏损股+退潮+异动下期望值为负,过头。对保守评判:0仓位/回避在证据上完全成立。折中风控:无仓者不建仓(position_pct=0);持仓者逢高减至轻仓并设止损5.50(略低于ma5=5.168留缓冲,实为减仓参考);周期短线1-2周;调仓触发:跌破ma5或异动核查升级即清仓。关键前提:[数据缺失:northbound_net_yi]缺市场方向信号,默认按更保守处理。"},"portfolio_decision":"终裁SELL/回避,position_pct=0,confidence中。采纳保守风控为主、中立风控折中为辅:激进的5%试错在亏损股(roe=-1.7075%)+pe=200.16+退潮+异动公告(news[0])+RSI14=81.22多重利空下期望值为负,不采纳。维持trader方向(看空),将止损口径明确为持仓者减仓参考位5.50(略低ma5=5.168)。QC提示:全部论据已溯源PASS,但QC仅校验数值不校验逻辑;[数据缺失:northbound_net_yi/pe_ttm]影响市场方向与TTM估值交叉验证,故confidence封顶为中不给高。妖股2/4未达≥3博弈阈值,但极度超买已等效高风险,空仓最优。","qc":{"status":"PASS","verified":["rsi14=81.22 ↔ technical.rsi14.value=81.2187","kdj.j=122.38 ↔ technical.kdj.value.j=122.3771","close=6.13 突破 boll.upper=5.5762 ↔ technical.boll.value.upper","close 偏离 ma5=5.168 +18.61% ↔ technical.ma.value.ma5","roe=-1.7075% ↔ fundamentals.roe.value","netprofit_yoy=-360.625% ↔ fundamentals.netprofit_yoy.value","pe=200.16 ↔ fundamentals.pe.value=200.1648","main_net_5d_wan=23482.79 ↔ moneyflow.main_net_5d_wan.value","lhb_net_amount=43103708 ↔ moneyflow.lhb_net_amount.value","macd.hist=+0.3156 ↔ technical.macd.value.hist","yaogu pressure=1.0/precursor=1.0/consolidation=0 ↔ yaogu.value.subscores","异动公告 ↔ news[0] (20260522 股票交易异常波动公告)"],"unverified":[],"confidence_downgraded":false,"action":"PASS"},"evidence_refs":[{"claim":"RSI14 极度超买","key":"technical.rsi14.value","value":81.2187},{"claim":"KDJ J 值极端超买","key":"technical.kdj.value.j","value":122.3771},{"claim":"close 突破 BOLL 上轨","key":"technical.boll.value.upper","value":5.5762},{"claim":"close 收盘价","key":"technical.close.value","value":6.13},{"claim":"ma5 偏离基准","key":"technical.ma.value.ma5","value":5.168},{"claim":"MACD 金叉柱状","key":"technical.macd.value.hist","value":0.3156},{"claim":"净资产收益率为负(亏损)","key":"fundamentals.roe.value","value":-1.7075},{"claim":"净利润同比暴跌","key":"fundamentals.netprofit_yoy.value","value":-360.625},{"claim":"市盈率极高","key":"fundamentals.pe.value","value":200.1648},{"claim":"市净率","key":"fundamentals.pb.value","value":1.5135},{"claim":"主力近5日净流入(万)","key":"moneyflow.main_net_5d_wan.value","value":23482.79},{"claim":"龙虎榜在榜","key":"moneyflow.lhb_on_list.value","value":true},{"claim":"龙虎榜净买入额","key":"moneyflow.lhb_net_amount.value","value":43103708.0},{"claim":"妖股要件命中数","key":"yaogu.value.hits","value":2},{"claim":"无压打开(站上6均线)","key":"yaogu.value.subscores.pressure","value":1.0},{"claim":"横盘整理未命中(振幅过大)","key":"yaogu.value.subscores.consolidation","value":0.0},{"claim":"异常波动公告","key":"news.value[0].title","value":"大众交通（集团）股份有限公司关于股票交易异常波动的公告"},{"claim":"北向资金缺失","key":"moneyflow.northbound_net_yi.reason","value":"moneyflow_hsgt 异常: Exception('参数校验失败, ')"}]},{"code":"000026","name":"飞亚达","industry":"服饰","verdict":"SELL","confidence":"中","position_pct":0,"stop_loss":22.6,"horizon":"短线（1-2 周），退潮期不持仓","yaogu_hits":2,"key_risks":["极端超买技术见顶风险：RSI14=83.73、KDJ J=99.61、收盘 25.55 已突破 BOLL 上轨 24.05，乖离率高，退潮期易急杀回补 MA5=22.6","估值与基本面严重背离：pe_ttm=96.81、pb=3.05，而 Q1 ROE 仅 1.93%，营收 yoy 仅 7.05%，缺乏盈利支撑，跨界收购陕西长空齿轮属题材想象非业绩兑现","退潮期无龙虎榜锁仓（lhb_on_list=false）、北向数据缺失，主力 5 日净流入 2.76 亿可能为拉高出货，板块合力本系统不评估，无接力确认"],"analysts":{"technical":"趋势: 多头(但极端超买)。close=25.55 站上全部 6 均线 (technical.ma 全 < close, MA5=22.6/MA250=16.15)，pressure 子分=1.0、clear_top=true，无上方均线压制。MACD 多头 (technical.macd.dif=1.7644 > dea=1.3299, hist=+0.8689)。但 RSI14=83.73 (technical.rsi14)、KDJ J=99.61/K=88.74 (technical.kdj) 均极端超买，收盘 25.55 已升破 BOLL 上轨 24.0495 (technical.boll.upper)，乖离过大。妖股: 2/4——precursor 命中 (yaogu.subscores.precursor=0.979, 22日2涨停量峰1.90x)、pressure 命中 (=1.0)；consolidation 不命中 (=0.0, 近10日振幅27.5%>20%)；hotspot 单股不可判 (=null)，需结合 news/行业。lhb_on_list=false (moneyflow) 无游资锁仓佐证，hits<3 非强妖。支撑: MA5=22.6 / BOLL mid=19.845。压力: 已无均线压力但 BOLL 上轨 24.05 为乖离回归位。风险: 超买急回、上轨外运行不可持续。","fundamental":"质地: 中偏弱；估值: 高估。pe_ttm=96.81 (fundamentals.pe_ttm)、pe=118.73、pb=3.051、ps_ttm=2.901 均显著高于服饰行业常态，total_mv≈103.67亿 (fundamentals.total_mv=1036727万)。盈利薄弱: Q1 roe 仅 1.9327% (fundamentals.roe, date=20260331)、roe_dt=1.849%，grossprofit_margin=34.45% 中规；netprofit_yoy=+43.64% 但 or_yoy 仅 +7.05%，利润增长靠低基数/非经常性，营收成长平庸。债务率 debt_to_assets=9.78% 极低、无杠杆风险。dv_ttm=1.5656% 股息一般。是否支撑现价: 否——96.8x 滚动 PE 对应 <2% 季度 ROE，估值远超盈利能力，现价由资金/题材驱动而非基本面。风险: 财报滞后(Q1 数据)，业绩证伪后估值杀。","news":"催化: 弱-中。板块: 服饰 (basic.industry)，单股无法判板块轮动 (yaogu.hotspot=null)，本系统不评估板块合力。利好: news[7] 2026-04-30 拟收购陕西长空齿轮 100% 股权暨关联交易——跨界收购齿轮/装备资产，为唯一具想象空间的题材催化，但属公告预案非业绩兑现。利空/中性: 其余 9 条均为常规公告(股东会决议 news[0-1]、关联交易预计 news[3]、会计政策变更 news[6]、续聘会计所 news[9])，无实质订单/政策利好。风险: 收购为关联交易、停留在公告阶段，落地与协同不确定，题材兑现前易被透支后回落。","sentiment":"资金: 流入但存分歧；情绪: 亢奋(过热)。主力近 5 日净流入 +2.76亿 (moneyflow.main_net_5d_wan=27618.8万)，资金面偏积极；turnover_rate=6.56% (fundamentals.turnover_rate) 换手活跃、情绪亢奋。但 lhb_on_list=false (moneyflow) 无龙虎榜数据，缺一线游资锁仓证据，主力净流入在 RSI83.7 高位可能为拉高派发。北向 [数据缺失:northbound] (moneyflow.northbound_net_yi reason: hsgt 参数校验失败)，无市场级资金佐证。游资迹象: 无明确(龙虎榜未上榜)。风险: 高位放量换手叠加无锁仓，退潮期资金随时反向。","_note":"RETREAT 退潮期：四分析师中技术=超买见顶、基本面=高估、消息=弱催化、情绪=高位分歧，整体偏空。"},"debate":{"bull":["技术多头排列完整，站上全部 6 均线、无上方压力 (yaogu.pressure=1.0, clear_top=true; technical.ma)","MACD 持续多头放量 (technical.macd.hist=+0.8689, dif=1.7644>dea=1.3299)","precursor 强命中，前期 22 日 2 次涨停+量峰 1.90x，主升浪动能仍在 (yaogu.subscores.precursor=0.979)","主力 5 日净流入 2.76 亿，资金态度积极 (moneyflow.main_net_5d_wan=27618.8万)","拟收购陕西长空齿轮 100% 股权提供跨界题材想象 (news[7] 2026-04-30)","[第2轮反驳] 估值高但题材妖股本就脱离基本面定价；超买可在上轨外钝化延续，急跌非必然——但承认无 LHB 锁仓与退潮环境削弱接力确定性"],"bear":["估值极端高估：pe_ttm=96.81、pe=118.73、pb=3.051，盈利不支撑 (fundamentals)","Q1 ROE 仅 1.93%、营收 yoy 仅 7.05%，业绩空心化 (fundamentals.roe=1.9327, or_yoy=7.0483)","极端超买见顶：RSI14=83.73、KDJ J=99.61、close 突破 BOLL 上轨 24.05 (technical.rsi14/kdj/boll)","无龙虎榜锁仓 (moneyflow.lhb_on_list=false)，高位主力净流入恐为派发，退潮期一字下杀风险","consolidation 不命中、近10日振幅27.5%，无平台支撑，纯拉升结构脆弱 (yaogu.subscores.consolidation=0.0)","[第2轮反驳] 收购仅公告预案(news[7])非业绩，题材透支即回落；6/6 均线乖离过大本身就是回归压力，pressure=1.0 在退潮期反成回补缺口风险，多头资金论据无 LHB 佐证"],"manager":"统一研判: 看空——高位极端超买+估值空心，退潮期资金无锁仓接力，风险报酬比劣于回避。"},"trader_thesis":"退潮期建议 SELL/回避。技术极端超买见顶：RSI14=83.73 (technical.rsi14=83.7344)、KDJ J=99.61 (technical.kdj.j=99.6139)、close=25.55 已突破 BOLL 上轨 (technical.boll.upper=24.0495)，乖离全部 6 均线 (MA5=22.6)。基本面不支撑：pe_ttm=96.81 (fundamentals.pe_ttm=96.8099) 对应 Q1 ROE 仅 1.93% (fundamentals.roe=1.9327)、营收 yoy 仅 7.05% (fundamentals.or_yoy=7.0483)。资金虽净流入 2.76 亿 (moneyflow.main_net_5d_wan=27618.8) 但无龙虎榜锁仓 (moneyflow.lhb_on_list=false)，高位恐派发。妖股 hits=2 (yaogu.hits) 非强妖，不博弈。止损 22.6 (跌破 MA5)，短线回避。","risk_debate":{"aggressive":"过保守点: 技术多头完整、站上 6/6 均线无压 (yaogu.pressure=1.0)，主力 5 日净流入 2.76 亿 (moneyflow.main_net_5d_wan=27618.8)，precursor 0.979 显示动能未竭，全清空可能踏空末段主升。更积极建议: 若必须参与则博弈性仓位 ≤8%、止损 BOLL mid 19.845 下方，仅限破上轨缩量不破 MA5 时。仍需警惕: RSI 83.73 超买，破 MA5=22.6 立即离场。","conservative":"风险过大点: pe_ttm=96.81 配 Q1 ROE 1.93% 严重背离 (fundamentals)，RSI14=83.73/J=99.61 极端超买 (technical)，无 LHB 锁仓 (moneyflow.lhb_on_list=false)、北向 [数据缺失:northbound]，退潮期高位一字下杀难出货。稳健建议: 0 仓位/清仓观望，不参与任何博弈，等回踩 MA20=19.845 且缩量企稳再评估。最坏情形: 收购题材(news[7])证伪+业绩暴雷+一字跌停连环杀。","neutral":"对激进评判: 多头排列与资金流入有 evidence (yaogu.pressure=1.0, moneyflow.main_net_5d_wan=27618.8)，但在 RSI83.7 极端区追多盈亏比差，激进过头。对保守评判: 高估+超买+无锁仓的清仓观望有充分 evidence 支撑 (fundamentals.pe_ttm/technical.rsi14/moneyflow.lhb_on_list)，更贴合退潮期。折中风控: 持仓者减至 0、不新建仓；止损 MA5=22.6；周期短线回避；调仓触发=回踩 MA20 19.845 缩量企稳方再评估。关键前提: 北向 [数据缺失:northbound] 与无 LHB，按更保守处理。","_note":"neutral 已见 aggressive 与 conservative 两方观点。"},"portfolio_decision":"终裁 SELL/回避，position_pct=0。采纳 conservative 为主、neutral 折中为辅：退潮期下高估值(fundamentals.pe_ttm=96.8099)+极端超买(technical.rsi14=83.7344, kdj.j=99.6139, 破 BOLL 上轨 24.0495)+无龙虎榜锁仓(moneyflow.lhb_on_list=false)三重不利共振，aggressive 的末段主升论缺锁仓与板块合力佐证、盈亏比差，不予采纳。对 trader 原决策: 维持 SELL 方向，仓位由其建议下调为 0（不博弈），止损沿用 MA5=22.6 作持仓者离场线。妖股 hits=2<3 非强妖，无需博弈性建仓。QC 提示: 全部论据已溯源 PASS，无未验证项；但北向数据缺失[数据缺失:northbound]、板块合力本系统不评估，confidence 取“中”不上“高”。","qc":{"status":"PASS","verified":["RSI14=83.73 (technical.rsi14=83.7344)","KDJ J=99.61 (technical.kdj.j=99.6139)","close=25.55 突破 BOLL 上轨 24.0495 (technical.boll.upper)","MA5=22.6 (technical.ma.value.ma5)","pe_ttm=96.81 (fundamentals.pe_ttm=96.8099)","Q1 ROE=1.93% (fundamentals.roe=1.9327, date=20260331)","营收 yoy=7.05% (fundamentals.or_yoy=7.0483)","主力 5 日净流入 2.76亿 (moneyflow.main_net_5d_wan=27618.8)","lhb_on_list=false (moneyflow.lhb_on_list)","yaogu hits=2 (yaogu.value.hits)"],"unverified":[],"confidence_downgraded":false},"evidence_refs":[{"claim":"RSI14 极端超买","key":"technical.rsi14","value":83.7344},{"claim":"KDJ J 值近 100","key":"technical.kdj.j","value":99.6139},{"claim":"收盘突破 BOLL 上轨","key":"technical.boll.upper","value":24.0495},{"claim":"止损位/MA5","key":"technical.ma.value.ma5","value":22.6},{"claim":"MACD 多头柱","key":"technical.macd.hist","value":0.8689},{"claim":"估值高估 pe_ttm","key":"fundamentals.pe_ttm","value":96.8099},{"claim":"Q1 ROE 薄弱","key":"fundamentals.roe","value":1.9327},{"claim":"营收成长平庸","key":"fundamentals.or_yoy","value":7.0483},{"claim":"净利 yoy","key":"fundamentals.netprofit_yoy","value":43.6387},{"claim":"换手活跃","key":"fundamentals.turnover_rate","value":6.5606},{"claim":"总市值约 103.67 亿","key":"fundamentals.total_mv","value":1036727.0379},{"claim":"主力 5 日净流入","key":"moneyflow.main_net_5d_wan","value":27618.8},{"claim":"无龙虎榜","key":"moneyflow.lhb_on_list","value":false},{"claim":"妖股命中数","key":"yaogu.value.hits","value":2},{"claim":"precursor 子分","key":"yaogu.value.subscores.precursor","value":0.979},{"claim":"pressure 站上6均线","key":"yaogu.value.subscores.pressure","value":1.0},{"claim":"consolidation 不命中","key":"yaogu.value.subscores.consolidation","value":0.0},{"claim":"拟收购陕西长空齿轮","key":"news[7]","value":"2026-04-30 关于拟收购陕西长空齿轮有限责任公司100%股权暨关联交易的公告"}]},{"code":"603931","name":"格林达","industry":"化工原料","verdict":"SELL","confidence":"中","position_pct":0,"stop_loss":49.78,"horizon":"短线 1-3 周（已持仓者）","yaogu_hits":2,"key_risks":["RSI14=82.1 (technical.rsi14=82.0972) 极度超买 + close 54.65 贴 BOLL 上轨 55.22 (technical.boll.upper=55.2242)，回调风险高，无博弈安全边际","估值天价 PE_TTM=90.88 (fundamentals.pe_ttm=90.8763) / PS_TTM=17.84 (fundamentals.ps_ttm=17.8357) 而 Q1 业绩双降 netprofit_yoy=-7.88% / or_yoy=-8.86% (fundamentals)，基本面零支撑","主力 5 日净流出 -378.54万 (moneyflow.main_net_5d_wan=-378.54) + 龙虎榜不在榜 (moneyflow.lhb_on_list=false)，无游资接力且 RETREAT 退潮，老主升(rzt=3⭐)易一字回落"],"analysts":{"technical":"趋势=多头但极端超买。close 54.65 (technical.close=54.65) 站上全部 6 均线 (yaogu.pressure=1.0, clear_top=true)，MA5/10/20/55/120/250 多头排列。MACD 金叉柱状为正 (technical.macd.hist=+1.7737, dif=5.1832>dea=4.2963)。但 RSI14=82.10 (technical.rsi14=82.0972) 严重超买，KDJ 三线 80+ 高位 (kdj.k=82.8988/d=83.9871/j=80.7222)，close 已贴 BOLL 上轨 55.22 (boll.upper=55.2242)，乖离极大（MA20=42.21，价偏离 +29%）。妖股 2/4：precursor 命中(22日4涨停/量峰2.58x, precursor=1.0)、pressure 命中(6/6均线, pressure=1.0)、consolidation 不命中(10日振幅29.6%, consolidation=0.0)、hotspot 单股不可判结合 news 无题材。支撑 MA5=49.78，压力 BOLL 上轨 55.22。风险：乖离过大随时均值回归；老主升确认即右侧，追高接最后一棒概率高。","fundamental":"质地=中偏弱，估值=严重高估。PE=89.02 (fundamentals.pe=89.017)、PE_TTM=90.88 (pe_ttm=90.8763)、PB=5.47 (pb=5.465)、PS_TTM=17.84 (ps_ttm=17.8357) 全线天价。Q1(报告期 20260331) 盈利与营收双降：netprofit_yoy=-7.88% (netprofit_yoy=-7.8765)、or_yoy=-8.86% (or_yoy=-8.8571)，单季 ROE 仅 1.49% (roe=1.4853)、扣非 1.28% (roe_dt=1.2793)。亮点仅低杠杆 debt_to_assets=8.23% (debt_to_assets=8.2342) 与毛利率 32.92% (grossprofit_margin=32.9177) 尚可，股息率仅 0.40% (dv_ttm=0.4026)。市值 109.06 亿 (total_mv=1090586.5467万)。是否支撑现价：否——业绩负增长却给 90x PE，纯情绪估值，无基本面锚。风险：高估值遇业绩下滑戴维斯双杀；财报滞后(20260331)。","news":"催化=无。近 10 条全为公告类 (news.source=tushare)：2025 年度股东会决议/见证(news[0][1] 20260521)、Q1 季报(news[7] 20260425)、年度审计/内控报告，均为程序性披露，无业绩超预期、并购、订单、政策题材。关键信号：20260429 连发 3 条股票交易异常波动公告及实控人/控股股东对交易所问询函的回函(news[3][4][5])，属监管关注，暗示前期涨幅已触发异动监控。板块=化工原料(basic.industry)，news 中无行业景气或题材轮动迹象，hotspot 无法支撑。风险：异动问询后若无实质利好，资金易借股东会落地兑现离场。","sentiment":"资金=流出，情绪=亢奋但顶背离。主力近 5 日净流出 -378.54万 (moneyflow.main_net_5d_wan=-378.54)，价创新高而主力撤离=量价资金背离。龙虎榜不在榜 (moneyflow.lhb_on_list=false)，无一线游资锁仓接力证据。北向 [数据缺失:northbound_net_yi](moneyflow_hsgt 异常)。换手率仅 3.51% (fundamentals.turnover_rate=3.5073)——高位低换手，既无放量出货也无放量承接，浮筹未充分换手反成隐患。情绪温度：技术超买(RSI 82)显示亢奋，但资金已用脚投票。游资迹象：无(龙虎榜未上榜)。风险：主力流出+无游资接力，RETREAT 退潮期高位易踩踏。"},"debate":{"bull":["强势多头趋势完整：close 54.65 站上全部 6 均线 (yaogu.pressure=1.0, clear_top=true)，MACD 金叉柱状放大 (technical.macd.hist=+1.7737)，趋势未破不言顶","precursor 妖股要件命中：22 日 4 次涨停、量峰/中位=2.58x (yaogu.subscores.precursor=1.0)，主力资金前期已强势运作，rzt=3⭐ 老主升说明趋势惯性强","财务杠杆健康：debt_to_assets=8.23% (fundamentals.debt_to_assets=8.2342) 极低，毛利率 32.92% (grossprofit_margin=32.9177) 行业中上，无暴雷下杀风险","[反驳 bear-估值]：90x PE (fundamentals.pe_ttm=90.8763) 对电子材料成长股是情绪定价常态，趋势股看动量不看 PE；但承认无业绩兑现则估值不可持续 [推测]","[反驳 bear-资金流出]：主力 5 日净 -378.54万 (moneyflow.main_net_5d_wan=-378.54) 规模相对 109 亿市值(total_mv=1090586.5467万)极小(<0.04%)，不足以判定主力出货"],"bear":["估值无锚：PE_TTM=90.88 (fundamentals.pe_ttm=90.8763)/PS_TTM=17.84 (ps_ttm=17.8357) 配 Q1 业绩双降 netprofit_yoy=-7.88%/or_yoy=-8.86% (fundamentals)，戴维斯双杀风险","技术极端超买：RSI14=82.10 (technical.rsi14=82.0972)、close 贴 BOLL 上轨 55.22 (boll.upper=55.2242)，价偏离 MA20=42.21 (ma.ma20=42.2095) 达 +29%，均值回归压力极大","资金背离：价创新高而主力 5 日净流出 -378.54万 (moneyflow.main_net_5d_wan=-378.54)，龙虎榜未上榜 (lhb_on_list=false)，无游资接力","监管关注：20260429 异动问询函回函(news[3][4][5])，前期涨幅已触发交易所异常波动监控","[反驳 bull-趋势]：老主升 rzt=3⭐ + precursor 确认(yaogu.precursor=1.0) 恰恰说明主升浪已走完，确认即右侧末端，追高接最后一棒","[反驳 bull-杠杆健康]：低负债 (debt_to_assets=8.2342) 是防守优点，但解释不了 90x PE 的进攻定价，质地与估值严重错配"],"manager":"看空——估值天价+业绩双降+资金流出+极端超买四杀，妖股仅 2/4 且属确认即右侧的老主升末端，无安全边际。"},"trader_thesis":"SELL/回避。趋势虽多头但已是老主升末端：RSI14=82.10 (technical.rsi14=82.0972) 极端超买，close 54.65 贴 BOLL 上轨 (technical.boll.upper=55.2242)，偏离 MA20=42.21 (technical.ma.ma20=42.2095) 约 +29%。基本面零支撑：PE_TTM=90.88 (fundamentals.pe_ttm=90.8763) 配 Q1 净利-7.88%/营收-8.86% (fundamentals.netprofit_yoy=-7.8765, or_yoy=-8.8571)。资金已撤：主力 5 日净流出 -378.54万 (moneyflow.main_net_5d_wan=-378.54)、龙虎榜不在榜 (moneyflow.lhb_on_list=false)。妖股仅 2/4 (yaogu.value.hits=2)，RETREAT 退潮期不博弈。已持仓者破 MA5=49.78 离场。","risk_debate":{"aggressive":"过保守点：趋势完整未破，6 均线全多头 (yaogu.pressure=1.0)、MACD 柱状仍放大 (technical.macd.hist=+1.7737)，直接清零仓位可能踏空惯性冲顶。更积极建议：已持仓者可保留 ≤5% 试探仓博惯性，止损上移至 MA5=49.78，跌破即走。仍需警惕：主力已净流出 -378.54万 (moneyflow.main_net_5d_wan=-378.54)，无接力则惯性不可持续。","conservative":"风险过大点：90x PE_TTM (fundamentals.pe_ttm=90.8763) 配业绩双降 (netprofit_yoy=-7.8765)、RSI14=82.10 (technical.rsi14=82.0972) 极端超买、价贴 BOLL 上轨 (boll.upper=55.2242)，任何博弈仓都是高位接盘。稳健建议：仓位 0%，新仓绝不介入，已持仓者立即减仓至清。最坏情形：异动问询(news[3])后无利好+主力流出，RETREAT 退潮一字回落。","neutral":"对激进评判：保留惯性仓的逻辑被资金流出 (moneyflow.main_net_5d_wan=-378.54) + 龙虎榜空缺 (lhb_on_list=false) 证伪，无接力的趋势惯性不可靠。对保守评判：估值/超买/资金三重证据扎实，0 仓判断成立。折中风控：新仓 0%，已持仓者跌破 MA5=49.78 (technical.ma.ma5=49.784) 无条件清。周期短线。关键前提：北向 [数据缺失:northbound_net_yi]，缺市场级信号则一律按更保守处理。"},"portfolio_decision":"终裁 SELL/回避，position_pct=0，采纳保守+中立风控为主（驳回激进的惯性试探仓——主力净流出 moneyflow.main_net_5d_wan=-378.54 + 龙虎榜不在榜 lhb_on_list=false 证伪了惯性可持续）。对 trader 决策无方向调整，confidence 维持中（QC 全 PASS，无下调；但 RETREAT 退潮 + 北向 [数据缺失] 使其不达高）。妖股仅 2/4 (yaogu hits=2) 不构成博弈仓理由，且 precursor/老主升 rzt=3⭐ 恰是确认即右侧末端。止损 49.78 (MA5) 供已持仓者执行。QC 提示：所有论据已溯源 evidence，PASS。","qc":{"status":"PASS","verified":["RSI14=82.10 ↔ technical.rsi14=82.0972 (±0.5% 内)","close 贴 BOLL 上轨 ↔ technical.boll.upper=55.2242, close=54.65","价偏离 MA20 +29% ↔ technical.ma.ma20=42.2095, close=54.65 (54.65/42.2095-1=29.5%)","PE_TTM=90.88 ↔ fundamentals.pe_ttm=90.8763","netprofit_yoy=-7.88% ↔ fundamentals.netprofit_yoy=-7.8765","or_yoy=-8.86% ↔ fundamentals.or_yoy=-8.8571","主力 5 日净流出 -378.54万 ↔ moneyflow.main_net_5d_wan=-378.54","龙虎榜不在榜 ↔ moneyflow.lhb_on_list=false","妖股 hits=2 ↔ yaogu.value.hits=2","MACD hist=+1.7737 ↔ technical.macd.hist=1.7737","止损 MA5=49.78 ↔ technical.ma.ma5=49.784"],"unverified":[],"confidence_downgraded":false},"evidence_refs":[{"claim":"RSI14 极端超买","key":"technical.rsi14","value":82.0972},{"claim":"close 贴 BOLL 上轨","key":"technical.boll.upper","value":55.2242},{"claim":"收盘价","key":"technical.close","value":54.65},{"claim":"MA20 用于乖离计算","key":"technical.ma.ma20","value":42.2095},{"claim":"止损位 MA5","key":"technical.ma.ma5","value":49.784},{"claim":"MACD 金叉柱状为正","key":"technical.macd.hist","value":1.7737},{"claim":"估值天价 PE_TTM","key":"fundamentals.pe_ttm","value":90.8763},{"claim":"PS_TTM 高","key":"fundamentals.ps_ttm","value":17.8357},{"claim":"Q1 净利同比下滑","key":"fundamentals.netprofit_yoy","value":-7.8765},{"claim":"Q1 营收同比下滑","key":"fundamentals.or_yoy","value":-8.8571},{"claim":"低杠杆","key":"fundamentals.debt_to_assets","value":8.2342},{"claim":"总市值","key":"fundamentals.total_mv","value":1090586.5467},{"claim":"换手率偏低","key":"fundamentals.turnover_rate","value":3.5073},{"claim":"主力 5 日净流出","key":"moneyflow.main_net_5d_wan","value":-378.54},{"claim":"龙虎榜不在榜","key":"moneyflow.lhb_on_list","value":false},{"claim":"北向数据缺失","key":"moneyflow.northbound_net_yi","value":null},{"claim":"妖股命中要件数","key":"yaogu.value.hits","value":2},{"claim":"precursor 命中(22日4涨停)","key":"yaogu.value.subscores.precursor","value":1.0},{"claim":"pressure 站上6/6均线","key":"yaogu.value.subscores.pressure","value":1.0},{"claim":"consolidation 不命中","key":"yaogu.value.subscores.consolidation","value":0.0},{"claim":"异动问询函回函公告","key":"news[3]","value":"20260429 控股股东异动问询函回函"}]},{"code":"002938","name":"鹏鼎控股","industry":"元器件","verdict":"HOLD","confidence":"中","position_pct":8,"stop_loss":94.4,"horizon":"3-7 交易日（博弈性短线，破 MA5 即离场）","yaogu_hits":2,"key_risks":["极度超买+一字板顶开博弈：RSI14=78.39(technical.rsi14.value)、KDJ j=95.98(technical.kdj.value.j)、close=103.93 已破 BOLL 上轨 99.72(technical.boll.value.upper)，clear_top=true(yaogu.value.clear_top) 一字/顶开次日高位分歧、退潮期一字跌停尾接力风险大","控股股东减持压顶：news[0] 0522 控股股东持股变动超1%、news[7] 0425 美港实业及一致行动人集辉国际减持预披露，催化叠减持顶背离","基本面不支撑估值：pe_ttm=64.89(fundamentals.pe_ttm.value)、pb=6.95(fundamentals.pb.value) 高位，且 netprofit_yoy=-5.21%(fundamentals.netprofit_yoy.value)、or_yoy=-1.25%(fundamentals.or_yoy.value) 双降，纯题材资金驱动"],"analysts":{"technical":"趋势: 多头（强延伸/过热）| 妖股: 2/4。close=103.93(technical.close.value) 站上全部 6 均线 MA5/10/20/55/120/250(technical.ma.value)，clear_top=true(yaogu.value.clear_top) pressure 无压打开♾️(yaogu subscores.pressure=1.0)。MACD 金叉红柱 hist=3.1012(technical.macd.value.hist)、dif=8.88>dea=7.33 多头。但严重超买: RSI14=78.39(technical.rsi14.value)、KDJ j=95.98(technical.kdj.value.j)、close 已破 BOLL 上轨 99.72(technical.boll.value.upper)。妖股: precursor 命中(subscores.precursor=1.0, 22日涨停3次量峰1.78x)、pressure 命中(=1.0)；consolidation=0.0(近10日振幅32.2%, detail.consolidation) 不命中；hotspot 单股不可判[据 news+industry=元器件/AI硬件由消息面判]。支撑: MA5=94.40 / MA10=88.87；压力: BOLL 上轨 99.72 已破，上方真空但顶部钝化。风险: 一字板顶开(clear_top)高位接力，超买回调随时触发。","fundamental":"质地: 中 估值: 高估。pe=64.45(fundamentals.pe.value)、pe_ttm=64.89(fundamentals.pe_ttm.value)、pb=6.95(fundamentals.pb.value)、ps_ttm=6.17(fundamentals.ps_ttm.value) 均处高位，total_mv≈2409亿(fundamentals.total_mv.value=24091504.21万)。盈利转弱: netprofit_yoy=-5.21%(fundamentals.netprofit_yoy.value, 20260331)、or_yoy=-1.25%(fundamentals.or_yoy.value)，单季 roe=1.35%(fundamentals.roe.value, 20260331)、roe_dt=0.95%(fundamentals.roe_dt.value)。毛利率 22.95%(fundamentals.grossprofit_margin.value)、债务率 30.36%(fundamentals.debt_to_assets.value) 杠杆健康。dv_ttm=0.96%(fundamentals.dv_ttm.value) 股息一般。是否支撑现价: 否——业绩同比双降叠 60x+ PE，当前价靠题材资金而非基本面。风险: 季报有滞后(date=20260331)，二季度若延续下滑则估值进一步承压。","news":"催化: 中（题材属性强于基本面利好）板块: 元器件(basic.industry)，概念归 AI 硬件；单股无法判板块梯队，本系统不评估板块合力。利好: 无实质性经营利好公告——news[1] 4月营收简报(0507)、news[2] Q1报告(0430) 为常规披露。利空: news[0] 0522 控股股东持股变动超1%、news[7] 0425 美港实业及一致行动人集辉国际减持预披露——高位减持信号明确。中性: news[8/9] 0424 股东会决议/董事会换届。风险: 减持预披露兑现期股价承压，公告面无支撑炒作的基本面催化。","sentiment":"资金: 流入 情绪: 亢奋（过热）。主力近 5 日净流入 +8.14亿(moneyflow.main_net_5d_wan.value=81401.77万) 资金积极。但换手率仅 0.6363%(fundamentals.turnover_rate.value) 极低——结合 clear_top=true(yaogu.value.clear_top) 一字板顶开，说明封板锁筹、抛压暂时压制，分歧未充分释放，次日打开易高波动。游资迹象: 无明确（lhb_on_list=false, moneyflow.lhb_on_list.value）——未上龙虎榜，无法确认游资锁仓或机构博弈结构。北向 [数据缺失:northbound_net_yi]（moneyflow.northbound reason 非空）。风险: 一字封板+低换手的资金态度无法证伪，打开日若放量则方向骤变。"},"debate":{"bull":["六线多头无压打开: close=103.93 站全部均线(technical.ma.value)、clear_top=true(yaogu.value.clear_top)、pressure=1.0，上方无套牢盘","MACD 金叉红柱延伸: hist=3.1012(technical.macd.value.hist)、dif=8.88>dea=7.33，多头动能在线","主力资金强势流入: 近 5 日 +8.14亿(moneyflow.main_net_5d_wan.value=81401.77万)，与价格同向印证","precursor 命中+一字板: 22日涨停3次量峰1.78x(yaogu.detail.precursor)、clear_top=true，强势股惯性","低换手锁筹: turnover_rate=0.6363%(fundamentals.turnover_rate.value) 一字封板抛压被压制，浮筹少","[推测] 概念=AI硬件 题材热度（单股不可证板块合力，降权处理）"],"bear":["极度超买顶背离: RSI14=78.39(technical.rsi14.value)、KDJ j=95.98(technical.kdj.value.j)、close 破 BOLL 上轨 99.72(technical.boll.value.upper)，回调一触即发","估值严重透支: pe_ttm=64.89(fundamentals.pe_ttm.value)、pb=6.95(fundamentals.pb.value) 高位，无基本面支撑","业绩同比双降: netprofit_yoy=-5.21%(fundamentals.netprofit_yoy.value)、or_yoy=-1.25%(fundamentals.or_yoy.value)，roe 季 1.35%","控股股东减持: news[0] 0522 持股变动超1% + news[7] 0425 一致行动人减持预披露，高位出货信号","一字板顶开退潮风险: clear_top=true(yaogu.value.clear_top) 退潮期一字跌停尾接力，consolidation=0.0(无平台支撑)","无游资确认: lhb_on_list=false(moneyflow.lhb_on_list.value)，封板资金结构不可证，+8.14亿无席位拆解"],"manager":"中性偏谨慎——技术多头+资金流入但极度超买叠减持，估值与业绩不支撑，clear_top 博弈不宜追高。"},"trader_thesis":"HOLD/不追高。多头未破: 六线全站(technical.ma)、MACD hist=3.1012(technical.macd.value.hist)、主力5日+8.14亿(moneyflow.main_net_5d_wan.value=81401.77万)。但严重超买 RSI14=78.39(technical.rsi14.value)、KDJ j=95.98(technical.kdj.value.j)、close=103.93 破 BOLL 上轨 99.72(technical.boll.value.upper)；估值 pe_ttm=64.89(fundamentals.pe_ttm.value) 配 netprofit_yoy=-5.21%(fundamentals.netprofit_yoy.value) 双降；news[7] 减持预披露。clear_top=true(yaogu.value.clear_top) 一字顶开，仅博弈性轻仓 8%，破 MA5=94.4(technical.ma.value.ma5) 离场。","risk_debate":{"aggressive":"过保守点: 主力 5 日净流入 +8.14亿(moneyflow.main_net_5d_wan.value=81401.77万)+六线无压打开(yaogu.value.clear_top=true)，8% 仓位偏轻，强势惯性下易踏空。更积极建议: 仓位 12%/止损 MA5=94.4(technical.ma.value.ma5)/理由 precursor 命中(yaogu subscores.precursor=1.0) 趋势未坏。仍需警惕: RSI14=78.39(technical.rsi14.value) 超买，止损必须铁纪律执行。","conservative":"风险过大点: clear_top=true(yaogu.value.clear_top) 一字顶开+退潮期，KDJ j=95.98(technical.kdj.value.j)、close 破 BOLL 上轨 99.72(technical.boll.value.upper) 极致超买，叠 news[7] 减持预披露与 pe_ttm=64.89(fundamentals.pe_ttm.value)/netprofit_yoy=-5.21%(fundamentals.netprofit_yoy.value)，8% 仍偏重。稳健建议: 仓位 0-5% 或观望，等打开日量价确认。最坏情形: 次日高开回落或一字跌停，低换手 0.64% 流动性差难离场。","neutral":"对激进评判: 资金流入+趋势在线属实，但 12% 在 clear_top 退潮期偏冒进。对保守评判: 减持+超买+估值风险扎实，0% 过头错失强势惯性。折中风控: 仓位 5-10%（取 8%）/止损 MA5=94.4(technical.ma.value.ma5)/周期 3-7 日/调仓触发: 打开日放量上破 BOLL 上轨可加，破 MA5 或减持兑现立即清。关键前提: 因 [数据缺失:northbound_net_yi] 且 lhb_on_list=false 无游资席位证据，按更保守处理。"},"portfolio_decision":"采纳中立风控为主、保守风控为辅。维持 trader HOLD/8% 博弈性轻仓，止损 MA5=94.4(technical.ma.value.ma5)，周期 3-7 日。理由: 技术多头与主力 5 日 +8.14亿(moneyflow.main_net_5d_wan.value) 支持不立即 SELL，但 RSI14=78.39/KDJ j=95.98 极致超买、close 破 BOLL 上轨、pe_ttm=64.89 配业绩双降、news[7] 控股股东减持、clear_top=true 一字顶开退潮风险，均不支持 BUY 追高。confidence 定中（非高）: 核心资金论据 lhb_on_list=false 无席位拆解、northbound [数据缺失]，封板资金结构不可证。yaogu_hits=2<3，按博弈性短线对待，仓位轻、止损紧。","qc":{"status":"PASS","verified":["六线全站 close=103.93 vs technical.close.value=103.93 + technical.ma.value 全部 < close","MACD hist=3.1012 vs technical.macd.value.hist=3.1012","主力5日净流入 8.14亿 vs moneyflow.main_net_5d_wan.value=81401.77万","RSI14=78.39 vs technical.rsi14.value=78.3867","KDJ j=95.98 vs technical.kdj.value.j=95.9831","close 破 BOLL 上轨 99.72 vs technical.boll.value.upper=99.7229 (103.93>99.72)","pe_ttm=64.89 vs fundamentals.pe_ttm.value=64.8942","netprofit_yoy=-5.21% vs fundamentals.netprofit_yoy.value=-5.2067","clear_top=true vs yaogu.value.clear_top=true","止损 MA5=94.4 vs technical.ma.value.ma5=94.396","lhb_on_list=false vs moneyflow.lhb_on_list.value=false"],"unverified":[],"confidence_downgraded":false},"evidence_refs":[{"claim":"收盘价站上全部 6 条均线","key":"technical.close.value","value":"103.93"},{"claim":"MA5 止损位/最近支撑","key":"technical.ma.value.ma5","value":"94.396"},{"claim":"MACD 金叉红柱多头动能","key":"technical.macd.value.hist","value":"3.1012"},{"claim":"RSI14 严重超买","key":"technical.rsi14.value","value":"78.3867"},{"claim":"KDJ J 值极致超买钝化","key":"technical.kdj.value.j","value":"95.9831"},{"claim":"收盘价突破 BOLL 上轨","key":"technical.boll.value.upper","value":"99.7229"},{"claim":"一字板/顶开 clear_top","key":"yaogu.value.clear_top","value":"true"},{"claim":"妖股命中数 2/4","key":"yaogu.value.hits","value":"2"},{"claim":"precursor 命中 22日3涨停量峰1.78x","key":"yaogu.value.subscores.precursor","value":"1.0"},{"claim":"pressure 命中 六线无压打开","key":"yaogu.value.subscores.pressure","value":"1.0"},{"claim":"consolidation 不命中 振幅32.2%","key":"yaogu.value.subscores.consolidation","value":"0.0"},{"claim":"估值高 PE-TTM 64.89","key":"fundamentals.pe_ttm.value","value":"64.8942"},{"claim":"PB 高位 6.95","key":"fundamentals.pb.value","value":"6.9528"},{"claim":"净利润同比下滑","key":"fundamentals.netprofit_yoy.value","value":"-5.2067"},{"claim":"营收同比下滑","key":"fundamentals.or_yoy.value","value":"-1.2486"},{"claim":"单季 ROE 偏低","key":"fundamentals.roe.value","value":"1.3454"},{"claim":"换手率极低锁筹","key":"fundamentals.turnover_rate.value","value":"0.6363"},{"claim":"总市值约 2409 亿","key":"fundamentals.total_mv.value","value":"24091504.2093"},{"claim":"主力近 5 日净流入约 8.14 亿","key":"moneyflow.main_net_5d_wan.value","value":"81401.77"},{"claim":"未上龙虎榜无游资席位证据","key":"moneyflow.lhb_on_list.value","value":"false"},{"claim":"控股股东持股变动超1%公告","key":"news.value[0].title","value":"控股股东持股变动超过1%的公告(20260522)"},{"claim":"控股股东及一致行动人减持预披露","key":"news.value[7].title","value":"美港实业及一致行动人集辉国际减持股份预披露(20260425)"},{"claim":"北向资金数据缺失","key":"moneyflow.northbound_net_yi.reason","value":"moneyflow_hsgt 异常: 参数校验失败"}]},{"code":"603661","name":"恒林股份","industry":"家居用品","verdict":"HOLD","confidence":"低","position_pct":8,"stop_loss":28.71,"horizon":"1-3 个交易日（博弈性短线，无催化不持有）","yaogu_hits":2,"key_risks":["KDJ J=105.22 极度超买 (technical.kdj.value.j=105.2246) + close 逼近 BOLL 上轨 33.46 (technical.boll.value.upper=33.4593)，一字板/顶开后随时高位回撤甚至一字跌停风险","无实质催化：近 10 条 news 全为股东会/业绩说明会/质押解押常规公告，无订单/并购/政策利好；hotspot 板块合力本系统不评估 [数据缺失:板块合力]","龙虎榜净额仅 +302.8 万 (moneyflow.lhb_net_amount=3028042.16 元) 偏小，游资分歧；北向 [数据缺失:northbound_net_yi]，退潮期(RETREAT)资金易撤"],"analysts":{"technical":"趋势: 多头（短期超买）| 妖股: 2/4 (precursor 1.0 / consol 0.0 / hotspot 单股不可判·news 无题材→无 / pressure 1.0)。close=32.53 站上全部 6 均线 (technical.ma: ma5=28.712~ma250=31.033)，pressure=1.0 且 clear_top=true (yaogu.value.clear_top=true) 无压打开。MACD hist 翻红 (technical.macd.value.hist=+0.3805) 动能转强，但 dif=-0.5834/dea=-0.7737 仍在零轴下，金叉级别低。RSI14=62.73 偏强未超买；KDJ J=105.22 (technical.kdj.value.j=105.2246) 极度超买。close=32.53 已逼近 BOLL 上轨 33.46 (technical.boll.value.upper=33.4593)。precursor=1.0（22日涨停2次·量峰/中位3.82x）但 consolidation=0（近10日振幅20.3%≥20%，无平台）。支撑: ma5/ma10 ≈28.7；压力: BOLL 上轨 33.46。风险: J 值极端+贴上轨，顶部钝化回撤；振幅大无平台支撑，追高即接盘。","fundamental":"质地: 中 估值: 合理偏低。PE=27.61 (fundamentals.pe.value)、pe_ttm=26.46 (fundamentals.pe_ttm.value) 家居用品行业中性；PB=1.2243 (fundamentals.pb.value) 接近净资产、ps_ttm=0.3695 (fundamentals.ps_ttm.value) 低，估值不贵；股息 dv_ttm=3.9041% (fundamentals.dv_ttm.value) 偏高有安全垫。成长: or_yoy=21.27% (fundamentals.or_yoy.value)、netprofit_yoy=13.72% (fundamentals.netprofit_yoy.value) 营收双位数增长但利润增速<营收，毛利率仅 18.75% (fundamentals.grossprofit_margin.value) 偏薄。ROE 单季=1.6087% (fundamentals.roe.value, 报告期 20260331) 一季度数年化一般。债务: debt_to_assets=65.12% (fundamentals.debt_to_assets.value) 偏高有杠杆风险。市值 45.24 亿 (fundamentals.total_mv.value=452385.05 万) 小盘。是否支撑现价: 存疑——估值合理但盈利质量(薄毛利+高负债)只能托底，撑不起一字板高位投机溢价。风险: 高负债+薄毛利下景气波动放大；财报为 20260331，时效滞后。","news":"催化: 无 板块: 家居用品 (basic.industry)，单股无法判板块轮动，本系统不评估板块合力。利好: 无实质性——近 10 条 news 全为程序性公告。利空: 控股股东股份质押 (news[5]: 20260501) 提示股东资金面，属中性偏关注。其余股东会决议/法律意见书/业绩说明会/薪酬方案 (news[0-4,6-9]) 均为噪声。风险: 一字板/顶开行情缺乏消息支撑，纯资金博弈，题材真空下持续性弱。","sentiment":"资金: 分歧 情绪: 温和偏亢奋（局部）。主力近 5 日净流入 +3525.04 万 (moneyflow.main_net_5d_wan.value) 为正，资金有进场；龙虎榜上榜 (moneyflow.lhb_on_list=true) 但净买仅 +302.8 万 (moneyflow.lhb_net_amount=3028042.16 元) 金额偏小，多空对倒分歧大、非一线游资强锁仓。换手率仅 1.29% (fundamentals.turnover_rate.value) 偏低——一字板/顶开缩量封板特征，换手不充分。北向 [数据缺失:northbound_net_yi]。游资迹象: 有（龙虎榜）但力度弱，难判锁仓 vs 出货。风险: 缩量一字若次日资金不接力，易高开低走，分歧转一致下跌。"},"debate":{"bull":["技术全多头：close=32.53 站上全部 6 均线 (technical.ma)，clear_top=true (yaogu.value.clear_top) 无压打开，MACD hist 翻红 (technical.macd.value.hist=+0.3805) 动能转强","前期试盘到位：precursor=1.0，22日2次涨停+量峰/中位3.82x (yaogu.value.detail.precursor)，有资金运作痕迹","主力资金进场：近5日主力净流入 +3525.04 万 (moneyflow.main_net_5d_wan.value)，且龙虎榜上榜 (moneyflow.lhb_on_list=true)","估值有安全垫：PB=1.2243 (fundamentals.pb.value) 近净资产、ps_ttm=0.3695 (fundamentals.ps_ttm.value)、dv_ttm=3.9041% (fundamentals.dv_ttm.value) 高股息，下行空间相对有限","营收高增：or_yoy=21.27% (fundamentals.or_yoy.value)，基本面非垃圾股","[推测] 一字板/顶开形态(clear_top=true)显示短线有强势资金主导，存在情绪溢价惯性（无次日盘口 evidence，降权）"],"bear":["极度超买：KDJ J=105.22 (technical.kdj.value.j=105.2246)，close 逼近 BOLL 上轨 33.46 (technical.boll.value.upper=33.4593)，回撤概率高","无题材无催化：10 条 news 全为程序性公告，hotspot 无 (analyst-news)，退潮期纯资金博弈难持续","妖股要件不全：hits 仅 2/4，consolidation=0（近10日振幅20.3% (yaogu.value.detail.consolidation)），无平台支撑，非强妖","龙虎榜分歧：净买仅 +302.8 万 (moneyflow.lhb_net_amount=3028042.16 元) 偏小，换手率仅1.29% (fundamentals.turnover_rate.value)，缩量一字次日易断板","MACD 零轴下：dif=-0.5834/dea=-0.7737 (technical.macd.value) 仍负，中期未转强，hist 翻红仅短线修复","高杠杆薄毛利：debt_to_assets=65.12% (fundamentals.debt_to_assets.value)、毛利率18.75% (fundamentals.grossprofit_margin.value)，撑不起投机高溢价；北向 [数据缺失:northbound_net_yi]"],"manager":"中性偏谨慎：技术多头+主力流入 vs 极度超买+无催化+缩量分歧+退潮期，证据两难，judged 一字板顶部博弈而非可持续主升。"},"trader_thesis":"一字板/顶开候选(yaogu.value.clear_top=true)，技术站上全部6均线(technical.ma)、主力5日净流入+3525.04万(moneyflow.main_net_5d_wan.value)、MACD hist翻红(technical.macd.value.hist=+0.3805)偏多；但 KDJ J=105.22(technical.kdj.value.j=105.2246)极度超买、close逼近BOLL上轨33.46(technical.boll.value.upper=33.4593)、换手仅1.29%(fundamentals.turnover_rate.value)缩量、龙虎榜净买仅302.8万(moneyflow.lhb_net_amount=3028042.16元)分歧、无实质催化(news全公告)、妖股仅2/4。退潮期不追高，已有仓位 HOLD 不加，止损 ma5=28.712 下方。","risk_debate":{"aggressive":"trader 偏保守点: 主力5日净流入+3525.04万(moneyflow.main_net_5d_wan.value)+全均线多头(technical.ma)+clear_top=true(yaogu.value.clear_top)，纯空仓 HOLD 可能踏空情绪惯性。更积极建议: 仓位可至 12%，止损守 ma10=28.639(technical.ma.value.ma10)给波动空间，次日放量过 BOLL 上轨 33.46 再加。仍需警惕: J=105.22(technical.kdj.value.j)极端，追高即顶部接盘。","conservative":"风险过大点: KDJ J=105.22(technical.kdj.value.j=105.2246)+贴BOLL上轨33.46(technical.boll.value.upper)+换手1.29%(fundamentals.turnover_rate.value)缩量一字，次日断板一字跌停流动性归零；龙虎榜仅+302.8万(moneyflow.lhb_net_amount)非强锁仓，债务率65.12%(fundamentals.debt_to_assets.value)。稳健建议: 仓位≤5%或观望，止损ma5=28.712(technical.ma.value.ma5)严守。最坏情形: 退潮期高位一字板次日核按钮，T+1无法出。","neutral":"对激进评判: 主力流入+多头排列属实，但其'情绪惯性'无次日evidence为[推测]，过头。对保守评判: 超买+缩量+无催化的退潮风险有硬 evidence(kdj.j/turnover/news)，更可信。折中风控: 仓位 5-10%(取8%)，止损 ma5=28.712(technical.ma.value.ma5)，周期1-3日；触发减仓: 跌破ma5或次日开板放量滞涨；加仓条件: 放量站稳BOLL上轨33.46(technical.boll.value.upper)且板块共振(本系统不评估,需人工)。关键前提: 北向 [数据缺失:northbound_net_yi]，按更保守处理。","_note":"neutral 同轮可见 aggressive/conservative"},"portfolio_decision":"终裁 HOLD，置信低，position_pct=8%（采纳 neutral 折中，介于 aggressive 12% 与 conservative 5% 之间；妖股 hits=2<3 但 clear_top 一字板高位博弈，仍按博弈性轻仓约束 ≤15%）。止损 28.71（ma5=28.712 下方，采纳 conservative/neutral 严守 ma5 意见，否决 aggressive 放宽至 ma10）。理由：技术多头+主力流入支持不立即清仓，但极度超买(J=105.22)+缩量(换手1.29%)+无催化+退潮期，不构成 BUY 加仓理由。QC 提示：thesis 全部论据数值已溯源 PASS；北向 [数据缺失:northbound_net_yi] 不作核心依据，置信受限于低。退潮期诚实定性——不制造看多，开板/破 ma5 即离场。","qc":{"status":"PASS","verified":["clear_top=true (yaogu.value.clear_top=true)","站上全部6均线 (technical.ma: close 32.53 > ma5 28.712...ma250 31.033)","主力5日净流入 +3525.04万 (moneyflow.main_net_5d_wan.value=3525.04)","MACD hist 翻红 +0.3805 (technical.macd.value.hist=0.3805)","KDJ J=105.22 (technical.kdj.value.j=105.2246)","BOLL 上轨 33.46 (technical.boll.value.upper=33.4593)","换手率 1.29% (fundamentals.turnover_rate.value=1.2922)","龙虎榜净买 302.8万 (moneyflow.lhb_net_amount=3028042.16 元)","止损 ma5=28.712 (technical.ma.value.ma5=28.712)","妖股 hits=2 (yaogu.value.hits=2)","news 全为程序性公告 (news.value 10 条 type=公告)"],"unverified":[],"confidence_downgraded":false},"evidence_refs":[{"claim":"一字板/顶开候选，无压打开","key":"yaogu.value.clear_top","value":true},{"claim":"close 站上全部 6 均线","key":"technical.ma.value","value":{"close":32.53,"ma5":28.712,"ma10":28.639,"ma20":29.8445,"ma55":30.9998,"ma120":32.2341,"ma250":31.033}},{"claim":"主力近 5 日净流入","key":"moneyflow.main_net_5d_wan.value","value":3525.04},{"claim":"MACD hist 翻红动能转强但 dif/dea 仍在零轴下","key":"technical.macd.value","value":{"dif":-0.5834,"dea":-0.7737,"hist":0.3805}},{"claim":"KDJ J 极度超买","key":"technical.kdj.value.j","value":105.2246},{"claim":"close 逼近 BOLL 上轨","key":"technical.boll.value.upper","value":33.4593},{"claim":"换手率偏低缩量","key":"fundamentals.turnover_rate.value","value":1.2922},{"claim":"龙虎榜上榜但净买偏小分歧","key":"moneyflow.lhb_net_amount","value":3028042.16},{"claim":"妖股要件 2/4，consolidation=0（振幅20.3%）","key":"yaogu.value","value":{"hits":2,"subscores":{"precursor":1.0,"consolidation":0.0,"pressure":1.0,"hotspot":null}}},{"claim":"估值合理偏低 PB 近净资产、高股息","key":"fundamentals.pb.value/dv_ttm.value","value":{"pb":1.2243,"dv_ttm":3.9041}},{"claim":"高负债薄毛利","key":"fundamentals.debt_to_assets.value/grossprofit_margin.value","value":{"debt_to_assets":65.1174,"grossprofit_margin":18.7458}},{"claim":"营收高增","key":"fundamentals.or_yoy.value","value":21.2735},{"claim":"止损位 ma5 下方","key":"technical.ma.value.ma5","value":28.712},{"claim":"北向数据缺失","key":"moneyflow.northbound_net_yi.reason","value":"moneyflow_hsgt 异常: 参数校验失败"},{"claim":"news 全为程序性公告无实质催化","key":"news.value","value":"10 条 type=公告"}]},{"code":"000417","name":"合百集团","industry":"百货","verdict":"SELL","confidence":"中","position_pct":0,"stop_loss":9.5,"horizon":"1-3 交易日（短线，已属右侧末段，不建仓）","yaogu_hits":2,"key_risks":["极度超买顶部信号：RSI14=82.35、KDJ J=90.11、close 10.24 较 BOLL 上轨 9.6924 高出 5.65%、较 MA20=7.3885 高出 38.6%，技术性回调/一字跌停风险高","主力大额出货：主力近 5 日净流出 1.2 亿(moneyflow.main_net_5d_wan=-12013.12)，龙虎榜净买仅 +1602 万(lhb_net_amount=16024870.3)，量级悬殊，高位对倒出货嫌疑","基本面严重背离：pe_ttm=53.51、roe 单季 1.36%、净利同比 -14.58%、营收同比 -16.86%，无任何业绩支撑高位股价"],"analysts":{"technical":"趋势: 多头但极度过热(右侧末段) | 妖股: 2/4 (precursor 1.0 / consol 0.0 / hotspot 无 / pressure 1.0)。close 站上 6/6 均线无压打开(yaogu.pressure=1.0, clear_top=true)、MACD 金叉(macd.hist=0.7035>0)，多头排列成立。但严重超买: RSI14=82.35(rsi14)、KDJ J=90.11(kdj.j)、close 10.24 突破 BOLL 上轨 9.6924 高 5.65%(boll.upper)、较 MA20 7.3885 高 38.6%(ma.ma20)，呈抛物线，顶部特征明确。precursor=1.0 是 22日4涨停量峰14.15x 的滞后右侧信号(yaogu.detail.precursor)，确认即主升浪走完；consolidation=0.0 因近10日振幅42.4%(yaogu.detail.consolidation)，非平台股。支撑: MA5=9.122/涨停阈值参考 9.5(yaogu.limit_threshold)；压力: 无技术压(clear_top)。风险: 极度超买叠加主力出货，技术性见顶回调风险高。","fundamental":"质地: 差 估值: 严重高估。pe_ttm=53.51(pe_ttm)、pe=49.85(pe)，对百货零售业(basic.industry=百货)属极端高估；pb=1.6761(pb) 看似温和但与盈利能力背离——roe 单季仅 1.3584%(roe, 报告期 20260331)、扣非 roe_dt=0.9124%，盈利能力孱弱。成长性恶化: 净利同比 -14.58%(netprofit_yoy)、营收同比 -16.8636%(or_yoy) 双降。债务率 52.19%(debt_to_assets) 中性偏高；股息率仅 1.0742%(dv_ttm)。是否支撑现价: 否——估值与盈利严重背离，无基本面逻辑支撑 10.24 的价格。风险: Q1 报(20260331)滞后，且营收净利双降趋势未现拐点。","news":"催化: 无 板块: 百货，无轮动迹象证据。10 条公告全为治理类(news[1-9]: 独董/对外担保/关联交易/薪酬制度、2025年度股东会决议、聘任副总经理)，无业绩/并购/重组/订单/政策实质利好。利好: 无实质利好。利空: 20260520 股票交易异常波动公告(news[0])——涨停后被动披露，属风险/监管关注信号而非催化。风险: 缺乏题材支撑下的纯资金驱动行情，催化真空，hotspot 无法成立(yaogu.hotspot=null + news 无题材)。","sentiment":"资金: 分歧偏流出 情绪: 亢奋(顶部)。换手率 33.32%(turnover_rate) 极高=情绪亢奋且巨大分歧。主力近 5 日净流出 1.2 亿(main_net_5d_wan=-12013.12)，而龙虎榜上榜(lhb_on_list=true)净买仅 +1602 万(lhb_net_amount=16024870.3)，两者量级悬殊——主力出货远大于游资接力，高位对倒/派发嫌疑大。游资迹象: 有(龙虎榜上榜)，但净额小不足以支撑。北向 [数据缺失:northbound_net_yi]。风险: 主力持续流出 + 超高换手，资金接力断档则一字跌停。"},"debate":{"bull":["多头排列+无压打开: close 站上 6/6 均线(yaogu.pressure=1.0, clear_top=true)、MACD 金叉 hist=0.7035(macd.hist)，上方无技术压力位","妖股 precursor 命中: 22 日 4 次涨停、量峰/中位=14.15x(yaogu.detail.precursor, subscore=1.0)，资金曾高度活跃","龙虎榜有游资介入: lhb_on_list=true、净买 +1602 万(lhb_net_amount=16024870.3)，存在博弈接力可能","趋势仍在多头通道: close 10.24 远高于所有中长期均线(ma.ma250=6.7917, ma.ma120=7.5691)，中期趋势未破","[第2轮反驳空头] 空头称主力流出，但龙虎榜仍有净买入(lhb_net_amount=16024870.3)，超买不等于立即下跌，强势股可钝化——但承认主力 -1.2亿(main_net_5d_wan)远超游资净买，接力力度不足","[第2轮反驳空头] 空头称估值高，但 pb 仅 1.6761(pb)、市值 79.86 亿(total_mv)非大盘高估值股——然承认 pe_ttm 53.51 与 roe 0.91% 的盈利背离难以辩护"],"bear":["极度超买顶部: RSI14=82.35(rsi14)、KDJ J=90.11(kdj.j)、close 突破 BOLL 上轨 5.65%(boll.upper=9.6924)、较 MA20 高 38.6%(ma.ma20)，抛物线见顶特征","主力大额出货: 近 5 日净流出 1.2 亿(main_net_5d_wan=-12013.12)，龙虎榜净买仅其 1/7(lhb_net_amount=16024870.3)，高位派发","基本面严重背离: pe_ttm=53.51(pe_ttm)、roe 单季 1.36%(roe)、净利 -14.58%(netprofit_yoy)、营收 -16.86%(or_yoy)，无业绩支撑","催化真空: 10 条公告全为治理噪声、唯一异动公告(news[0])是风险信号，hotspot 无法成立(yaogu.hotspot=null)，纯资金驱动","[第2轮反驳多头] 多头称无压打开是利好，但 clear_top + 突破上轨在 RSI82/J90 下恰是顶背离温床，无压=无支撑接盘，回落更快(boll.upper, rsi14)","[第2轮反驳多头] 多头称 precursor 命中显示活跃，但 precursor=1.0 是 22 日 4 涨停的滞后右侧信号(yaogu.detail.precursor)，确认即主升浪走完，且 consolidation=0.0(振幅42.4%)说明无健康平台，是高波动末段而非蓄势"],"manager":"统一研判看空——技术极度超买叠加主力 1.2 亿净流出与基本面双降，妖股属性弱(hits=2,catalyst真空)，右侧末段，看空。"},"trader_thesis":"SELL/不建仓。技术极度超买见顶: RSI14=82.35(rsi14=82.3492)、KDJ J=90.11(kdj.j=90.1085)、close 10.24 较 BOLL 上轨高 5.65%(boll.upper=9.6924)、较 MA20 高 38.6%(ma.ma20=7.3885)。资金面派发: 主力 5 日净流出 1.2 亿(main_net_5d_wan=-12013.12)，龙虎榜净买仅 1602 万(lhb_net_amount=16024870.3)，量级悬殊属高位出货。基本面无支撑: pe_ttm=53.51(pe_ttm=53.5104)、roe 单季 1.36%(roe=1.3584)、净利同比 -14.58%(netprofit_yoy=-14.58)、营收 -16.86%(or_yoy=-16.8636)。催化真空(news 全治理类)。yaogu hits=2(yaogu.value.hits) 妖股属性弱。退潮期回避，position 0%，破涨停阈值 9.5(yaogu.limit_threshold) 确认离场。","risk_debate":{"aggressive":"过保守点: 趋势仍多头无压打开(yaogu.pressure=1.0, clear_top=true)、MACD 金叉(macd.hist=0.7035)，强势股超买可钝化，0% 仓位可能踏空续涨。更积极建议: 若执意博弈，仅 ≤5% 试探性仓位、止损死守 9.5 涨停阈值(yaogu.limit_threshold)、隔日不破即走。仍需警惕: 主力 -1.2 亿出货(main_net_5d_wan)力度远超龙虎榜净买(lhb_net_amount=16024870.3)，接力随时断。","conservative":"风险过大点: 任何多头仓位都过大——RSI14=82.35(rsi14)、J=90.11(kdj.j)、突破 BOLL 上轨(boll.upper)，叠加主力 1.2 亿出货(main_net_5d_wan=-12013.12)与基本面双降(netprofit_yoy=-14.58, or_yoy=-16.8636)，一字跌停风险实在。稳健建议: 0% 仓位、纯回避，持仓者借强势减仓。最坏情形: 高位放量后资金断档，连续跌停无法出逃，换手 33.32%(turnover_rate)的浮筹踩踏。","neutral":"对激进评判: 无压打开属实(clear_top)，但在 RSI82/J90 下是顶部钝化非健康突破，5% 试探的期望值为负。对保守评判: 0% 回避有 evidence 充分支撑(超买+主力流出+催化真空三重共振)，不过头。折中风控: 仓位 0%(不建仓)；若持仓则止损 9.5(yaogu.limit_threshold)、周期 1-3 日；加仓触发条件=回踩 MA20 7.3885(ma.ma20)企稳且主力转净流入。关键前提: 北向 [数据缺失:northbound_net_yi]，按更保守处理。"},"portfolio_decision":"终裁 SELL/0% 仓位，批准 trader 方向并采纳保守风控为主、中立风控可执行细则。理由: 技术极度超买(rsi14=82.3492, kdj.j=90.1085, close 破 BOLL 上轨 boll.upper=9.6924)、主力 5 日净流出 1.2 亿(main_net_5d_wan=-12013.12)远超龙虎榜净买 1602 万(lhb_net_amount=16024870.3)、基本面 pe_ttm=53.51 与净利营收双降(netprofit_yoy=-14.58, or_yoy=-16.8636)、催化真空(news 全治理类)四重看空共振。妖股 hits=2(yaogu.value.hits) 属性弱且 hotspot 无法成立(yaogu.hotspot=null)，无博弈价值。退潮期诚实给 SELL，与 §3.3a T2 综合 7/100 回避一致。对 trader 决策无调整。QC 提示: 全部论据已溯源 evidence，PASS；北向 [数据缺失:northbound_net_yi] 不影响核心结论。confidence=中(非高: 技术强势钝化与一字下跌时点不可测，故不绝对)。","qc":{"status":"PASS","verified":["RSI14=82.35 (rsi14=82.3492)","KDJ J=90.11 (kdj.j=90.1085)","close 较 BOLL 上轨高 5.65% (close=10.24, boll.upper=9.6924)","close 较 MA20 高 38.6% (close=10.24, ma.ma20=7.3885)","主力 5 日净流出 1.2 亿 (main_net_5d_wan=-12013.12)","龙虎榜净买 1602 万 (lhb_net_amount=16024870.3)","pe_ttm=53.51 (pe_ttm=53.5104)","roe 单季 1.36% (roe=1.3584)","净利同比 -14.58% (netprofit_yoy=-14.58)","营收同比 -16.86% (or_yoy=-16.8636)","yaogu hits=2 (yaogu.value.hits=2)","止损/涨停阈值 9.5 (yaogu.limit_threshold=9.5)","换手率 33.32% (turnover_rate=33.32)","MACD hist=0.7035 金叉 (macd.hist=0.7035)"],"unverified":[],"confidence_downgraded":false},"evidence_refs":[{"claim":"RSI14 严重超买","key":"technical.rsi14.value","value":82.3492},{"claim":"KDJ J 值高位超买","key":"technical.kdj.value.j","value":90.1085},{"claim":"BOLL 上轨已被突破","key":"technical.boll.value.upper","value":9.6924},{"claim":"MA20 远低于现价","key":"technical.ma.value.ma20","value":7.3885},{"claim":"MACD 金叉","key":"technical.macd.value.hist","value":0.7035},{"claim":"主力近5日净流出1.2亿","key":"moneyflow.main_net_5d_wan.value","value":-12013.12},{"claim":"龙虎榜上榜净买1602万","key":"moneyflow.lhb_net_amount.value","value":16024870.3},{"claim":"PE-TTM 严重高估","key":"fundamentals.pe_ttm.value","value":53.5104},{"claim":"ROE 单季孱弱","key":"fundamentals.roe.value","value":1.3584},{"claim":"净利润同比负增长","key":"fundamentals.netprofit_yoy.value","value":-14.58},{"claim":"营收同比负增长","key":"fundamentals.or_yoy.value","value":-16.8636},{"claim":"妖股命中2要件属性弱","key":"yaogu.value.hits","value":2},{"claim":"涨停阈值/止损参考","key":"yaogu.value.limit_threshold","value":9.5},{"claim":"换手率极高情绪亢奋","key":"fundamentals.turnover_rate.value","value":33.32}]}]};</script>
+<script>
+const B = window.__BATCH__;
+const verdictRank = {BUY:3, HOLD:2, SELL:1};
+const confRank = {'高':3,'中':2,'低':1};
+const ITEMS = B.stocks.slice();
+
+function esc(s){ if(s==null) return ''; return String(s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+let sortKey='conf', sortDir='desc', filter='ALL';
+
+function defaultSort(arr){
+  // 置信度 -> 仓位 desc
+  return arr.slice().sort((a,b)=>{
+    const c = confRank[b.confidence]-confRank[a.confidence];
+    if(c) return c;
+    return (b.position_pct||0)-(a.position_pct||0);
+  });
+}
+function getSorted(){
+  let arr = ITEMS.filter(s=> filter==='ALL' ? true : s.verdict===filter);
+  if(sortKey==='default') return defaultSort(arr);
+  const dir = sortDir==='desc'?-1:1;
+  arr.sort((a,b)=>{
+    let av,bv;
+    switch(sortKey){
+      case 'verdict': av=verdictRank[a.verdict]; bv=verdictRank[b.verdict]; break;
+      case 'conf': av=confRank[a.confidence]; bv=confRank[b.confidence]; break;
+      case 'pos': av=a.position_pct||0; bv=b.position_pct||0; break;
+      case 'stop': av=a.stop_loss||0; bv=b.stop_loss||0; break;
+      case 'yaogu': av=a.yaogu_hits||0; bv=b.yaogu_hits||0; break;
+      case 'name': av=a.code; bv=b.code; return dir*String(av).localeCompare(String(bv));
+      default: av=0; bv=0;
+    }
+    if(av<bv) return -1*dir;
+    if(av>bv) return 1*dir;
+    // tiebreak by confidence then pos
+    const c=confRank[b.confidence]-confRank[a.confidence]; if(c) return c;
+    return (b.position_pct||0)-(a.position_pct||0);
+  });
+  return arr;
 }
 
-/* ── Render Stock Detail ──────────────────────────────── */
-function aClass(verdict){
-  const v=verdict||'';
-  if(/卖|空|压制|悲观|警戒|HOLD-LEAN-SELL|SELL|高估|质地差|偏空/.test(v)) return '';
-  if(/买|多|乐观|正面|强催化|BUY/.test(v)) return 'pos';
-  return 'neu';
+function dots(n){
+  let h='<span class="dots">';
+  for(let i=0;i<4;i++) h+= '<span class="dot'+(i<n?' on':'')+'"></span>';
+  h+= '<span class="n">'+n+'/4</span></span>';
+  return h;
+}
+function qcBadge(qc){
+  if(qc.status==='UNVERIFIED'){
+    const n=(qc.unverified||[]).length;
+    return '<span class="qc-badge fail">QC 未通过 '+n+' 条</span>';
+  }
+  return '<span class="qc-badge pass">QC PASS</span>';
 }
 
-function renderDetail(s){
-  const code=s.code.split('.')[0];
-  const ind=s.industry||'';
-  const dec = s.portfolio_decision||'';
-  const thesis = s.trader_thesis||'';
-
-  const analysts=['fundamental','technical','sentiment','news'].map(k=>{
-    const a=s.analysts[k]||{};
-    const labels={fundamental:'基本面',technical:'技术面',sentiment:'情绪面',news:'消息面'};
-    return `<div class="analyst-card">
-      <div class="hd">
-        <span class="role">${labels[k]} Analyst</span>
-        <span><span class="verd ${aClass(a.verdict)}">${a.verdict||''}</span><span class="conf">conf ${(a.confidence||0).toFixed(2)}</span></span>
-      </div>
-      <div class="sum">${stripEmoji(a.summary||'')}</div>
-    </div>`;
-  }).join('');
-
-  const bullList=(s.debate.bull||[]).map(x=>'<li>'+stripEmoji(x)+'</li>').join('');
-  const bearList=(s.debate.bear||[]).map(x=>'<li>'+stripEmoji(x)+'</li>').join('');
-
-  const risks=(s.key_risks||[]).map(r=>'<li>'+stripEmoji(r)+'</li>').join('');
-
-  const evs=(s.evidence_refs||[]).map(e=>`
-    <div class="ev-item">
-      <div class="clm">${stripEmoji(e.claim)}</div>
-      <div class="ref tip-host">${e.ref}<div class="tip-pop">溯源路径: ${e.ref}</div></div>
-    </div>`).join('');
-
-  const fbBanner = s.via_fallback ? `<div class="fb-banner"><b>[FB] 降级模式标注</b> · 本票因 Claude API 529 持续过载, 走主 agent 综合 4 视角 + 模拟 bull/bear 的降级研判, 非真正 13 agent 对抗式 pipeline. evidence 数值严谨度保持但缺多 agent 独立性, 信心度比 000417/603779 (完整 pipeline) 低一档.</div>` : '';
-
-  return `<div class="view" data-id="stk-${code}">
-    ${fbBanner}
-    <div class="stock-head">
-      <div class="left">
-        <h2>${s.code} · ${s.name} ${s.via_fallback?'<span class="fallback-tag">FB</span>':''}</h2>
-        <div class="meta">行业 ${ind} · 时间窗 ${s.horizon} · 妖股 ${s.yaogu_hits}/4 (${stripEmoji(s.yaogu_detail||'')})</div>
-      </div>
-      <div class="right">
-        <div class="stat"><div class="k">终裁</div><div class="v"><span class="verdict-block verdict-${s.verdict}">${s.verdict}</span></div></div>
-        <div class="stat"><div class="k">置信度</div><div class="v">${(s.confidence_score*100).toFixed(0)}%</div></div>
-        <div class="stat"><div class="k">无仓口径</div><div class="v">${s.position_pct}%</div></div>
-        <div class="stat"><div class="k">持仓口径</div><div class="v">${s.position_pct_held}%</div></div>
-        <div class="stat"><div class="k">QC</div><div class="v" style="font-size:10px">${qcBadge(s,true)}</div></div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3><span class="num">1</span>四分析师独立结论 (并行 subagent)</h3>
-      <div class="analyst-grid">${analysts}</div>
-    </div>
-
-    <div class="section">
-      <h3><span class="num">2</span>多空辩论 2 轮 (researcher subagent)</h3>
-      <div class="debate-grid">
-        <div class="debate-side bull">
-          <div class="hd">[+] BULL 多头<span class="conf">conf ${(s.debate.bull_confidence||0).toFixed(2)}</span></div>
-          <ul>${bullList}</ul>
-        </div>
-        <div class="debate-side bear">
-          <div class="hd">[-] BEAR 空头<span class="conf">conf ${(s.debate.bear_confidence||0).toFixed(2)}</span></div>
-          <ul>${bearList}</ul>
-        </div>
-      </div>
-      <div class="manager-bar"><b>Research Manager 汇总:</b>${stripEmoji(s.debate.manager||'')}</div>
-    </div>
-
-    <div class="section">
-      <h3><span class="num">3</span>Trader Thesis</h3>
-      <div class="thesis-block">${stripEmoji(thesis)}</div>
-    </div>
-
-    <div class="section">
-      <h3><span class="num">4</span>风控三方辩论</h3>
-      <div class="risk-grid">
-        <div class="risk-col aggr"><div class="hd">[A] Aggressive 激进</div><p>${stripEmoji(s.risk_debate.aggressive||'')}</p></div>
-        <div class="risk-col cons"><div class="hd">[C] Conservative 保守</div><p>${stripEmoji(s.risk_debate.conservative||'')}</p></div>
-        <div class="risk-col neu"><div class="hd">[N] Neutral 中性</div><p>${stripEmoji(s.risk_debate.neutral||'')}</p></div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3><span class="num">5</span>Portfolio Manager 终裁</h3>
-      <div class="portfolio-box">
-        <div class="hd">Final Verdict · ${s.verdict} · conf ${(s.confidence_score*100).toFixed(0)}%</div>
-        <p>${stripEmoji(dec)}</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3><span class="num">6</span>Stop-Loss 规则</h3>
-      <div class="thesis-block" style="border-left-color:var(--redMuted);background:var(--redPale)">${stripEmoji(s.stop_loss||'')}</div>
-    </div>
-
-    <div class="section">
-      <h3><span class="num">7</span>Key Risks (${(s.key_risks||[]).length})</h3>
-      <ul class="risk-list">${risks}</ul>
-    </div>
-
-    <div class="section">
-      <h3><span class="num">8</span>QC Audit · ${s.qc.status} (verified ${s.qc.verified_count}, unverified ${s.qc.unverified_count})</h3>
-      <button class="ev-toggle" aria-expanded="false" onclick="toggleEv(this)">
-        <span>Evidence Refs · ${(s.evidence_refs||[]).length} 条溯源</span><span class="arr">›</span>
-      </button>
-      <div class="ev-list">${evs}</div>
-    </div>
-  </div>`;
+function analystCard(cls,label,txt){
+  if(!txt) return '';
+  return '<div class="acard"><div class="ah"><span class="ai '+cls+'">'+label+'</span></div>'+
+    '<div class="abody">'+esc(txt)+'</div></div>';
 }
 
-function toggleEv(btn){
-  const list=btn.nextElementSibling;
-  const o=list.classList.toggle('open');
-  btn.classList.toggle('open',o);
-  btn.setAttribute('aria-expanded', o?'true':'false');
+function detailHTML(s){
+  const a=s.analysts||{};
+  let h='<div class="detail">';
+  h+='<div class="detail-head"><span class="dh-name">'+esc(s.code)+' '+esc(s.name)+'</span>'+
+     '<span class="vb '+s.verdict+'">'+s.verdict+'</span>'+
+     '<span class="conf '+s.confidence+'">置信 '+esc(s.confidence)+'</span>'+
+     qcBadge(s.qc)+
+     '<span class="dh-meta">仓位 '+ (s.position_pct||0) +'% · 止损 '+esc(s.stop_loss)+' · '+esc(s.horizon)+'</span></div>';
+
+  // analysts
+  h+='<div class="dlabel">四分析师独立结论</div>';
+  h+='<div class="analysts">';
+  h+=analystCard('tech','技术面 TECHNICAL', a.technical);
+  h+=analystCard('fund','基本面 FUNDAMENTAL', a.fundamental);
+  h+=analystCard('news','消息面 NEWS', a.news);
+  h+=analystCard('sent','情绪面 SENTIMENT', a.sentiment);
+  h+='</div>';
+
+  // debate
+  const d=s.debate||{};
+  h+='<div class="dlabel">多空辩论</div>';
+  h+='<div class="debate">';
+  h+='<div class="dcol bull"><div class="dch">多方 BULL</div><ul>'+
+     (d.bull||[]).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>';
+  h+='<div class="dcol bear"><div class="dch">空方 BEAR</div><ul>'+
+     (d.bear||[]).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>';
+  h+='</div>';
+  if(d.manager) h+='<div class="manager"><span class="mlab">研究经理收敛</span>'+esc(d.manager)+'</div>';
+
+  // trader
+  h+='<div class="dlabel">交易员论点</div>';
+  h+='<div class="trader">'+esc(s.trader_thesis)+'</div>';
+
+  // risk debate
+  const r=s.risk_debate||{};
+  h+='<div class="dlabel">三方风控辩论</div>';
+  h+='<div class="risk3">';
+  h+='<div class="rcard"><span class="rh agg">激进 AGGRESSIVE</span><div class="rbody">'+esc(r.aggressive)+'</div></div>';
+  h+='<div class="rcard"><span class="rh con">保守 CONSERVATIVE</span><div class="rbody">'+esc(r.conservative)+'</div></div>';
+  h+='<div class="rcard"><span class="rh neu">中立 NEUTRAL</span><div class="rbody">'+esc(r.neutral)+'</div></div>';
+  h+='</div>';
+
+  // final decision
+  h+='<div class="dlabel">组合经理终裁</div>';
+  h+='<div class="final"><div class="flab">最终决策 · '+
+     '<span class="vb '+s.verdict+'">'+s.verdict+'</span></div>'+
+     '<div class="ftxt">'+esc(s.portfolio_decision)+'</div></div>';
+
+  // QC detail
+  const qc=s.qc||{};
+  h+='<div class="dlabel">QC 质检</div>';
+  h+='<div class="qc-detail">'+qcBadge(qc)+' — 论据数值溯源校验（不校验研判逻辑）。已核验 '+
+     (qc.verified||[]).length+' 条。';
+  if(qc.status==='UNVERIFIED' && (qc.unverified||[]).length){
+    h+='<div class="un">未通过项：</div><ul>'+
+       (qc.unverified||[]).map(x=>'<li class="un">'+esc(x)+'</li>').join('')+'</ul>';
+  }
+  h+='</div>';
+
+  // evidence refs
+  const refs=s.evidence_refs||[];
+  h+='<div class="dlabel">溯源 evidence_refs</div>';
+  h+='<div class="evi-info">悬停任意行查看 key / value。共 '+refs.length+' 条溯源。</div>';
+  h+='<table class="evi-table"><thead><tr><th style="width:42%">论据 claim</th><th style="width:32%">字段 key</th><th>取值 value</th></tr></thead><tbody>';
+  refs.forEach(rf=>{
+    let v=rf.value;
+    if(v!==null && typeof v==='object') v=JSON.stringify(v);
+    h+='<tr title="'+esc(rf.key)+' = '+esc(v)+'"><td>'+esc(rf.claim)+'</td>'+
+       '<td class="ek mono">'+esc(rf.key)+'</td>'+
+       '<td class="ev mono">'+esc(v)+'</td></tr>';
+  });
+  h+='</tbody></table>';
+
+  h+='</div>';
+  return h;
 }
 
-/* ── Mount ────────────────────────────────────────────── */
-const content=document.getElementById('content');
-content.innerHTML = renderOverview() + BATCH.stocks.map(renderDetail).join('');
+let openCode=null;
+function render(){
+  const arr=getSorted();
+  const tb=document.getElementById('ovbody');
+  let h='';
+  arr.forEach(s=>{
+    const riskSum=(s.key_risks&&s.key_risks[0])? s.key_risks[0].slice(0,90)+(s.key_risks[0].length>90?'…':'') : '';
+    h+='<tr class="datarow'+(openCode===s.code?' open':'')+'" data-code="'+s.code+'">'+
+       '<td class="td-name">'+esc(s.name)+'<span class="cd mono">'+esc(s.code)+'</span></td>'+
+       '<td class="td-ind">'+esc(s.industry)+'</td>'+
+       '<td><span class="vb '+s.verdict+'">'+s.verdict+'</span></td>'+
+       '<td><span class="conf '+s.confidence+'">'+esc(s.confidence)+'</span></td>'+
+       '<td class="mono">'+(s.position_pct||0)+'%</td>'+
+       '<td class="mono">'+esc(s.stop_loss)+'</td>'+
+       '<td>'+dots(s.yaogu_hits||0)+'</td>'+
+       '<td>'+qcBadge(s.qc)+'</td>'+
+       '<td class="risk-sum">'+esc(riskSum)+'</td>'+
+       '<td class="expand-ind">'+(openCode===s.code?'收起 ▲':'展开 ▼')+'</td>'+
+       '</tr>';
+    if(openCode===s.code){
+      h+='<tr class="detail-row"><td colspan="10">'+detailHTML(s)+'</td></tr>';
+    }
+  });
+  tb.innerHTML=h;
+  // update header arrows
+  document.querySelectorAll('th[data-sk]').forEach(th=>{
+    const arr=th.querySelector('.arr');
+    if(!arr) return;
+    arr.textContent = (th.dataset.sk===sortKey) ? (sortDir==='desc'?'▼':'▲') : '↕';
+  });
+}
 
-/* Wire detail-link clicks */
-content.addEventListener('click',e=>{
-  const a=e.target.closest('[data-go]');
-  if(a){ e.preventDefault(); switchTab(a.dataset.go); }
-});
+function init(){
+  // KPI
+  const c={BUY:0,HOLD:0,SELL:0};
+  B.stocks.forEach(s=>c[s.verdict]=(c[s.verdict]||0)+1);
+  document.getElementById('kpiBHS').innerHTML=
+    '<span class="b">'+c.BUY+'</span><em>B</em> · '+
+    '<span class="h">'+c.HOLD+'</span><em>H</em> · '+
+    '<span class="s">'+c.SELL+'</span><em>S</em>';
+
+  // table interactions (event delegation)
+  document.getElementById('ovbody').addEventListener('click',e=>{
+    const tr=e.target.closest('tr.datarow');
+    if(!tr) return;
+    const code=tr.dataset.code;
+    openCode = (openCode===code)? null : code;
+    render();
+  });
+  document.querySelectorAll('th[data-sk]').forEach(th=>{
+    th.addEventListener('click',()=>{
+      const k=th.dataset.sk;
+      if(sortKey===k){ sortDir = sortDir==='desc'?'asc':'desc'; }
+      else { sortKey=k; sortDir='desc'; }
+      render();
+    });
+  });
+  document.querySelectorAll('.chip').forEach(ch=>{
+    ch.addEventListener('click',()=>{
+      filter=ch.dataset.f;
+      document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      ch.classList.add('active');
+      openCode=null;
+      render();
+    });
+  });
+  render();
+}
+document.addEventListener('DOMContentLoaded',init);
 </script>
-<!-- kengit analytics: GoatCounter -->
+<!-- kengit analytics: GoatCounter (gated, inline implementation, no CDN dependency) -->
 <script>
 window.kengitTrackVisit = function() {
   if (window._kengitTracked) return;
@@ -1152,6 +520,5 @@ if (!document.getElementById('auth-gate') || sessionStorage.getItem('kengit-auth
   }
 }
 </script>
-
 </body>
 </html>
