@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<!-- Layout: A Classic Tab -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>无限光年(INF)·漆远 PPT 提问作战清单</title>
+<style>
+  :root{
+    --blue:#1226AA; --techBlue:#00A0DF; --blueDeep:#091252; --blueMid:#2E4FD0;
+    --blueLight:#E8EEFF; --bluePale:#F4F6FF; --techLight:#E0F4FC; --techPale:#CCF0FF;
+    --green:#0EA573; --greenLight:#E6F9F0; --amber:#E89820; --amberLight:#FFF8E6;
+    --redMuted:#C85040; --redPale:#FFF0EE;
+    --white:#FFFFFF; --bg:#F5F7FC; --dark:#1A1A2E;
+    --textMid:#3A3F5C; --textLight:#6B7094; --textMuted:#9098B8; --border:#D8E2F0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  *:focus-visible{outline:2px solid var(--techBlue); outline-offset:2px; border-radius:4px;}
+  html,body{min-height:100%;}
+  body{
+    background:var(--bg); color:var(--textMid);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:12px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:0 0 40px;}
+
+  /* Header */
+  .header{
+    background:linear-gradient(135deg,var(--blueDeep),var(--blue));
+    padding:16px 24px; display:flex; justify-content:space-between; align-items:center;
+    box-shadow:0 2px 12px rgba(18,38,170,0.15); flex-wrap:wrap; gap:12px;
+  }
+  .header .h-title{font-size:17px; font-weight:700; color:#fff; letter-spacing:0;}
+  .header .h-sub{font-size:10px; color:rgba(255,255,255,0.72); margin-top:3px; letter-spacing:0.4px;}
+  .kpis{display:flex; gap:10px; flex-wrap:wrap;}
+  .kpi{
+    background:rgba(255,255,255,0.12); border-radius:8px; padding:7px 14px; text-align:center;
+    min-width:78px; backdrop-filter:blur(8px);
+  }
+  .kpi .n{font-size:19px; font-weight:800; color:#fff; line-height:1.1;}
+  .kpi .l{font-size:8px; color:rgba(255,255,255,0.72); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px;}
+
+  /* Tabs */
+  .tabbar{display:flex; background:#fff; border-bottom:1px solid var(--border); padding:0 16px; position:sticky; top:0; z-index:50; flex-wrap:wrap;}
+  .tab-btn{
+    padding:11px 18px; font-size:12px; font-weight:400; color:var(--textLight);
+    background:transparent; border:none; border-bottom:2px solid transparent; cursor:pointer;
+    transition:all 0.15s ease; font-family:inherit;
+  }
+  .tab-btn:hover{color:var(--blue); background:var(--bluePale);}
+  .tab-btn.active{color:var(--blue); background:var(--blueLight); border-bottom-color:var(--blue); font-weight:700;}
+
+  .content{padding:20px 24px;}
+  .view{display:none; animation:fade 0.15s ease;}
+  .view.active{display:block;}
+  @keyframes fade{from{opacity:0;}to{opacity:1;}}
+
+  /* Section title */
+  .sec-title{font-size:14px; font-weight:700; color:var(--blue); margin:22px 0 12px; display:flex; align-items:center; gap:8px;}
+  .sec-title:first-child{margin-top:0;}
+  .sec-title .bar{width:4px; height:15px; background:var(--blue); border-radius:2px;}
+
+  /* Card */
+  .card{
+    background:#fff; border:1px solid var(--border); border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.06); overflow:hidden; margin-bottom:14px;
+  }
+  .card-topbar{height:4px;}
+  .card-pad{padding:16px 18px;}
+
+  /* Verdict block */
+  .verdict{
+    background:#fff; border:1px solid var(--border); border-left:none; border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.06); padding:18px 20px; margin-bottom:16px;
+  }
+  .verdict p{font-size:13px; line-height:1.75; color:var(--textMid);}
+  .verdict strong{color:var(--blue); font-weight:700;}
+  .verdict .em{color:var(--redMuted); font-weight:700;}
+
+  /* Grid */
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+
+  /* mini info card */
+  .mini{background:#fff; border:1px solid var(--border); border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.06); overflow:hidden;}
+  .mini .mh{padding:10px 14px; border-bottom:1px solid var(--border); font-size:12px; font-weight:700; color:var(--blue); display:flex; align-items:center; gap:8px;}
+  .mini .mb{padding:12px 14px; font-size:12px; color:var(--textMid); line-height:1.7;}
+  .mini .mb ul{list-style:none;}
+  .mini .mb li{padding-left:16px; position:relative; margin-bottom:6px;}
+  .mini .mb li::before{content:""; position:absolute; left:2px; top:8px; width:5px; height:5px; background:var(--techBlue); border-radius:50%;}
+
+  /* TOP3 cards */
+  .top-card{margin-bottom:16px;}
+  .top-head{
+    padding:14px 18px; cursor:pointer; display:flex; align-items:center; gap:14px;
+    transition:background 0.15s ease;
+  }
+  .top-head:hover{background:var(--bluePale);}
+  .rank{
+    flex-shrink:0; width:46px; height:46px; border-radius:10px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; color:#fff; font-weight:800;
+  }
+  .rank .rn{font-size:18px; line-height:1;}
+  .rank .rl{font-size:7px; letter-spacing:1px; margin-top:1px;}
+  .rank.r1{background:linear-gradient(135deg,#091252,#1226AA);}
+  .rank.r2{background:linear-gradient(135deg,#1226AA,#2E4FD0);}
+  .rank.r3{background:linear-gradient(135deg,#2E4FD0,#00A0DF);}
+  .top-head .th-main{flex:1; min-width:0;}
+  .top-head .th-title{font-size:14px; font-weight:700; color:var(--blue); line-height:1.4;}
+  .top-head .th-ref{font-size:10px; color:var(--textLight); margin-top:3px;}
+  .top-head .chev{flex-shrink:0; color:var(--techBlue); font-size:13px; font-weight:700; transition:transform 0.2s ease;}
+  .top-card.open .chev{transform:rotate(90deg);}
+  .top-body{display:none; padding:0 18px 18px; border-top:1px solid var(--border);}
+  .top-card.open .top-body{display:block;}
+
+  .qline{font-size:12px; line-height:1.55;}
+  .quote{
+    background:var(--bluePale); border:1px solid var(--border); border-left:3px solid var(--techBlue);
+    border-radius:0 8px 8px 0; padding:12px 14px; margin:12px 0; font-size:12.5px; line-height:1.7; color:var(--textMid);
+  }
+  .lbl{display:inline-block; font-size:9px; font-weight:700; padding:2px 8px; border-radius:4px; letter-spacing:0.3px; margin-bottom:4px;}
+  .lbl-probe{background:var(--techLight); color:var(--techBlue);}
+  .lbl-strong{background:var(--greenLight); color:var(--green);}
+  .lbl-slip{background:var(--redPale); color:var(--redMuted);}
+  .lbl-follow{background:var(--amberLight); color:var(--amber);}
+  .block{margin-top:12px;}
+  .block .bt{font-size:12px; color:var(--textMid); line-height:1.7;}
+  .sv{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;}
+  .sv .svcol{border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:11.5px; line-height:1.6;}
+  .sv .svcol.s{background:var(--greenLight); border-color:#bfe9d6;}
+  .sv .svcol.x{background:var(--redPale); border-color:#f0cdc7;}
+  .sv .svcol .ch{font-size:9px; font-weight:700; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;}
+  .sv .svcol.s .ch{color:var(--green);}
+  .sv .svcol.x .ch{color:var(--redMuted);}
+
+  /* reserve group */
+  .group{margin-bottom:12px;}
+  .group-head{
+    padding:11px 16px; cursor:pointer; display:flex; align-items:center; gap:10px;
+    background:var(--blueDeep); color:#fff; border-radius:9px 9px 0 0; transition:background 0.15s ease;
+  }
+  .group.collapsed .group-head{border-radius:9px;}
+  .group-head:hover{background:#0c1a6e;}
+  .group-head .gtag{font-size:11px; font-weight:800; background:rgba(255,255,255,0.18); border-radius:5px; width:22px; height:22px; display:flex; align-items:center; justify-content:center;}
+  .group-head .gt{flex:1; font-size:12.5px; font-weight:700; letter-spacing:0.3px;}
+  .group-head .gcount{font-size:9px; color:rgba(255,255,255,0.7); background:rgba(255,255,255,0.12); padding:2px 8px; border-radius:10px;}
+  .group-head .gchev{font-size:12px; transition:transform 0.2s ease;}
+  .group.collapsed .gchev{transform:rotate(-90deg);}
+  .group-body{background:#fff; border:1px solid var(--border); border-top:none; border-radius:0 0 9px 9px; padding:4px 0;}
+  .group.collapsed .group-body{display:none;}
+  .qitem{padding:11px 16px; border-bottom:1px solid var(--border);}
+  .qitem:last-child{border-bottom:none;}
+  .qitem .qt{font-size:12px; color:var(--textMid); line-height:1.6;}
+  .qitem .qt b{color:var(--blue); font-weight:700;}
+  .qitem .qp{font-size:11px; color:var(--textLight); margin-top:5px; padding-left:12px; border-left:2px solid var(--techLight); line-height:1.55;}
+  .qitem .qp .pk{color:var(--techBlue); font-weight:700;}
+  .pageref{display:inline-block; font-size:8.5px; font-weight:700; color:var(--blueMid); background:var(--blueLight); padding:1px 6px; border-radius:3px; margin-right:5px;}
+
+  /* forbidden */
+  .forb{
+    background:var(--redPale); border:1px solid #f0cdc7; border-radius:9px; padding:12px 16px; margin-bottom:10px;
+    display:flex; gap:12px; align-items:flex-start;
+  }
+  .forb .fno{flex-shrink:0; width:24px; height:24px; border-radius:6px; background:var(--redMuted); color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center;}
+  .forb .ft{font-size:12px; line-height:1.6; color:var(--textMid);}
+  .forb .ft b{color:var(--redMuted); font-weight:700;}
+
+  /* tactic */
+  .tactic{
+    background:#fff; border:1px solid var(--border); border-radius:9px; padding:12px 16px; margin-bottom:10px;
+    display:flex; gap:12px; align-items:flex-start; box-shadow:0 1px 4px rgba(0,0,0,0.04);
+  }
+  .tactic .tno{flex-shrink:0; width:24px; height:24px; border-radius:6px; background:var(--blue); color:#fff; font-weight:800; font-size:12px; display:flex; align-items:center; justify-content:center;}
+  .tactic .tt{font-size:12px; line-height:1.65; color:var(--textMid);}
+  .tactic .tt b{color:var(--blue); font-weight:700;}
+
+  .callout{
+    background:var(--techLight); border:1px solid var(--techBlue); border-radius:9px; padding:14px 18px; margin-bottom:16px;
+  }
+  .callout .co-t{font-size:12px; font-weight:700; color:var(--blueDeep); margin-bottom:5px; display:flex; align-items:center; gap:8px;}
+  .callout .co-b{font-size:12.5px; line-height:1.7; color:var(--textMid);}
+  .callout .co-b strong{color:var(--blue);}
+
+  .seg{display:inline-block; font-size:9px; font-weight:700; color:var(--white); background:var(--blueMid); padding:2px 9px; border-radius:4px; margin-left:8px; vertical-align:middle;}
+
+  /* footer */
+  .footer{padding:14px 24px; border-top:1px solid var(--border); margin-top:8px; font-size:9px; color:var(--textMuted); line-height:1.6; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+
+  @media (max-width:1199px){
+    .grid-2,.grid-3{grid-template-columns:1fr;}
+    .sv{grid-template-columns:1fr;}
+    .header{flex-wrap:wrap;}
+  }
+  @media (max-width:1024px){
+    .tab-btn{padding:9px 12px; font-size:11px;}
+    .content{padding:16px 14px;}
+  }
+</style>
+</head>
+<body>
+<!-- 访问密码门 -->
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+  <div style="font-family:-apple-system,sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <input id="auth-input" type="password" placeholder="Access Code" autocomplete="off"
+      style="width:200px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:1rem;font-family:-apple-system,sans-serif;outline:none;text-align:center;letter-spacing:.1em;"
+      onfocus="this.style.borderColor='rgba(255,255,255,.2)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+  </div>
+  <div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0;transition:opacity .3s">incorrect code</div>
+  <div style="font-size:.6rem;color:rgba(255,255,255,.15);margin-top:20px">Press Enter to continue</div>
+</div>
+<script>
+const AUTH_HASH = '7d153d2a4423e402868a5eb0cbe8bbdefa87bd0888eef1ea6febd769152bc0d3';
+document.addEventListener('DOMContentLoaded', function(){
+  if(sessionStorage.getItem('kengit-authed')==='1'){document.getElementById('auth-gate').remove();return}
+  const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
+  const mainEls=Array.from(document.body.children).filter(el=>el.id!=='auth-gate'&&el.tagName!=='SCRIPT'&&el.tagName!=='SVG');
+  mainEls.forEach(el=>{el.dataset.kengitHidden='1';el.style.display='none';});
+  setTimeout(()=>input.focus(),100);
+  input.addEventListener('keydown',async e=>{
+    if(e.key!=='Enter')return;
+    const val=input.value;
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(val));
+    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hash===AUTH_HASH){
+      sessionStorage.setItem('kengit-authed','1');
+      if (window.kengitTrackVisit) window.kengitTrackVisit();
+      gate.style.opacity='0';gate.style.transition='opacity .5s';
+      setTimeout(()=>{
+        gate.remove();
+        document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});
+      },500);
+    }else{
+      err.style.opacity='1';input.value='';input.style.borderColor='#E74C3C';
+      setTimeout(()=>{err.style.opacity='0';input.style.borderColor='rgba(255,255,255,.1)'},2000);
+    }
+  });
+});
+</script>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <div class="h-title">无限光年（INF）· 漆远 PPT 提问作战清单</div>
+      <div class="h-sub">财务 IT + AI 数字化专家视角 · AI for Finance 主轴 · 评估真实技术实力</div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="n">9</div><div class="l">专家 Swarm</div></div>
+      <div class="kpi"><div class="n">3</div><div class="l">必问</div></div>
+      <div class="kpi"><div class="n">20+</div><div class="l">储备问题</div></div>
+      <div class="kpi"><div class="n">6</div><div class="l">信息黑洞</div></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabbar" id="tabbar" role="tablist">
+    <button class="tab-btn active" role="tab" data-view="v1">裁决总览</button>
+    <button class="tab-btn" role="tab" data-view="v2">TOP 3 必问</button>
+    <button class="tab-btn" role="tab" data-view="v3">储备问题清单</button>
+    <button class="tab-btn" role="tab" data-view="v4">禁区 &amp; 现场打法</button>
+  </div>
+
+  <div class="content">
+
+    <!-- ============ VIEW 1 : 裁决总览 ============ -->
+    <div class="view active" id="v1">
+      <div class="verdict">
+        <p>漆远的 PPT 是一份 <strong>「硬资产 + 软叙事」的混合体</strong>：个人学术血统、OpenCoder / ActFound（Nature MI）、文档解析 / 检索的公开榜单名次——这些是<strong>真的、可查的、别碰</strong>；但「可信 / 可审计 / 可解释」从口号到工程的落差、「300 分析师 100% 使用」、「飞轮护城河」、「高毛利轻资产」——这些是<span class="em">用具体数字包装、却挂着模糊或自报信源</span>的叙事。<br><br>你的任务不是辩论他的愿景，而是用财务审计的语言 <strong>问他要「证据链」，不是要「形容词」</strong>。</p>
+      </div>
+
+      <div class="callout">
+        <div class="co-t"><span class="bar" style="width:4px;height:13px;background:var(--techBlue);border-radius:2px;"></span>判真伪的统一信号（现场只听这一个分叉）</div>
+        <div class="co-b">他能给出 <strong>具体口径 / 案例 / 数字 / 可联系 reference</strong> = 真；滑向 <strong>「我们 Ontology 引擎会处理」「客户反馈如此」「具体可以再对齐」</strong> 这类抽象兜底、把举证责任外推 = 叙事在破。</div>
+      </div>
+
+      <div class="sec-title"><span class="bar"></span>主战场与四大破绽</div>
+      <div class="grid-2">
+        <div class="mini">
+          <div class="mh">主战场（把对话拉回你的主场）</div>
+          <div class="mb"><ul>
+            <li><b>财务可审计性</b>——「可信」是工程事实还是营销形容词</li>
+            <li><b>ROI 归因</b>——效率 / 成果数字能不能被独立核实</li>
+            <li><b>数据合规</b>——跨境、隔离、授权链</li>
+          </ul></div>
+        </div>
+        <div class="mini">
+          <div class="mh">四大破绽（问题全部由此展开）</div>
+          <div class="mb"><ul>
+            <li>① 可信 / 可审计 / 可解释：口号 → 工程的鸿沟</li>
+            <li>② 数据飞轮 vs Sandbox 数据隔离 / 私有化的架构矛盾</li>
+            <li>③ 金融商业化兑现度（境外收入 + 仅恒生指数具名）</li>
+            <li>④ 毛利率（Token 定价 + 租赁算力）</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="sec-title"><span class="bar"></span>专家陪审团（9 位 · 收敛度 = 问题价值）</div>
+      <div class="card">
+        <div class="card-topbar" style="background:var(--blue);"></div>
+        <div class="card-pad" style="padding:0;">
+          <table style="width:100%; border-collapse:separate; border-spacing:0;">
+            <thead><tr style="background:var(--blueDeep);">
+              <th style="padding:8px 14px; font-size:9px; font-weight:700; color:#fff; text-align:left; text-transform:uppercase; letter-spacing:0.5px;">专家</th>
+              <th style="padding:8px 14px; font-size:9px; font-weight:700; color:#fff; text-align:left; text-transform:uppercase; letter-spacing:0.5px;">阵营</th>
+              <th style="padding:8px 14px; font-size:9px; font-weight:700; color:#fff; text-align:left; text-transform:uppercase; letter-spacing:0.5px;">分析维度</th>
+            </tr></thead>
+            <tbody id="panel-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="callout" style="background:var(--amberLight); border-color:var(--amber);">
+        <div class="co-t" style="color:#8a5a10;"><span class="bar" style="width:4px;height:13px;background:var(--amber);border-radius:2px;"></span>交叉验证信号</div>
+        <div class="co-b">多位专家<strong>独立撞到同一批问题</strong>——「可审计前置 vs 后验」（王志强 + 林涛 + Gary Marcus 三人）、「100% 使用 + 准确率责任」（陈嘉怡 + 王志强 + 李开复 + 周文 四人）、「飞轮 vs 隔离」（刘静 + 林涛 + steelman）。这三个正是 TOP 3，得到 swarm 收敛验证。</div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW 2 : TOP3 ============ -->
+    <div class="view" id="v2">
+      <p style="font-size:11px; color:var(--textLight); margin-bottom:14px;">点击任一卡片展开逐字话术 / 隐藏探针 / 强 vs 滑头答案 / 追问。按杠杆排序。</p>
+
+      <!-- TOP 1 -->
+      <div class="card top-card" id="top1">
+        <div class="card-topbar" style="background:var(--blueDeep);"></div>
+        <div class="top-head" tabindex="0" role="button" aria-expanded="false">
+          <div class="rank r1"><div class="rn">1</div><div class="rl">TOP</div></div>
+          <div class="th-main">
+            <div class="th-title">「可信」是工程事实还是营销形容词？——前置硬约束 vs 后验贴标签</div>
+            <div class="th-ref"><span class="pageref">P8 可解释</span><span class="pageref">P9 神经符号+RL</span>3 位专家独立撞到此点 · 技术核心 + 审计主场</div>
+          </div>
+          <div class="chev">&#9656;</div>
+        </div>
+        <div class="top-body">
+          <div class="quote">
+            「漆总，您 P9 的神经符号路线我特别认同，这正是我觉得金融 AI 该走的方向。我想请教一个工程落地的细节：您说的『符号约束』，是在模型<b>生成推理链之前</b>就介入、把不符合规则的路径直接剪掉（hard constraint）；还是模型<b>先生成、再用规则在输出端做校验过滤</b>？这两个在演示上很像，但在审计责任上是两码事——能不能给我举一个具体例子：系统<b>在推理中途</b>被符号规则拦下、重定向了一次错误推理的案例？」
+          </div>
+          <div class="block"><span class="lbl lbl-probe">隐藏探针</span><div class="bt">真神经符号 = 符号参与推理过程的<b>构成</b>；绝大多数工业落地只是输出端<b>后验校验</b>（generate-then-validate），却包装成「推理可控可解释」。要求<b>演示而非解释</b>，把整套叙事压成一个可证伪的单点测试。</div></div>
+          <div class="block"><div class="sv">
+            <div class="svcol s"><div class="ch">强答案</div>能说出约束嵌入的具体位置（constrained decoding / 中间步骤 formal verification / Ontology 节点 veto 权），并当场举出「中途拦截」案例。</div>
+            <div class="svcol x"><div class="ch">滑头答案</div>「我们会对所有输出做规则校验和来源追溯」——这就是<b>后验</b>，等于承认是个优秀的规则后处理系统，不是神经符号推理。滑向「Ontology 引擎会处理」=叙事破。</div>
+          </div></div>
+          <div class="block"><span class="lbl lbl-follow">追问</span><div class="bt">「如果是后验校验，那在校验触发之前中间推理仍是黑盒——当系统给出一个<b>通过了校验的错误答案</b>时，您能追溯到是哪一步推理出的问题吗？」</div></div>
+        </div>
+      </div>
+
+      <!-- TOP 2 -->
+      <div class="card top-card" id="top2">
+        <div class="card-topbar" style="background:var(--blue);"></div>
+        <div class="top-head" tabindex="0" role="button" aria-expanded="false">
+          <div class="rank r2"><div class="rn">2</div><div class="rl">TOP</div></div>
+          <div class="th-main">
+            <div class="th-title">「300 分析师 100% 使用 + 财报点评 20 分钟」——口径、准确率、谁担责</div>
+            <div class="th-ref"><span class="pageref">P14 投研</span><span class="pageref">P5 港股表格 Acc 65.18%</span>4 位专家撞到此点 · 最高收敛</div>
+          </div>
+          <div class="chev">&#9656;</div>
+        </div>
+        <div class="top-body">
+          <div class="quote">
+            「漆总，P14 那个 300 分析师 100% 使用、财报点评数小时压到 20 分钟，我看着真动心。我们内部推类似产品时栽过跟头——最初口径是『登录即算使用』，后来发现周活不到 15%。想请教贵司这个 100% 是怎么定义的（日活 / 周活 / 还是工作流强制流转）？另外这 20 分钟，是 AI 生成草稿的时间，还是分析师<b>完整交付一篇合规可发布点评</b>的端到端时间？我多问一句是因为——您 P5 里香港财务表格的解析准确率是 65%，如果点评里用到港股财报，意味着约三分之一数据点可能有误，那分析师是被明确告知了这个置信度，还是系统给了一份『看起来已验证』的完整报告？」
+          </div>
+          <div class="block"><span class="lbl lbl-probe">隐藏探针</span><div class="bt">① 100% 是「工作流强制嵌入」刷出来的合规使用（只证明 IT 集成、不证明价值），还是分析师自发依赖；② 20 分钟是否切掉了人工校对 / 合规 review 的时间；③ 把 P14 速度宣称与 P5 的 65% 准确率<b>对撞</b>——金融场景一个数字解析错 = 法律责任，谁签字谁担责。</div></div>
+          <div class="block"><div class="sv">
+            <div class="svcol s"><div class="ch">强答案</div>给出明确口径（如「当班在席分析师发起 query 占比」）+ 端到端净节省 + 输出带逐数据点置信度、低于阈值强制人工复核且有 audit trail。</div>
+            <div class="svcol x"><div class="ch">滑头答案</div>「这是客户反馈给我们的数字」「分析师会做专业判断，系统是辅助工具」——把举证责任和准确率责任全甩回给听众 / 用户。</div>
+          </div></div>
+          <div class="block"><span class="lbl lbl-follow">追问</span><div class="bt">「这篇点评发出去，合规审批节点是完全保留、还是有环节被 AI 旁路了？另外这两家券商目前是付费签约还是 POC 阶段？」</div></div>
+        </div>
+      </div>
+
+      <!-- TOP 3 -->
+      <div class="card top-card" id="top3">
+        <div class="card-topbar" style="background:var(--blueMid);"></div>
+        <div class="top-head" tabindex="0" role="button" aria-expanded="false">
+          <div class="rank r3"><div class="rn">3</div><div class="rl">TOP</div></div>
+          <div class="th-main">
+            <div class="th-title">「数据飞轮护城河」vs「Sandbox 数据隔离 / 私有化」的架构级矛盾</div>
+            <div class="th-ref"><span class="pageref">P11 飞轮</span><span class="pageref">P9 Sandbox</span><span class="pageref">P14 私有化金融客户</span>护城河逻辑硬伤 + 数据合规</div>
+          </div>
+          <div class="chev">&#9656;</div>
+        </div>
+        <div class="top-body">
+          <div class="quote">
+            「漆总，P11 的数据飞轮『积累专有领域知识、自强化』是个很漂亮的护城河逻辑，但 P9 同时讲 Sandbox 防数据泄露、私有化部署——这两个我有点想不通怎么兼容。想请教：飞轮学习的数据是<b>跨客户聚合</b>的，还是每个客户<b>完全隔离</b>？如果一家银行的业务交互数据隔离在它本地，那飞轮的『数据量优势』从哪来？如果是聚合的，A 银行的数据会不会在它同业竞争对手 B 的模型优化里被间接用到？」
+          </div>
+          <div class="block"><span class="lbl lbl-probe">隐藏探针</span><div class="bt">飞轮（要数据汇聚才转得动）与隔离 / 私有化（金融数据不出域）在架构上<b>内在冲突</b>。逼他说清飞轮实质：是模型参数跨客户更新（触碰《数据安全法》《个人信息保护法》+ 监管「数据不出域」），还是仅限客户自有 Ontology 扩充（那护城河比 PPT 窄得多，任何有标注预算的对手都能复现）。</div></div>
+          <div class="block"><div class="sv">
+            <div class="svcol s"><div class="ch">强答案</div>清晰区分「客户私有 Ontology 完全本地隔离」vs「通用基模用公开语料预训练」，说明联邦学习 / 差分隐私机制 + 合同里数据使用授权条款 + 给出可量化的跨客户泛化提升数据。</div>
+            <div class="svcol x"><div class="ch">滑头答案</div>「私有化部署保障安全」一句带过，回避「飞轮数据从哪来、到哪去」。</div>
+          </div></div>
+          <div class="block"><span class="lbl lbl-follow">追问</span><div class="bt">「合同里有没有明确写客户数据不用于基础模型迭代？如果有，飞轮护城河的实质到底是参数更新还是仅客户自有 Ontology 扩充？目前有没有实测到某客户数据贡献让模型某任务准确率提升了 X 个百分点？」</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW 3 : 储备问题 ============ -->
+    <div class="view" id="v3">
+      <p style="font-size:11px; color:var(--textLight); margin-bottom:14px;">点击分组标题折叠 / 展开。相机投放，<b style="color:var(--redMuted);">别一口气全问完</b>——3 个核心 + 2-3 个相机追问的密度最舒服。</p>
+      <div id="reserve"></div>
+    </div>
+
+    <!-- ============ VIEW 4 : 禁区 & 打法 ============ -->
+    <div class="view" id="v4">
+      <div class="sec-title"><span class="bar" style="background:var(--redMuted);"></span>禁区 — 这些一碰你就输 / 显外行 / 正中下怀<span class="seg" style="background:var(--redMuted);">steelman 警告</span></div>
+      <div id="forbidden"></div>
+
+      <div class="sec-title" style="margin-top:24px;"><span class="bar"></span>现场打法（战术收口）</div>
+      <div id="tactics"></div>
+
+      <div class="callout" style="margin-top:18px;">
+        <div class="co-t"><span class="bar" style="width:4px;height:13px;background:var(--techBlue);border-radius:2px;"></span>投放节奏</div>
+        <div class="co-b">他讲完 <strong>P14（金融页）</strong>后，先抛 <strong>TOP 2</strong>（最贴金融、4 专家共识、他难躲）；视回答质量接 <strong>TOP 1</strong>（技术核心、演示型）或 <strong>TOP 3</strong>（架构矛盾）。其余储备问题相机补充。会议不是查户口。</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span>生成流程：kenThink 战略定位 → kenmoe 9 专家 swarm → 收敛验证 TOP 3 · Corporate Dual-Blue</span>
+    <span>机密 · 仅供会议内部参考 · 2026-05-27</span>
+  </div>
+</div>
+
+<script>
+  // ---- data ----
+  var PANEL = [
+    ["陈嘉怡 · 头部券商金融科技部 AI 采购 / POC 负责人","反方｜买方DD","POC→生产落地真实性、100% 使用留存口径"],
+    ["王志强 · 四大出身、金融集团内控 / 审计总监","反方｜审计","可审计 / 可解释审计轨迹工程实现、责任归属"],
+    ["林涛 · AI 技术投前尽调专家（前大厂 NLP）","中立｜技术DD","神经符号真约束 vs 后验、benchmark 自报 vs 第三方"],
+    ["赵明 · AI Infra / 算力成本架构师","正方｜抠成本","Token 定价毛利、租赁算力可持续性、Sandbox 指标"],
+    ["周文 · 美元基金 AI 赛道投资人","中立｜VC DD","资本结构 / 营收境外 / 客户集中 / 组织收缩"],
+    ["刘静 · 金融 + 跨境数据合规律师","中立｜合规","飞轮 vs 隔离、电信数据 / 跨境、私有化责任分界"],
+    ["INF 辩护方 · 资深可信 AI 技术创始人","正方｜steelman","哪些问题不公平 / 会被化解、如何刁钻又 humble"],
+    ["Gary Marcus（神经符号旗手 + LLM 炒作批评者）","权威","神经符号真伪、benchmark 独立性"],
+    ["李开复（创新工场 + 01.AI，中国 AI 创业 DD）","权威","商业化兑现 vs PR、估值叙事 vs ARR 真相"]
+  ];
+
+  var RESERVE = [
+    {tag:"A", title:"技术真伪", items:[
+      {ref:"P5/P6", q:"<b>benchmark 独立可复现：</b>「Parser 对比里 GPT、Gemini 的数字，是您们自己调 API 测的，还是 OpenCompass / 官方榜单的盲测结果？」", p:"自测对手成绩存在测试集 / 版本 / prompt 不对等偏差。追问：『超 GPT-4 Turbo』在 OpenCompass、C-Eval 公开榜没找到 INF 提交记录，这个数字来自哪？"},
+      {ref:"P5", q:"<b>Parser 评测集泄漏：</b>「香港财务表格测试集是自建还是公开集？训练 / 测试有没有做 domain split——同一家公司的报告会不会跨集出现？」", p:"RL 在窄分布上易把测试集『记进去』。追问：65% 那剩下 35% 的错误做过 error taxonomy 吗？"},
+      {ref:"P4", q:"<b>QDGAT 传承链：</b>「那个 2020 年 QDGAT 在 DROP 上 88.4 是扎实工作，它的图推理能力今天<b>以什么具体形式</b>保留在大模型产品里——架构层继承还是团队基因延续？」", p:"用 2020 窄任务 SOTA 背书 2024 通用大模型，两者范式对立。诚实承认『团队能力早期证明』也是好答案，别穷追。"},
+      {ref:"P2/P9", q:"<b>Ontology 构建 / 维护成本：</b>「Ontology 初版人工标注占多大比例、多少专家工时？监管规则变了，更新 pipeline 是人工还是自动抽取？」", p:"若靠人堆维护，规模化是伪命题，Ontology 是维护负债不是护城河。"}
+    ]},
+    {tag:"B", title:"商业兑现", items:[
+      {ref:"李开复·最狠", q:"<b>ARR + 保底比例：</b>「已签合同的年度经常性收入大概什么量级？其中有保底年费承诺的占多少？给个数量级就行。」", p:"绕开所有过程指标直问结果，不给数字本身就是答案。"},
+      {ref:"P14", q:"<b>第二个可具名旗舰：</b>「恒生指数之外，有没有第二个客户今天能做某种程度的具名、或联合白皮书背书？」", p:"『全部不能具名』在这个体量不正常，除非收入没到客户愿意背书的程度。"},
+      {ref:"P13/P17", q:"<b>三线聚焦 + 现金跑道：</b>「金融 / AI Infra / 科学三条线收入贡献比例大概多少？有没有一条是您愿意放弃另两条也要做到第一的？」", p:"招聘降 83% + COO 离职 + 三线铺开 = 平台扩张还是找不到主赛道的多线求生。"},
+      {ref:"P14/P16", q:"<b>成果定价的合规边界：</b>「投研场景里『成果』怎么定义？分析师用了 AI 建议最后亏损算不算成果未达成？」", p:"Outcome 与投资收益绑定可能触发投顾牌照红线；逼出『Outcome』其实只是 SLA 指标而非财务结果。"},
+      {ref:"P14", q:"<b>6-12 月领先的来源：</b>「『领先其他 AI 方案 6-12 个月』是客户同期 bake-off 横评，还是先用了你们再回头比的印象？」", p:"真同场竞技 vs 社交礼貌式表达。"}
+    ]},
+    {tag:"C", title:"成本与毛利", items:[
+      {ref:"赵明·最狠 · P16", q:"<b>算力成本结构 / 毛利区间：</b>「Model-agnostic 调外部 LLM + Infra-agnostic 租算力 + 高毛利轻资产，三个同时成立很苛刻。能不能拆一下三层成本，自研层 stickiness 来自哪、毛利大致区间？」", p:"spread 从哪来。这是整个商业叙事的核心矛盾。"},
+      {ref:"P16", q:"<b>算力地理与出口管制敞口（软化版）：</b>「给东南亚 / 中东客户服务时，高性能推理算力的地理来源和采购路径是什么结构？纯云 API 还是自建 / 合作 IDC？出口管制敞口对 SLA 可持续性有没有影响？」", p:"算力是租的、跨境的、受双向管制约束 = 毛利与可用性隐性地雷。"},
+      {ref:"P16", q:"<b>Outcome 定价 vs 算力波动：</b>「市场波动时调用量尖峰、底层算力成本跟着走——Outcome 定价下这个波动是您们扛还是 pass-through 给客户？」", p:"固定算力成本 + 变量成果 fee，毛利会被峰值拖垮。"}
+    ]},
+    {tag:"D", title:"工程 / 风控", items:[
+      {ref:"P12", q:"<b>Sandbox 冷启动真相：</b>「&lt;500ms 是完全冷启动还是有常驻热池的 warm path？热池占容量比例多少？100,000 并发是峰值 burst 还是稳态？」", p:"热池占比抬高有效算力单价；benchmark 数字 vs 生产规模。"},
+      {ref:"P12", q:"<b>5% / 1% 漏识别的责任链：</b>「95% Prompt 识别意味着 5% 漏过，金融场景 1% 高风险漏拦可能是一笔违规交易。那 1% 发生时，责任是平台 / 客户 / 还是 HITL 那个人？合同有没有 SLA 和赔付？」", p:"『可信』若没有责任对价合同，就是无法落地的形容词。"},
+      {ref:"P8", q:"<b>audit trail 规格：</b>「完整记录是 append-only 不可篡改存储吗？监管要事后重现某笔信用评级结论，系统能不能在不依赖模型当前版本的情况下<b>确定性重放</b>当时的推理链？」", p:"区分『有日志』vs『可审计』（不可篡改 + 可重放 + 完整性证明）。"}
+    ]},
+    {tag:"E", title:"合规 / 数据", items:[
+      {ref:"刘静·最高杠杆 · P2/P8", q:"<b>跨境数据流：</b>「国内金融客户的数据，如果推理用到境外算力节点，在数据安全法和数据出境规定下要走安全评估。私有化部署是完全本地计算，还是有推理流量走境外节点？」", p:"基础设施级合规硬伤，无法临场即兴发明答案。"},
+      {ref:"P16", q:"<b>电信数据信用评分授权链：</b>「基于电信级用户数据做信用评分，用户授权是运营商服务协议一次性覆盖，还是这个具体用途单独授权？多法域怎么处理？」", p:"高敏个人信息目的外使用，PIPL 单独同意要求。"},
+      {ref:"P14", q:"<b>信用评级『国家标准』角色：</b>「您在这个 SME 评级国家标准里，是『提供工具的技术服务商』，还是实质参与了评级规则制定？后者在多数司法辖区会触发金融牌照 / 算法问责。」", p:"技术供应商深度介入时责任难隔离。"}
+    ]},
+    {tag:"F", title:"资本 / 组织（最敏感，必须软化）", items:[
+      {ref:"P2", q:"<b>收入境外结构：</b>「『收入大部分来自境外』有点反直觉，多数 AI 公司先在本土跑通再出海。这是有意的战略选择，还是某海外市场先成熟？海外收入是一两个大客户撑的还是分散的？」", p:"境外为主是真战略还是国内竞争失利的叙事重构 + 客户集中度。"},
+      {ref:"P2", q:"<b>Prosperity7 战略协同（软化版，不要直接质疑投资关系真伪）：</b>「注意到投资方有 Prosperity7，背后有中东资本背景，结合 PPT 拓展中东——这块有没有实质战略协同？通过这个渠道拿到中东实质商业进展了吗？」", p:"让他自己说出这个投资方到底给了什么；真的就会列中东客户 / 资源，存疑就会语焉不详。"},
+      {ref:"李开复·软化", q:"<b>谁全职推商业化（不要直接问『COO 为什么走』）：</b>「您同时挂着研究院 / 上智院 / 公司，商业化——签单、产品路线拍板——是您亲自推，还是有全职的商业化负责人？」", p:"第一执行层是否空缺，呼应 0 公开中标。"}
+    ]}
+  ];
+
+  var FORBIDDEN = [
+    "<b>别质疑学术血统 / OpenCoder / ActFound / 公开榜单名次</b>——Google Scholar、HuggingFace、榜单 URL 秒查，碰了显得没做功课。",
+    "<b>别跟他辩『Scaling Law 通不通 AGI』</b>——他二十年主场，会把你讲进去。",
+    "<b>别直接问『你 Prosperity7 投资方是不是真的』</b>——你手上是『查无证据』（负证明），他可能有 NDA 文件；公开指控式提问一旦他甩文件，你公信力损失比他大。留给会后法律 DD。",
+    "<b>别审判式问『为什么国内客户都不敢具名』</b>——预设了『不具名 = 有问题』，金融机构不具名是行业惯例，他用『惯例』就反杀你。",
+    "<b>别用 HR 口吻问『COO 为什么离职』</b>——跟你『财务 IT + AI 数字化』身份跑偏，高管变动有 N 种合理解释。",
+    "<b>别问『OpenCoder 商业化了吗』『你们能不能跟 ChatGPT 比』</b>——暴露不懂开源逻辑 / 没看 PPT 限定的赛道。"
+  ];
+
+  var TACTICS = [
+    "<b>刀藏在问题里，不要握在手上晃。</b>你手握『六大黑洞』，但全程<b>不亮</b>（不说『我查到印尼 GB200』『沙特阿美查无证据』）——用黑洞<b>设计问题方向</b>，让漆远的回答自己暴露细节，会后再 DD 核实。公开场合即使你事实正确，指控式提问也会被『商业敏感』化解。",
+    "<b>话术结构固定为『先恭维真资产 → 再问证据链』。</b>每个问题先认可他一个真东西（学术 / 开源 / 方向），降低防御，再用『我想更好地理解』『我们内部也踩过这个坑』把举证责任藏进问题里。",
+    "<b>投放节奏。</b>3 个核心 + 2-3 个相机追问的密度最舒服，别一口气全问完——会议不是查户口。",
+    "<b>判真伪的统一信号。</b>他能给具体口径 / 案例 / 数字 / 可联系 reference = 真；滑向抽象兜底 / 外推举证责任 = 叙事在破。你只需现场听这个分叉。"
+  ];
+
+  // ---- render ----
+  function camp(c){
+    if(c.indexOf("反方")===0) return "<span class='lbl lbl-slip'>"+c+"</span>";
+    if(c.indexOf("正方")===0) return "<span class='lbl lbl-strong'>"+c+"</span>";
+    if(c.indexOf("权威")===0) return "<span class='lbl' style='background:var(--blueLight);color:var(--blue);'>"+c+"</span>";
+    return "<span class='lbl lbl-probe'>"+c+"</span>";
+  }
+  (function(){
+    var pb=document.getElementById('panel-body');
+    PANEL.forEach(function(r,i){
+      var tr=document.createElement('tr');
+      tr.style.background = i%2===0 ? '#fff' : 'var(--bluePale)';
+      tr.innerHTML="<td style='padding:8px 14px;font-size:11px;color:var(--textMid);border-bottom:1px solid var(--border);font-weight:600;'>"+r[0]+"</td>"+
+                   "<td style='padding:8px 14px;font-size:10px;border-bottom:1px solid var(--border);white-space:nowrap;'>"+camp(r[1])+"</td>"+
+                   "<td style='padding:8px 14px;font-size:10px;color:var(--textLight);border-bottom:1px solid var(--border);'>"+r[2]+"</td>";
+      pb.appendChild(tr);
+    });
+  })();
+
+  (function(){
+    var box=document.getElementById('reserve');
+    RESERVE.forEach(function(g,gi){
+      var div=document.createElement('div');
+      div.className='group'+(gi>0?' collapsed':'');
+      var items=g.items.map(function(it){
+        return "<div class='qitem'><div class='qt'><span class='pageref'>"+it.ref+"</span>"+it.q+"</div><div class='qp'><span class='pk'>探针 · </span>"+it.p+"</div></div>";
+      }).join('');
+      div.innerHTML="<div class='group-head' tabindex='0' role='button'><span class='gtag'>"+g.tag+"</span><span class='gt'>"+g.title+"</span><span class='gcount'>"+g.items.length+" 题</span><span class='gchev'>&#9662;</span></div><div class='group-body'>"+items+"</div>";
+      box.appendChild(div);
+      div.querySelector('.group-head').addEventListener('click',function(){div.classList.toggle('collapsed');});
+      div.querySelector('.group-head').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();div.classList.toggle('collapsed');}});
+    });
+  })();
+
+  (function(){
+    var fb=document.getElementById('forbidden');
+    FORBIDDEN.forEach(function(t,i){
+      var d=document.createElement('div'); d.className='forb';
+      d.innerHTML="<div class='fno'>&times;</div><div class='ft'>"+t+"</div>";
+      fb.appendChild(d);
+    });
+    var tb=document.getElementById('tactics');
+    TACTICS.forEach(function(t,i){
+      var d=document.createElement('div'); d.className='tactic';
+      d.innerHTML="<div class='tno'>"+(i+1)+"</div><div class='tt'>"+t+"</div>";
+      tb.appendChild(d);
+    });
+  })();
+
+  // ---- tabs ----
+  var tabbar=document.getElementById('tabbar');
+  var tabs=[].slice.call(tabbar.querySelectorAll('.tab-btn'));
+  function activate(view){
+    tabs.forEach(function(t){t.classList.toggle('active',t.dataset.view===view);});
+    [].slice.call(document.querySelectorAll('.view')).forEach(function(v){v.classList.toggle('active',v.id===view);});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){activate(t.dataset.view);});});
+  tabbar.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+      var cur=tabs.findIndex(function(t){return t.classList.contains('active');});
+      var nx=e.key==='ArrowRight'?(cur+1)%tabs.length:(cur-1+tabs.length)%tabs.length;
+      tabs[nx].click(); tabs[nx].focus();
+    }
+  });
+
+  // ---- TOP3 expand ----
+  ['top1','top2','top3'].forEach(function(id){
+    var card=document.getElementById(id);
+    var head=card.querySelector('.top-head');
+    function toggle(){
+      var open=card.classList.toggle('open');
+      head.setAttribute('aria-expanded',open?'true':'false');
+    }
+    head.addEventListener('click',toggle);
+    head.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+  });
+  document.getElementById('top1').classList.add('open');
+  document.getElementById('top1').querySelector('.top-head').setAttribute('aria-expanded','true');
+</script>
+<!-- kengit analytics: GoatCounter (gated, inline implementation, no CDN dependency) -->
+<script>
+window.kengitTrackVisit = function() {
+  if (window._kengitTracked) return;
+  window._kengitTracked = true;
+  try {
+    var url = 'https://kenno.goatcounter.com/count?' +
+      'p=' + encodeURIComponent(location.pathname + location.search) +
+      '&t=' + encodeURIComponent(document.title) +
+      '&r=' + encodeURIComponent(document.referrer) +
+      '&s=' + screen.width + ',' + screen.height + ',' + (window.devicePixelRatio || 1) +
+      '&rnd=' + Math.random();
+    var img = new Image(1, 1);
+    img.src = url;
+  } catch(e) {}
+};
+if (!document.getElementById('auth-gate') || sessionStorage.getItem('kengit-authed')==='1') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.kengitTrackVisit);
+  } else {
+    window.kengitTrackVisit();
+  }
+}
+</script>
+
+</body>
+</html>
