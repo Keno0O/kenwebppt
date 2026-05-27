@@ -210,7 +210,7 @@
   <div style="font-size:.6rem;color:rgba(255,255,255,.15);margin-top:20px">Press Enter to continue</div>
 </div>
 <script>
-const AUTH_HASH = '7d153d2a4423e402868a5eb0cbe8bbdefa87bd0888eef1ea6febd769152bc0d3';
+const AUTH_HASH = '4a3340f371a532eadba7a070771de3ad808e39d2efb6921feb1818fcd9d3141d';
 document.addEventListener('DOMContentLoaded', function(){
   if(sessionStorage.getItem('kengit-authed')==='1'){document.getElementById('auth-gate').remove();return}
   const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
@@ -257,6 +257,7 @@ document.addEventListener('DOMContentLoaded', function(){
   <!-- TABS -->
   <div class="tabbar" id="tabbar" role="tablist">
     <button class="tab-btn active" role="tab" data-view="v1">裁决总览</button>
+    <button class="tab-btn" role="tab" data-view="vos">GenAI OS 解码</button>
     <button class="tab-btn" role="tab" data-view="v2">TOP 3 必问</button>
     <button class="tab-btn" role="tab" data-view="v3">储备问题清单</button>
     <button class="tab-btn" role="tab" data-view="v4">禁区 &amp; 现场打法</button>
@@ -313,6 +314,118 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="callout" style="background:var(--amberLight); border-color:var(--amber);">
         <div class="co-t" style="color:#8a5a10;"><span class="bar" style="width:4px;height:13px;background:var(--amber);border-radius:2px;"></span>交叉验证信号</div>
         <div class="co-b">多位专家<strong>独立撞到同一批问题</strong>——「可审计前置 vs 后验」（王志强 + 林涛 + Gary Marcus 三人）、「100% 使用 + 准确率责任」（陈嘉怡 + 王志强 + 李开复 + 周文 四人）、「飞轮 vs 隔离」（刘静 + 林涛 + steelman）。这三个正是 TOP 3，得到 swarm 收敛验证。</div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW OS : GenAI OS 解码 ============ -->
+    <div class="view" id="vos">
+      <div class="verdict">
+        <p><strong>一句话理解：</strong>GenAI OS = AI 时代的「中间件 / 操作系统层」——夹在「原始大模型 + 算力」和「企业 AI 应用」之间，<strong>把不可控的概率模型，治理成可控、可审计、可解释、可规模部署的企业级系统</strong>。它是 INF 整个叙事的支点，金融落地的全部价值都挂在这一层。</p>
+      </div>
+
+      <div class="sec-title"><span class="bar"></span>为什么叫「OS」——核心心智模型</div>
+      <div class="card">
+        <div class="card-topbar" style="background:var(--blue);"></div>
+        <div class="card-pad" style="padding:0;">
+          <table style="width:100%; border-collapse:separate; border-spacing:0;">
+            <thead><tr style="background:var(--blueDeep);">
+              <th style="padding:8px 14px; font-size:9px; font-weight:700; color:#fff; text-align:left; text-transform:uppercase; letter-spacing:0.5px;">传统操作系统</th>
+              <th style="padding:8px 14px; font-size:9px; font-weight:700; color:#fff; text-align:left; text-transform:uppercase; letter-spacing:0.5px;">INF GenAI OS</th>
+            </tr></thead>
+            <tbody>
+              <tr style="background:#fff;"><td style="padding:8px 14px;font-size:11px;color:var(--textMid);border-bottom:1px solid var(--border);">管理 CPU / 内存 / 磁盘等<b>硬件资源</b></td><td style="padding:8px 14px;font-size:11px;color:var(--textMid);border-bottom:1px solid var(--border);">管理 LLM / GPU 算力等<b>AI 资源</b></td></tr>
+              <tr style="background:var(--bluePale);"><td style="padding:8px 14px;font-size:11px;color:var(--textMid);border-bottom:1px solid var(--border);">应用不直接操作硬件，走 OS 统一接口</td><td style="padding:8px 14px;font-size:11px;color:var(--textMid);border-bottom:1px solid var(--border);">应用不直接调原始大模型，走 OS 统一接口</td></tr>
+              <tr style="background:#fff;"><td style="padding:8px 14px;font-size:11px;color:var(--textMid);">提供进程隔离、权限控制、调度</td><td style="padding:8px 14px;font-size:11px;color:var(--textMid);">提供 Sandbox 隔离、权限门控、多模型调度</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="callout">
+        <div class="co-t"><span class="bar" style="width:4px;height:13px;background:var(--techBlue);border-radius:2px;"></span>为什么需要这一层</div>
+        <div class="co-b">原始 LLM 像一颗「能力极强但不靠谱的 CPU」——会幻觉、不遵守企业规则、不可审计、可能越权调工具。直接拿 ChatGPT 给银行做 agent，等于让一个聪明但乱来的实习生直接操作核心交易系统。<strong>GenAI OS 的全部价值，就是在中间加一层治理 / 约束 / 编排层</strong>，让「能聊」变成金融、医疗这种<strong>错误零容忍</strong>行业里「能用、敢用、可担责」。</div>
+      </div>
+
+      <div class="sec-title"><span class="bar"></span>三层架构（PPT 第 10 页）</div>
+      <div class="card"><div class="card-pad">
+        <div style="display:flex; flex-direction:column; gap:0; align-items:stretch;">
+          <div style="background:var(--blueLight); border:1px solid var(--border); border-radius:8px; padding:12px 16px; text-align:center;">
+            <div style="font-size:9px; font-weight:700; color:var(--blueMid); letter-spacing:0.5px; text-transform:uppercase;">企业应用层（agent 业务）</div>
+            <div style="font-size:12px; font-weight:700; color:var(--blue); margin-top:4px;">金融 &nbsp;·&nbsp; AI Infra &nbsp;·&nbsp; 科学 &nbsp;·&nbsp; ...</div>
+          </div>
+          <div style="text-align:center; color:var(--techBlue); font-size:11px; font-weight:700; padding:4px 0;">&#9650;&nbsp; agent 调用统一接口</div>
+          <div style="background:var(--blueDeep); border-radius:8px; padding:14px 16px; text-align:center; box-shadow:0 2px 8px rgba(18,38,170,0.2);">
+            <div style="font-size:9px; font-weight:700; color:var(--techPale); letter-spacing:0.5px; text-transform:uppercase;">INF 可信 GenAI OS（治理中枢 · 核心卖点）</div>
+            <div style="font-size:12.5px; font-weight:700; color:#fff; margin-top:6px; line-height:1.7;">Ontologies &nbsp;·&nbsp; Skills &nbsp;·&nbsp; Vertical Models<br>Reasoning Engine &nbsp;·&nbsp; AI Agents Factory &nbsp;·&nbsp; Sandbox</div>
+          </div>
+          <div style="text-align:center; color:var(--techBlue); font-size:11px; font-weight:700; padding:4px 0;">&#9650;&nbsp; 调度 / 约束</div>
+          <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:12px 16px; text-align:center;">
+            <div style="font-size:9px; font-weight:700; color:var(--textLight); letter-spacing:0.5px; text-transform:uppercase;">底层「硬件」</div>
+            <div style="font-size:12px; font-weight:700; color:var(--textMid); margin-top:4px;">LLMs（外部大模型） &nbsp;·&nbsp; GPU 算力</div>
+          </div>
+        </div>
+        <div style="margin-top:12px; padding:10px 14px; background:var(--techLight); border-radius:8px; font-size:11.5px; color:var(--textMid); line-height:1.6;">
+          <b style="color:var(--blue);">模型无关（Model-agnostic）+ 基础设施无关（Infra-agnostic）</b>：不绑 GPT/Claude、不绑某云/GPU。既是商业卖点（客户不被单厂商锁定），也是它把自己定位成「中枢 / OS」而非「模型公司」的根据。
+        </div>
+      </div></div>
+
+      <div class="sec-title"><span class="bar"></span>OS 内部 6 个组件（映射到你熟的 IT 概念）</div>
+      <div class="card">
+        <div class="card-topbar" style="background:var(--techBlue);"></div>
+        <div class="card-pad" style="padding:0;">
+          <table style="width:100%; border-collapse:separate; border-spacing:0;">
+            <thead><tr style="background:var(--blueDeep);">
+              <th style="padding:8px 14px; font-size:9px; font-weight:700; color:#fff; text-align:left; text-transform:uppercase; letter-spacing:0.5px;">组件</th>
+              <th style="padding:8px 14px; font-size:9px; font-weight:700; color:#fff; text-align:left; text-transform:uppercase; letter-spacing:0.5px;">干什么</th>
+              <th style="padding:8px 14px; font-size:9px; font-weight:700; color:#fff; text-align:left; text-transform:uppercase; letter-spacing:0.5px;">类比</th>
+            </tr></thead>
+            <tbody id="os-comp"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="sec-title"><span class="bar"></span>三大支柱 = 它怎么做到「可信」（PPT 第 9 页）</div>
+      <div class="grid-3">
+        <div class="mini"><div class="mh">① Ontology + Skills</div><div class="mb">把行业知识（合规要求、工作流、运营数据）结构化成机器可执行——<b>地基</b>。</div></div>
+        <div class="mini"><div class="mh">② 神经符号 + RL</div><div class="mb">在 Ontology 约束下推理。神经网络管语言/感知，符号逻辑管规则/约束——播客里「灰盒」的工程落地。</div></div>
+        <div class="mini"><div class="mh">③ Sandbox 边界控制</div><div class="mb">安全执行，防 agent 乱调工具或泄露数据/API。</div></div>
+      </div>
+      <div style="margin:12px 0 4px; font-size:12px; color:var(--textMid);">最终交付企业最在意、而通用 ChatGPT 给不了的三属性（PPT 第 8 页）：</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:6px;">
+        <span class="lbl" style="background:var(--blueLight); color:var(--blue); font-size:11px; padding:6px 14px;">可控 Controllable</span>
+        <span class="lbl" style="background:var(--blueLight); color:var(--blue); font-size:11px; padding:6px 14px;">可审计 Auditable</span>
+        <span class="lbl" style="background:var(--blueLight); color:var(--blue); font-size:11px; padding:6px 14px;">可解释 Explainable</span>
+      </div>
+
+      <div class="sec-title"><span class="bar"></span>一个金融实例（让它落地）— 财报点评 agent 走一遍 OS</div>
+      <div class="card"><div class="card-pad">
+        <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:11px; line-height:1.5;">
+          <span style="background:var(--bluePale); border:1px solid var(--border); border-radius:6px; padding:5px 9px;">原始财报 PDF</span>
+          <span style="color:var(--techBlue); font-weight:700;">&rarr;</span>
+          <span style="background:var(--bluePale); border:1px solid var(--border); border-radius:6px; padding:5px 9px;"><b style="color:var(--blue);">Infinity-Parser</b> 解析成结构化表格</span>
+          <span style="color:var(--techBlue); font-weight:700;">&rarr;</span>
+          <span style="background:var(--bluePale); border:1px solid var(--border); border-radius:6px; padding:5px 9px;"><b style="color:var(--blue);">Reasoning Engine</b> 在金融 Ontology（准则/披露规则）约束下推理</span>
+          <span style="color:var(--techBlue); font-weight:700;">&rarr;</span>
+          <span style="background:var(--bluePale); border:1px solid var(--border); border-radius:6px; padding:5px 9px;"><b style="color:var(--blue);">Skills</b> 调行情/历史数据</span>
+          <span style="color:var(--techBlue); font-weight:700;">&rarr;</span>
+          <span style="background:var(--bluePale); border:1px solid var(--border); border-radius:6px; padding:5px 9px;"><b style="color:var(--blue);">Sandbox</b> 防越权</span>
+          <span style="color:var(--techBlue); font-weight:700;">&rarr;</span>
+          <span style="background:var(--bluePale); border:1px solid var(--border); border-radius:6px; padding:5px 9px;">全程记入<b style="color:var(--blue);">审计轨迹</b></span>
+          <span style="color:var(--techBlue); font-weight:700;">&rarr;</span>
+          <span style="background:var(--greenLight); border:1px solid #bfe9d6; border-radius:6px; padding:5px 9px; color:var(--green); font-weight:700;">可追溯来源的点评</span>
+        </div>
+        <div style="margin-top:10px; font-size:11px; color:var(--textLight);">这一整条链路，就是 GenAI OS 在干的事；数据飞轮（PPT 第 11 页）声称：用得越多 → 沉淀越多领域知识进 Ontology → Agent 越强 → 用得更多（自强化护城河）。</div>
+      </div></div>
+
+      <div class="sec-title"><span class="bar" style="background:var(--amber);"></span>评估者视角 — 别被「OS」这个词唬住</div>
+      <div class="callout" style="background:var(--amberLight); border-color:var(--amber);">
+        <div class="co-t" style="color:#8a5a10;"><span class="bar" style="width:4px;height:13px;background:var(--amber);border-radius:2px;"></span>哪里是真、哪里要打问号（接回 TOP 1 / TOP 3）</div>
+        <div class="co-b" style="line-height:1.8;">
+          • <strong>「OS」是强营销隐喻，本质是「企业级 Agent 编排 + 治理中间件」</strong>——同品类有蚂蚁 Agentar、各种 agent framework；差异化全押在「神经符号 + Ontology + 可信」三个词。<br>
+          • <strong>真伪关键全在 Reasoning Engine</strong>：神经符号是<b>推理前置硬约束</b>，还是<b>先生成再后验贴标签</b>？前者才配叫可控可解释——这是 <b>TOP 1</b>。<br>
+          • <strong>Ontology 是命门</strong>：谁建、多少人工、法规变了怎么维护？若每个客户手工搭，「OS」实质是「咨询 + 胶水代码」，不是可规模复制平台，飞轮也转不起来。<br>
+          • <strong>飞轮 vs 数据隔离矛盾</strong>：OS 靠数据汇聚转飞轮，但金融数据不出域 / Sandbox 隔离——架构上打架，这是 <b>TOP 3</b>。<br>
+          <span style="display:block; margin-top:8px; padding-top:8px; border-top:1px dashed var(--amber);"><strong>一句话定性：</strong>GenAI OS 不是底层模型创新，而是把原始大模型<b>工程化、治理化、行业化</b>的一整套中间层。护城河强弱，完全取决于那层 Ontology 资产有多深、多可复用——而这恰恰是 PPT 没说清、需要你现场逼问的地方。</span>
+        </div>
       </div>
     </div>
 
@@ -503,6 +616,26 @@ document.addEventListener('DOMContentLoaded', function(){
                    "<td style='padding:8px 14px;font-size:10px;border-bottom:1px solid var(--border);white-space:nowrap;'>"+camp(r[1])+"</td>"+
                    "<td style='padding:8px 14px;font-size:10px;color:var(--textLight);border-bottom:1px solid var(--border);'>"+r[2]+"</td>";
       pb.appendChild(tr);
+    });
+  })();
+
+  (function(){
+    var OS_COMP=[
+      ["Ontologies","把碎片化行业知识转成结构化、机器可执行的知识库","主数据 / 数据字典 / 业务规则库"],
+      ["Skills","可复用的能力 / 工具单元，供 agent 调用","API / 系统调用 / 驱动"],
+      ["Vertical Models","垂直场景微调的小模型（如 Infinity-Parser）","专用协处理器"],
+      ["Reasoning Engine","推理调度核心（神经符号 + RL）","OS 内核 / 调度器"],
+      ["AI Agents Factory","agent 的编排与生产线","进程管理器 / 运行时"],
+      ["Sandbox","隔离执行，防越权、防数据泄露","容器 / 进程隔离"]
+    ];
+    var ob=document.getElementById('os-comp');
+    OS_COMP.forEach(function(r,i){
+      var tr=document.createElement('tr');
+      tr.style.background=i%2===0?'#fff':'var(--bluePale)';
+      tr.innerHTML="<td style='padding:8px 14px;font-size:11px;font-weight:700;color:var(--blue);border-bottom:1px solid var(--border);white-space:nowrap;'>"+r[0]+"</td>"+
+                   "<td style='padding:8px 14px;font-size:11px;color:var(--textMid);border-bottom:1px solid var(--border);'>"+r[1]+"</td>"+
+                   "<td style='padding:8px 14px;font-size:10px;color:var(--textLight);border-bottom:1px solid var(--border);'>"+r[2]+"</td>";
+      ob.appendChild(tr);
     });
   })();
 
