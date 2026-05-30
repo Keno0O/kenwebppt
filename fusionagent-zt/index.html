@@ -1,0 +1,126 @@
+<!DOCTYPE html><html lang=zh><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>fusion-agent v1ztpool · 20260529</title><style>*{box-sizing:border-box}body{margin:0;background:#0a0a0a;color:#d8dae8;font-family:-apple-system,"PingFang SC",sans-serif;font-size:13px}
+.wrap{max-width:1000px;margin:0 auto;padding:14px 16px 50px}h1{font-size:16px;margin:8px 0 2px}.sub{font-size:10px;color:#6b7094}
+.banner{background:#1a1508;border:1px solid #E89820;color:#e0a83c;border-radius:8px;padding:10px 13px;font-size:11px;margin:12px 0;line-height:1.5}
+table{width:100%;border-collapse:collapse;background:#101216;border:1px solid #23262e;border-radius:8px;overflow:hidden;margin-top:10px}
+th{background:#16181f;color:#9098b8;font-size:9px;text-transform:uppercase;padding:8px;text-align:left}td{padding:8px;border-top:1px solid #1c1f27;font-size:12px;vertical-align:top}
+.rk{color:#6b7094;font-weight:700}.code b{color:#fff}.code span{color:#9098b8;font-size:11px}
+.t{padding:2px 7px;border-radius:4px;font-size:9px;font-weight:800}.t.zt{color:#0EA573;background:#0c2a1f}.t.setup{color:#00A0DF;background:#0a1f2a}
+.sc b{color:#E89820;font-size:14px}.tags{font-size:10.5px;color:#b8bcd0;max-width:280px}.combo{color:#E89820;font-weight:700}
+.foot{margin-top:20px;font-size:10px;color:#4a4f63;border-top:1px solid #1c1f27;padding-top:10px}</style></head><body>
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px"><div style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div><input id="auth-input" type="password" placeholder="Access Code" style="width:200px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;text-align:center;outline:none"><div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0">incorrect</div></div><script>const AUTH_HASH="7d153d2a4423e402868a5eb0cbe8bbdefa87bd0888eef1ea6febd769152bc0d3";document.addEventListener('DOMContentLoaded',function(){if(sessionStorage.getItem('kengit-authed')==='1'){var g=document.getElementById('auth-gate');if(g)g.remove();return}var gate=document.getElementById('auth-gate'),inp=document.getElementById('auth-input'),er=document.getElementById('auth-error');Array.from(document.body.children).filter(e=>e.id!=='auth-gate'&&e.tagName!=='SCRIPT').forEach(e=>{e.dataset.kh='1';e.style.display='none'});setTimeout(()=>inp.focus(),100);inp.addEventListener('keydown',async e=>{if(e.key!=='Enter')return;var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(inp.value));var hx=Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');if(hx===AUTH_HASH){sessionStorage.setItem('kengit-authed','1');gate.remove();document.querySelectorAll('[data-kh]').forEach(e=>e.style.display='')}else{er.style.opacity='1';inp.value=''}})});</script><div class=wrap>
+<h1>fusion-agent · 当日涨停池扫描 (v1)</h1><div class=sub>20260529 · 沪深主板(60/00) 排除ST/科创/创业/北交 · universe 2960只 · 当日市场≥3连板 4</div>
+<div class=banner>⚠ 概率倾斜 watchlist 非买入信号: 按验证因子(前期涨停5.4x/放量2.2x/open_gap续航3.6x/Power组合5.42x)排序的高连板潜力候选; 连板base rate低,多数候选仍不连板。仅观测,不下单不自改生产。</div>
+<table><thead><tr><th>#</th><th>代码·名称</th><th>状态</th><th>score</th><th>前期涨停</th><th>放量</th><th>open_gap</th><th>验证因子tag</th></tr></thead><tbody><tr><td class=rk>1</td><td class=code><b>600162.SH</b><br><span>香江控股</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.88</b></td>
+        <td>4</td><td>3.07</td><td>7.1</td>
+        <td class=tags>前期涨停≥3 放量≥2.0 open_gap≥5<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td></tr><tr><td class=rk>2</td><td class=code><b>002806.SZ</b><br><span>华锋股份</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.88</b></td>
+        <td>4</td><td>3.28</td><td>10.0</td>
+        <td class=tags>前期涨停≥3 放量≥2.0 open_gap≥5<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td></tr><tr><td class=rk>3</td><td class=code><b>603011.SH</b><br><span>合锻智能</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.81</b></td>
+        <td>3</td><td>1.57</td><td>5.1</td>
+        <td class=tags>前期涨停≥3 放量≥1.5 open_gap≥5<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td></tr><tr><td class=rk>4</td><td class=code><b>600863.SH</b><br><span>华能蒙电</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.68</b></td>
+        <td>3</td><td>3.34</td><td>0.0</td>
+        <td class=tags>前期涨停≥3 放量≥2.0<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td></tr><tr><td class=rk>5</td><td class=code><b>002251.SZ</b><br><span>步步高</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.68</b></td>
+        <td>3</td><td>3.23</td><td>0.2</td>
+        <td class=tags>前期涨停≥3 放量≥2.0<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td></tr><tr><td class=rk>6</td><td class=code><b>601566.SH</b><br><span>九牧王</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.68</b></td>
+        <td>4</td><td>2.45</td><td>0.3</td>
+        <td class=tags>前期涨停≥3 放量≥2.0<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td></tr><tr><td class=rk>7</td><td class=code><b>603324.SH</b><br><span>盛剑科技</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.68</b></td>
+        <td>3</td><td>3.19</td><td>3.8</td>
+        <td class=tags>前期涨停≥3 放量≥2.0<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td></tr><tr><td class=rk>8</td><td class=code><b>001269.SZ</b><br><span>欧晶科技</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.68</b></td>
+        <td>3</td><td>2.04</td><td>3.4</td>
+        <td class=tags>前期涨停≥3 放量≥2.0<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td></tr><tr><td class=rk>9</td><td class=code><b>603303.SH</b><br><span>得邦照明</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.61</b></td>
+        <td>4</td><td>1.68</td><td>0.6</td>
+        <td class=tags>前期涨停≥3 放量≥1.5<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td></tr><tr><td class=rk>10</td><td class=code><b>000539.SZ</b><br><span>粤电力Ａ</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.6</b></td>
+        <td>7</td><td>0.6</td><td>8.7</td>
+        <td class=tags>前期涨停≥5 open_gap≥5</td></tr><tr><td class=rk>11</td><td class=code><b>600726.SH</b><br><span>华电能源</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.6</b></td>
+        <td>18</td><td>0.42</td><td>5.9</td>
+        <td class=tags>前期涨停≥5 open_gap≥5</td></tr><tr><td class=rk>12</td><td class=code><b>000767.SZ</b><br><span>晋控电力</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>6</td><td>1.37</td><td>1.4</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>13</td><td class=code><b>600488.SH</b><br><span>津药药业</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>11</td><td>0.67</td><td>-0.8</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>14</td><td class=code><b>600530.SH</b><br><span>交大昂立</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>6</td><td>1.1</td><td>0.0</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>15</td><td class=code><b>600693.SH</b><br><span>东百集团</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>10</td><td>0.94</td><td>-1.2</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>16</td><td class=code><b>600828.SH</b><br><span>茂业商业</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>14</td><td>1.02</td><td>0.0</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>17</td><td class=code><b>600865.SH</b><br><span>百大集团</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>7</td><td>0.74</td><td>0.0</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>18</td><td class=code><b>600869.SH</b><br><span>远东股份</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>10</td><td>0.9</td><td>2.1</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>19</td><td class=code><b>002081.SZ</b><br><span>金螳螂</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>12</td><td>0.65</td><td>1.8</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>20</td><td class=code><b>601116.SH</b><br><span>三江购物</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>5</td><td>0.94</td><td>0.6</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>21</td><td class=code><b>603618.SH</b><br><span>杭电股份</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>19</td><td>1.04</td><td>-2.1</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>22</td><td class=code><b>002824.SZ</b><br><span>和胜股份</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>5</td><td>0.73</td><td>1.5</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>23</td><td class=code><b>002995.SZ</b><br><span>天地在线</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.4</b></td>
+        <td>13</td><td>0.64</td><td>3.6</td>
+        <td class=tags>前期涨停≥5</td></tr><tr><td class=rk>24</td><td class=code><b>000037.SZ</b><br><span>深南电A</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.28</b></td>
+        <td>4</td><td>0.56</td><td>-0.3</td>
+        <td class=tags>前期涨停≥3</td></tr><tr><td class=rk>25</td><td class=code><b>600110.SH</b><br><span>诺德股份</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.28</b></td>
+        <td>4</td><td>1.06</td><td>1.7</td>
+        <td class=tags>前期涨停≥3</td></tr><tr><td class=rk>26</td><td class=code><b>600280.SH</b><br><span>中央商场</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.28</b></td>
+        <td>4</td><td>1.27</td><td>-0.7</td>
+        <td class=tags>前期涨停≥3</td></tr><tr><td class=rk>27</td><td class=code><b>600979.SH</b><br><span>广安爱众</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.28</b></td>
+        <td>4</td><td>0.41</td><td>-1.2</td>
+        <td class=tags>前期涨停≥3</td></tr><tr><td class=rk>28</td><td class=code><b>603060.SH</b><br><span>国检集团</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.28</b></td>
+        <td>3</td><td>0.57</td><td>2.7</td>
+        <td class=tags>前期涨停≥3</td></tr><tr><td class=rk>29</td><td class=code><b>603890.SH</b><br><span>春秋电子</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.28</b></td>
+        <td>4</td><td>1.46</td><td>3.7</td>
+        <td class=tags>前期涨停≥3</td></tr><tr><td class=rk>30</td><td class=code><b>000926.SZ</b><br><span>福星股份</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.25</b></td>
+        <td>2</td><td>2.31</td><td>2.1</td>
+        <td class=tags>放量≥2.0</td></tr><tr><td class=rk>31</td><td class=code><b>603439.SH</b><br><span>三力制药</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.25</b></td>
+        <td>1</td><td>3.83</td><td>-1.4</td>
+        <td class=tags>放量≥2.0</td></tr><tr><td class=rk>32</td><td class=code><b>601702.SH</b><br><span>华峰铝业</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.25</b></td>
+        <td>2</td><td>2.18</td><td>-0.5</td>
+        <td class=tags>放量≥2.0</td></tr><tr><td class=rk>33</td><td class=code><b>002457.SZ</b><br><span>青龙管业</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.2</b></td>
+        <td>1</td><td>1.38</td><td>5.2</td>
+        <td class=tags>open_gap≥5</td></tr><tr><td class=rk>34</td><td class=code><b>605277.SH</b><br><span>新亚电子</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.2</b></td>
+        <td>2</td><td>0.99</td><td>10.0</td>
+        <td class=tags>open_gap≥5</td></tr><tr><td class=rk>35</td><td class=code><b>000799.SZ</b><br><span>酒鬼酒</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.18</b></td>
+        <td>1</td><td>1.57</td><td>-0.2</td>
+        <td class=tags>放量≥1.5</td></tr><tr><td class=rk>36</td><td class=code><b>600857.SH</b><br><span>宁波中百</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.18</b></td>
+        <td>2</td><td>1.56</td><td>1.8</td>
+        <td class=tags>放量≥1.5</td></tr><tr><td class=rk>37</td><td class=code><b>605177.SH</b><br><span>东亚药业</span></td>
+        <td><span class="t zt">ZT</span></td><td class=sc><b>0.18</b></td>
+        <td>0</td><td>1.53</td><td>2.9</td>
+        <td class=tags>放量≥1.5</td></tr></tbody></table>
+<div class=foot>setup=未涨停但具验证setup / ZT=当日已涨停 · 命中37只 · 红线:观测+提议非信号,禁下单</div></div></body></html>
