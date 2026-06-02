@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang=zh><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
-<title>fusion-agent · 20260601</title><style>
+<title>fusion-agent · 20260602</title><style>
 *{box-sizing:border-box}body{margin:0;background:#0a0a0a;color:#d8dae8;font-family:-apple-system,"PingFang SC",sans-serif;font-size:13px}
 .wrap{max-width:1100px;margin:0 auto;padding:14px 16px 50px}
 h1{font-size:16px;margin:8px 0 2px}.sub{font-size:10px;color:#6b7094;letter-spacing:.04em}
@@ -17,7 +17,7 @@ td{padding:9px;border-top:1px solid #1c1f27;font-size:12px;vertical-align:top}
 .foot{margin-top:24px;font-size:10px;color:#4a4f63;border-top:1px solid #1c1f27;padding-top:10px}
 </style></head><body>
 <div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px"><div style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div><input id="auth-input" type="password" placeholder="Access Code" style="width:200px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;text-align:center;outline:none"><div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0">incorrect</div></div><script>const AUTH_HASH="7d153d2a4423e402868a5eb0cbe8bbdefa87bd0888eef1ea6febd769152bc0d3";document.addEventListener('DOMContentLoaded',function(){if(sessionStorage.getItem('kengit-authed')==='1'){var g=document.getElementById('auth-gate');if(g)g.remove();return}var gate=document.getElementById('auth-gate'),inp=document.getElementById('auth-input'),er=document.getElementById('auth-error');Array.from(document.body.children).filter(e=>e.id!=='auth-gate'&&e.tagName!=='SCRIPT').forEach(e=>{e.dataset.kh='1';e.style.display='none'});setTimeout(()=>inp.focus(),100);inp.addEventListener('keydown',async e=>{if(e.key!=='Enter')return;var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(inp.value));var hx=Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');if(hx===AUTH_HASH){sessionStorage.setItem('kengit-authed','1');gate.remove();document.querySelectorAll('[data-kh]').forEach(e=>e.style.display='')}else{er.style.opacity='1';inp.value=''}})});</script><div class=wrap>
-<h1>fusion-agent · 融合观测</h1><div class=sub>20260601 · t1board §3.3a 量化 × kenaagent 研判 · 续航 oracle 自监控 · 不下单不自改生产</div>
+<h1>fusion-agent · 融合观测</h1><div class=sub>20260602 · t1board §3.3a 量化 × kenaagent 研判 · 续航 oracle 自监控 · 不下单不自改生产</div>
 <div class=banner>⚠ 本输出由 fusion-agent 基于历史数据生成,无策略级回测/样本外oracle,因子权重为工程约定非校准参数;仅观测+提议,不构成投资建议,禁入自动化下单链路。</div>
 
 <h2>双源交叉验证融合（按融合分降序）</h2>
