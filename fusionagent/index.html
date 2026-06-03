@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang=zh><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
-<title>fusion-agent · 20260602</title><style>
+<title>fusion-agent · 20260603</title><style>
 *{box-sizing:border-box}body{margin:0;background:#0a0a0a;color:#d8dae8;font-family:-apple-system,"PingFang SC",sans-serif;font-size:13px}
 .wrap{max-width:1100px;margin:0 auto;padding:14px 16px 50px}
 h1{font-size:16px;margin:8px 0 2px}.sub{font-size:10px;color:#6b7094;letter-spacing:.04em}
@@ -17,131 +17,11 @@ td{padding:9px;border-top:1px solid #1c1f27;font-size:12px;vertical-align:top}
 .foot{margin-top:24px;font-size:10px;color:#4a4f63;border-top:1px solid #1c1f27;padding-top:10px}
 </style></head><body>
 <div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px"><div style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div><input id="auth-input" type="password" placeholder="Access Code" style="width:200px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;text-align:center;outline:none"><div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0">incorrect</div></div><script>const AUTH_HASH="7d153d2a4423e402868a5eb0cbe8bbdefa87bd0888eef1ea6febd769152bc0d3";document.addEventListener('DOMContentLoaded',function(){if(sessionStorage.getItem('kengit-authed')==='1'){var g=document.getElementById('auth-gate');if(g)g.remove();return}var gate=document.getElementById('auth-gate'),inp=document.getElementById('auth-input'),er=document.getElementById('auth-error');Array.from(document.body.children).filter(e=>e.id!=='auth-gate'&&e.tagName!=='SCRIPT').forEach(e=>{e.dataset.kh='1';e.style.display='none'});setTimeout(()=>inp.focus(),100);inp.addEventListener('keydown',async e=>{if(e.key!=='Enter')return;var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(inp.value));var hx=Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');if(hx===AUTH_HASH){sessionStorage.setItem('kengit-authed','1');gate.remove();document.querySelectorAll('[data-kh]').forEach(e=>e.style.display='')}else{er.style.opacity='1';inp.value=''}})});</script><div class=wrap>
-<h1>fusion-agent · 融合观测</h1><div class=sub>20260602 · t1board §3.3a 量化 × kenaagent 研判 · 续航 oracle 自监控 · 不下单不自改生产</div>
+<h1>fusion-agent · 融合观测</h1><div class=sub>20260603 · t1board §3.3a 量化 × kenaagent 研判 · 续航 oracle 自监控 · 不下单不自改生产</div>
 <div class=banner>⚠ 本输出由 fusion-agent 基于历史数据生成,无策略级回测/样本外oracle,因子权重为工程约定非校准参数;仅观测+提议,不构成投资建议,禁入自动化下单链路。</div>
 
 <h2>双源交叉验证融合（按融合分降序）</h2>
-<table><thead><tr><th>代码·名称</th><th>tier</th><th>融合分</th><th>研判</th><th>因子tag / Power组合</th><th>交叉信号</th></tr></thead><tbody><tr>
-        <td class=code><b>600121.SH</b><br><span>郑州煤电</span></td>
-        <td><span class=tier>T1</span></td>
-        <td class=fs><b>0.79</b><br><span>量0.79</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥3 放量≥1.5 open_gap≥5<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>002421.SZ</b><br><span>达实智能</span></td>
-        <td><span class=tier>T1</span></td>
-        <td class=fs><b>0.61</b><br><span>量0.61</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5 放量≥2.0<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>002806.SZ</b><br><span>华锋股份</span></td>
-        <td><span class=tier>T1</span></td>
-        <td class=fs><b>0.61</b><br><span>量0.61</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5 放量≥2.0<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>002579.SZ</b><br><span>中京电子</span></td>
-        <td><span class=tier>T1</span></td>
-        <td class=fs><b>0.61</b><br><span>量0.61</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5 放量≥2.0<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>600162.SH</b><br><span>香江控股</span></td>
-        <td><span class=tier>T1</span></td>
-        <td class=fs><b>0.61</b><br><span>量0.61</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5 放量≥2.0<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>603045.SH</b><br><span>福达合金</span></td>
-        <td><span class=tier>WATCH</span></td>
-        <td class=fs><b>0.61</b><br><span>量0.61</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5 放量≥1.5<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>600459.SH</b><br><span>贵研铂业</span></td>
-        <td><span class=tier>WATCH</span></td>
-        <td class=fs><b>0.61</b><br><span>量0.61</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥3 放量≥1.5<br><span class=combo>🔥前期涨停≥3∩放量≥1.5</span></td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>600403.SH</b><br><span>大有能源</span></td>
-        <td><span class=tier>T1</span></td>
-        <td class=fs><b>0.36</b><br><span>量0.36</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5 open_gap≥5</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>603890.SH</b><br><span>春秋电子</span></td>
-        <td><span class=tier>T1</span></td>
-        <td class=fs><b>0.36</b><br><span>量0.36</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5 open_gap≥5</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>002896.SZ</b><br><span>中大力德</span></td>
-        <td><span class=tier>WATCH</span></td>
-        <td class=fs><b>0.36</b><br><span>量0.36</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>放量≥2.0 open_gap≥5</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>600936.SH</b><br><span>北投科技</span></td>
-        <td><span class=tier>T1</span></td>
-        <td class=fs><b>0.18</b><br><span>量0.18</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>000601.SZ</b><br><span>韶能股份</span></td>
-        <td><span class=tier>T1</span></td>
-        <td class=fs><b>0.18</b><br><span>量0.18</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>002975.SZ</b><br><span>博杰股份</span></td>
-        <td><span class=tier>T1</span></td>
-        <td class=fs><b>0.18</b><br><span>量0.18</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>600345.SH</b><br><span>长江通信</span></td>
-        <td><span class=tier>T2</span></td>
-        <td class=fs><b>0.18</b><br><span>量0.18</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>600367.SH</b><br><span>红星发展</span></td>
-        <td><span class=tier>T2</span></td>
-        <td class=fs><b>0.18</b><br><span>量0.18</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>000055.SZ</b><br><span>方大集团</span></td>
-        <td><span class=tier>T3</span></td>
-        <td class=fs><b>0.18</b><br><span>量0.18</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>open_gap≥5</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>601686.SH</b><br><span>友发集团</span></td>
-        <td><span class=tier>T3</span></td>
-        <td class=fs><b>0.18</b><br><span>量0.18</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>open_gap≥5</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>000960.SZ</b><br><span>锡业股份</span></td>
-        <td><span class=tier>WATCH</span></td>
-        <td class=fs><b>0.18</b><br><span>量0.18</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥3</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>002137.SZ</b><br><span>实益达</span></td>
-        <td><span class=tier>WATCH</span></td>
-        <td class=fs><b>0.18</b><br><span>量0.18</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>放量≥1.5</td>
-        <td class="">—</td></tr><tr>
-        <td class=code><b>601869.SH</b><br><span>长飞光纤</span></td>
-        <td><span class=tier>WATCH</span></td>
-        <td class=fs><b>0.18</b><br><span>量0.18</span></td>
-        <td><span class=vb style="color:#6B7094;background:#16181f">—</span></td>
-        <td class=tags>前期涨停≥5</td>
-        <td class="">—</td></tr></tbody></table>
+<table><thead><tr><th>代码·名称</th><th>tier</th><th>融合分</th><th>研判</th><th>因子tag / Power组合</th><th>交叉信号</th></tr></thead><tbody></tbody></table>
 <h2>三曲线记分卡（续航 oracle 真实命中率·自监控验证因子）</h2>
 <table><thead><tr><th>验证因子桶</th><th>n</th><th>次日涨停</th><th>≥2连板</th><th>≥3连板</th></tr></thead><tbody><tr><td>open_gap≥5</td><td>534</td><td>0.539</td><td>0.249</td><td>0.131</td></tr><tr><td>连板≥3(s2_consec)</td><td>1594</td><td>0.251</td><td>0.097</td><td>0.048</td></tr><tr><td>ALL(base)</td><td>3410</td><td>0.201</td><td>0.072</td><td>0.036</td></tr></tbody></table>
 <div class=foot>fusion-agent · 观测+提议工具非信号系统 · 禁入下单链路 · 红线: 不下单/不自改生产/机械oracle非自评</div>
