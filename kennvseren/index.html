@@ -121,10 +121,10 @@ padding:12px 16px 10px;box-shadow:0 2px 12px rgba(18,38,170,.22);}
 @media(min-width:900px){
   .app{max-width:1280px;}
   .layout{display:grid;grid-template-columns:248px minmax(0,1fr) 360px;align-items:start;}
-  .hd{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;}  /* 品牌左+KPI右,填满 */
+  .hd{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;position:sticky;top:0;z-index:50;}  /* 品牌左+KPI右填满 + sticky 让侧栏/右栏对齐 */
   .hd .kpis{margin-top:0;gap:9px;}
   .hd .ttl{font-size:19px;}
-  .side{position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;border-right:1px solid var(--bd);padding:12px 12px 30px;background:var(--bg);}
+  .side{position:sticky;top:var(--hd-h,108px);align-self:start;max-height:calc(100vh - var(--hd-h,108px));overflow-y:auto;border-right:1px solid var(--bd);padding:12px 12px 30px;background:var(--bg);}
   .srch{position:static;padding:0 0 10px;}
   .sres{position:fixed;left:auto;right:auto;width:340px;top:auto;}  /* 逃离 .side overflow 裁剪,坐标 JS 从 sbox 算 */
   .tabs{position:static;flex-direction:column;border-bottom:none;background:transparent;gap:2px;}
@@ -134,7 +134,7 @@ padding:12px 16px 10px;box-shadow:0 2px 12px rgba(18,38,170,.22);}
   .sidextra .sx-h{font-size:11px;font-weight:700;color:var(--tl2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
   .sx-themes{display:flex;flex-wrap:wrap;gap:5px;}.sx-themes .sxt{font-size:11px;font-weight:600;color:var(--blue);background:var(--bl);border-radius:6px;padding:3px 8px;cursor:pointer;}
   .main{min-width:0;padding:0 2px;}.wrap{padding:14px 16px;}
-  .rail{display:block;position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;border-left:1px solid var(--bd);background:#fff;}
+  .rail{display:block;position:sticky;top:var(--hd-h,108px);align-self:start;max-height:calc(100vh - var(--hd-h,108px));overflow-y:auto;border-left:1px solid var(--bd);background:#fff;}
   .rail-empty{text-align:center;color:var(--tmut);font-size:12px;padding:60px 20px;line-height:1.8;}
   .drw,.ovl{display:none!important;}  /* 桌面用右栏,禁底部 drawer */
   .rc:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);transform:translateY(-1px);}
@@ -424,6 +424,9 @@ function switchTab(t){
 const sin=$('sin');
 sin.addEventListener('input',e=>{document.querySelector('.sbox').classList.toggle('on',!!e.target.value);doSearch(e.target.value);});
 $('sclr').onclick=()=>{sin.value='';doSearch('');document.querySelector('.sbox').classList.remove('on');};
+// 桌面:把 header 实测高度写进 --hd-h,让侧栏/右栏精确偏移在其下(否则右栏底部溢出视口被截,详情看不全)
+const setHdH=()=>{const hd=document.querySelector('.hd');if(hd)document.documentElement.style.setProperty('--hd-h',hd.offsetHeight+'px');};
+setHdH(); window.addEventListener('resize',setHdH);
 // 跨断点 resize:清 mobile drawer 的 overflow 锁(否则放大到桌面页面卡死),调和 drawer↔rail
 matchMedia('(min-width:900px)').addEventListener('change',e=>{
   if(e.matches){ document.body.style.overflow=''; $('drw').classList.remove('on'); $('ovl').classList.remove('on'); }
