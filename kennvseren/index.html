@@ -100,6 +100,42 @@ padding:12px 16px 10px;box-shadow:0 2px 12px rgba(18,38,170,.22);}
 .t1box{background:#FAF5FF;border:1px solid #E9D5FF;border-radius:9px;padding:10px;margin-top:8px;font-family:var(--mono);font-size:10px;color:var(--tm);white-space:pre-wrap;word-break:break-word;line-height:1.5;}
 .foot{text-align:center;font-size:10px;color:var(--tmut);line-height:1.7;padding:20px 16px;}
 .empty{text-align:center;padding:36px 20px;color:var(--tmut);font-size:12px;border:2px dashed var(--bd);border-radius:12px;background:var(--bg);}
+/* 复核 2x2 象限 */
+.q2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:4px 0 12px;}
+.qcard{border:1px solid var(--bd);border-radius:12px;padding:11px 12px;background:#fff;}
+.qcard .qh{font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px;}
+.qcard .qd{font-size:10px;color:var(--tl2);margin:2px 0 7px;line-height:1.4;}
+.qcard.q-watch{border-top:3px solid var(--blue);}.qcard.q-trap{border-top:3px solid var(--amber);}
+.qcard.q-hit{border-top:3px solid var(--green);}.qcard.q-cold{border-top:3px solid var(--tmut);}
+.qstk{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #F0F3FA;font-size:12px;cursor:pointer;}
+.qstk:active{background:var(--bp);}.qstk .qn{font-weight:700;}.qstk .qm{font-family:var(--mono);font-size:11px;}
+.qmore{font-size:10px;color:var(--blue);text-align:center;padding-top:6px;}
+.cat{background:linear-gradient(135deg,#091252,#1226AA);border-radius:12px;padding:12px 14px;margin-bottom:12px;color:#fff;}
+.cat .ch{font-size:12px;font-weight:800;letter-spacing:.5px;}.cat .cl{display:flex;gap:6px;margin-top:8px;overflow-x:auto;}
+.cat .cn{flex-shrink:0;background:rgba(255,255,255,.12);border-radius:8px;padding:6px 10px;font-size:10.5px;text-align:center;min-width:74px;}
+.cat .cn.on{background:var(--tech);font-weight:800;}.cat .cn b{display:block;font-size:13px;}
+.sidextra{display:none;}
+.rail{display:none;}  /* 手机端隐藏右栏用 drawer(必须在 @media 之前,否则覆盖桌面 block) */
+/* 桌面端三列(用户要兼顾电脑端;承认 drawer↔右栏是两套交互→JS 分支详情) */
+@media(min-width:900px){
+  .app{max-width:1280px;}
+  .layout{display:grid;grid-template-columns:248px minmax(0,1fr) 360px;align-items:start;}
+  .hd{grid-column:1/-1;}
+  .side{position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;border-right:1px solid var(--bd);padding:12px 12px 30px;background:var(--bg);}
+  .srch{position:static;padding:0 0 10px;}
+  .sres{position:fixed;left:auto;right:auto;width:340px;top:auto;}  /* 逃离 .side overflow 裁剪,坐标 JS 从 sbox 算 */
+  .tabs{position:static;flex-direction:column;border-bottom:none;background:transparent;gap:2px;}
+  .tab{flex:none;text-align:left;border-bottom:none;border-left:3px solid transparent;border-radius:8px;padding:11px 12px;}
+  .tab.on{border-left-color:var(--blue);border-bottom:none;}
+  .sidextra{display:block;margin-top:14px;border-top:1px solid var(--bd);padding-top:12px;}
+  .sidextra .sx-h{font-size:11px;font-weight:700;color:var(--tl2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
+  .sx-themes{display:flex;flex-wrap:wrap;gap:5px;}.sx-themes .sxt{font-size:11px;font-weight:600;color:var(--blue);background:var(--bl);border-radius:6px;padding:3px 8px;cursor:pointer;}
+  .main{min-width:0;padding:0 2px;}.wrap{padding:14px 16px;}
+  .rail{display:block;position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;border-left:1px solid var(--bd);background:#fff;}
+  .rail-empty{text-align:center;color:var(--tmut);font-size:12px;padding:60px 20px;line-height:1.8;}
+  .drw,.ovl{display:none!important;}  /* 桌面用右栏,禁底部 drawer */
+  .rc:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);transform:translateY(-1px);}
+}
 </style></head><body>
 <!-- 访问密码门 -->
 <div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
@@ -141,18 +177,25 @@ document.addEventListener('DOMContentLoaded',function(){
 <div class="kpi"><div class="v">29</div><div class="l">今日涨停候选</div></div>
 <div class="kpi"><div class="v">1</div><div class="l">∩产业链</div></div>
 <div class="kpi"><div class="v">20d</div><div class="l">涨停窗口</div></div>
-</div></div><div class="srch" id="srch"><div class="sbox">
+</div></div>
+<div class="layout">
+  <div class="side"><div class="srch" id="srch"><div class="sbox">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#9098B8" stroke-width="2"/><path d="M21 21l-4-4" stroke="#9098B8" stroke-width="2" stroke-linecap="round"/></svg>
 <input id="sin" placeholder="搜索 多孔炭 / MLCC / 超级电容 / 液冷 / 个股…" autocomplete="off">
 <span class="clr" id="sclr">×</span></div>
 <div class="sres" id="sres" style="display:none"></div></div><div class="tabs">
-<button class="tab on" data-t="composite" onclick="switchTab('composite')">综合榜</button>
+<button class="tab on" data-t="audit" onclick="switchTab('audit')">复核</button>
+<button class="tab" data-t="composite" onclick="switchTab('composite')">综合榜</button>
 <button class="tab" data-t="potential" onclick="switchTab('potential')">潜力榜</button>
 <button class="tab" data-t="strength" onclick="switchTab('strength')">强势榜</button>
 <button class="tab" data-t="chain" onclick="switchTab('chain')">产业链</button>
 <button class="tab" data-t="choke" onclick="switchTab('choke')">卡点</button>
-<button class="tab" data-t="search" onclick="switchTab('search')">搜索</button></div><div class="wrap" id="view"></div><div class="foot">数据:tushare 高级版(行情/财务/涨停 截至 2026-06-05) · 多源概念:同花顺ths/开盘啦/akshare · 卡点 severity 为策展判断非机械数字 · 涨停因子 mode-A verbatim(§3.3a 29 候选)<br>
-方法论蒸馏自 11 个 serenity/chokepoint skill · 🤖 Claude · kennvseren v2 · <b>仅供研究,非投资建议</b></div>
+<button class="tab" data-t="search" onclick="switchTab('search')">搜索</button></div><div class="sidextra">
+<div class="sx-h">今日热题材</div><div class="sx-themes" id="sxthemes"></div></div></div>
+  <div class="main"><div class="wrap" id="view"></div><div class="foot">数据:tushare 高级版(行情/财务/涨停 截至 2026-06-05) · 多源概念:同花顺ths/开盘啦/akshare · 卡点 severity 为策展判断非机械数字 · 涨停因子 mode-A verbatim(§3.3a 29 候选)<br>
+方法论蒸馏自 11 个 serenity/chokepoint skill · 🤖 Claude · kennvseren v3 · <b>仅供研究,非投资建议</b></div></div>
+  <aside class="rail" id="rail"><div class="rail-empty">点选个股 →<br>右栏查看详情</div></aside>
+</div>
 </div>
 <div class="ovl" id="ovl" onclick="closeDrawer()"></div>
 <div class="drw" id="drw"></div>
@@ -249,6 +292,7 @@ function doSearch(q){
   const box=$('sres');
   if(!q){box.style.display='none';return;}
   box.style.display='block';
+  if(isDesktop()){const sb=document.querySelector('.sbox').getBoundingClientRect();box.style.top=(sb.bottom+4)+'px';box.style.left=sb.left+'px';}  // 桌面 fixed 定位逃 overflow
   const ci=SEARCH.concept_index, sn=SEARCH.stock_names;
   // 概念/板块匹配
   const cmatch=Object.keys(ci).filter(t=>t.toLowerCase().includes(q)).sort((a,b)=>ci[b].stocks.length-ci[a].stocks.length).slice(0,8);
@@ -304,29 +348,68 @@ function openStock(c){
     <div class="met"><div class="l">fwd PE 27E</div><div class="v">${r.fp27??'—'}</div></div></div>`;
   // 近期涨停
   if(r.lu>0||r.streak>0){h+=`<div class="sec">近期涨停</div><div class="line">近窗口 <b>${r.lu}</b> 次涨停,最高 <b>${r.streak}</b> 连板${r.ds!=null?`,距今 ${r.ds} 日`:''}${r.hot?` · 开盘啦人气 ${(r.hot/1000).toFixed(0)}k`:''}${r.hrank?` · 同花顺热榜 #${r.hrank}`:''}。</div>`;}
-  if(r.kth&&r.kth.length)h+=`<div class="line dim">今日热题材:${r.kth.join(' / ')}</div>`;
+  if(r.kth&&r.kth.length)h+=`<div class="line dim">今日热题材:${r.kth.map(esc).join(' / ')}</div>`;
   // 卡点
-  if(r.supc||r.subst){h+=`<div class="sec">结构卡点(策展判断)</div><div class="line">供应商:${r.supc||'—'}${r.sole?' · 近 sole-source':''}<br>替代等待:${r.subst||'—'}${r.pca?'<br>前周期类比:'+r.pca:''}</div>`;}
-  if(r.dr)h+=`<div class="line"><b style="color:var(--green)">驱动</b> ${r.dr}</div>`;
-  if(r.rk)h+=`<div class="line"><b style="color:var(--amber)">风险</b> ${r.rk}</div>`;
-  if(r.quar)h+=`<div class="line"><b style="color:var(--red)">⚠隔离</b> ${r.quar}</div>`;
-  if(r.anti)h+=`<div class="line"><b style="color:var(--red)">AVOID</b> ${r.anti}</div>`;
-  if(r.paths&&r.paths.length)h+=`<div class="sec">深挖路径</div>`+r.paths.map(p=>`<div class="line dim">${p}</div>`).join('');
+  if(r.supc||r.subst){h+=`<div class="sec">结构卡点(策展判断)</div><div class="line">供应商:${esc(r.supc)||'—'}${r.sole?' · 近 sole-source':''}<br>替代等待:${esc(r.subst)||'—'}${r.pca?'<br>前周期类比:'+esc(r.pca):''}</div>`;}
+  if(r.dr)h+=`<div class="line"><b style="color:var(--green)">驱动</b> ${esc(r.dr)}</div>`;
+  if(r.rk)h+=`<div class="line"><b style="color:var(--amber)">风险</b> ${esc(r.rk)}</div>`;
+  if(r.quar)h+=`<div class="line"><b style="color:var(--red)">⚠隔离</b> ${esc(r.quar)}</div>`;
+  if(r.anti)h+=`<div class="line"><b style="color:var(--red)">AVOID</b> ${esc(r.anti)}</div>`;
+  if(r.paths&&r.paths.length)h+=`<div class="sec">深挖路径</div>`+r.paths.map(p=>`<div class="line dim">${esc(p)}</div>`).join('');
   // T1 verbatim
   if(r.t1&&r.t1row)h+=`<div class="sec">T1board §3.3a verbatim</div><div class="t1box">${esc(r.t1row)}</div>`;
   else h+=`<div class="line dim" style="margin-top:12px">T1board:非当日涨停候选,涨停模型(gbdt/tier)不适用(铁律#4)。</div>`;
   h+='</div>';
-  $('drw').innerHTML=h; $('drw').classList.add('on'); $('ovl').classList.add('on'); document.body.style.overflow='hidden';
+  if(isDesktop()){ $('rail').innerHTML=h; $('rail').scrollTop=0; }                 // 桌面:右栏常驻
+  else { $('drw').innerHTML=h; $('drw').classList.add('on'); $('ovl').classList.add('on'); document.body.style.overflow='hidden'; }  // 手机:底部抽屉
 }
-function closeDrawer(){$('drw').classList.remove('on');$('ovl').classList.remove('on');document.body.style.overflow='';}
+const isDesktop=()=>matchMedia('(min-width:900px)').matches;
+function closeDrawer(){
+  if(isDesktop()){ $('rail').innerHTML='<div class="rail-empty">点选个股 →<br>右栏查看详情</div>'; }
+  else { $('drw').classList.remove('on');$('ovl').classList.remove('on');document.body.style.overflow=''; }
+}
+
+// ---------- 复核审计:结构 × 动量 正交 2×2 ----------
+const CK_STRONG=58;
+const isHot=r=>(r.streak>=2)||(r.lu>=2)||r.t1===1;
+const isStrong=r=>r.ck!=null&&r.ck>=CK_STRONG;
+function qstkRow(r,metric){return `<div class="qstk" onclick="openStock('${r.c}')"><span class="qn">${esc(r.n)} <span class="code">${r.c}</span></span><span class="qm" style="color:${scoreColor(r.ck||0)}">${metric}</span></div>`;}
+function catalystStrip(){
+  // 降级版(kenmoe 裁决):只渲染可算/公开节奏;认证里程碑/政策窗口 tushare 无一手源 → 诚实标待录入,不 LLM 臆造
+  const yr=(D.meta&&D.meta.as_of||'').slice(0,4);
+  const steps=[['GB200','2024 放量',yr==='2024'],['GB300','2025 推理',yr==='2025'],['Rubin','2026 爬坡',yr==='2026'],['Rubin Ultra','2027',yr>='2027']];
+  return `<div class="cat"><div class="ch">⚡ Vera Rubin 平台节奏(NVIDIA 公开 roadmap · 可算)</div>
+  <div class="cl">${steps.map(s=>`<div class="cn ${s[2]?'on':''}"><b>${s[0]}</b>${s[1]}</div>`).join('')}</div>
+  <div style="font-size:9.5px;color:rgba(255,255,255,.6);margin-top:7px">财报披露窗口见个股详情 · 认证里程碑/政策窗口 tushare 无结构化一手源,需人工录入(不 LLM 臆造,守 CURATED 铁律)</div></div>`;
+}
+function audit2x2(){
+  const pool=RECS.filter(r=>r.tier==='core-verified'||r.tier==='ext-curated'||r.tier==='ext-taxonomy');
+  const watch=pool.filter(r=>isStrong(r)&&!isHot(r)).sort((a,b)=>{
+    const ac=(a.pe==null?60:a.pe)+(a.nr||9)*3, bc=(b.pe==null?60:b.pe)+(b.nr||9)*3;  // 低拥挤(低PE分位+低券商)优先
+    return (b.ck-a.ck)||(ac-bc);});
+  const hit=pool.filter(r=>isStrong(r)&&isHot(r)).sort((a,b)=>b.ck-a.ck);
+  const trap=pool.filter(r=>!isStrong(r)&&isHot(r)).sort((a,b)=>(b.streak-a.streak)||(b.lu-a.lu));  // 全补集不漏桶:弱∩热=动量无强结构=该警惕(证伪标记内嵌metric高亮)
+  const coldN=pool.filter(r=>!isStrong(r)&&!isHot(r)).length;
+  const card=(cls,emoji,title,desc,arr,fmt,more)=>`<div class="qcard ${cls}"><div class="qh">${emoji} ${title} <span class="dim" style="font-size:10px;font-weight:400">${arr.length}</span></div><div class="qd">${desc}</div>${arr.slice(0,more).map(fmt).join('')||'<div class="dim" style="font-size:11px">无</div>'}${arr.length>more?`<div class="qmore">+${arr.length-more} 更多…</div>`:''}</div>`;
+  let h=catalystStrip();
+  h+=`<div class="note"><b>复核审计 = 结构卡点(多年) × 涨停动量(近20日)正交 2×2 错位。</b>两轴独立可算,不依赖 LLM 臆造。<b>不暗示任一引擎有缺陷</b>——§3.3a 本只覆盖涨停候选,大票不在其内是设计本义(kenroast 修正)。</div>`;
+  h+=`<div class="q2">
+   ${card('q-watch','🎯','潜力前夜 (该盯)','结构强(卡点≥'+CK_STRONG+') ∩ 近期未涨停 ∩ 低拥挤 → 机构还没发现的冷门卡点',watch,r=>qstkRow(r,'卡点'+r.ck+(r.pe!=null?' · PE'+r.pe+'%':'')),8)}
+   ${card('q-hit','✅','双击 (确认)','结构强 ∩ 近期涨停 → 卡点+动量双确认',hit,r=>qstkRow(r,'卡点'+r.ck+' · '+(r.streak>=2?r.streak+'板':r.lu+'涨停')),6)}
+   ${card('q-trap','⚠️','动量陷阱 (该警惕)','涨停热但结构弱/盈利证伪 → 蹭概念,看着像实则证伪',trap,r=>qstkRow(r,(r.streak>=2?r.streak+'板':r.lu+'涨停')+(r.np!=null&&r.np<0?' · 净利'+r.np+'%':'')),6)}
+   <div class="qcard q-cold"><div class="qh">😴 冷区 <span class="dim" style="font-size:10px;font-weight:400">${coldN}</span></div><div class="qd">结构弱 ∩ 无近期涨停 → 暂不关注</div><div class="dim" style="font-size:11px">${coldN} 只,略</div></div>
+  </div>`;
+  return h;
+}
 
 // ---------- tabs ----------
-let curTab='composite';
+let curTab='audit';
 function switchTab(t){
   curTab=t;
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
   const v=$('view');
-  if(t==='composite')v.innerHTML='<div class="note">综合榜 = 潜力(结构卡点+低拥挤) × 强势(近20日涨停/连板+热度)加权。点开看个股全画像。</div>'+rankList('comp');
+  if(t==='audit')v.innerHTML=audit2x2();
+  else if(t==='composite')v.innerHTML='<div class="note">综合榜 = 潜力(结构卡点+低拥挤) × 强势(近20日涨停/连板+热度)加权。点开看个股全画像。</div>'+rankList('comp');
   else if(t==='potential')v.innerHTML='<div class="note"><b>潜力榜:</b>结构性卡点强 + 低拥挤(低PE分位/低券商覆盖)+ 兑现有空间 — 找还没被发现的强势前夜。</div>'+rankList('pot');
   else if(t==='strength')v.innerHTML='<div class="note"><b>强势榜:</b>近20日涨停次数/连板高度 + 概念热度 + 时效 — 找当下最强的产业链股。</div>'+rankList('str');
   else if(t==='chain')v.innerHTML=chainView();
@@ -338,7 +421,15 @@ function switchTab(t){
 const sin=$('sin');
 sin.addEventListener('input',e=>{document.querySelector('.sbox').classList.toggle('on',!!e.target.value);doSearch(e.target.value);});
 $('sclr').onclick=()=>{sin.value='';doSearch('');document.querySelector('.sbox').classList.remove('on');};
-switchTab('composite');
+// 跨断点 resize:清 mobile drawer 的 overflow 锁(否则放大到桌面页面卡死),调和 drawer↔rail
+matchMedia('(min-width:900px)').addEventListener('change',e=>{
+  if(e.matches){ document.body.style.overflow=''; $('drw').classList.remove('on'); $('ovl').classList.remove('on'); }
+  else { const rl=$('rail'); if(rl) rl.innerHTML='<div class="rail-empty">点选个股 →<br>右栏查看详情</div>'; }
+  doSearch(sin.value);  // 重定位/隐藏搜索下拉
+});
+// 桌面侧栏 热题材(可点搜)
+(function(){const el=$('sxthemes');if(el&&D.hot_themes){el.innerHTML=D.hot_themes.map(t=>{const q=t.replace(/'/g,"\\'");return `<span class="sxt" onclick="document.getElementById('sin').value='${q}';doSearch('${q}')">${esc(t)}</span>`;}).join('');}})();
+switchTab('audit');
 
 </script><!-- kengit analytics -->
 <script>
