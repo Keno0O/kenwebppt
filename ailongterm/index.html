@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<!-- Layout: A Classic Tab -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI算力·卡点长投挖掘 | 60/00/30 主板</title>
+<style>
+:root{
+  --blue:#1226AA; --tech:#00A0DF; --blueDeep:#091252; --blueMid:#2E4FD0;
+  --blueLight:#E8EEFF; --bluePale:#F4F6FF; --techLight:#E0F4FC; --techPale:#CCF0FF;
+  --green:#0EA573; --greenLight:#E6F9F0; --amber:#E89820; --amberLight:#FFF8E6;
+  --red:#C85040; --redPale:#FFF0EE;
+  --white:#fff; --bg:#F5F7FC; --dark:#1A1A2E;
+  --tMid:#3A3F5C; --tLight:#6B7094; --tMuted:#9098B8; --bd:#D8E2F0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--tMid);font-size:12px;line-height:1.55;}
+*:focus-visible{outline:2px solid var(--tech);outline-offset:2px;}
+a{color:var(--tech);text-decoration:none;}
+.header{background:linear-gradient(135deg,#091252,#1226AA);padding:16px 24px;display:flex;
+  justify-content:space-between;align-items:center;box-shadow:0 2px 12px rgba(18,38,170,.15);flex-wrap:wrap;gap:10px;}
+.header h1{font-size:17px;font-weight:700;color:#fff;letter-spacing:.3px;}
+.header .sub{font-size:10px;color:rgba(255,255,255,.7);margin-top:3px;letter-spacing:.5px;}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;}
+.kpi{background:rgba(255,255,255,.12);border-radius:8px;padding:7px 14px;text-align:center;min-width:84px;backdrop-filter:blur(8px);}
+.kpi .n{font-size:18px;font-weight:800;color:#fff;}
+.kpi .l{font-size:8px;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.5px;margin-top:1px;}
+.tabbar{display:flex;background:#fff;border-bottom:1px solid var(--bd);padding:0 12px;position:sticky;top:0;z-index:50;overflow-x:auto;}
+.tab-btn{padding:11px 16px;font-size:11px;font-weight:400;color:var(--tLight);background:transparent;border:none;
+  border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .15s ease;}
+.tab-btn:hover{background:var(--bluePale);color:var(--blue);}
+.tab-btn.active{color:var(--blue);background:var(--blueLight);border-bottom:2px solid var(--blue);font-weight:700;}
+.wrap{padding:18px 24px 40px;max-width:1380px;margin:0 auto;}
+.view{display:none;animation:fade .15s ease;}
+.view.active{display:block;}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.sec-title{font-size:14px;font-weight:700;color:var(--blue);margin:6px 0 12px;display:flex;align-items:center;gap:8px;}
+.sec-title .rule{flex:1;height:1px;background:var(--bd);}
+.card{background:#fff;border:1px solid var(--bd);border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden;margin-bottom:14px;}
+.card .bar{height:4px;}
+.card-h{padding:11px 16px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+.card-b{padding:14px 16px;}
+.lede{background:linear-gradient(135deg,#F4F6FF,#E8EEFF);border:1px solid var(--bd);border-left:4px solid var(--blue);
+  border-radius:8px;padding:14px 18px;font-size:12.5px;color:var(--tMid);line-height:1.7;margin-bottom:14px;}
+.lede b{color:var(--blue);}
+table{width:100%;border-collapse:separate;border-spacing:0;border-radius:10px;overflow:hidden;border:1px solid var(--bd);background:#fff;}
+thead tr{background:var(--blueDeep);}
+th{padding:8px 10px;font-size:9px;font-weight:700;color:#fff;text-align:left;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;}
+td{padding:7px 10px;font-size:10.5px;color:var(--tMid);border-bottom:1px solid var(--bd);vertical-align:top;}
+tbody tr:nth-child(odd){background:#fff;}
+tbody tr:nth-child(even){background:var(--bluePale);}
+tbody tr:hover{background:var(--blueLight);}
+.tbl-scroll{overflow-x:auto;border-radius:10px;}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;white-space:nowrap;}
+.b-blue{background:var(--blueLight);color:var(--blue);}
+.b-tech{background:var(--techLight);color:#0782b3;}
+.b-green{background:var(--greenLight);color:var(--green);}
+.b-amber{background:var(--amberLight);color:#b9760f;}
+.b-red{background:var(--redPale);color:var(--red);}
+.b-gray{background:#EEF1F7;color:var(--tLight);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.pick{background:#fff;border:1px solid var(--bd);border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden;display:flex;flex-direction:column;transition:all .25s ease;}
+.pick:hover{box-shadow:0 4px 16px rgba(0,0,0,.10);transform:translateY(-1px);}
+.pick .ph{padding:11px 14px;border-bottom:1px solid var(--bd);}
+.pick .nm{font-size:13px;font-weight:700;color:var(--blue);}
+.pick .code{font-size:9px;color:var(--tMuted);font-family:"SF Mono",Consolas,monospace;}
+.pick .pb{padding:12px 14px;flex:1;}
+.mrow{display:flex;flex-wrap:wrap;gap:4px 12px;margin-bottom:10px;}
+.mitem{font-size:10px;color:var(--tLight);}
+.mitem b{color:var(--tMid);font-weight:700;}
+.thesis{font-size:11px;color:var(--tMid);line-height:1.6;margin-bottom:8px;}
+.vf{font-size:10px;line-height:1.55;padding:6px 9px;border-radius:6px;margin-top:6px;}
+.vf.ok{background:var(--greenLight);}.vf.no{background:var(--redPale);}
+.vf .k{font-weight:700;}
+.vf.ok .k{color:var(--green);}.vf.no .k{color:var(--red);}
+.funnel{display:flex;flex-direction:column;gap:6px;margin:8px 0;}
+.fstep{background:var(--blueLight);border-left:4px solid var(--blue);border-radius:6px;padding:7px 12px;font-size:11px;display:flex;justify-content:space-between;align-items:center;}
+.fstep .v{font-weight:800;color:var(--blue);font-family:"SF Mono",Consolas,monospace;}
+.fstep:nth-child(2){margin-left:18px;background:#EAF0FF;}
+.fstep:nth-child(3){margin-left:36px;}
+.fstep:nth-child(4){margin-left:54px;background:var(--techLight);border-left-color:var(--tech);}
+.fstep:nth-child(5){margin-left:72px;background:var(--techLight);border-left-color:var(--tech);}
+.note{font-size:10px;color:var(--tLight);line-height:1.6;}
+ul.tight{margin:4px 0 4px 18px;}ul.tight li{font-size:11px;margin-bottom:5px;line-height:1.55;}
+.disc{background:#FFF8E6;border:1px solid var(--amber);border-radius:8px;padding:10px 14px;font-size:10.5px;color:#7a5210;line-height:1.6;margin-bottom:14px;}
+.pos{color:var(--tech);font-weight:700;}.neg{color:var(--tLight);}
+.footer{border-top:1px solid var(--bd);padding:12px 24px;font-size:9px;color:var(--tMuted);text-align:center;line-height:1.6;}
+@media(max-width:1199px){.grid2,.grid3{grid-template-columns:1fr;}.header{flex-direction:column;align-items:flex-start;}}
+@media(max-width:1024px){.tab-btn{padding:9px 11px;font-size:10px;}.wrap{padding:14px 12px 32px;}}
+</style>
+</head>
+<body>
+<!-- 访问密码门 -->
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+  <div style="font-family:-apple-system,sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div>
+  <input id="auth-input" type="password" placeholder="Access Code" autocomplete="off"
+    style="width:200px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:1rem;font-family:-apple-system,sans-serif;outline:none;text-align:center;letter-spacing:.1em;">
+  <div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0;transition:opacity .3s">incorrect code</div>
+  <div style="font-size:.6rem;color:rgba(255,255,255,.15);margin-top:20px">Press Enter to continue</div>
+</div>
+<script>
+const AUTH_HASH='7d153d2a4423e402868a5eb0cbe8bbdefa87bd0888eef1ea6febd769152bc0d3';
+document.addEventListener('DOMContentLoaded',function(){
+  if(sessionStorage.getItem('kengit-authed')==='1'){var g=document.getElementById('auth-gate');if(g)g.remove();return;}
+  const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
+  const mainEls=Array.from(document.body.children).filter(el=>el.id!=='auth-gate'&&el.tagName!=='SCRIPT'&&el.tagName!=='SVG');
+  mainEls.forEach(el=>{el.dataset.kengitHidden='1';el.style.display='none';});
+  setTimeout(()=>input.focus(),100);
+  input.addEventListener('keydown',async e=>{
+    if(e.key!=='Enter')return;
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(input.value));
+    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hash===AUTH_HASH){
+      sessionStorage.setItem('kengit-authed','1');
+      if(window.kengitTrackVisit)window.kengitTrackVisit();
+      gate.style.opacity='0';gate.style.transition='opacity .5s';
+      setTimeout(()=>{gate.remove();document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});},500);
+    }else{err.style.opacity='1';input.value='';input.style.borderColor='#E74C3C';setTimeout(()=>{err.style.opacity='0';input.style.borderColor='rgba(255,255,255,.1)';},2000);}
+  });
+});
+</script>
+
+<div class="header">
+  <div>
+    <h1>AI 算力·卡点 长投标的挖掘 · 60/00/30 主板</h1>
+    <div class="sub">承《三安光电深度研判》主线 · tushare 高级版 + 同花顺概念板块 + kennvseren 卡点策展 + 逐股 web 尽调 · 基准日 2026-06-12</div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="n">3199</div><div class="l">60/00 在册</div></div>
+    <div class="kpi"><div class="n">11</div><div class="l">主板精选</div></div>
+    <div class="kpi"><div class="n">10</div><div class="l">创业板精选</div></div>
+    <div class="kpi"><div class="n">1</div><div class="l">小盘真敞口</div></div>
+  </div>
+</div>
+
+<div class="tabbar" id="tabbar" role="tablist">
+  <button class="tab-btn active" data-v="ov" role="tab">总览 · 总判</button>
+  <button class="tab-btn" data-v="pick" role="tab">精选 11（主板）</button>
+  <button class="tab-btn" data-v="char" role="tab">历史股性</button>
+  <button class="tab-btn" data-v="cyb" role="tab">创业板 30</button>
+  <button class="tab-btn" data-v="small" role="tab">小盘 &lt;100亿</button>
+  <button class="tab-btn" data-v="addon" role="tab">补遗 · 避雷</button>
+  <button class="tab-btn" data-v="bound" role="tab">验证点 · 边界</button>
+</div>
+
+<div class="wrap">
+<div class="disc">[!] <b>认识论边界（不可阉割）</b>：本报告是结构化对抗式意见生成器输出，<b>非经验证投资信号</b>；所有打分 / kennvseren severity / verdict 为主观先验或工程约定，<b>非回测校准参数</b>；<b>不构成投资建议</b>。涨跌幅以中性数字呈现（不用红绿，规避 A 股「红涨绿跌」歧义）。</div>
+
+<!-- ===== 总览 ===== -->
+<div class="view active" id="ov">
+  <div class="lede">在「60/00 主板 + AI 算力卡点 + 护城河/盈利质量并重」三重约束下，同时满足"卡点真·盈利实·估值不离谱"者<b>极少</b>——主板优质卡点股已被这轮 AI 行情大幅定价（进攻组多只两年涨 6–12 倍）。"便宜的卡点"几乎只剩两类：① 盈利扎实但股价<b>滞涨</b>的质量股（紫光国微/韦尔/士兰微/沃尔核材）；② 估值低、政策卡点稳健兑现的战略矿产（驰宏锌锗）。正确读法 = <b>5 稳健底仓 + 1 核心持仓补 + 5 进攻弹性</b>，按子链分散、左侧分批，而非全仓追高。</div>
+  <div class="sec-title">关键结论<span class="rule"></span></div>
+  <div class="tbl-scroll"><table><thead><tr><th>维度</th><th>结论</th><th>置信</th></tr></thead><tbody>
+    <tr><td>60/00 是否存在三安之外优质卡点长投</td><td>存在，但"卡点纯度×盈利质量×估值安全"三者兼得者稀缺</td><td><span class="badge b-tech">中高</span></td></tr>
+    <tr><td>稳健底仓首选</td><td>紫光国微 / 韦尔股份(豪威) / 驰宏锌锗</td><td><span class="badge b-amber">中</span></td></tr>
+    <tr><td>进攻弹性首选</td><td>沪电股份（卡点真+盈利兑现最实，估值/拥挤最弱环）</td><td><span class="badge b-amber">中</span></td></tr>
+    <tr><td>最"三安式"左侧对赌</td><td>云南锗业（定性最强财务最弱）/ 士兰微（SiC IDM 重资产）</td><td><span class="badge b-amber">中</span></td></tr>
+    <tr><td>二次复核修正</td><td><b>沃尔核材</b>（高速铜连接，便宜+卡点+滞涨）本应进精选，已补</td><td><span class="badge b-tech">中高</span></td></tr>
+    <tr><td>小盘 &lt;100亿 真潜力</td><td>几近空集；12 只尽调 9 只蹭概念，仅新亚电子 AI 敞口被实证</td><td><span class="badge b-tech">高</span></td></tr>
+  </tbody></table></div>
+
+  <div class="sec-title">筛选漏斗（透明可复核）<span class="rule"></span></div>
+  <div class="grid2">
+    <div class="card"><div class="bar" style="background:var(--blue)"></div><div class="card-h"><span style="font-weight:700;color:var(--blue)">60/00 主板</span></div><div class="card-b"><div class="funnel">
+      <div class="fstep"><span>60/00 在册</span><span class="v">3199</span></div>
+      <div class="fstep"><span>AI 概念∪硬件申万 L2</span><span class="v">744</span></div>
+      <div class="fstep"><span>收紧 on-thesis（去蹭概念+负向行业）</span><span class="v">287</span></div>
+      <div class="fstep"><span>打分+卡点 overlay+AVOID 否决</span><span class="v">18</span></div>
+      <div class="fstep"><span>子链去重+稳健/进攻配平</span><span class="v">10→11</span></div>
+    </div></div></div>
+    <div class="card"><div class="bar" style="background:var(--tech)"></div><div class="card-h"><span style="font-weight:700;color:var(--blue)">小盘 &lt;100亿（同花顺概念全用上）</span></div><div class="card-b"><div class="funnel">
+      <div class="fstep"><span>概念∪硬件行业（&lt;100亿）</span><span class="v">150</span></div>
+      <div class="fstep"><span>tushare 行业脊柱清洗</span><span class="v">40</span></div>
+      <div class="fstep"><span>逐股 web 尽调证伪</span><span class="v">12</span></div>
+      <div class="fstep"><span>AI 敞口被实证</span><span class="v">1</span></div>
+      <div class="fstep"><span>真潜力短名单</span><span class="v">3</span></div>
+    </div>
+    <div class="note" style="margin-top:8px;">打分 = 护城河30 + 盈利质量30 + 估值20 + 成长20（60/00）；小盘 = 财务35 + 卡点/成长35 + 毛利15 + 估值15。kennvseren AVOID（英维克/合盛硅业/东山精密）−30 否决。</div>
+    </div></div>
+  </div>
+
+  <div class="sec-title">二次复核后 · 合并精选总表<span class="rule"></span></div>
+  <div class="tbl-scroll"><table><thead><tr><th>组</th><th>标的（按子链）</th></tr></thead><tbody>
+    <tr><td><span class="badge b-green">稳健底仓</span></td><td>紫光国微(特种IC) · 韦尔股份(CIS) · 雅克科技(材料) · 驰宏锌锗(锗) · 深南电路(载板)</td></tr>
+    <tr><td><span class="badge b-tech">核心补</span></td><td><b>沃尔核材</b>（高速铜连接 · 便宜+卡点+滞涨，修正遗漏）</td></tr>
+    <tr><td><span class="badge b-amber">进攻弹性</span></td><td>沪电股份(AI-PCB) · 兆易创新(存储反转) · 士兰微(SiC IDM) · 光迅科技(光模块) · 云南锗业(锗镓对赌)</td></tr>
+    <tr><td><span class="badge b-gray">观察名单</span></td><td>生益 · 有研新材 · 北方稀土 · 通富 · 锡业 · 斯达 · 长电 · 中兴 + 北方华创(设备) · 工业富联(服务器) · 立讯(互连) · 星网锐捷(数通) · 万润(材料)</td></tr>
+    <tr><td><span class="badge b-red">警示/避雷</span></td><td>英维克(液冷·AVOID+极贵) · 闻泰科技(安世地缘黑天鹅·已破净)</td></tr>
+  </tbody></table></div>
+</div>
+
+<!-- ===== 精选11 ===== -->
+<div class="view" id="pick">
+  <div class="sec-title">稳健底仓 5 + 核心持仓补 1<span class="rule"></span></div>
+  <div class="grid2" id="grid-stable"></div>
+  <div class="sec-title">进攻弹性 5（认估值与周期风险）<span class="rule"></span></div>
+  <div class="grid2" id="grid-attack"></div>
+</div>
+
+<!-- ===== 股性 ===== -->
+<div class="view" id="char">
+  <div class="lede">tushare qfq，2023-01 至 2026-06-12（累计≈2.4 年，非严格"近 3 年"）；β 对沪深300、日频。<b>滞涨质量股</b>（紫光 −46% / 韦尔 −32%近1年 / 士兰 −3% / 沃尔 −10%近1年）与三安最像——盈利在、股价没跟；<b>火箭股</b>（沪电 +936% / 光迅 +1184% / 深南 +602%）已大幅定价 AI 预期。全榜治理风险普遍<b>低于三安</b>。</div>
+  <div class="tbl-scroll"><table id="char-table"><thead><tr>
+    <th>标的</th><th>子链/组</th><th>β</th><th>年化波动%</th><th>近1年%</th><th>23年来累计%</th><th>近1年回撤%</th><th>画像</th>
+  </tr></thead><tbody></tbody></table></div>
+</div>
+
+<!-- ===== 创业板 ===== -->
+<div class="view" id="cyb">
+  <div class="lede">创业板补的是「<b>AI 弹性进攻位</b>」，不是安全边际：盈利质量这轮更亮（光模块三剑客 ROE 21–72%、扣非 20–107 亿），但<b>估值更贵、股性更烈、普涨数十倍</b>（新易盛/旭创 2023 年来 +5600%）。纯增量 = 光模块利润龙头 + 半导体材料上游卡点群（光刻胶/抛光垫/靶材，比 60/00 的雅克更纯）。</div>
+  <div class="tbl-scroll"><table id="cyb-table"><thead><tr>
+    <th>组</th><th>代码</th><th>名称</th><th>子链</th><th>市值(亿)</th><th>PE</th><th>5yrROE</th><th>2025扣非(亿)</th><th>一句话</th>
+  </tr></thead><tbody></tbody></table></div>
+  <div class="note" style="margin-top:10px;">跨板防撞车：光模块三剑客(旭创/新易盛/天孚)+光迅同源，只配 1–2 只；AI-PCB 已横跨两板（沪电/深南/胜宏）合并不超 1–2 只。真正"便宜+卡点"全样本仅个位数：驰宏锌锗/扬杰/卓胜微(反转)/韦尔/紫光国微。</div>
+</div>
+
+<!-- ===== 小盘 ===== -->
+<div class="view" id="small">
+  <div class="lede"><b>头号结论：主板 &lt;100 亿的"真卡点潜力股"几乎是空集。</b> 把同花顺全部 20 个 AI 硬件概念板块用上，反而暴露概念标签<b>约九成是噪声</b>。对最像的 12 只逐股 web 尽调：<b>9 只蹭概念无实质</b>、2 只真成长但非卡点、<b>仅 1 只（新亚电子）AI 敞口被实证</b>。结构性原因：A 股定价效率高，真卡点公司一旦被认知市值早涨过 100 亿；真小盘卡点多在 688/300（被 00/60 约束排除）。</div>
+  <div class="sec-title">12 只逐股尽调（默认怀疑 + web 证伪）<span class="rule"></span></div>
+  <div class="tbl-scroll"><table id="small-table"><thead><tr>
+    <th>代码</th><th>名称</th><th>实际主业</th><th>AI 卡点敞口</th><th>Verdict</th><th>主要风险旗标</th>
+  </tr></thead><tbody></tbody></table></div>
+  <div class="sec-title">唯一短名单（浅水区里相对站得住的极少数）<span class="rule"></span></div>
+  <div class="grid3" id="small-picks"></div>
+  <div class="note" style="margin-top:8px;">其余 9 只就「AI 算力·卡点长投」维度不构成真潜力，未纳入清单。实操：别在主板 &lt;100亿 硬找"下一个三安/沪电"——真标的极稀薄、减持/解禁/重组旗标密集；要真小盘卡点请下沉到 688/300。</div>
+</div>
+
+<!-- ===== 补遗 ===== -->
+<div class="view" id="addon">
+  <div class="lede">二次复核全流程，扫描"高分但未入选"标的 + 显式核查关键卡点名字。<b>确有遗漏</b>：沃尔核材本该进精选（见「精选11」核心补）；几个子链（半导体设备/AI服务器整机/高速互连/液冷）在主榜代表性不足，补遗如下。</div>
+  <div class="sec-title">子链盲区补遗（并入观察名单）<span class="rule"></span></div>
+  <div class="tbl-scroll"><table id="addon-table"><thead><tr>
+    <th>代码</th><th>名称</th><th>子链（此前缺）</th><th>市值(亿)</th><th>PE</th><th>5yrROE</th><th>2025扣非(亿)</th><th>定性补遗</th>
+  </tr></thead><tbody></tbody></table></div>
+  <div class="sec-title">避雷补遗<span class="rule"></span></div>
+  <div class="card"><div class="bar" style="background:var(--red)"></div><div class="card-h"><span style="font-weight:700;color:var(--red)">闻泰科技(600745) · 比三安更严重的地缘/治理黑天鹅</span><span class="badge b-red">避雷</span></div>
+  <div class="card-b"><div class="thesis">安世半导体（功率/模拟车规 IDM）母公司，曾是 A 股半导体重仓白马。但 2025 安世(Nexperia)遭<b>荷兰政府干预/控制权风波</b>，叠加 ODM 拖累：2025 扣非转亏 −3.16 亿、5 年均 ROE −29.5%、近 1 年 −46%、2023 年来 −68%、<b>PB 已破净 0.94</b>。</div>
+  <div class="vf no"><span class="k">定性 </span>地缘黑天鹅击穿（性质比三安治理雷更严重、已实质性恶化）。列此提示：<b>勿因"安世 IDM 卡点"叙事抄底</b>——卡点资产可被地缘强制剥离，是本主线最硬的尾部风险案例。</div></div></div>
+  <div class="card"><div class="bar" style="background:var(--amber)"></div><div class="card-h"><span style="font-weight:700;color:#b9760f">英维克(002837) · 液冷子链龙头但 AVOID</span><span class="badge b-amber">警示</span></div>
+  <div class="card-b"><div class="thesis">数据中心液冷龙头（扣非 5.04 亿连 5 正），但 kennvseren 标 <b>AVOID</b>（毛利压缩 / 液冷可双供卡点弱 / 业绩证伪）+ <b>PE174 / PB25 极贵</b>、近1年 +225%。子链龙头但策展警示+估值透支，<b>不推荐，仅补全液冷子链</b>。</div></div></div>
+</div>
+
+<!-- ===== 验证点+边界 ===== -->
+<div class="view" id="bound">
+  <div class="sec-title">跨标的紧盯的 5 个验证点<span class="rule"></span></div>
+  <div class="tbl-scroll"><table><thead><tr><th>#</th><th>验证点</th><th>决定谁的走向</th></tr></thead><tbody>
+    <tr><td>1</td><td><b>北美 AI capex 斜率（2026H2）</b></td><td>沪电/深南/生益/光迅/胜宏（PCB-CCL-光模块链最硬共同证伪点）</td></tr>
+    <tr><td>2</td><td><b>存储超级周期拐点</b>（DRAM/NAND/NOR 价 + 毛利，CFO 已预告趋平）</td><td>兆易创新的反转弹性是否见顶</td></tr>
+    <tr><td>3</td><td><b>镓锗出口管制走向</b>（2026-11-27 对美临时暂停到期）</td><td>驰宏锌锗 / 云南锗业的政策卡点叙事</td></tr>
+    <tr><td>4</td><td><b>SiC 价格战</b>（Wolfspeed 破产后产能出清）</td><td>士兰微 SiC 放量"量能否抵价"（与三安同源）</td></tr>
+    <tr><td>5</td><td><b>各标的 2026 半年报（2026-08）</b></td><td>滞涨质量股扣非拐点 / 火箭股盈利能否撑高估值</td></tr>
+  </tbody></table></div>
+  <div class="sec-title">认识论边界（P0，不可阉割）<span class="rule"></span></div>
+  <div class="card"><div class="bar" style="background:var(--blue)"></div><div class="card-b">
+    <ul class="tight">
+      <li><b>不构成投资建议</b>，不对价格方向作任何保证。所有标的含未定价开放变量（AI capex / 地缘管制 / 周期拐点），只能跟踪、无法精确定价。</li>
+      <li><b>打分体系是工程约定、非回测校准</b>：四维分位 + 卡点 severity 加成 + 稳健/进攻 gate 阈值均为主观先验；综合分仅用于<b>池内相对排序</b>。</li>
+      <li><b>kennvseren severity 是人工策展判断</b>（as_of 2026-06，蒸馏自 vera-rubin/serenity），覆盖未必穷尽，与硬数据不可混为一谈。</li>
+      <li><b>THS 概念标签噪声极高</b>（小盘节正是其实证）；"实际主业/AI 敞口"以各股 web 尽调为准（来源 2025–2026 公告/研报/互动易）。</li>
+      <li><b>口径提示</b>：扣非 vs 归母不同（长持锚定扣非）；部分公司单季增速远高于年度（紫光 Q1+46% vs 年度+11.5%、兆易 Q1 营收+119% vs +25%）；个别毛利率 tushare 与年报口径有差（士兰微 tushare 24.6% vs 年报约 19%）。</li>
+      <li><b>小盘股</b>信息披露薄、流动性差、题材波动剧烈，AI 敞口占比多未单独披露，判断含较高不确定性；减持/解禁/重组旗标须以最新公告复核。</li>
+    </ul>
+  </div></div>
+  <div class="note">数据溯源：tushare 高级版（stock_basic / daily_basic / fina_indicator_vip / income_vip / pro_bar qfq / ths_index / ths_member / index_member_all，实拉 20260612）；kennvseren chokepoint_seed.json；22 份 subagent web 尽调。</div>
+</div>
+
+</div>
+
+<div class="footer">
+  AI 算力·卡点长投挖掘报告（60/00/30 主板） · 基准日 2026-06-12 · 生成 2026-06-15 · 数据 tushare 高级版 + 同花顺概念 + kennvseren 策展 + web 尽调<br>
+  本页为结构化研究意见，非投资建议。市场有风险，决策需自负。
+</div>
+
+<script>
+const PICKS_STABLE=[
+ {nm:"紫光国微",code:"002049.SZ",sub:"特种IC/FPGA",bar:"#1226AA",tag:["稳健","b-green"],
+  m:["市值608亿","PE36.8","PB4.4","5yrROE19.6%","毛利59%","扣非12.18亿(连5正)","β1.43 · 近1年+11.8% · 23来−45.9%"],
+  t:"国产特种集成电路绝对龙头（军工细分市占60%+），壁垒在军工可靠性认证。高ROE+高毛利+股价已深跌46%消化估值。注：「AI」属性主要是军工自主可控，民用算力敞口有限。",
+  ok:"2026 半年报特种 IC 增速维持 20%+、Q1 高增（+170%）可持续。",no:"增速转个位数/负、毛利跌破68%、招标停滞致连续两季扣非下滑。"},
+ {nm:"韦尔股份(豪威)",code:"603501.SH",sub:"CIS图像传感器",bar:"#1226AA",tag:["稳健","b-green"],
+  m:["市值1085亿","PE29.5","PB3.3","5yrROE11.8%","扣非39.1亿(连5正)","β1.23 · 近1年−31.9% · 23来+12.2%"],
+  t:"CIS 全球前三、车载 CIS 出货登顶第一；半导体里最便宜+滞涨的质量股。属「质量扎实但股价滞涨=潜在价值」一类。",
+  ok:"2026H2–2027 营收/毛利环比改善 + 车载占比提升抵消手机下滑。",no:"手机去库延长、存货减值再扩、汽车定点落地不及。"},
+ {nm:"雅克科技",code:"002409.SZ",sub:"半导体前驱体材料",bar:"#1226AA",tag:["稳健","b-green"],
+  m:["市值633亿","PE62.9","PB8.0","5yrROE9.8%","扣非9.54亿(连5正)","β1.44 · 近1年+154%"],
+  t:"国内唯一规模化半导体前驱体国产替代（全球前三），HBM/3D NAND 扩产直接拉动（HBM4 吨价值为传统 5–8 倍）。护城河集中前驱体单点；光刻胶大头是 LCD（半导体弱于南大光电）。",
+  ok:"2026H2 前驱体出货翻倍 + 稼动率回升 + 内蒙特气投产。",no:"出货大幅低于预期 / 商誉减值 / 海外大客户份额流失。"},
+ {nm:"驰宏锌锗",code:"600497.SH",sub:"锗·战略矿产",bar:"#1226AA",tag:["稳健","b-green"],
+  m:["市值468亿","PE38.9","PB2.8","股息1.08%","5yrROE7.1%","扣非10.62亿(连5正)","β1.18 · 近1年+80.5%"],
+  t:"kennvseren sev4.0/high/政策卡点，估值最低+稳健兑现（防御位）。主业铅锌托底，锗占利润不足10%，弹性小于云南锗业但更稳。",
+  ok:"锗价维持高位 + 军工红外/半导体深加工放量 + 铅锌成本下行修复 ROE。",no:"对美管制全面解除/锗价回落 + 铅锌大跌。"},
+ {nm:"深南电路",code:"002916.SZ",sub:"PCB/FC-BGA载板",bar:"#1226AA",tag:["稳健-成长","b-green"],
+  m:["市值2585亿","PE71.1","PB15.7","5yrROE14.1%","扣非31.14亿(连5正)","β1.57 · 近1年+306% · 23来+602%"],
+  t:"FC-BGA 高端载板国产化稀缺（先进封装上游真卡点，sev3.5），盈利真成长（ROE20.6、Q1+75%）。但 PB15.7 估值已高——更接近高弹性卡点核心而非安全边际。",
+  ok:"中报 AI 服务器 PCB 兑现 70 亿 + 广州 FC-BGA 高层数良率爬坡。",no:"美系 AI capex 2026H2 放缓 / 载板毛利持续 <20%。"},
+ {nm:"沃尔核材",code:"002130.SZ",sub:"高速铜连接 · 修正遗漏",bar:"#00A0DF",tag:["核心补","b-tech"],
+  m:["市值269亿","PE23.9","PB2.9","5yrROE15.2%","扣非10.93亿(连5正)","β1.29 · 近1年−10% · 23来+199%"],
+  t:"二次复核修正遗漏：seed 高速铜连接卡点（NVL 机柜内高速铜连接），同时满足卡点真+盈利扎实+估值便宜(PE24)+近1年滞涨(−10%)——「便宜+卡点+滞涨」三者兼得稀缺，综合分82.3并列最高。",
+  ok:"224G/448G 高速铜缆（CPC/CPO 配套）放量。",no:"铜连接相对光互连的长期路线之争 / 卡位兑现待验。"},
+];
+const PICKS_ATTACK=[
+ {nm:"沪电股份",code:"002463.SZ",sub:"AI算力PCB",bar:"var(--amber)",tag:["进攻核心","b-amber"],
+  m:["市值2409亿","PE56","PB15.2","5yrROE17.4%","扣非25.46亿","综合分82.8(最高)","β1.46 · 近1年+242% · 23来+936%"],
+  t:"英伟达 GB200/GB300 链 PCB 主供，北美 AI 服务器 PCB 份额 80%+、全球约40%。盈利兑现最实（ROE32、毛利逆势走强）。卡点真但估值/拥挤是全榜最弱环。",
+  ok:"2026 中报 H1 净利预增 44.6–53.4% + 泰国/43 亿扩产 H2 投产 + GB300 放量。",no:"北美 capex 指引下修 / 毛利连续两季回落 / Q2 增速 <30%（Q1 经营现金流 −64% 需盯）。"},
+ {nm:"兆易创新",code:"603986.SH",sub:"存储反转",bar:"var(--amber)",tag:["进攻","b-amber"],
+  m:["市值3376亿","PE117","PB13.6","5yrROE9.3%","扣非14.69亿","Q1扣非+530%","β1.65 · 近1年+306%"],
+  t:"NOR Flash 全球第二 + MCU 国产龙头 + 利基 DRAM。存储超级周期间接挤出受益，Q1 扣非已近全年。但 PE117 透支、CFO 预告毛利见顶、不做 HBM 仅间接受益。",
+  ok:"2026 Q2/Q3 验单季高增可持续 + 利基 DRAM 放量 + 毛利守住。",no:"DRAM/NAND 现货见顶回落 / 毛利连续两季下滑 / Q2 扣非环比转负。"},
+ {nm:"士兰微",code:"600460.SH",sub:"功率/SiC IDM",bar:"var(--amber)",tag:["进攻 · 三安式","b-amber"],
+  m:["市值535亿","PE117","PB4.4","5yrROE6.6%","扣非3.72亿","β1.24 · 近1年+33% · 23来−2.9%"],
+  t:"最像三安的 SiC IDM（自有 6/8/12 英寸线），AI 服务器电源 SiC 方案 + 8 英寸 SiC 2026H2 投产。但 ROE 仅 3.3% 薄、重资产折旧前置、撞 SiC 价格战（Wolfspeed 破产、衬底跌超40%）。",
+  ok:"8\" SiC 2026H2 投产后单季扣非环比加速 + AI 电源/车规 SiC 占比抬升 + 毛利回升 22%+。",no:"连续 2 季扣非个位数 / 毛利持续下探 / 价格战满产仍亏。"},
+ {nm:"光迅科技",code:"002281.SZ",sub:"光模块/光器件",bar:"var(--amber)",tag:["进攻","b-amber"],
+  m:["市值1653亿","PE160","PB16","5yrROE8.7%","扣非9.15亿","β1.61 · 23来+1184%"],
+  t:"光通信垂直整合最深（自有光芯片 100G EML/1.6T 硅光），字节 25 亿订单 + Google/Meta 框架。修正三安「止于下游」判断（有自有光芯片）。但 PE160 透支（涨12倍）、ROE 弱于旭创/新易盛。",
+  ok:"高端 EML/硅光自给率实测 + 1.6T/3.2T 海外大客户认证落地。",no:"认证受阻 / EML 自给停滞 / 价格战压毛利 / CPO 长期替代可插拔模块。"},
+ {nm:"云南锗业",code:"002428.SZ",sub:"锗镓对赌",bar:"var(--amber)",tag:["进攻 · 最三安式","b-amber"],
+  m:["市值603亿","PE 亏","PB41","5yrROE−1.7%","扣非−0.07亿","β1.41 · 23来+874%"],
+  t:"国内唯一量产 InP 衬底，镓锗管制定性卡点最强（sev4.0）。但扣非亏、PB41、Q1 补贴占净利 46.8%、纯题材定价——高赔率低胜率左侧对赌，仅小仓位配置，不作压舱石。",
+  ok:"2026 年报/2027 季报扣非 ROE 转正且锗价高位下 InP 放量带毛利回升。",no:"对美管制常态化松绑致锗价回落 + 扣非持续为负 + PB 无业绩回归。"},
+];
+const CHAR=[
+ ["三安光电(对照)","低β滞涨大象(治理雷)",1.17,40.3,15.4,-19.4,-39.2],
+ ["紫光国微","稳健·特种IC",1.43,41.4,11.8,-45.9,-30.0],
+ ["韦尔股份(豪威)","稳健·CIS",1.23,36.7,-31.9,12.2,-43.4],
+ ["雅克科技","稳健·材料",1.44,47.8,154.1,168.7,-21.7],
+ ["驰宏锌锗","稳健·锗",1.18,36.1,80.5,98.3,-32.8],
+ ["深南电路","稳健-成长·载板",1.57,52.5,306.4,602.4,-26.7],
+ ["沃尔核材","核心补·高速铜连接",1.29,54.5,-10.0,199.0,-45.4],
+ ["沪电股份","进攻·AI-PCB",1.46,59.0,242.5,935.6,-24.0],
+ ["兆易创新","进攻·存储",1.65,53.0,305.8,371.1,-27.4],
+ ["士兰微","进攻·SiC IDM",1.24,40.5,33.3,-2.9,-27.3],
+ ["光迅科技","进攻·光模块",1.61,61.3,377.2,1184.3,-26.7],
+ ["云南锗业","进攻·锗镓",1.41,57.6,375.6,874.2,-22.5],
+];
+const CYB=[
+ ["稳健-成长","b-green","300308","中际旭创","光模块全球龙头",12814,85.7,"21.3%",107.1,"1.6T 过 NV 认证 Q4 放量，扣非+262%真爆发"],
+ ["稳健-成长","b-green","300502","新易盛","光模块利润王",7061,65.8,"32.1%",95.07,"营收+187%、ROE72%，三剑客里估值相对最低"],
+ ["稳健-成长","b-green","300394","天孚通信","光器件/CPO 组件",3065,141.1,"26.5%",19.76,"质量分 97.5 最高，CPO 光引擎卡位，但最贵"],
+ ["稳健","b-green","300373","扬杰科技","功率半导体",525,38.3,"14.7%",11.46,"本组估值最合理的功率半导体稳健位"],
+ ["稳健","b-green","300408","三环集团","MLCC/陶瓷封装",2424,84.3,"9.8%",22.49,"MLCC+陶瓷封装，毛利44%，被动元件卡位"],
+ ["进攻","b-amber","300346","南大光电","ArF 光刻胶",410,117.8,"6.1%",2.54,"seed 最高 sev4.0，光刻胶真卡脖子但兑现最慢"],
+ ["进攻","b-amber","300054","鼎龙股份","CMP 抛光垫",753,90.7,"8.4%",6.78,"抛光垫国产替代真兑现，Q1扣非+75%"],
+ ["进攻","b-amber","300666","江丰电子","溅射靶材",727,131.7,"6.5%",3.60,"靶材已进台积电链，薄利+贵"],
+ ["进攻","b-amber","300476","胜宏科技","AI 算力 PCB",3216,68.7,"16.1%",43.04,"ROE33.8、扣非43亿，2027E~21倍组内性价比最高"],
+ ["进攻","b-amber","300782","卓胜微","射频前端反转",516,"亏","12.5%",-3.48,"周期底部、2025亏损、PB3.9便宜，左侧对赌"],
+];
+const SMALL=[
+ ["605277","新亚电子","电子线缆，含 AI 服务器高速铜缆(PCIe6.0)","实证：经安费诺进 GB系列/Dell/Google/Meta，但 AI 收入仅~5.5%","真成长·敞口实但小","b-tech","股东减持；依赖安费诺；AI 占比低"],
+ ["002729","好利科技","熔断器/电路保护元件","真有 HVDC/数据中心熔断器布局，但占比未量化","题材待验证·真业务非卡点","b-amber","减持；PE79 透支；扣非仅0.37亿"],
+ ["001314","亿道信息","AI 终端 ODM(AIPC/AI NAS/边缘 AI 盒)","真成长但组装方非算力供给(毛利16.7%)","真成长但非卡点","b-amber","大额解禁(62%)；并购商誉；Q1现金流−495%"],
+ ["001229","魅视科技","分布式视听(指挥大屏/坐席)","无实质，光模块纯沾边","蹭概念无实质","b-red","增收不增利，净利−23%"],
+ ["003015","日久光电","ITO 导电膜(消费/车载显示)","无关，PET铜箔仅试样","蹭概念无实质","b-red","实控人减持"],
+ ["600237","铜峰电子","薄膜电容(新能源/电网)","无实证 AI 订单","蹭概念/题材待验证","b-red","PE52 透支(股东增持为正面)"],
+ ["603933","睿能科技","工业自动化控制 + IC 分销","“MCU/存储”来自分销标签，无实质","蹭概念无实质","b-red","跨界并购重组不确定；应收大"],
+ ["003026","中晶科技","中低端功率分立器件用硅片","真半导体材料但非 SiC、非 AI","蹭概念(题材)","b-red","PE125 透支；股东减持"],
+ ["003028","振邦智能","白电/小家电智能控制器","CPO 纯属贴标","蹭概念无实质","b-red","2025 净利 −64%；PE72 背离"],
+ ["605058","澳弘电子","中低端家电 PCB","AI 仅口号，无订单/客户","蹭概念无实质","b-red","5.8亿转债摊薄；客户集中"],
+ ["603928","兴业股份","传统铸造/工业树脂","半导体材料仅送样未量产","蹭概念无实质","b-red","减持；Q1高增来自顺周期成本"],
+ ["002194","武汉凡谷","基站射频(华为>60%)","CPO 被公司自己否认","蹭概念无实质","b-red","2025 首亏；主业下行；减持"],
+];
+const SMALL_PICKS=[
+ {nm:"新亚电子",code:"605277.SH",bar:"#00A0DF",tag:["唯一AI敞口实证","b-tech"],
+  m:["市值66亿","PE30(最低)","PB3.76","ROE12.3%","扣非2.20亿"],
+  t:"真做 AI 服务器高速铜缆(PCIe6.0)，经 Tier-1 安费诺进 Dell/HP/Google/Meta、应用于含 GB 系列服务器。财务扎实+估值本批最低。",
+  warn:"但 AI 收入仅占~5.5%、是安费诺下游、定价权弱、卡点偏弱；有股东减持。定性=真成长·敞口已验证但占比小、待224G/448G放量。"},
+ {nm:"好利科技",code:"002729.SZ",bar:"var(--amber)",tag:["条件性","b-amber"],
+  m:["市值32亿","PE79","PB5.63","ROE4.9%","扣非0.37亿"],
+  t:"熔断器/电路保护「隐形冠军」，已切入数据中心/HVDC 高压直流熔断器（AI 服务器 800V 供电真增量赛道）。",
+  warn:"但 AI/IDC 收入占比未单独披露、料仍小；PE79 对扣非 0.37 亿明显透支。适合观察 HVDC 放量证据，不宜题材高位追。"},
+ {nm:"亿道信息",code:"001314.SZ",bar:"var(--amber)",tag:["高风险弹性","b-amber"],
+  m:["市值73亿","PE66","PB3.48","ROE13.4%","毛利16.7%"],
+  t:"AI 终端 ODM(AIPC/AI NAS/边缘 AI 盒)成长真兑现(营收+44%)。",
+  warn:"但毛利仅16.7%=代工议价弱、不掌握算力/封装核心；叠加大额解禁(62%)、并购商誉、Q1经营现金流−495%——风险旗标偏多，仅作高风险弹性观察。"},
+];
+const ADDON=[
+ ["002371","北方华创","半导体设备龙头",4836,"86.7","14.0%",53.36,"A股半导体设备绝对卡点(刻蚀/PVD/CVD/炉管/清洗)，扣非53亿真龙头；但 PE87/PB12 贵、大盘——核心但估值高，宜回调配置"],
+ ["601138","工业富联","AI 服务器整机/ODM",13917,"34.2","16.8%",341.88,"全球 AI 服务器(GB200/液冷/800G)最大体量受益、扣非342亿、PE34不贵；但毛利仅7.6%=代工非卡点，是算力基建β非卡点α"],
+ ["002475","立讯精密","高速互连/连接器",4646,"27.0","19.4%",141.69,"连接器/高速铜缆/AI 服务器互连+消费电子，ROE19/扣非142亿/PE27；AI 互连真增量但消费电子占比大"],
+ ["002396","星网锐捷","数通交换机/服务器",134,"33.0","7.2%",3.30,"数通交换机/AI 网络设备，PE33/PB1.9不贵、扣非连5正；AI 数据中心网络受益"],
+ ["002643","万润股份","半导体/OLED/沸石材料",136,"46.5","8.1%",2.62,"半导体材料(光刻胶单体/电子材料)+OLED+沸石，毛利40%、PB2.0；材料平台滞涨"],
+];
+function fmt(n){return (n>0?"+":"")+n+"%";}
+function pickCard(p){
+  return `<div class="pick"><div class="bar" style="background:${p.bar}"></div>
+    <div class="ph"><div style="display:flex;justify-content:space-between;align-items:center;gap:6px;">
+      <div><span class="nm">${p.nm}</span> <span class="code">${p.code}</span></div>
+      <span class="badge ${p.tag[1]}">${p.tag[0]}</span></div>
+      <div style="font-size:10px;color:var(--tLight);margin-top:3px;">${p.sub}</div></div>
+    <div class="pb">
+      <div class="mrow">${p.m.map(x=>`<span class="mitem">${x}</span>`).join("")}</div>
+      <div class="thesis">${p.t}</div>
+      <div class="vf ok"><span class="k">证实 </span>${p.ok}</div>
+      <div class="vf no"><span class="k">证伪 </span>${p.no}</div>
+    </div></div>`;
+}
+document.getElementById("grid-stable").innerHTML=PICKS_STABLE.map(pickCard).join("");
+document.getElementById("grid-attack").innerHTML=PICKS_ATTACK.map(pickCard).join("");
+// 股性表
+document.querySelector("#char-table tbody").innerHTML=CHAR.map(r=>{
+  const hl=r[0].includes("对照")?'style="font-weight:700;"':'';
+  return `<tr ${hl}><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${fmt(r[4])}</td><td>${fmt(r[5])}</td><td>${r[6]}%</td><td><span class="note">${r[7]}</span></td></tr>`;
+}).join("");
+// 创业板表
+document.querySelector("#cyb-table tbody").innerHTML=CYB.map(r=>
+  `<tr><td><span class="badge ${r[1]}">${r[0]}</span></td><td class="code">${r[2]}</td><td><b>${r[3]}</b></td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td><td>${r[8]}</td><td><span class="note">${r[9]}</span></td></tr>`
+).join("");
+// 小盘尽调表
+document.querySelector("#small-table tbody").innerHTML=SMALL.map(r=>
+  `<tr><td class="code">${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${r[3]}</td><td><span class="badge ${r[5]}">${r[4]}</span></td><td><span class="note">${r[6]}</span></td></tr>`
+).join("");
+// 小盘短名单 cards
+document.getElementById("small-picks").innerHTML=SMALL_PICKS.map(p=>
+  `<div class="pick"><div class="bar" style="background:${p.bar}"></div>
+   <div class="ph"><div style="display:flex;justify-content:space-between;align-items:center;gap:6px;"><div><span class="nm">${p.nm}</span> <span class="code">${p.code}</span></div><span class="badge ${p.tag[1]}">${p.tag[0]}</span></div></div>
+   <div class="pb"><div class="mrow">${p.m.map(x=>`<span class="mitem">${x}</span>`).join("")}</div>
+   <div class="thesis">${p.t}</div><div class="vf no"><span class="k">须知 </span>${p.warn}</div></div></div>`
+).join("");
+// 补遗表
+document.querySelector("#addon-table tbody").innerHTML=ADDON.map(r=>
+  `<tr><td class="code">${r[0]}</td><td><b>${r[1]}</b></td><td><span class="badge b-blue">${r[2]}</span></td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td><span class="note">${r[7]}</span></td></tr>`
+).join("");
+// Tab 切换 + 键盘
+const tabbar=document.getElementById("tabbar");
+tabbar.addEventListener("click",e=>{const b=e.target.closest(".tab-btn");if(!b)return;sw(b);});
+tabbar.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight"||e.key==="ArrowLeft"){
+    const tabs=[...tabbar.querySelectorAll(".tab-btn")];const cur=tabs.findIndex(t=>t.classList.contains("active"));
+    const nx=e.key==="ArrowRight"?(cur+1)%tabs.length:(cur-1+tabs.length)%tabs.length;sw(tabs[nx]);tabs[nx].focus();}
+});
+function sw(btn){
+  document.querySelectorAll(".tab-btn").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  btn.classList.add("active");document.getElementById(btn.dataset.v).classList.add("active");
+  document.querySelector(".wrap").scrollIntoView({block:"start"});
+}
+</script>
+<!-- kengit analytics: GoatCounter (gated, inline, no CDN) -->
+<script>
+window.kengitTrackVisit=function(){
+  if(window._kengitTracked)return;window._kengitTracked=true;
+  try{var url='https://kenno.goatcounter.com/count?p='+encodeURIComponent(location.pathname+location.search)+'&t='+encodeURIComponent(document.title)+'&r='+encodeURIComponent(document.referrer)+'&s='+screen.width+','+screen.height+','+(window.devicePixelRatio||1)+'&rnd='+Math.random();
+  var img=new Image(1,1);img.src=url;}catch(e){}
+};
+if(!document.getElementById('auth-gate')||sessionStorage.getItem('kengit-authed')==='1'){
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',window.kengitTrackVisit);}else{window.kengitTrackVisit();}
+}
+</script>
+</body>
+</html>
