@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>连板续航自进化层 · 20260616</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>连板续航自进化层 · 20260617</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0a0a0a;color:#e8e8ea;font:14px/1.5 -apple-system,"PingFang SC",sans-serif;padding:0 0 40px;font-feature-settings:"tnum" 1}
@@ -46,447 +46,27 @@ tr.b2row td{background:#0b1622}
 </style></head><body>
 <div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px"><div style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div><input id="auth-input" type="password" placeholder="Access Code" style="width:200px;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;text-align:center;outline:none"><div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0">incorrect</div></div><script>const AUTH_HASH="7d153d2a4423e402868a5eb0cbe8bbdefa87bd0888eef1ea6febd769152bc0d3";document.addEventListener('DOMContentLoaded',function(){if(sessionStorage.getItem('kengit-authed')==='1'){var g=document.getElementById('auth-gate');if(g)g.remove();return}var gate=document.getElementById('auth-gate'),inp=document.getElementById('auth-input'),er=document.getElementById('auth-error');Array.from(document.body.children).filter(e=>e.id!=='auth-gate'&&e.tagName!=='SCRIPT').forEach(e=>{e.dataset.kh='1';e.style.display='none'});setTimeout(()=>inp.focus(),100);inp.addEventListener('keydown',async e=>{if(e.key!=='Enter')return;var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(inp.value));var hx=Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');if(hx===AUTH_HASH){sessionStorage.setItem('kengit-authed','1');gate.remove();document.querySelectorAll('[data-kh]').forEach(e=>e.style.display='')}else{er.style.opacity='1';inp.value=''}})});</script>
 <header><div class="wrap"><h1><span class="dot"></span>连板续航自进化层 · 5天回测</h1>
-<div class="sub">asof 20260616 · 机械oracle(真实next-run标签)walk-forward GBDT · 每晚扩窗re-fit · 非LLM自评 · 5天历史可肉眼回测</div></div></header>
+<div class="sub">asof 20260617 · 机械oracle(真实next-run标签)walk-forward GBDT · 每晚扩窗re-fit · 非LLM自评 · 5天历史可肉眼回测</div></div></header>
 <div class="wrap">
 <div class="banner">⚠ 连板续航倾向分: 历史K线结构对续航仅弱判别(OOS AUC~0.59, top档命中~34% vs base~19%, lift~1.7x); 续航本质由次日情绪/资金驱动。本分仅作首板池内优先级排序, 非买入信号, 不构成投资建议, 禁入下单链路。</div>
 <div class="grid">
-  <div class="kpi"><div class="v ok">0.6223</div><div class="l">样本外 AUC · 稳定</div></div>
-  <div class="kpi"><div class="v">17.1%</div><div class="l">首板→连板3+ 基础率</div></div>
-  <div class="kpi"><div class="v ok">31.7%</div><div class="l">最高档命中(×1.85 lift)</div></div>
+  <div class="kpi"><div class="v ok">0.625</div><div class="l">样本外 AUC · 稳定</div></div>
+  <div class="kpi"><div class="v">17.0%</div><div class="l">首板→连板3+ 基础率</div></div>
+  <div class="kpi"><div class="v ok">31.4%</div><div class="l">最高档命中(×1.85 lift)</div></div>
   <div class="kpi"><div class="v">5</div><div class="l">回测交易日</div></div>
 </div>
 
 <section><div class="st">会发现 · 5天首板池 续航倾向分 vs 实际续航<span class="tag">绿行=走到3+ · 蓝行=走到2板 · 对比打分准不准</span></div>
-<div class="tabs"><button class="tb " onclick="sw(0)">06/10</button>
-<button class="tb " onclick="sw(1)">06/11</button>
-<button class="tb " onclick="sw(2)">06/12</button>
-<button class="tb " onclick="sw(3)">06/15</button>
-<button class="tb active" onclick="sw(4)">06/16</button></div>
-<div class="tbody" data-tab="0" style="display:none"><div class="daysum">42只首板 · 实际走3+ <b>0</b>/42</div><table><thead><tr><th>代码·名称</th><th>倾向分</th><th>档位</th><th>历史该档</th><th>实际续航</th><th>量比5/60</th><th>距涨停高点</th><th>上影cover</th></tr></thead><tbody><tr class="d-low ">
-              <td class="code">603011.SH<span class="nm">合锻智能</span></td>
-              <td class="sc">31.9</td>
-              <td><span class="tier d-low">第6档</span></td>
-              <td class="hr">16.5%<span class="lf">×0.96</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.3%</span></td>
-              <td class="f">2.62</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.03</td>
-            </tr>
-<tr class="d-low ">
-              <td class="code">002757.SZ<span class="nm">南兴股份</span></td>
-              <td class="sc">26.9</td>
-              <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-10.0%</span></td>
-              <td class="f">0.6</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.98</td>
-            </tr>
-<tr class="d-low ">
-              <td class="code">000558.SZ<span class="nm">天府文旅</span></td>
-              <td class="sc">24.1</td>
-              <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.5%</span></td>
-              <td class="f">1.18</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.63</td>
-            </tr>
-<tr class="d-low ">
-              <td class="code">600843.SH<span class="nm">上工申贝</span></td>
-              <td class="sc">23.1</td>
-              <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.4%</span></td>
-              <td class="f">1.41</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.69</td>
-            </tr>
-<tr class="d-low ">
-              <td class="code">600573.SH<span class="nm">惠泉啤酒</span></td>
-              <td class="sc">22.9</td>
-              <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.3%</span></td>
-              <td class="f">1.65</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.91</td>
-            </tr>
-<tr class="d-low b2row">
-              <td class="code">603823.SH<span class="nm">百合花</span></td>
-              <td class="sc">21.4</td>
-              <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
-              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
-              <td class="f">2.18</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.8</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">603220.SH<span class="nm">中贝通信</span></td>
-              <td class="sc">20.2</td>
-              <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-6.8%</span></td>
-              <td class="f">0.51</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.01</td>
-            </tr>
-<tr class="d-bot b2row">
-              <td class="code">002165.SZ<span class="nm">红宝丽</span></td>
-              <td class="sc">17.4</td>
-              <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
-              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
-              <td class="f">0.59</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.65</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">002081.SZ<span class="nm">金螳螂</span></td>
-              <td class="sc">16.5</td>
-              <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-9.9%</span></td>
-              <td class="f">1.11</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.87</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">002208.SZ<span class="nm">合肥城建</span></td>
-              <td class="sc">16.5</td>
-              <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-6.8%</span></td>
-              <td class="f">0.92</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.21</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">002256.SZ<span class="nm">兆新股份</span></td>
-              <td class="sc">16.2</td>
-              <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.9%</span></td>
-              <td class="f">0.42</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.87</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">002125.SZ<span class="nm">湘潭电化</span></td>
-              <td class="sc">15.6</td>
-              <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.9%</span></td>
-              <td class="f">2.73</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.12</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">600698.SH<span class="nm">湖南天雁</span></td>
-              <td class="sc">14.9</td>
-              <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.1%</span></td>
-              <td class="f">0.5</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.75</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">603661.SH<span class="nm">恒林股份</span></td>
-              <td class="sc">14.6</td>
-              <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.6%</span></td>
-              <td class="f">2.68</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.1</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">603938.SH<span class="nm">三孚股份</span></td>
-              <td class="sc">14.1</td>
-              <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.7%</span></td>
-              <td class="f">1.88</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.33</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">603687.SH<span class="nm">大胜达</span></td>
-              <td class="sc">13.5</td>
-              <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.9%</span></td>
-              <td class="f">0.73</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.94</td>
-            </tr>
-<tr class="d-bot b2row">
-              <td class="code">600178.SH<span class="nm">东安动力</span></td>
-              <td class="sc">13.4</td>
-              <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
-              <td class="f">1.21</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.76</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">002657.SZ<span class="nm">中科金财</span></td>
-              <td class="sc">12.8</td>
-              <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.6%</span></td>
-              <td class="f">2.23</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.61</td>
-            </tr>
-<tr class="d-bot b2row">
-              <td class="code">600378.SH<span class="nm">昊华科技</span></td>
-              <td class="sc">12.3</td>
-              <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
-              <td class="f">3.3</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.44</td>
-            </tr>
-<tr class="d-bot b2row">
-              <td class="code">600665.SH<span class="nm">天地源</span></td>
-              <td class="sc">12.0</td>
-              <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
-              <td class="f">1.92</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.96</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">600981.SH<span class="nm">苏豪汇鸿</span></td>
-              <td class="sc">10.5</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.6%</span></td>
-              <td class="f">2.22</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.69</td>
-            </tr>
-<tr class="d-bot b2row">
-              <td class="code">002119.SZ<span class="nm">康强电子</span></td>
-              <td class="sc">10.3</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
-              <td class="f">1.3</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.02</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">601678.SH<span class="nm">滨化股份</span></td>
-              <td class="sc">10.0</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.3%</span></td>
-              <td class="f">0.97</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.14</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">000815.SZ<span class="nm">美利云</span></td>
-              <td class="sc">9.9</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-7.2%</span></td>
-              <td class="f">0.36</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.93</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">600593.SH<span class="nm">大连圣亚</span></td>
-              <td class="sc">9.7</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.6%</span></td>
-              <td class="f">1.38</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.68</td>
-            </tr>
-<tr class="d-bot b2row">
-              <td class="code">002409.SZ<span class="nm">雅克科技</span></td>
-              <td class="sc">8.4</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
-              <td class="f">1.36</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.12</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">002830.SZ<span class="nm">名雕股份</span></td>
-              <td class="sc">7.8</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.6%</span></td>
-              <td class="f">1.42</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.68</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">603636.SH<span class="nm">南威软件</span></td>
-              <td class="sc">7.6</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-8.5%</span></td>
-              <td class="f">0.79</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.84</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">600058.SH<span class="nm">五矿发展</span></td>
-              <td class="sc">7.3</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-5.1%</span></td>
-              <td class="f">0.92</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.68</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">002459.SZ<span class="nm">晶澳科技</span></td>
-              <td class="sc">6.7</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.7%</span></td>
-              <td class="f">0.83</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.67</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">603886.SH<span class="nm">元祖股份</span></td>
-              <td class="sc">6.7</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.8%</span></td>
-              <td class="f">3.11</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.92</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">600088.SH<span class="nm">中视传媒</span></td>
-              <td class="sc">6.0</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-7.2%</span></td>
-              <td class="f">1.3</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.97</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">600206.SH<span class="nm">有研新材</span></td>
-              <td class="sc">6.0</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.2%</span></td>
-              <td class="f">1.1</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.97</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">002261.SZ<span class="nm">拓维信息</span></td>
-              <td class="sc">5.6</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-6.4%</span></td>
-              <td class="f">0.51</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.79</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">603160.SH<span class="nm">汇顶科技</span></td>
-              <td class="sc">5.6</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.8%</span></td>
-              <td class="f">1.17</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.81</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">600881.SH<span class="nm">亚泰集团</span></td>
-              <td class="sc">5.3</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-5.1%</span></td>
-              <td class="f">2.56</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.79</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">002960.SZ<span class="nm">青鸟智控</span></td>
-              <td class="sc">4.9</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.7%</span></td>
-              <td class="f">1.67</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.99</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">600732.SH<span class="nm">爱旭股份</span></td>
-              <td class="sc">4.3</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+3.9%</span></td>
-              <td class="f">0.74</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.79</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">000970.SZ<span class="nm">中科三环</span></td>
-              <td class="sc">2.9</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.2%</span></td>
-              <td class="f">3.34</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.93</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">002430.SZ<span class="nm">杭氧股份</span></td>
-              <td class="sc">2.8</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.9%</span></td>
-              <td class="f">0.92</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.86</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">000025.SZ<span class="nm">特力A</span></td>
-              <td class="sc">2.2</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.4%</span></td>
-              <td class="f">1.75</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.75</td>
-            </tr>
-<tr class="d-bot ">
-              <td class="code">600229.SH<span class="nm">城市传媒</span></td>
-              <td class="sc">2.1</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-8.2%</span></td>
-              <td class="f">1.95</td>
-              <td class="f">0.0%</td>
-              <td class="f">0.85</td>
-            </tr></tbody></table></div>
-<div class="tbody" data-tab="1" style="display:none"><div class="daysum">40只首板 · 实际走3+ <b>3</b>/40</div><table><thead><tr><th>代码·名称</th><th>倾向分</th><th>档位</th><th>历史该档</th><th>实际续航</th><th>量比5/60</th><th>距涨停高点</th><th>上影cover</th></tr></thead><tbody><tr class="d-hi b2row">
+<div class="tabs"><button class="tb " onclick="sw(0)">06/11</button>
+<button class="tb " onclick="sw(1)">06/12</button>
+<button class="tb " onclick="sw(2)">06/15</button>
+<button class="tb " onclick="sw(3)">06/16</button>
+<button class="tb active" onclick="sw(4)">06/17</button></div>
+<div class="tbody" data-tab="0" style="display:none"><div class="daysum">40只首板 · 实际走3+ <b>3</b>/40</div><table><thead><tr><th>代码·名称</th><th>倾向分</th><th>档位</th><th>历史该档</th><th>实际续航</th><th>量比5/60</th><th>距涨停高点</th><th>上影cover</th></tr></thead><tbody><tr class="d-hi b2row">
               <td class="code">002203.SZ<span class="nm">海亮股份</span></td>
               <td class="sc">50.6</td>
               <td><span class="tier d-hi">第9档</span></td>
-              <td class="hr">24.4%<span class="lf">×1.43</span></td>
+              <td class="hr">24.3%<span class="lf">×1.43</span></td>
               <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.76</td>
               <td class="f">0.0%</td>
@@ -496,7 +76,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">601137.SH<span class="nm">博威合金</span></td>
               <td class="sc">44.5</td>
               <td><span class="tier d-mid">第8档</span></td>
-              <td class="hr">20.3%<span class="lf">×1.18</span></td>
+              <td class="hr">20.4%<span class="lf">×1.2</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.2%</span></td>
               <td class="f">1.89</td>
               <td class="f">0.0%</td>
@@ -506,7 +86,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600108.SH<span class="nm">亚盛集团</span></td>
               <td class="sc">30.8</td>
               <td><span class="tier d-low">第6档</span></td>
-              <td class="hr">16.5%<span class="lf">×0.96</span></td>
+              <td class="hr">16.7%<span class="lf">×0.99</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.8%</span></td>
               <td class="f">0.66</td>
               <td class="f">0.0%</td>
@@ -516,7 +96,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603678.SH<span class="nm">火炬电子</span></td>
               <td class="sc">27.1</td>
               <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-6.1%</span></td>
               <td class="f">2.61</td>
               <td class="f">0.0%</td>
@@ -526,7 +106,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600470.SH<span class="nm">六国化工</span></td>
               <td class="sc">25.8</td>
               <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.6%</span></td>
               <td class="f">0.45</td>
               <td class="f">0.0%</td>
@@ -536,7 +116,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600141.SH<span class="nm">兴发集团</span></td>
               <td class="sc">25.6</td>
               <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.3%</span></td>
               <td class="f">0.83</td>
               <td class="f">0.0%</td>
@@ -546,7 +126,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000631.SZ<span class="nm">顺发恒能</span></td>
               <td class="sc">25.2</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.0%</span></td>
               <td class="f">0.7</td>
               <td class="f">0.0%</td>
@@ -556,7 +136,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000510.SZ<span class="nm">新金路</span></td>
               <td class="sc">24.0</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><b class="win">★走到3板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.84</td>
               <td class="f">0.0%</td>
@@ -566,7 +146,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600067.SH<span class="nm">冠城新材</span></td>
               <td class="sc">22.9</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.94</td>
               <td class="f">0.0%</td>
@@ -576,7 +156,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600459.SH<span class="nm">贵研铂业</span></td>
               <td class="sc">21.9</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.5%</span></td>
               <td class="f">2.05</td>
               <td class="f">0.0%</td>
@@ -586,7 +166,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000921.SZ<span class="nm">海信家电</span></td>
               <td class="sc">21.0</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.0%</span></td>
               <td class="f">1.63</td>
               <td class="f">0.0%</td>
@@ -596,7 +176,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002490.SZ<span class="nm">山东墨龙</span></td>
               <td class="sc">19.7</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+3.3%</span></td>
               <td class="f">0.89</td>
               <td class="f">0.0%</td>
@@ -606,7 +186,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002824.SZ<span class="nm">和胜股份</span></td>
               <td class="sc">16.6</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.0%</span></td>
               <td class="f">1.37</td>
               <td class="f">0.0%</td>
@@ -616,7 +196,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002469.SZ<span class="nm">三维化学</span></td>
               <td class="sc">16.2</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.9%</span></td>
               <td class="f">0.88</td>
               <td class="f">0.0%</td>
@@ -626,7 +206,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600667.SH<span class="nm">太极实业</span></td>
               <td class="sc">14.7</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-6.2%</span></td>
               <td class="f">1.55</td>
               <td class="f">0.0%</td>
@@ -636,7 +216,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600979.SH<span class="nm">广安爱众</span></td>
               <td class="sc">14.1</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-5.2%</span></td>
               <td class="f">0.75</td>
               <td class="f">0.0%</td>
@@ -646,7 +226,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002254.SZ<span class="nm">泰和新材</span></td>
               <td class="sc">13.0</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.5%</span></td>
               <td class="f">2.46</td>
               <td class="f">0.0%</td>
@@ -656,7 +236,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603315.SH<span class="nm">福鞍股份</span></td>
               <td class="sc">12.5</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.5%</span></td>
               <td class="f">0.73</td>
               <td class="f">0.0%</td>
@@ -666,7 +246,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603936.SH<span class="nm">博敏电子</span></td>
               <td class="sc">11.4</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.3%</span></td>
               <td class="f">0.84</td>
               <td class="f">0.0%</td>
@@ -676,7 +256,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">601958.SH<span class="nm">金钼股份</span></td>
               <td class="sc">10.9</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><b class="win">★走到3板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.16</td>
               <td class="f">0.0%</td>
@@ -686,7 +266,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603657.SH<span class="nm">春光科技</span></td>
               <td class="sc">8.6</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-10.0%</span></td>
               <td class="f">0.64</td>
               <td class="f">0.0%</td>
@@ -696,7 +276,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603318.SH<span class="nm">水发燃气</span></td>
               <td class="sc">8.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-7.0%</span></td>
               <td class="f">1.05</td>
               <td class="f">0.0%</td>
@@ -706,7 +286,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000688.SZ<span class="nm">国城矿业</span></td>
               <td class="sc">8.0</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+3.5%</span></td>
               <td class="f">0.98</td>
               <td class="f">0.0%</td>
@@ -716,7 +296,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002428.SZ<span class="nm">云南锗业</span></td>
               <td class="sc">7.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.6%</span></td>
               <td class="f">0.89</td>
               <td class="f">0.0%</td>
@@ -726,7 +306,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002378.SZ<span class="nm">章源钨业</span></td>
               <td class="sc">7.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+3.0%</span></td>
               <td class="f">1.17</td>
               <td class="f">0.0%</td>
@@ -736,7 +316,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603399.SH<span class="nm">永杉锂业</span></td>
               <td class="sc">7.0</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.6%</span></td>
               <td class="f">1.34</td>
               <td class="f">0.0%</td>
@@ -746,7 +326,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603992.SH<span class="nm">松霖科技</span></td>
               <td class="sc">6.8</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.0%</span></td>
               <td class="f">1.2</td>
               <td class="f">0.0%</td>
@@ -756,7 +336,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600353.SH<span class="nm">旭光电子</span></td>
               <td class="sc">6.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.2%</span></td>
               <td class="f">1.81</td>
               <td class="f">0.0%</td>
@@ -766,7 +346,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002407.SZ<span class="nm">多氟多</span></td>
               <td class="sc">5.2</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+3.9%</span></td>
               <td class="f">1.23</td>
               <td class="f">0.0%</td>
@@ -776,7 +356,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600722.SH<span class="nm">金牛化工</span></td>
               <td class="sc">5.2</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.5%</span></td>
               <td class="f">0.77</td>
               <td class="f">0.0%</td>
@@ -786,7 +366,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603355.SH<span class="nm">莱克电气</span></td>
               <td class="sc">4.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.3%</span></td>
               <td class="f">0.96</td>
               <td class="f">0.0%</td>
@@ -796,7 +376,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002913.SZ<span class="nm">奥士康</span></td>
               <td class="sc">4.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.8%</span></td>
               <td class="f">0.98</td>
               <td class="f">0.0%</td>
@@ -806,7 +386,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600322.SH<span class="nm">津投城开</span></td>
               <td class="sc">4.3</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-6.3%</span></td>
               <td class="f">1.07</td>
               <td class="f">0.0%</td>
@@ -816,7 +396,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002965.SZ<span class="nm">祥鑫科技</span></td>
               <td class="sc">4.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.7%</span></td>
               <td class="f">1.62</td>
               <td class="f">0.0%</td>
@@ -826,7 +406,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002842.SZ<span class="nm">翔鹭钨业</span></td>
               <td class="sc">3.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.9%</span></td>
               <td class="f">1.03</td>
               <td class="f">0.0%</td>
@@ -836,7 +416,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000032.SZ<span class="nm">深桑达A</span></td>
               <td class="sc">3.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><b class="win">★走到4板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.87</td>
               <td class="f">0.0%</td>
@@ -846,7 +426,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002654.SZ<span class="nm">万润科技</span></td>
               <td class="sc">2.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.2%</span></td>
               <td class="f">0.81</td>
               <td class="f">0.0%</td>
@@ -856,7 +436,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">001696.SZ<span class="nm">宗申动力</span></td>
               <td class="sc">2.6</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">2.91</td>
               <td class="f">0.0%</td>
@@ -866,7 +446,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603991.SH<span class="nm">领先股份</span></td>
               <td class="sc">2.6</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.9%</span></td>
               <td class="f">1.11</td>
               <td class="f">0.0%</td>
@@ -876,17 +456,17 @@ tr.b2row td{background:#0b1622}
               <td class="code">002549.SZ<span class="nm">凯美特气</span></td>
               <td class="sc">1.4</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.4%</span></td>
               <td class="f">0.81</td>
               <td class="f">0.0%</td>
               <td class="f">0.79</td>
             </tr></tbody></table></div>
-<div class="tbody" data-tab="2" style="display:none"><div class="daysum">59只首板 · 实际走3+ <b>1</b>/59</div><table><thead><tr><th>代码·名称</th><th>倾向分</th><th>档位</th><th>历史该档</th><th>实际续航</th><th>量比5/60</th><th>距涨停高点</th><th>上影cover</th></tr></thead><tbody><tr class="d-hi b2row">
+<div class="tbody" data-tab="1" style="display:none"><div class="daysum">59只首板 · 实际走3+ <b>1</b>/59</div><table><thead><tr><th>代码·名称</th><th>倾向分</th><th>档位</th><th>历史该档</th><th>实际续航</th><th>量比5/60</th><th>距涨停高点</th><th>上影cover</th></tr></thead><tbody><tr class="d-hi b2row">
               <td class="code">603335.SH<span class="nm">迪生力</span></td>
               <td class="sc">83.9</td>
               <td><span class="tier d-hi">第10档</span></td>
-              <td class="hr">31.7%<span class="lf">×1.85</span></td>
+              <td class="hr">31.4%<span class="lf">×1.85</span></td>
               <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.97</td>
               <td class="f">0.0%</td>
@@ -896,7 +476,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600162.SH<span class="nm">香江控股</span></td>
               <td class="sc">62.0</td>
               <td><span class="tier d-hi">第10档</span></td>
-              <td class="hr">31.7%<span class="lf">×1.85</span></td>
+              <td class="hr">31.4%<span class="lf">×1.85</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.9%</span></td>
               <td class="f">3.9</td>
               <td class="f">0.0%</td>
@@ -906,7 +486,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002927.SZ<span class="nm">泰永长征</span></td>
               <td class="sc">52.6</td>
               <td><span class="tier d-hi">第9档</span></td>
-              <td class="hr">24.4%<span class="lf">×1.43</span></td>
+              <td class="hr">24.3%<span class="lf">×1.43</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.2%</span></td>
               <td class="f">0.86</td>
               <td class="f">0.0%</td>
@@ -916,7 +496,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603738.SH<span class="nm">泰晶科技</span></td>
               <td class="sc">50.1</td>
               <td><span class="tier d-hi">第9档</span></td>
-              <td class="hr">24.4%<span class="lf">×1.43</span></td>
+              <td class="hr">24.3%<span class="lf">×1.43</span></td>
               <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.71</td>
               <td class="f">0.0%</td>
@@ -926,7 +506,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002088.SZ<span class="nm">鲁阳节能</span></td>
               <td class="sc">39.2</td>
               <td><span class="tier d-mid">第7档</span></td>
-              <td class="hr">16.4%<span class="lf">×0.95</span></td>
+              <td class="hr">16.2%<span class="lf">×0.95</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.7%</span></td>
               <td class="f">1.0</td>
               <td class="f">0.0%</td>
@@ -935,8 +515,8 @@ tr.b2row td{background:#0b1622}
 <tr class="d-low ">
               <td class="code">002733.SZ<span class="nm">雄韬股份</span></td>
               <td class="sc">29.9</td>
-              <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
+              <td><span class="tier d-low">第6档</span></td>
+              <td class="hr">16.7%<span class="lf">×0.99</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+9.3%</span></td>
               <td class="f">0.94</td>
               <td class="f">0.0%</td>
@@ -946,7 +526,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603815.SH<span class="nm">交建股份</span></td>
               <td class="sc">24.8</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.6%</span></td>
               <td class="f">0.57</td>
               <td class="f">0.0%</td>
@@ -956,7 +536,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603225.SH<span class="nm">新凤鸣</span></td>
               <td class="sc">23.6</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.9%</span></td>
               <td class="f">1.25</td>
               <td class="f">0.0%</td>
@@ -966,7 +546,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603990.SH<span class="nm">麦迪科技</span></td>
               <td class="sc">23.2</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.2%</span></td>
               <td class="f">1.11</td>
               <td class="f">0.0%</td>
@@ -976,7 +556,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002969.SZ<span class="nm">嘉美包装</span></td>
               <td class="sc">21.5</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.0%</span></td>
               <td class="f">0.96</td>
               <td class="f">0.0%</td>
@@ -986,7 +566,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603036.SH<span class="nm">如通股份</span></td>
               <td class="sc">21.1</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.2%</span></td>
               <td class="f">2.93</td>
               <td class="f">0.0%</td>
@@ -996,7 +576,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002457.SZ<span class="nm">青龙管业</span></td>
               <td class="sc">19.2</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.2%</span></td>
               <td class="f">1.79</td>
               <td class="f">0.0%</td>
@@ -1006,7 +586,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002742.SZ<span class="nm">冀衡医药</span></td>
               <td class="sc">18.6</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.6%</span></td>
               <td class="f">1.0</td>
               <td class="f">0.0%</td>
@@ -1016,7 +596,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002345.SZ<span class="nm">潮宏基</span></td>
               <td class="sc">17.8</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.4%</span></td>
               <td class="f">1.16</td>
               <td class="f">0.0%</td>
@@ -1026,7 +606,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600961.SH<span class="nm">株冶集团</span></td>
               <td class="sc">16.2</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.6%</span></td>
               <td class="f">0.79</td>
               <td class="f">0.0%</td>
@@ -1036,7 +616,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002552.SZ<span class="nm">宝鼎科技</span></td>
               <td class="sc">15.3</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><b class="win">★走到3板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.16</td>
               <td class="f">-0.15%</td>
@@ -1046,7 +626,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">601996.SH<span class="nm">丰林集团</span></td>
               <td class="sc">15.3</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.7%</span></td>
               <td class="f">0.78</td>
               <td class="f">0.0%</td>
@@ -1056,7 +636,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002830.SZ<span class="nm">名雕股份</span></td>
               <td class="sc">15.0</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.8%</span></td>
               <td class="f">1.88</td>
               <td class="f">0.0%</td>
@@ -1066,7 +646,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603020.SH<span class="nm">爱普股份</span></td>
               <td class="sc">14.4</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-10.0%</span></td>
               <td class="f">2.3</td>
               <td class="f">0.0%</td>
@@ -1074,9 +654,9 @@ tr.b2row td{background:#0b1622}
             </tr>
 <tr class="d-bot ">
               <td class="code">600862.SH<span class="nm">中航高科</span></td>
-              <td class="sc">13.7</td>
+              <td class="sc">13.8</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.3%</span></td>
               <td class="f">1.09</td>
               <td class="f">0.0%</td>
@@ -1086,7 +666,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000547.SZ<span class="nm">航天发展</span></td>
               <td class="sc">13.6</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.5%</span></td>
               <td class="f">0.66</td>
               <td class="f">0.0%</td>
@@ -1096,7 +676,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000099.SZ<span class="nm">中信海直</span></td>
               <td class="sc">13.3</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.6%</span></td>
               <td class="f">2.23</td>
               <td class="f">0.0%</td>
@@ -1106,7 +686,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600857.SH<span class="nm">宁波中百</span></td>
               <td class="sc">13.2</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.2%</span></td>
               <td class="f">1.36</td>
               <td class="f">0.0%</td>
@@ -1116,7 +696,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000969.SZ<span class="nm">安泰科技</span></td>
               <td class="sc">13.0</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.3%</span></td>
               <td class="f">1.36</td>
               <td class="f">0.0%</td>
@@ -1126,7 +706,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600539.SH<span class="nm">狮头股份</span></td>
               <td class="sc">12.5</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.2%</span></td>
               <td class="f">0.64</td>
               <td class="f">0.0%</td>
@@ -1136,7 +716,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">601233.SH<span class="nm">桐昆股份</span></td>
               <td class="sc">12.5</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.2%</span></td>
               <td class="f">1.05</td>
               <td class="f">0.0%</td>
@@ -1146,7 +726,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000758.SZ<span class="nm">中色股份</span></td>
               <td class="sc">12.4</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+3.7%</span></td>
               <td class="f">1.02</td>
               <td class="f">0.0%</td>
@@ -1156,7 +736,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600962.SH<span class="nm">国投中鲁</span></td>
               <td class="sc">11.9</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.1%</span></td>
               <td class="f">0.89</td>
               <td class="f">0.0%</td>
@@ -1166,7 +746,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000768.SZ<span class="nm">中航西飞</span></td>
               <td class="sc">11.6</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-5.4%</span></td>
               <td class="f">0.95</td>
               <td class="f">0.0%</td>
@@ -1176,7 +756,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002085.SZ<span class="nm">万丰奥威</span></td>
               <td class="sc">11.6</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.0%</span></td>
               <td class="f">2.58</td>
               <td class="f">0.0%</td>
@@ -1186,7 +766,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600292.SH<span class="nm">电投水电</span></td>
               <td class="sc">11.5</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.0%</span></td>
               <td class="f">0.96</td>
               <td class="f">0.0%</td>
@@ -1196,7 +776,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000751.SZ<span class="nm">锌业股份</span></td>
               <td class="sc">11.3</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.9%</span></td>
               <td class="f">0.76</td>
               <td class="f">0.0%</td>
@@ -1206,7 +786,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600531.SH<span class="nm">豫光金铅</span></td>
               <td class="sc">11.1</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.8%</span></td>
               <td class="f">0.74</td>
               <td class="f">0.0%</td>
@@ -1216,7 +796,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000759.SZ<span class="nm">中百集团</span></td>
               <td class="sc">11.0</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.1%</span></td>
               <td class="f">2.67</td>
               <td class="f">0.0%</td>
@@ -1226,7 +806,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000151.SZ<span class="nm">中成股份</span></td>
               <td class="sc">10.9</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.8%</span></td>
               <td class="f">1.47</td>
               <td class="f">0.0%</td>
@@ -1236,7 +816,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002270.SZ<span class="nm">华明装备</span></td>
               <td class="sc">10.0</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.1%</span></td>
               <td class="f">0.87</td>
               <td class="f">0.0%</td>
@@ -1246,7 +826,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002200.SZ<span class="nm">交投生态</span></td>
               <td class="sc">9.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.6%</span></td>
               <td class="f">1.63</td>
               <td class="f">0.0%</td>
@@ -1256,7 +836,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002637.SZ<span class="nm">赞宇科技</span></td>
               <td class="sc">9.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.4%</span></td>
               <td class="f">1.15</td>
               <td class="f">0.0%</td>
@@ -1266,7 +846,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002190.SZ<span class="nm">成飞集成</span></td>
               <td class="sc">9.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.7%</span></td>
               <td class="f">0.86</td>
               <td class="f">0.0%</td>
@@ -1276,7 +856,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600391.SH<span class="nm">航发科技</span></td>
               <td class="sc">8.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.1%</span></td>
               <td class="f">0.8</td>
               <td class="f">0.0%</td>
@@ -1286,7 +866,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000506.SZ<span class="nm">招金黄金</span></td>
               <td class="sc">8.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.97</td>
               <td class="f">0.0%</td>
@@ -1296,7 +876,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000630.SZ<span class="nm">铜陵有色</span></td>
               <td class="sc">8.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+7.9%</span></td>
               <td class="f">1.35</td>
               <td class="f">0.0%</td>
@@ -1306,7 +886,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002935.SZ<span class="nm">天奥电子</span></td>
               <td class="sc">8.2</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.4%</span></td>
               <td class="f">0.91</td>
               <td class="f">0.0%</td>
@@ -1316,7 +896,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603528.SH<span class="nm">多伦科技</span></td>
               <td class="sc">7.8</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.3%</span></td>
               <td class="f">1.5</td>
               <td class="f">0.0%</td>
@@ -1326,7 +906,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603993.SH<span class="nm">洛阳钼业</span></td>
               <td class="sc">7.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+9.5%</span></td>
               <td class="f">1.14</td>
               <td class="f">0.0%</td>
@@ -1336,7 +916,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600497.SH<span class="nm">驰宏锌锗</span></td>
               <td class="sc">7.3</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+9.1%</span></td>
               <td class="f">0.85</td>
               <td class="f">0.0%</td>
@@ -1346,7 +926,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002597.SZ<span class="nm">金禾实业</span></td>
               <td class="sc">7.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.7%</span></td>
               <td class="f">1.23</td>
               <td class="f">0.0%</td>
@@ -1356,7 +936,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600576.SH<span class="nm">祥源文旅</span></td>
               <td class="sc">6.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.0%</span></td>
               <td class="f">1.23</td>
               <td class="f">0.0%</td>
@@ -1366,7 +946,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002812.SZ<span class="nm">恩捷股份</span></td>
               <td class="sc">6.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.6%</span></td>
               <td class="f">0.76</td>
               <td class="f">0.0%</td>
@@ -1376,7 +956,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600601.SH<span class="nm">方正科技</span></td>
               <td class="sc">5.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.3%</span></td>
               <td class="f">1.09</td>
               <td class="f">0.0%</td>
@@ -1386,7 +966,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600869.SH<span class="nm">远东股份</span></td>
               <td class="sc">4.8</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.8%</span></td>
               <td class="f">1.53</td>
               <td class="f">-0.06%</td>
@@ -1396,7 +976,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002215.SZ<span class="nm">诺普信</span></td>
               <td class="sc">4.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.8%</span></td>
               <td class="f">1.01</td>
               <td class="f">0.0%</td>
@@ -1406,7 +986,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600229.SH<span class="nm">城市传媒</span></td>
               <td class="sc">4.4</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-6.1%</span></td>
               <td class="f">3.79</td>
               <td class="f">0.0%</td>
@@ -1416,7 +996,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002882.SZ<span class="nm">金龙羽</span></td>
               <td class="sc">4.3</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.8%</span></td>
               <td class="f">0.88</td>
               <td class="f">0.0%</td>
@@ -1426,7 +1006,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600567.SH<span class="nm">山鹰国际</span></td>
               <td class="sc">4.2</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.1%</span></td>
               <td class="f">2.4</td>
               <td class="f">0.0%</td>
@@ -1436,7 +1016,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603519.SH<span class="nm">立霸股份</span></td>
               <td class="sc">3.2</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.9%</span></td>
               <td class="f">1.56</td>
               <td class="f">0.0%</td>
@@ -1446,7 +1026,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603180.SH<span class="nm">金牌家居</span></td>
               <td class="sc">3.0</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-6.6%</span></td>
               <td class="f">1.62</td>
               <td class="f">0.0%</td>
@@ -1456,7 +1036,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000737.SZ<span class="nm">北方铜业</span></td>
               <td class="sc">1.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+7.0%</span></td>
               <td class="f">1.2</td>
               <td class="f">0.0%</td>
@@ -1466,17 +1046,17 @@ tr.b2row td{background:#0b1622}
               <td class="code">600711.SH<span class="nm">盛屯矿业</span></td>
               <td class="sc">1.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+3.6%</span></td>
               <td class="f">1.03</td>
               <td class="f">-0.08%</td>
               <td class="f">0.71</td>
             </tr></tbody></table></div>
-<div class="tbody" data-tab="3" style="display:none"><div class="daysum">80只首板 · 实际走3+ <b>0</b>/61</div><table><thead><tr><th>代码·名称</th><th>倾向分</th><th>档位</th><th>历史该档</th><th>实际续航</th><th>量比5/60</th><th>距涨停高点</th><th>上影cover</th></tr></thead><tbody><tr class="d-hi ">
+<div class="tbody" data-tab="2" style="display:none"><div class="daysum">80只首板 · 实际走3+ <b>7</b>/80</div><table><thead><tr><th>代码·名称</th><th>倾向分</th><th>档位</th><th>历史该档</th><th>实际续航</th><th>量比5/60</th><th>距涨停高点</th><th>上影cover</th></tr></thead><tbody><tr class="d-hi ">
               <td class="code">601975.SH<span class="nm">招商南油</span></td>
               <td class="sc">63.8</td>
               <td><span class="tier d-hi">第10档</span></td>
-              <td class="hr">31.7%<span class="lf">×1.85</span></td>
+              <td class="hr">31.4%<span class="lf">×1.85</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.4%</span></td>
               <td class="f">0.64</td>
               <td class="f">0.0%</td>
@@ -1486,7 +1066,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">601872.SH<span class="nm">招商轮船</span></td>
               <td class="sc">56.6</td>
               <td><span class="tier d-hi">第9档</span></td>
-              <td class="hr">24.4%<span class="lf">×1.43</span></td>
+              <td class="hr">24.3%<span class="lf">×1.43</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.5%</span></td>
               <td class="f">0.62</td>
               <td class="f">0.0%</td>
@@ -1496,8 +1076,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">600696.SH<span class="nm">退市岩石</span></td>
               <td class="sc">53.1</td>
               <td><span class="tier d-hi">第9档</span></td>
-              <td class="hr">24.4%<span class="lf">×1.43</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">24.3%<span class="lf">×1.43</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.34</td>
               <td class="f">0.0%</td>
               <td class="f">0.24</td>
@@ -1506,7 +1086,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603011.SH<span class="nm">合锻智能</span></td>
               <td class="sc">52.9</td>
               <td><span class="tier d-hi">第9档</span></td>
-              <td class="hr">24.4%<span class="lf">×1.43</span></td>
+              <td class="hr">24.3%<span class="lf">×1.43</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.1%</span></td>
               <td class="f">2.37</td>
               <td class="f">0.0%</td>
@@ -1516,8 +1096,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">600545.SH<span class="nm">卓郎智能</span></td>
               <td class="sc">48.1</td>
               <td><span class="tier d-hi">第9档</span></td>
-              <td class="hr">24.4%<span class="lf">×1.43</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">24.3%<span class="lf">×1.43</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.78</td>
               <td class="f">0.0%</td>
               <td class="f">1.21</td>
@@ -1526,8 +1106,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002824.SZ<span class="nm">和胜股份</span></td>
               <td class="sc">46.2</td>
               <td><span class="tier d-mid">第8档</span></td>
-              <td class="hr">20.3%<span class="lf">×1.18</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">20.4%<span class="lf">×1.2</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.22</td>
               <td class="f">0.0%</td>
               <td class="f">1.0</td>
@@ -1536,7 +1116,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600026.SH<span class="nm">中远海能</span></td>
               <td class="sc">41.0</td>
               <td><span class="tier d-mid">第8档</span></td>
-              <td class="hr">20.3%<span class="lf">×1.18</span></td>
+              <td class="hr">20.4%<span class="lf">×1.2</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-7.0%</span></td>
               <td class="f">0.72</td>
               <td class="f">0.0%</td>
@@ -1546,7 +1126,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600636.SH<span class="nm">退市国化</span></td>
               <td class="sc">40.0</td>
               <td><span class="tier d-mid">第7档</span></td>
-              <td class="hr">16.4%<span class="lf">×0.95</span></td>
+              <td class="hr">16.2%<span class="lf">×0.95</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.6%</span></td>
               <td class="f">1.36</td>
               <td class="f">0.0%</td>
@@ -1556,7 +1136,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002903.SZ<span class="nm">宇环数控</span></td>
               <td class="sc">35.7</td>
               <td><span class="tier d-mid">第7档</span></td>
-              <td class="hr">16.4%<span class="lf">×0.95</span></td>
+              <td class="hr">16.2%<span class="lf">×0.95</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.6%</span></td>
               <td class="f">0.99</td>
               <td class="f">0.0%</td>
@@ -1566,18 +1146,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">002432.SZ<span class="nm">九安医疗</span></td>
               <td class="sc">34.6</td>
               <td><span class="tier d-low">第6档</span></td>
-              <td class="hr">16.5%<span class="lf">×0.96</span></td>
+              <td class="hr">16.7%<span class="lf">×0.99</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.8%</span></td>
               <td class="f">0.5</td>
               <td class="f">0.0%</td>
               <td class="f">0.98</td>
             </tr>
-<tr class="d-low b2row">
+<tr class="d-low won">
               <td class="code">600110.SH<span class="nm">诺德股份</span></td>
               <td class="sc">34.2</td>
               <td><span class="tier d-low">第6档</span></td>
-              <td class="hr">16.5%<span class="lf">×0.96</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">16.7%<span class="lf">×0.99</span></td>
+              <td class="ocell"><b class="win">★走到3板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.87</td>
               <td class="f">0.0%</td>
               <td class="f">1.19</td>
@@ -1586,8 +1166,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002515.SZ<span class="nm">金字火腿</span></td>
               <td class="sc">33.6</td>
               <td><span class="tier d-low">第6档</span></td>
-              <td class="hr">16.5%<span class="lf">×0.96</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">16.7%<span class="lf">×0.99</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.48</td>
               <td class="f">0.0%</td>
               <td class="f">1.02</td>
@@ -1596,7 +1176,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000545.SZ<span class="nm">金浦钛业</span></td>
               <td class="sc">31.3</td>
               <td><span class="tier d-low">第6档</span></td>
-              <td class="hr">16.5%<span class="lf">×0.96</span></td>
+              <td class="hr">16.7%<span class="lf">×0.99</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.4%</span></td>
               <td class="f">0.61</td>
               <td class="f">0.0%</td>
@@ -1606,18 +1186,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">000520.SZ<span class="nm">凤凰航运</span></td>
               <td class="sc">29.6</td>
               <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.2%</span></td>
               <td class="f">2.29</td>
               <td class="f">0.0%</td>
               <td class="f">0.94</td>
             </tr>
-<tr class="d-low b2row">
+<tr class="d-low won">
               <td class="code">603002.SH<span class="nm">宏昌电子</span></td>
               <td class="sc">29.5</td>
               <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
+              <td class="ocell"><b class="win">★走到3板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.44</td>
               <td class="f">0.0%</td>
               <td class="f">1.09</td>
@@ -1626,18 +1206,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">002851.SZ<span class="nm">麦格米特</span></td>
               <td class="sc">26.3</td>
               <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.43</td>
               <td class="f">0.0%</td>
               <td class="f">1.13</td>
             </tr>
-<tr class="d-low b2row">
+<tr class="d-low won">
               <td class="code">002741.SZ<span class="nm">光华科技</span></td>
               <td class="sc">26.1</td>
               <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
+              <td class="ocell"><b class="win">★走到3板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.46</td>
               <td class="f">0.0%</td>
               <td class="f">1.26</td>
@@ -1646,8 +1226,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002585.SZ<span class="nm">双星新材</span></td>
               <td class="sc">25.9</td>
               <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.98</td>
               <td class="f">0.0%</td>
               <td class="f">1.45</td>
@@ -1656,7 +1236,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002613.SZ<span class="nm">北玻股份</span></td>
               <td class="sc">25.1</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.7%</span></td>
               <td class="f">2.7</td>
               <td class="f">0.0%</td>
@@ -1666,7 +1246,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002263.SZ<span class="nm">大东南</span></td>
               <td class="sc">23.4</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.9%</span></td>
               <td class="f">0.76</td>
               <td class="f">0.0%</td>
@@ -1676,8 +1256,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002051.SZ<span class="nm">中工国际</span></td>
               <td class="sc">23.0</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.03</td>
               <td class="f">0.0%</td>
               <td class="f">1.0</td>
@@ -1686,7 +1266,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600460.SH<span class="nm">士兰微</span></td>
               <td class="sc">21.4</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+8.2%</span></td>
               <td class="f">1.25</td>
               <td class="f">0.0%</td>
@@ -1696,7 +1276,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600563.SH<span class="nm">法拉电子</span></td>
               <td class="sc">21.1</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+7.0%</span></td>
               <td class="f">1.08</td>
               <td class="f">0.0%</td>
@@ -1706,7 +1286,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600375.SH<span class="nm">汉马科技</span></td>
               <td class="sc">21.0</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.3%</span></td>
               <td class="f">0.91</td>
               <td class="f">0.0%</td>
@@ -1716,7 +1296,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603007.SH<span class="nm">顺景科技</span></td>
               <td class="sc">19.6</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.7%</span></td>
               <td class="f">0.77</td>
               <td class="f">0.0%</td>
@@ -1726,7 +1306,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002021.SZ<span class="nm">中捷资源</span></td>
               <td class="sc">19.4</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.8%</span></td>
               <td class="f">0.68</td>
               <td class="f">0.0%</td>
@@ -1736,7 +1316,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002428.SZ<span class="nm">云南锗业</span></td>
               <td class="sc">19.3</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.3%</span></td>
               <td class="f">1.03</td>
               <td class="f">0.0%</td>
@@ -1746,7 +1326,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002635.SZ<span class="nm">安洁科技</span></td>
               <td class="sc">18.8</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.7%</span></td>
               <td class="f">1.02</td>
               <td class="f">0.0%</td>
@@ -1756,7 +1336,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600293.SH<span class="nm">三峡新材</span></td>
               <td class="sc">18.8</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.1%</span></td>
               <td class="f">2.82</td>
               <td class="f">0.0%</td>
@@ -1766,8 +1346,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">603045.SH<span class="nm">福达合金</span></td>
               <td class="sc">18.3</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.4</td>
               <td class="f">0.0%</td>
               <td class="f">1.16</td>
@@ -1776,7 +1356,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000733.SZ<span class="nm">振华科技</span></td>
               <td class="sc">18.2</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+8.6%</span></td>
               <td class="f">1.84</td>
               <td class="f">0.0%</td>
@@ -1786,7 +1366,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002281.SZ<span class="nm">光迅科技</span></td>
               <td class="sc">17.8</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.0%</span></td>
               <td class="f">0.73</td>
               <td class="f">0.0%</td>
@@ -1796,7 +1376,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002040.SZ<span class="nm">南京港</span></td>
               <td class="sc">16.6</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-5.2%</span></td>
               <td class="f">0.59</td>
               <td class="f">0.0%</td>
@@ -1806,18 +1386,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">000070.SZ<span class="nm">特发信息</span></td>
               <td class="sc">16.5</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+3.6%</span></td>
               <td class="f">0.86</td>
               <td class="f">0.0%</td>
               <td class="f">0.91</td>
             </tr>
-<tr class="d-bot b2row">
+<tr class="d-bot won">
               <td class="code">000777.SZ<span class="nm">中核科技</span></td>
               <td class="sc">15.7</td>
-              <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td><span class="tier d-bot">第3档</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
+              <td class="ocell"><b class="win">★走到3板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.76</td>
               <td class="f">0.0%</td>
               <td class="f">0.6</td>
@@ -1826,7 +1406,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002364.SZ<span class="nm">中恒电气</span></td>
               <td class="sc">15.2</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.1%</span></td>
               <td class="f">0.85</td>
               <td class="f">0.0%</td>
@@ -1836,7 +1416,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600578.SH<span class="nm">京能电力</span></td>
               <td class="sc">15.0</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.0%</span></td>
               <td class="f">1.63</td>
               <td class="f">0.0%</td>
@@ -1846,7 +1426,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002426.SZ<span class="nm">胜利精密</span></td>
               <td class="sc">14.5</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.2%</span></td>
               <td class="f">1.37</td>
               <td class="f">0.0%</td>
@@ -1856,7 +1436,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600226.SH<span class="nm">亨通股份</span></td>
               <td class="sc">14.5</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.1%</span></td>
               <td class="f">2.48</td>
               <td class="f">0.0%</td>
@@ -1866,8 +1446,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">600549.SH<span class="nm">厦门钨业</span></td>
               <td class="sc">13.9</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.6</td>
               <td class="f">0.0%</td>
               <td class="f">0.88</td>
@@ -1876,7 +1456,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000700.SZ<span class="nm">模塑科技</span></td>
               <td class="sc">13.5</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.7%</span></td>
               <td class="f">1.01</td>
               <td class="f">0.0%</td>
@@ -1886,7 +1466,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000823.SZ<span class="nm">超声电子</span></td>
               <td class="sc">13.4</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.1%</span></td>
               <td class="f">2.38</td>
               <td class="f">0.0%</td>
@@ -1896,7 +1476,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002972.SZ<span class="nm">科安达</span></td>
               <td class="sc">12.7</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+8.7%</span></td>
               <td class="f">1.54</td>
               <td class="f">0.0%</td>
@@ -1906,8 +1486,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002806.SZ<span class="nm">华锋股份</span></td>
               <td class="sc">12.5</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.39</td>
               <td class="f">0.0%</td>
               <td class="f">1.22</td>
@@ -1916,7 +1496,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600183.SH<span class="nm">生益科技</span></td>
               <td class="sc">12.0</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+7.8%</span></td>
               <td class="f">1.21</td>
               <td class="f">0.0%</td>
@@ -1926,7 +1506,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000980.SZ<span class="nm">众泰汽车</span></td>
               <td class="sc">11.8</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.8%</span></td>
               <td class="f">0.8</td>
               <td class="f">0.0%</td>
@@ -1936,7 +1516,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002384.SZ<span class="nm">东山精密</span></td>
               <td class="sc">10.9</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.1%</span></td>
               <td class="f">0.87</td>
               <td class="f">0.0%</td>
@@ -1945,8 +1525,8 @@ tr.b2row td{background:#0b1622}
 <tr class="d-bot ">
               <td class="code">000657.SZ<span class="nm">中钨高新</span></td>
               <td class="sc">10.8</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td><span class="tier d-bot">第2档</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.4%</span></td>
               <td class="f">1.34</td>
               <td class="f">0.0%</td>
@@ -1956,7 +1536,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002137.SZ<span class="nm">实益达</span></td>
               <td class="sc">10.8</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.8%</span></td>
               <td class="f">3.2</td>
               <td class="f">0.0%</td>
@@ -1966,18 +1546,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">000593.SZ<span class="nm">德龙汇能</span></td>
               <td class="sc">10.0</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.8%</span></td>
               <td class="f">0.76</td>
               <td class="f">0.0%</td>
               <td class="f">0.83</td>
             </tr>
-<tr class="d-bot b2row">
+<tr class="d-bot won">
               <td class="code">600353.SH<span class="nm">旭光电子</span></td>
               <td class="sc">10.0</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="win">★走到3板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.67</td>
               <td class="f">0.0%</td>
               <td class="f">1.32</td>
@@ -1986,7 +1566,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002174.SZ<span class="nm">游族网络</span></td>
               <td class="sc">9.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.6%</span></td>
               <td class="f">1.26</td>
               <td class="f">0.0%</td>
@@ -1996,7 +1576,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000636.SZ<span class="nm">风华高科</span></td>
               <td class="sc">9.4</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+8.6%</span></td>
               <td class="f">1.72</td>
               <td class="f">0.0%</td>
@@ -2006,18 +1586,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">002815.SZ<span class="nm">崇达技术</span></td>
               <td class="sc">8.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.5%</span></td>
               <td class="f">1.74</td>
               <td class="f">0.0%</td>
               <td class="f">1.11</td>
             </tr>
-<tr class="d-bot b2row">
+<tr class="d-bot won">
               <td class="code">002080.SZ<span class="nm">中材科技</span></td>
               <td class="sc">8.2</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="win">★走到3板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.12</td>
               <td class="f">0.0%</td>
               <td class="f">1.07</td>
@@ -2026,7 +1606,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002730.SZ<span class="nm">电光科技</span></td>
               <td class="sc">8.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.5%</span></td>
               <td class="f">0.44</td>
               <td class="f">0.0%</td>
@@ -2036,7 +1616,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002859.SZ<span class="nm">洁美科技</span></td>
               <td class="sc">8.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+7.5%</span></td>
               <td class="f">1.8</td>
               <td class="f">0.0%</td>
@@ -2046,7 +1626,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600520.SH<span class="nm">三佳科技</span></td>
               <td class="sc">7.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.2%</span></td>
               <td class="f">1.11</td>
               <td class="f">0.0%</td>
@@ -2056,7 +1636,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002913.SZ<span class="nm">奥士康</span></td>
               <td class="sc">7.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.8%</span></td>
               <td class="f">0.99</td>
               <td class="f">0.0%</td>
@@ -2066,7 +1646,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600237.SH<span class="nm">铜峰电子</span></td>
               <td class="sc">7.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.9%</span></td>
               <td class="f">1.73</td>
               <td class="f">0.0%</td>
@@ -2076,7 +1656,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002664.SZ<span class="nm">信质集团</span></td>
               <td class="sc">7.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.1%</span></td>
               <td class="f">0.71</td>
               <td class="f">0.0%</td>
@@ -2086,8 +1666,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">600703.SH<span class="nm">三安光电</span></td>
               <td class="sc">7.4</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.18</td>
               <td class="f">0.0%</td>
               <td class="f">0.94</td>
@@ -2096,7 +1676,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000811.SZ<span class="nm">冰轮环境</span></td>
               <td class="sc">7.3</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.9%</span></td>
               <td class="f">0.83</td>
               <td class="f">0.0%</td>
@@ -2106,7 +1686,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000960.SZ<span class="nm">锡业股份</span></td>
               <td class="sc">7.3</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.5%</span></td>
               <td class="f">1.39</td>
               <td class="f">0.0%</td>
@@ -2116,7 +1696,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002301.SZ<span class="nm">齐心集团</span></td>
               <td class="sc">7.3</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.6%</span></td>
               <td class="f">1.0</td>
               <td class="f">0.0%</td>
@@ -2126,7 +1706,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002961.SZ<span class="nm">瑞达期货</span></td>
               <td class="sc">6.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.7%</span></td>
               <td class="f">0.74</td>
               <td class="f">0.0%</td>
@@ -2136,7 +1716,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000411.SZ<span class="nm">英特集团</span></td>
               <td class="sc">6.4</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.3%</span></td>
               <td class="f">1.38</td>
               <td class="f">0.0%</td>
@@ -2146,7 +1726,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002440.SZ<span class="nm">闰土股份</span></td>
               <td class="sc">5.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.6%</span></td>
               <td class="f">1.22</td>
               <td class="f">0.0%</td>
@@ -2156,27 +1736,17 @@ tr.b2row td{background:#0b1622}
               <td class="code">600176.SH<span class="nm">中国巨石</span></td>
               <td class="sc">5.8</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+8.5%</span></td>
               <td class="f">1.38</td>
               <td class="f">0.0%</td>
               <td class="f">1.15</td>
             </tr>
 <tr class="d-bot ">
-              <td class="code">002106.SZ<span class="nm">莱宝高科</span></td>
-              <td class="sc">5.4</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.2%</span></td>
-              <td class="f">1.96</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.09</td>
-            </tr>
-<tr class="d-bot ">
               <td class="code">002897.SZ<span class="nm">意华股份</span></td>
               <td class="sc">5.4</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.2%</span></td>
               <td class="f">0.94</td>
               <td class="f">0.0%</td>
@@ -2186,8 +1756,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">601179.SH<span class="nm">中国西电</span></td>
               <td class="sc">5.2</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="b2">走到2板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">0.65</td>
               <td class="f">0.0%</td>
               <td class="f">0.84</td>
@@ -2196,17 +1766,27 @@ tr.b2row td{background:#0b1622}
               <td class="code">600160.SH<span class="nm">巨化股份</span></td>
               <td class="sc">4.8</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.2%</span></td>
               <td class="f">2.22</td>
               <td class="f">-0.09%</td>
               <td class="f">1.07</td>
             </tr>
 <tr class="d-bot ">
+              <td class="code">002106.SZ<span class="nm">莱宝高科</span></td>
+              <td class="sc">4.6</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.2%</span></td>
+              <td class="f">1.96</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.09</td>
+            </tr>
+<tr class="d-bot ">
               <td class="code">002136.SZ<span class="nm">安纳达</span></td>
               <td class="sc">4.6</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.0%</span></td>
               <td class="f">0.83</td>
               <td class="f">0.0%</td>
@@ -2216,18 +1796,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">002745.SZ<span class="nm">木林森</span></td>
               <td class="sc">3.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+3.7%</span></td>
               <td class="f">1.14</td>
               <td class="f">0.0%</td>
               <td class="f">1.01</td>
             </tr>
-<tr class="d-bot b2row">
+<tr class="d-bot won">
               <td class="code">601636.SH<span class="nm">旗滨集团</span></td>
               <td class="sc">3.6</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="win">★走到3板</b> <span class="nxt">次日涨停</span></td>
               <td class="f">1.61</td>
               <td class="f">0.0%</td>
               <td class="f">0.95</td>
@@ -2236,7 +1816,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">000887.SZ<span class="nm">中鼎股份</span></td>
               <td class="sc">3.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.0%</span></td>
               <td class="f">1.8</td>
               <td class="f">-0.04%</td>
@@ -2246,7 +1826,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002849.SZ<span class="nm">威星智能</span></td>
               <td class="sc">2.8</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.6%</span></td>
               <td class="f">1.07</td>
               <td class="f">0.0%</td>
@@ -2256,7 +1836,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">002335.SZ<span class="nm">科华数据</span></td>
               <td class="sc">2.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.5%</span></td>
               <td class="f">0.97</td>
               <td class="f">0.0%</td>
@@ -2266,18 +1846,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">600362.SH<span class="nm">江西铜业</span></td>
               <td class="sc">1.4</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.8%</span></td>
               <td class="f">1.31</td>
               <td class="f">0.0%</td>
               <td class="f">0.7</td>
             </tr></tbody></table></div>
-<div class="tbody" data-tab="4" style="display:block"><div class="daysum">65只首板 · 次日待揭晓</div><table><thead><tr><th>代码·名称</th><th>倾向分</th><th>档位</th><th>历史该档</th><th>实际续航</th><th>量比5/60</th><th>距涨停高点</th><th>上影cover</th></tr></thead><tbody><tr class="d-hi ">
+<div class="tbody" data-tab="3" style="display:none"><div class="daysum">65只首板 · 实际走3+ <b>0</b>/53</div><table><thead><tr><th>代码·名称</th><th>倾向分</th><th>档位</th><th>历史该档</th><th>实际续航</th><th>量比5/60</th><th>距涨停高点</th><th>上影cover</th></tr></thead><tbody><tr class="d-hi ">
               <td class="code">002160.SZ<span class="nm">常铝股份</span></td>
               <td class="sc">61.3</td>
               <td><span class="tier d-hi">第10档</span></td>
-              <td class="hr">31.7%<span class="lf">×1.85</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">31.4%<span class="lf">×1.85</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.1%</span></td>
               <td class="f">0.55</td>
               <td class="f">0.0%</td>
               <td class="f">0.66</td>
@@ -2286,8 +1866,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002735.SZ<span class="nm">王子新材</span></td>
               <td class="sc">51.7</td>
               <td><span class="tier d-hi">第9档</span></td>
-              <td class="hr">24.4%<span class="lf">×1.43</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">24.3%<span class="lf">×1.43</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.0%</span></td>
               <td class="f">2.94</td>
               <td class="f">0.0%</td>
               <td class="f">0.89</td>
@@ -2296,8 +1876,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002700.SZ<span class="nm">万憬能源</span></td>
               <td class="sc">46.5</td>
               <td><span class="tier d-mid">第8档</span></td>
-              <td class="hr">20.3%<span class="lf">×1.18</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">20.4%<span class="lf">×1.2</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+7.6%</span></td>
               <td class="f">1.61</td>
               <td class="f">0.0%</td>
               <td class="f">1.11</td>
@@ -2306,8 +1886,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002782.SZ<span class="nm">可立克</span></td>
               <td class="sc">44.2</td>
               <td><span class="tier d-mid">第8档</span></td>
-              <td class="hr">20.3%<span class="lf">×1.18</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">20.4%<span class="lf">×1.2</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.9%</span></td>
               <td class="f">0.68</td>
               <td class="f">0.0%</td>
               <td class="f">1.02</td>
@@ -2316,18 +1896,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">002885.SZ<span class="nm">京泉华</span></td>
               <td class="sc">41.4</td>
               <td><span class="tier d-mid">第8档</span></td>
-              <td class="hr">20.3%<span class="lf">×1.18</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">20.4%<span class="lf">×1.2</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.2%</span></td>
               <td class="f">0.55</td>
               <td class="f">0.0%</td>
               <td class="f">1.04</td>
             </tr>
-<tr class="d-low ">
+<tr class="d-mid ">
               <td class="code">600500.SH<span class="nm">中化国际</span></td>
               <td class="sc">34.8</td>
-              <td><span class="tier d-low">第6档</span></td>
-              <td class="hr">16.5%<span class="lf">×0.96</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td><span class="tier d-mid">第7档</span></td>
+              <td class="hr">16.2%<span class="lf">×0.95</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.6%</span></td>
               <td class="f">2.84</td>
               <td class="f">0.0%</td>
               <td class="f">1.4</td>
@@ -2336,8 +1916,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002672.SZ<span class="nm">东江环保</span></td>
               <td class="sc">28.6</td>
               <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-6.2%</span></td>
               <td class="f">1.59</td>
               <td class="f">0.0%</td>
               <td class="f">0.71</td>
@@ -2346,8 +1926,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">000048.SZ<span class="nm">京基智农</span></td>
               <td class="sc">28.3</td>
               <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.1%</span></td>
               <td class="f">2.4</td>
               <td class="f">0.0%</td>
               <td class="f">0.87</td>
@@ -2356,8 +1936,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002931.SZ<span class="nm">锋龙股份</span></td>
               <td class="sc">26.6</td>
               <td><span class="tier d-low">第5档</span></td>
-              <td class="hr">14.7%<span class="lf">×0.86</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.7%</span></td>
               <td class="f">1.45</td>
               <td class="f">0.0%</td>
               <td class="f">0.64</td>
@@ -2366,8 +1946,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">603169.SH<span class="nm">兰石重装</span></td>
               <td class="sc">25.3</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+4.2%</span></td>
               <td class="f">0.88</td>
               <td class="f">0.0%</td>
               <td class="f">0.61</td>
@@ -2376,8 +1956,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">600206.SH<span class="nm">有研新材</span></td>
               <td class="sc">24.8</td>
               <td><span class="tier d-low">第4档</span></td>
-              <td class="hr">14.6%<span class="lf">×0.85</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">15.2%<span class="lf">×0.9</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.7%</span></td>
               <td class="f">1.96</td>
               <td class="f">0.0%</td>
               <td class="f">1.17</td>
@@ -2386,18 +1966,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">000791.SZ<span class="nm">甘肃能源</span></td>
               <td class="sc">18.1</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.7%</span></td>
               <td class="f">0.49</td>
               <td class="f">0.0%</td>
               <td class="f">1.06</td>
             </tr>
-<tr class="d-bot ">
+<tr class="d-bot b2row">
               <td class="code">600397.SH<span class="nm">江钨装备</span></td>
               <td class="sc">18.0</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
+              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
               <td class="f">1.51</td>
               <td class="f">0.0%</td>
               <td class="f">0.74</td>
@@ -2406,8 +1986,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002805.SZ<span class="nm">丰元股份</span></td>
               <td class="sc">16.2</td>
               <td><span class="tier d-bot">第3档</span></td>
-              <td class="hr">13.2%<span class="lf">×0.77</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.0%</span></td>
               <td class="f">0.98</td>
               <td class="f">0.0%</td>
               <td class="f">0.89</td>
@@ -2416,8 +1996,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">603318.SH<span class="nm">水发燃气</span></td>
               <td class="sc">15.6</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.6%</span></td>
               <td class="f">1.33</td>
               <td class="f">0.0%</td>
               <td class="f">0.66</td>
@@ -2426,18 +2006,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">002194.SZ<span class="nm">武汉凡谷</span></td>
               <td class="sc">15.1</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.9%</span></td>
               <td class="f">1.76</td>
               <td class="f">0.0%</td>
               <td class="f">0.85</td>
             </tr>
-<tr class="d-bot ">
+<tr class="d-bot b2row">
               <td class="code">603989.SH<span class="nm">艾华集团</span></td>
               <td class="sc">15.1</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
               <td class="f">1.32</td>
               <td class="f">0.0%</td>
               <td class="f">1.35</td>
@@ -2446,8 +2026,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">000564.SZ<span class="nm">供销大集</span></td>
               <td class="sc">15.0</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-5.0%</span></td>
               <td class="f">1.09</td>
               <td class="f">0.0%</td>
               <td class="f">0.65</td>
@@ -2456,18 +2036,28 @@ tr.b2row td{background:#0b1622}
               <td class="code">601208.SH<span class="nm">东材科技</span></td>
               <td class="sc">15.0</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.0%</span></td>
               <td class="f">1.46</td>
               <td class="f">0.0%</td>
               <td class="f">1.36</td>
             </tr>
 <tr class="d-bot ">
+              <td class="code">600105.SH<span class="nm">永鼎股份</span></td>
+              <td class="sc">14.9</td>
+              <td><span class="tier d-bot">第2档</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+7.2%</span></td>
+              <td class="f">0.81</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.06</td>
+            </tr>
+<tr class="d-bot ">
               <td class="code">002047.SZ<span class="nm">宝鹰股份</span></td>
               <td class="sc">14.4</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+3.3%</span></td>
               <td class="f">0.97</td>
               <td class="f">0.0%</td>
               <td class="f">0.87</td>
@@ -2476,28 +2066,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">002927.SZ<span class="nm">泰永长征</span></td>
               <td class="sc">14.2</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.9%</span></td>
               <td class="f">1.12</td>
               <td class="f">0.0%</td>
               <td class="f">1.0</td>
             </tr>
 <tr class="d-bot ">
-              <td class="code">600105.SH<span class="nm">永鼎股份</span></td>
-              <td class="sc">14.0</td>
-              <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
-              <td class="f">0.81</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.06</td>
-            </tr>
-<tr class="d-bot ">
               <td class="code">601020.SH<span class="nm">华钰矿业</span></td>
               <td class="sc">11.7</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.9%</span></td>
               <td class="f">1.15</td>
               <td class="f">0.0%</td>
               <td class="f">0.65</td>
@@ -2506,38 +2086,38 @@ tr.b2row td{background:#0b1622}
               <td class="code">002645.SZ<span class="nm">华宏科技</span></td>
               <td class="sc">10.9</td>
               <td><span class="tier d-bot">第2档</span></td>
-              <td class="hr">9.8%<span class="lf">×0.57</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.8%</span></td>
               <td class="f">1.32</td>
               <td class="f">0.0%</td>
               <td class="f">1.36</td>
             </tr>
-<tr class="d-bot ">
+<tr class="d-bot b2row">
               <td class="code">002484.SZ<span class="nm">江海股份</span></td>
               <td class="sc">10.4</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
               <td class="f">1.09</td>
               <td class="f">0.0%</td>
               <td class="f">1.58</td>
             </tr>
-<tr class="d-bot ">
+<tr class="d-bot b2row">
               <td class="code">600707.SH<span class="nm">彩虹股份</span></td>
               <td class="sc">10.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
               <td class="f">1.44</td>
               <td class="f">-0.09%</td>
               <td class="f">1.09</td>
             </tr>
-<tr class="d-bot ">
+<tr class="d-bot b2row">
               <td class="code">603773.SH<span class="nm">沃格光电</span></td>
               <td class="sc">10.0</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
               <td class="f">1.47</td>
               <td class="f">0.0%</td>
               <td class="f">1.79</td>
@@ -2546,8 +2126,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002449.SZ<span class="nm">国星光电</span></td>
               <td class="sc">9.3</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.5%</span></td>
               <td class="f">1.16</td>
               <td class="f">0.0%</td>
               <td class="f">0.93</td>
@@ -2556,18 +2136,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">000608.SZ<span class="nm">阳光股份</span></td>
               <td class="sc">9.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.6%</span></td>
               <td class="f">2.44</td>
               <td class="f">-0.14%</td>
               <td class="f">1.63</td>
             </tr>
-<tr class="d-bot ">
+<tr class="d-bot b2row">
               <td class="code">600186.SH<span class="nm">莲花控股</span></td>
               <td class="sc">9.0</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
               <td class="f">1.17</td>
               <td class="f">0.0%</td>
               <td class="f">1.16</td>
@@ -2576,18 +2156,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">603803.SH<span class="nm">瑞斯康达</span></td>
               <td class="sc">8.6</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.3%</span></td>
               <td class="f">0.35</td>
               <td class="f">0.0%</td>
               <td class="f">0.85</td>
             </tr>
-<tr class="d-bot ">
+<tr class="d-bot b2row">
               <td class="code">600192.SH<span class="nm">长城电工</span></td>
               <td class="sc">8.2</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
               <td class="f">0.6</td>
               <td class="f">0.0%</td>
               <td class="f">0.69</td>
@@ -2596,8 +2176,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002734.SZ<span class="nm">利民股份</span></td>
               <td class="sc">7.2</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.5%</span></td>
               <td class="f">0.83</td>
               <td class="f">0.0%</td>
               <td class="f">0.79</td>
@@ -2606,8 +2186,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">603042.SH<span class="nm">华脉科技</span></td>
               <td class="sc">7.0</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.7%</span></td>
               <td class="f">0.67</td>
               <td class="f">0.0%</td>
               <td class="f">0.9</td>
@@ -2616,8 +2196,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">603861.SH<span class="nm">白云电器</span></td>
               <td class="sc">7.0</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.6%</span></td>
               <td class="f">1.35</td>
               <td class="f">0.0%</td>
               <td class="f">0.84</td>
@@ -2626,8 +2206,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">000029.SZ<span class="nm">深深房A</span></td>
               <td class="sc">6.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+3.4%</span></td>
               <td class="f">1.24</td>
               <td class="f">0.0%</td>
               <td class="f">0.91</td>
@@ -2636,8 +2216,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">000012.SZ<span class="nm">南玻A</span></td>
               <td class="sc">6.4</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.4%</span></td>
               <td class="f">1.26</td>
               <td class="f">0.0%</td>
               <td class="f">0.92</td>
@@ -2646,8 +2226,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">603166.SH<span class="nm">福达股份</span></td>
               <td class="sc">6.3</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+6.8%</span></td>
               <td class="f">1.56</td>
               <td class="f">0.0%</td>
               <td class="f">0.81</td>
@@ -2656,8 +2236,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">603663.SH<span class="nm">三祥新材</span></td>
               <td class="sc">5.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-4.2%</span></td>
               <td class="f">1.87</td>
               <td class="f">0.0%</td>
               <td class="f">1.46</td>
@@ -2666,8 +2246,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002446.SZ<span class="nm">盛路通信</span></td>
               <td class="sc">5.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.6%</span></td>
               <td class="f">1.55</td>
               <td class="f">0.0%</td>
               <td class="f">0.8</td>
@@ -2676,8 +2256,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002346.SZ<span class="nm">柘中股份</span></td>
               <td class="sc">5.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.8%</span></td>
               <td class="f">0.84</td>
               <td class="f">0.0%</td>
               <td class="f">0.96</td>
@@ -2686,8 +2266,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">000970.SZ<span class="nm">中科三环</span></td>
               <td class="sc">5.4</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.4%</span></td>
               <td class="f">4.05</td>
               <td class="f">0.0%</td>
               <td class="f">0.95</td>
@@ -2696,7 +2276,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">600228.SH<span class="nm">返利科技</span></td>
               <td class="sc">5.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
               <td class="f">4.6</td>
               <td class="f">0.0%</td>
@@ -2706,8 +2286,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">600392.SH<span class="nm">盛和资源</span></td>
               <td class="sc">5.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.9%</span></td>
               <td class="f">2.03</td>
               <td class="f">0.0%</td>
               <td class="f">0.86</td>
@@ -2716,8 +2296,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002217.SZ<span class="nm">合力泰</span></td>
               <td class="sc">4.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+1.9%</span></td>
               <td class="f">0.56</td>
               <td class="f">0.0%</td>
               <td class="f">0.7</td>
@@ -2726,8 +2306,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002729.SZ<span class="nm">好利科技</span></td>
               <td class="sc">4.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.7%</span></td>
               <td class="f">0.59</td>
               <td class="f">0.0%</td>
               <td class="f">0.94</td>
@@ -2736,8 +2316,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">600458.SH<span class="nm">时代新材</span></td>
               <td class="sc">4.8</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.3%</span></td>
               <td class="f">2.93</td>
               <td class="f">0.0%</td>
               <td class="f">1.13</td>
@@ -2746,8 +2326,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">600888.SH<span class="nm">新疆众和</span></td>
               <td class="sc">4.8</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-1.5%</span></td>
               <td class="f">1.59</td>
               <td class="f">0.0%</td>
               <td class="f">1.23</td>
@@ -2756,8 +2336,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002058.SZ<span class="nm">威尔泰</span></td>
               <td class="sc">4.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-5.1%</span></td>
               <td class="f">1.41</td>
               <td class="f">0.0%</td>
               <td class="f">0.96</td>
@@ -2766,8 +2346,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002774.SZ<span class="nm">快意电梯</span></td>
               <td class="sc">4.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+2.7%</span></td>
               <td class="f">0.72</td>
               <td class="f">0.0%</td>
               <td class="f">0.81</td>
@@ -2776,28 +2356,28 @@ tr.b2row td{background:#0b1622}
               <td class="code">002008.SZ<span class="nm">大族激光</span></td>
               <td class="sc">4.4</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.6%</span></td>
               <td class="f">0.94</td>
               <td class="f">0.0%</td>
               <td class="f">0.94</td>
             </tr>
-<tr class="d-bot ">
+<tr class="d-bot b2row">
               <td class="code">002141.SZ<span class="nm">贤丰控股</span></td>
               <td class="sc">4.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
               <td class="f">3.36</td>
               <td class="f">0.0%</td>
               <td class="f">0.85</td>
             </tr>
-<tr class="d-bot ">
+<tr class="d-bot b2row">
               <td class="code">000679.SZ<span class="nm">大连友谊</span></td>
               <td class="sc">3.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
               <td class="f">1.05</td>
               <td class="f">0.0%</td>
               <td class="f">0.75</td>
@@ -2806,8 +2386,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">002436.SZ<span class="nm">兴森科技</span></td>
               <td class="sc">3.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+8.4%</span></td>
               <td class="f">1.22</td>
               <td class="f">0.0%</td>
               <td class="f">1.21</td>
@@ -2816,8 +2396,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">603260.SH<span class="nm">合盛硅业</span></td>
               <td class="sc">3.3</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.0%</span></td>
               <td class="f">2.86</td>
               <td class="f">0.0%</td>
               <td class="f">0.76</td>
@@ -2826,8 +2406,8 @@ tr.b2row td{background:#0b1622}
               <td class="code">603196.SH<span class="nm">璞源材料</span></td>
               <td class="sc">3.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.2%</span></td>
               <td class="f">0.72</td>
               <td class="f">0.0%</td>
               <td class="f">0.79</td>
@@ -2836,7 +2416,7 @@ tr.b2row td{background:#0b1622}
               <td class="code">603721.SH<span class="nm">中广天择</span></td>
               <td class="sc">3.1</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
               <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
               <td class="f">1.6</td>
               <td class="f">0.0%</td>
@@ -2846,18 +2426,18 @@ tr.b2row td{background:#0b1622}
               <td class="code">002303.SZ<span class="nm">美盈森</span></td>
               <td class="sc">2.9</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+5.2%</span></td>
               <td class="f">1.32</td>
               <td class="f">0.0%</td>
               <td class="f">0.83</td>
             </tr>
 <tr class="d-bot ">
-              <td class="code">000736.SZ<span class="nm">中交地产</span></td>
+              <td class="code">000736.SZ<span class="nm">中交发展</span></td>
               <td class="sc">2.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-5.0%</span></td>
               <td class="f">2.08</td>
               <td class="f">0.0%</td>
               <td class="f">0.9</td>
@@ -2866,38 +2446,38 @@ tr.b2row td{background:#0b1622}
               <td class="code">600052.SH<span class="nm">东望时代</span></td>
               <td class="sc">2.7</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-2.0%</span></td>
               <td class="f">0.83</td>
               <td class="f">0.0%</td>
               <td class="f">0.9</td>
             </tr>
 <tr class="d-bot ">
-              <td class="code">603078.SH<span class="nm">江化微</span></td>
-              <td class="sc">2.7</td>
-              <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
-              <td class="f">1.7</td>
-              <td class="f">0.0%</td>
-              <td class="f">1.25</td>
-            </tr>
-<tr class="d-bot ">
               <td class="code">000034.SZ<span class="nm">神州数码</span></td>
               <td class="sc">2.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.8%</span></td>
               <td class="f">1.12</td>
               <td class="f">0.0%</td>
               <td class="f">0.92</td>
             </tr>
 <tr class="d-bot ">
+              <td class="code">603078.SH<span class="nm">江化微</span></td>
+              <td class="sc">2.4</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日+0.6%</span></td>
+              <td class="f">1.7</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.25</td>
+            </tr>
+<tr class="d-bot ">
               <td class="code">000541.SZ<span class="nm">佛山照明</span></td>
               <td class="sc">2.3</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-3.6%</span></td>
               <td class="f">1.45</td>
               <td class="f">0.0%</td>
               <td class="f">0.81</td>
@@ -2906,21 +2486,431 @@ tr.b2row td{background:#0b1622}
               <td class="code">002910.SZ<span class="nm">庄园牧场</span></td>
               <td class="sc">2.0</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="lose">死在1板</span> <span class="nxt">次日-0.5%</span></td>
               <td class="f">2.18</td>
               <td class="f">0.0%</td>
               <td class="f">0.7</td>
             </tr>
-<tr class="d-bot ">
+<tr class="d-bot b2row">
               <td class="code">600615.SH<span class="nm">鑫源智造</span></td>
               <td class="sc">1.5</td>
               <td><span class="tier d-bot">第1档</span></td>
-              <td class="hr">10.0%<span class="lf">×0.58</span></td>
-              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><b class="b2">续板中(2板)·未定</b></td>
               <td class="f">0.99</td>
               <td class="f">0.0%</td>
               <td class="f">0.91</td>
+            </tr></tbody></table></div>
+<div class="tbody" data-tab="4" style="display:block"><div class="daysum">41只首板 · 次日待揭晓</div><table><thead><tr><th>代码·名称</th><th>倾向分</th><th>档位</th><th>历史该档</th><th>实际续航</th><th>量比5/60</th><th>距涨停高点</th><th>上影cover</th></tr></thead><tbody><tr class="d-hi ">
+              <td class="code">000811.SZ<span class="nm">冰轮环境</span></td>
+              <td class="sc">47.7</td>
+              <td><span class="tier d-hi">第9档</span></td>
+              <td class="hr">24.3%<span class="lf">×1.43</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.83</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.95</td>
+            </tr>
+<tr class="d-mid ">
+              <td class="code">603601.SH<span class="nm">再升科技</span></td>
+              <td class="sc">43.6</td>
+              <td><span class="tier d-mid">第8档</span></td>
+              <td class="hr">20.4%<span class="lf">×1.2</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.72</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.18</td>
+            </tr>
+<tr class="d-mid ">
+              <td class="code">002579.SZ<span class="nm">中京电子</span></td>
+              <td class="sc">37.3</td>
+              <td><span class="tier d-mid">第7档</span></td>
+              <td class="hr">16.2%<span class="lf">×0.95</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.39</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.57</td>
+            </tr>
+<tr class="d-low ">
+              <td class="code">600378.SH<span class="nm">昊华科技</span></td>
+              <td class="sc">29.1</td>
+              <td><span class="tier d-low">第5档</span></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">3.2</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.59</td>
+            </tr>
+<tr class="d-low ">
+              <td class="code">002254.SZ<span class="nm">泰和新材</span></td>
+              <td class="sc">28.8</td>
+              <td><span class="tier d-low">第5档</span></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">2.23</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.19</td>
+            </tr>
+<tr class="d-low ">
+              <td class="code">002491.SZ<span class="nm">通鼎互联</span></td>
+              <td class="sc">28.2</td>
+              <td><span class="tier d-low">第5档</span></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.97</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.05</td>
+            </tr>
+<tr class="d-low ">
+              <td class="code">000725.SZ<span class="nm">京东方A</span></td>
+              <td class="sc">26.0</td>
+              <td><span class="tier d-low">第5档</span></td>
+              <td class="hr">13.9%<span class="lf">×0.82</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.71</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.31</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">603986.SH<span class="nm">兆易创新</span></td>
+              <td class="sc">18.1</td>
+              <td><span class="tier d-bot">第3档</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.96</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.24</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">603139.SH<span class="nm">康惠股份</span></td>
+              <td class="sc">17.8</td>
+              <td><span class="tier d-bot">第3档</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.58</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.08</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">002201.SZ<span class="nm">九鼎新材</span></td>
+              <td class="sc">17.6</td>
+              <td><span class="tier d-bot">第3档</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.01</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.76</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">603929.SH<span class="nm">亚翔集成</span></td>
+              <td class="sc">17.3</td>
+              <td><span class="tier d-bot">第3档</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.56</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.16</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">603458.SH<span class="nm">勘设股份</span></td>
+              <td class="sc">16.2</td>
+              <td><span class="tier d-bot">第3档</span></td>
+              <td class="hr">12.6%<span class="lf">×0.74</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.55</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.08</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">002828.SZ<span class="nm">贝肯能源</span></td>
+              <td class="sc">13.8</td>
+              <td><span class="tier d-bot">第2档</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.75</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.58</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">603283.SH<span class="nm">赛腾股份</span></td>
+              <td class="sc">13.7</td>
+              <td><span class="tier d-bot">第2档</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">2.04</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.14</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">603637.SH<span class="nm">镇海股份</span></td>
+              <td class="sc">12.3</td>
+              <td><span class="tier d-bot">第2档</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.87</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.18</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">002106.SZ<span class="nm">莱宝高科</span></td>
+              <td class="sc">11.4</td>
+              <td><span class="tier d-bot">第2档</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.89</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.15</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">600176.SH<span class="nm">中国巨石</span></td>
+              <td class="sc">11.2</td>
+              <td><span class="tier d-bot">第2档</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.32</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.38</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">000823.SZ<span class="nm">超声电子</span></td>
+              <td class="sc">11.0</td>
+              <td><span class="tier d-bot">第2档</span></td>
+              <td class="hr">9.3%<span class="lf">×0.55</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">2.15</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.24</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">000695.SZ<span class="nm">滨海能源</span></td>
+              <td class="sc">10.3</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.71</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.86</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">600026.SH<span class="nm">中远海能</span></td>
+              <td class="sc">10.3</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.16</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.88</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">600552.SH<span class="nm">凯盛科技</span></td>
+              <td class="sc">10.3</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.33</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.23</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">600579.SH<span class="nm">中化装备</span></td>
+              <td class="sc">8.2</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">2.55</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.79</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">603488.SH<span class="nm">展鹏科技</span></td>
+              <td class="sc">8.0</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.51</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.0</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">002161.SZ<span class="nm">远望谷</span></td>
+              <td class="sc">7.1</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.06</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.74</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">600237.SH<span class="nm">铜峰电子</span></td>
+              <td class="sc">6.9</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.6</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.13</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">002906.SZ<span class="nm">华阳集团</span></td>
+              <td class="sc">5.9</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.99</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.95</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">600673.SH<span class="nm">东阳光</span></td>
+              <td class="sc">5.9</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.95</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.95</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">601117.SH<span class="nm">中国化学</span></td>
+              <td class="sc">5.7</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.13</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.78</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">603976.SH<span class="nm">正川股份</span></td>
+              <td class="sc">5.5</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">2.64</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.17</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">002916.SZ<span class="nm">深南电路</span></td>
+              <td class="sc">5.3</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.0</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.18</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">000672.SZ<span class="nm">上峰材料</span></td>
+              <td class="sc">4.9</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.19</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.0</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">603020.SH<span class="nm">爱普股份</span></td>
+              <td class="sc">4.6</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">2.76</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.09</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">000955.SZ<span class="nm">欣龙控股</span></td>
+              <td class="sc">4.4</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.39</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.54</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">002918.SZ<span class="nm">蒙娜丽莎</span></td>
+              <td class="sc">4.3</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.95</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.85</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">002404.SZ<span class="nm">嘉欣丝绸</span></td>
+              <td class="sc">4.2</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.47</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.96</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">600876.SH<span class="nm">凯盛新能</span></td>
+              <td class="sc">3.9</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.69</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.82</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">002938.SZ<span class="nm">鹏鼎控股</span></td>
+              <td class="sc">3.7</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.19</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.18</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">000100.SZ<span class="nm">TCL科技</span></td>
+              <td class="sc">3.4</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.65</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.0</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">000050.SZ<span class="nm">深天马A</span></td>
+              <td class="sc">2.7</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">1.57</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.86</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">603880.SH<span class="nm">南卫股份</span></td>
+              <td class="sc">2.2</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.7</td>
+              <td class="f">0.0%</td>
+              <td class="f">1.02</td>
+            </tr>
+<tr class="d-bot ">
+              <td class="code">600676.SH<span class="nm">交运股份</span></td>
+              <td class="sc">2.0</td>
+              <td><span class="tier d-bot">第1档</span></td>
+              <td class="hr">9.7%<span class="lf">×0.57</span></td>
+              <td class="ocell"><span class="oc pend">首板当日·次日待揭晓</span></td>
+              <td class="f">0.91</td>
+              <td class="f">0.0%</td>
+              <td class="f">0.7</td>
             </tr></tbody></table></div></section>
 
 <section><div class="st">会总结 · SHAP 因子重要度<span class="tag">↑=较上次上升</span></div><div class="srow"><span class="sk">amt_ratio20</span><span class="sbar"><i style="width:100%"></i></span><span class="sv">0.2836</span></div>
@@ -2937,16 +2927,16 @@ tr.b2row td{background:#0b1622}
 <div class="srow"><span class="sk">vr5_20</span><span class="sbar"><i style="width:30%"></i></span><span class="sv">0.086</span></div>
 <div class="srow"><span class="sk">fakebreak_m60</span><span class="sbar"><i style="width:27%"></i></span><span class="sv">0.0787</span></div>
 <div class="srow"><span class="sk">c_ma60</span><span class="sbar"><i style="width:25%"></i></span><span class="sv">0.0736</span></div></section>
-<section><div class="st">会思考 · 历史校准(分数档→真实3+率)<span class="tag">扩窗OOS</span></div><div class="crow"><span class="cd">第1档</span><span class="cbar"><i style="width:31%"></i></span><span class="cv">10.0% <span class="cl">×0.58</span> <span class="cn">n=532</span></span></div>
-<div class="crow"><span class="cd">第2档</span><span class="cbar"><i style="width:30%"></i></span><span class="cv">9.8% <span class="cl">×0.57</span> <span class="cn">n=533</span></span></div>
-<div class="crow"><span class="cd">第3档</span><span class="cbar"><i style="width:41%"></i></span><span class="cv">13.2% <span class="cl">×0.77</span> <span class="cn">n=532</span></span></div>
-<div class="crow"><span class="cd">第4档</span><span class="cbar"><i style="width:46%"></i></span><span class="cv">14.6% <span class="cl">×0.85</span> <span class="cn">n=533</span></span></div>
-<div class="crow"><span class="cd">第5档</span><span class="cbar"><i style="width:46%"></i></span><span class="cv">14.7% <span class="cl">×0.86</span> <span class="cn">n=532</span></span></div>
-<div class="crow"><span class="cd">第6档</span><span class="cbar"><i style="width:52%"></i></span><span class="cv">16.5% <span class="cl">×0.96</span> <span class="cn">n=533</span></span></div>
-<div class="crow"><span class="cd">第7档</span><span class="cbar"><i style="width:51%"></i></span><span class="cv">16.4% <span class="cl">×0.95</span> <span class="cn">n=532</span></span></div>
-<div class="crow"><span class="cd">第8档</span><span class="cbar"><i style="width:63%"></i></span><span class="cv">20.3% <span class="cl">×1.18</span> <span class="cn">n=533</span></span></div>
-<div class="crow"><span class="cd">第9档</span><span class="cbar"><i style="width:77%"></i></span><span class="cv">24.4% <span class="cl">×1.43</span> <span class="cn">n=532</span></span></div>
-<div class="crow"><span class="cd">第10档</span><span class="cbar"><i style="width:100%"></i></span><span class="cv">31.7% <span class="cl">×1.85</span> <span class="cn">n=533</span></span></div></section>
+<section><div class="st">会思考 · 历史校准(分数档→真实3+率)<span class="tag">扩窗OOS</span></div><div class="crow"><span class="cd">第1档</span><span class="cbar"><i style="width:30%"></i></span><span class="cv">9.7% <span class="cl">×0.57</span> <span class="cn">n=538</span></span></div>
+<div class="crow"><span class="cd">第2档</span><span class="cbar"><i style="width:29%"></i></span><span class="cv">9.3% <span class="cl">×0.55</span> <span class="cn">n=538</span></span></div>
+<div class="crow"><span class="cd">第3档</span><span class="cbar"><i style="width:40%"></i></span><span class="cv">12.6% <span class="cl">×0.74</span> <span class="cn">n=539</span></span></div>
+<div class="crow"><span class="cd">第4档</span><span class="cbar"><i style="width:48%"></i></span><span class="cv">15.2% <span class="cl">×0.9</span> <span class="cn">n=538</span></span></div>
+<div class="crow"><span class="cd">第5档</span><span class="cbar"><i style="width:44%"></i></span><span class="cv">13.9% <span class="cl">×0.82</span> <span class="cn">n=539</span></span></div>
+<div class="crow"><span class="cd">第6档</span><span class="cbar"><i style="width:53%"></i></span><span class="cv">16.7% <span class="cl">×0.99</span> <span class="cn">n=538</span></span></div>
+<div class="crow"><span class="cd">第7档</span><span class="cbar"><i style="width:51%"></i></span><span class="cv">16.2% <span class="cl">×0.95</span> <span class="cn">n=538</span></span></div>
+<div class="crow"><span class="cd">第8档</span><span class="cbar"><i style="width:65%"></i></span><span class="cv">20.4% <span class="cl">×1.2</span> <span class="cn">n=539</span></span></div>
+<div class="crow"><span class="cd">第9档</span><span class="cbar"><i style="width:77%"></i></span><span class="cv">24.3% <span class="cl">×1.43</span> <span class="cn">n=538</span></span></div>
+<div class="crow"><span class="cd">第10档</span><span class="cbar"><i style="width:100%"></i></span><span class="cv">31.4% <span class="cl">×1.85</span> <span class="cn">n=539</span></span></div></section>
 
 <div class="foot">连板续航自进化层 · fusion-agent side-car · 不下单/不自改生产/写经redline · 历史结构对续航仅弱判别(天花板~AUC0.59, 形态+资金均到顶), 续航主因次日情绪资金 · "实际续航"列为事后真实outcome(非特征,不参与打分)</div>
 </div>
