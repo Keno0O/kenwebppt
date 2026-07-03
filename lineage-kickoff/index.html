@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<!-- Layout: A Classic Tab -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据血缘治理 Kickoff · 财务侧介绍 Brief</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { min-height:100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background:#F5F7FC; color:#3A3F5C; font-size:12px;
+}
+*:focus-visible { outline:2px solid #00A0DF; outline-offset:2px; }
+
+/* ── Header ── */
+.header {
+  background:linear-gradient(135deg,#091252,#1226AA);
+  padding:16px 20px; display:flex; justify-content:space-between; align-items:center;
+  box-shadow:0 2px 12px rgba(18,38,170,0.15); flex-wrap:wrap; gap:10px;
+}
+.header-title { font-size:16px; font-weight:700; color:#fff; }
+.header-sub { font-size:10px; color:rgba(255,255,255,0.7); margin-top:3px; letter-spacing:0.5px; }
+.kpi-row { display:flex; gap:10px; }
+.kpi {
+  background:rgba(255,255,255,0.12); border-radius:8px; padding:7px 14px;
+  text-align:center; min-width:72px;
+}
+.kpi-num { font-size:17px; font-weight:800; color:#fff; }
+.kpi-label { font-size:8px; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.5px; margin-top:1px; }
+
+/* ── Tab bar ── */
+.tab-bar {
+  display:flex; background:#fff; border-bottom:1px solid #D8E2F0; padding:0 14px;
+  position:sticky; top:0; z-index:100;
+}
+.tab-btn {
+  padding:11px 16px; font-size:11px; border:none; cursor:pointer;
+  background:transparent; color:#6B7094; font-weight:400;
+  border-bottom:2px solid transparent; transition:all 0.15s ease;
+  font-family:inherit; white-space:nowrap;
+}
+.tab-btn.active { background:#E8EEFF; color:#1226AA; font-weight:700; border-bottom:2px solid #1226AA; }
+.tab-content { display:none; padding:16px 18px; max-width:960px; margin:0 auto; }
+.tab-content.active { display:block; animation:fadein 0.15s ease; }
+@keyframes fadein { from{opacity:0;} to{opacity:1;} }
+
+/* ── Cards ── */
+.card {
+  background:#fff; border:1px solid #D8E2F0; border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06); overflow:hidden; margin-bottom:14px;
+}
+.card-bar { height:4px; background:#1226AA; }
+.card-bar.tech { background:#00A0DF; }
+.card-head {
+  padding:12px 16px; border-bottom:1px solid #D8E2F0;
+  display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.card-title { font-size:13px; font-weight:700; color:#1226AA; }
+.card-body { padding:14px 16px; }
+
+/* ── Badges ── */
+.badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:9px; font-weight:700; }
+.b-blue { color:#1226AA; background:#E8EEFF; }
+.b-tech { color:#00A0DF; background:#E0F4FC; }
+.b-green { color:#0EA573; background:#E6F9F0; }
+.b-amber { color:#E89820; background:#FFF8E6; }
+.b-red { color:#C85040; background:#FFF0EE; }
+
+/* ── Script timeline ── */
+.seg { display:flex; gap:0; margin-bottom:14px; }
+.seg-rail { width:64px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; }
+.seg-time { font-size:9px; font-weight:700; color:#00A0DF; background:#E0F4FC; border-radius:4px; padding:2px 6px; white-space:nowrap; }
+.seg-dot { width:10px; height:10px; border-radius:50%; background:#1226AA; margin-top:8px; border:2px solid #fff; box-shadow:0 0 0 1.5px #1226AA; }
+.seg-line { width:2px; flex:1; background:#D8E2F0; margin-top:4px; }
+.seg-card { flex:1; min-width:0; }
+.script-text { font-size:13px; line-height:1.9; color:#3A3F5C; }
+.script-text p { margin-bottom:8px; }
+.script-text strong { color:#1226AA; }
+.hl { background:#E0F4FC; color:#0074A3; padding:0 3px; border-radius:3px; font-weight:600; }
+
+/* ── Flow chain ── */
+.chain { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:10px 0 4px; }
+.chain-node {
+  background:#1226AA; color:#fff; font-size:10px; font-weight:600;
+  padding:5px 10px; border-radius:6px;
+}
+.chain-node.deep { background:#091252; }
+.chain-node.mid { background:#2E4FD0; }
+.chain-node.tech { background:#00A0DF; }
+.chain-arrow { color:#9098B8; font-size:11px; font-weight:700; }
+
+/* ── Q&A ── */
+.qa-item { background:#fff; border:1px solid #D8E2F0; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.06); margin-bottom:10px; overflow:hidden; }
+.qa-head {
+  width:100%; text-align:left; background:transparent; border:none; cursor:pointer;
+  padding:13px 16px; display:flex; align-items:flex-start; gap:10px;
+  font-family:inherit; transition:all 0.15s ease;
+}
+.qa-head:hover { background:#F4F6FF; }
+.qa-num {
+  flex-shrink:0; width:24px; height:24px; border-radius:6px; background:#1226AA; color:#fff;
+  font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center;
+}
+.qa-q { flex:1; font-size:12.5px; font-weight:700; color:#1A1A2E; line-height:1.5; }
+.qa-toggle { flex-shrink:0; font-size:12px; font-weight:700; color:#9098B8; font-family:"SF Mono",Consolas,monospace; }
+.qa-body { display:none; padding:0 16px 14px 50px; }
+.qa-item.open .qa-body { display:block; }
+.qa-item.open .qa-toggle::before { content:"[-]"; }
+.qa-item:not(.open) .qa-toggle::before { content:"[+]"; }
+.qa-a { font-size:12.5px; line-height:1.85; color:#3A3F5C; }
+.qa-a strong { color:#1226AA; }
+.qa-note {
+  margin-top:10px; padding:8px 12px; background:#F4F6FF; border-left:3px solid #00A0DF;
+  border-radius:0 6px 6px 0; font-size:11px; color:#6B7094; line-height:1.6;
+}
+.qa-note strong { color:#0074A3; }
+
+/* ── Tables ── */
+.tbl-wrap { border:1px solid #D8E2F0; border-radius:10px; overflow-x:auto; }
+table { width:100%; border-collapse:separate; border-spacing:0; min-width:520px; }
+th { background:#091252; padding:9px 12px; font-size:9px; font-weight:700; color:#fff; text-align:left; text-transform:uppercase; letter-spacing:0.5px; white-space:nowrap; }
+td { padding:9px 12px; font-size:11px; color:#3A3F5C; border-bottom:1px solid #D8E2F0; line-height:1.6; vertical-align:top; }
+tbody tr:nth-child(even) { background:#F4F6FF; }
+tbody tr:hover { background:#E8EEFF; }
+tbody tr:last-child td { border-bottom:none; }
+
+/* ── Fix list ── */
+.fix-item { display:flex; gap:12px; padding:12px 0; border-bottom:1px dashed #D8E2F0; }
+.fix-item:last-child { border-bottom:none; }
+.fix-num { flex-shrink:0; width:22px; height:22px; border-radius:50%; background:#E8EEFF; color:#1226AA; font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+.fix-text { font-size:12px; line-height:1.75; }
+.fix-text strong { color:#1226AA; }
+.arrow-fix { color:#0EA573; font-weight:700; }
+
+/* ── Redline ── */
+.redline { display:flex; gap:10px; padding:10px 0; border-bottom:1px dashed #D8E2F0; align-items:flex-start; }
+.redline:last-child { border-bottom:none; }
+.redline-tag { flex-shrink:0; }
+.redline-text { font-size:12px; line-height:1.7; }
+
+/* ── Buttons / toast ── */
+.btn {
+  padding:6px 14px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;
+  transition:all 0.15s ease; font-family:inherit;
+}
+.btn-sec { background:#fff; border:1px solid #1226AA; color:#1226AA; }
+.btn-sec:hover { background:#E8EEFF; }
+#toast {
+  position:fixed; top:16px; right:16px; padding:10px 18px; background:#091252; color:#fff;
+  border-radius:8px; font-size:11px; font-weight:600; box-shadow:0 4px 16px rgba(0,0,0,0.15);
+  z-index:2000; opacity:0; transform:translateY(-10px);
+  transition:opacity 0.25s ease, transform 0.25s ease; pointer-events:none;
+}
+
+.footer { padding:14px 18px 22px; text-align:center; font-size:8px; color:#9098B8; border-top:1px solid #D8E2F0; margin-top:8px; }
+.section-label { font-size:10px; font-weight:700; color:#6B7094; text-transform:uppercase; letter-spacing:0.8px; margin:18px 0 10px; }
+.section-label:first-child { margin-top:0; }
+
+/* ── Mobile ── */
+@media (max-width:640px) {
+  .header { padding:13px 14px; }
+  .header-title { font-size:14px; }
+  .kpi { padding:5px 10px; min-width:58px; }
+  .kpi-num { font-size:14px; }
+  .tab-bar { padding:0 4px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .tab-btn { padding:11px 11px; font-size:11px; }
+  .tab-content { padding:12px 10px; }
+  .seg-rail { width:46px; }
+  .seg-time { font-size:8px; padding:2px 4px; }
+  .card-body { padding:12px 12px; }
+  .qa-body { padding:0 14px 13px 14px; }
+  .script-text, .qa-a { font-size:13.5px; }
+}
+</style>
+</head>
+<body>
+<!-- 访问密码门 -->
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+  <div style="font-family:-apple-system,sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <input id="auth-input" type="password" placeholder="Access Code" autocomplete="off"
+      style="width:200px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:1rem;font-family:-apple-system,sans-serif;outline:none;text-align:center;letter-spacing:.1em;"
+      onfocus="this.style.borderColor='rgba(255,255,255,.2)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+  </div>
+  <div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0;transition:opacity .3s">incorrect code</div>
+  <div style="font-size:.6rem;color:rgba(255,255,255,.15);margin-top:20px">Press Enter to continue</div>
+</div>
+<script>
+const AUTH_HASH = '7d153d2a4423e402868a5eb0cbe8bbdefa87bd0888eef1ea6febd769152bc0d3';
+document.addEventListener('DOMContentLoaded', function(){
+  if(sessionStorage.getItem('kengit-authed')==='1'){document.getElementById('auth-gate').remove();return}
+  const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
+  const mainEls=Array.from(document.body.children).filter(el=>el.id!=='auth-gate'&&el.tagName!=='SCRIPT'&&el.tagName!=='SVG');
+  mainEls.forEach(el=>{el.dataset.kengitHidden='1';el.style.display='none';});
+  setTimeout(()=>input.focus(),100);
+  input.addEventListener('keydown',async e=>{
+    if(e.key!=='Enter')return;
+    const val=input.value;
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(val));
+    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hash===AUTH_HASH){
+      sessionStorage.setItem('kengit-authed','1');
+      if (window.kengitTrackVisit) window.kengitTrackVisit();
+      gate.style.opacity='0';gate.style.transition='opacity .5s';
+      setTimeout(()=>{
+        gate.remove();
+        document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});
+      },500);
+    }else{
+      err.style.opacity='1';input.value='';input.style.borderColor='#E74C3C';
+      setTimeout(()=>{err.style.opacity='0';input.style.borderColor='rgba(255,255,255,.1)'},2000);
+    }
+  });
+});
+</script>
+
+
+<div class="header">
+  <div>
+    <div class="header-title">数据血缘治理 Kickoff · 财务侧介绍 Brief</div>
+    <div class="header-sub">项目背景及目标 · 3 分钟 Script + 刁钻问题应对 · 2026-07</div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-num">3'20"</div><div class="kpi-label">Script</div></div>
+    <div class="kpi"><div class="kpi-num">9</div><div class="kpi-label">Q&amp;A</div></div>
+    <div class="kpi"><div class="kpi-num">8</div><div class="kpi-label">源系统</div></div>
+  </div>
+</div>
+
+<div class="tab-bar" role="tablist" id="tabBar">
+  <button class="tab-btn active" data-tab="tab-script" role="tab">逐字稿</button>
+  <button class="tab-btn" data-tab="tab-qa" role="tab">应对矩阵</button>
+  <button class="tab-btn" data-tab="tab-slide" role="tab">Slide 微调</button>
+  <button class="tab-btn" data-tab="tab-decision" role="tab">决策记录</button>
+</div>
+
+<!-- ════════ TAB 1: Script ════════ -->
+<div class="tab-content active" id="tab-script">
+
+  <div class="card">
+    <div class="card-bar tech"></div>
+    <div class="card-head">
+      <span class="card-title">数据链路（背景段视觉锚点）</span>
+      <button class="btn btn-sec" onclick="copyScript()">[复制全文]</button>
+    </div>
+    <div class="card-body">
+      <div class="chain">
+        <span class="chain-node deep">源头系统 ×8</span><span class="chain-arrow">&rarr;</span>
+        <span class="chain-node">ODS</span><span class="chain-arrow">&rarr;</span>
+        <span class="chain-node mid">中间层</span><span class="chain-arrow">&rarr;</span>
+        <span class="chain-node mid">汇总层</span><span class="chain-arrow">&rarr;</span>
+        <span class="chain-node tech">财务数据集市</span><span class="chain-arrow">&rarr;</span>
+        <span class="chain-node deep">监管 / 审计</span>
+      </div>
+      <div style="font-size:10px; color:#9098B8; margin-top:6px;">CRM · JDE · PMS/PDMS · Insight Tax · OA · Timesheet · WMS · Edex</div>
+    </div>
+  </div>
+
+  <!-- 开场 -->
+  <div class="seg">
+    <div class="seg-rail"><span class="seg-time">15 秒</span><div class="seg-dot"></div><div class="seg-line"></div></div>
+    <div class="seg-card card" style="margin-bottom:0;">
+      <div class="card-bar"></div>
+      <div class="card-head"><span class="card-title">开场 · 致谢 + 定位</span><span class="badge b-blue">身份：需求方</span></div>
+      <div class="card-body script-text">
+        <p>感谢 IT 项目组把这个项目推动落地。这个需求是<span class="hl">财务部在 2026 年度改善事项中正式提出的</span>，今天由我代表财务，把我们作为首批试点部门的背景、痛点和期望讲清楚。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 背景 -->
+  <div class="seg">
+    <div class="seg-rail"><span class="seg-time">40 秒</span><div class="seg-dot"></div><div class="seg-line"></div></div>
+    <div class="seg-card card" style="margin-bottom:0;">
+      <div class="card-bar"></div>
+      <div class="card-head"><span class="card-title">背景 · 为什么血缘是底层基础</span></div>
+      <div class="card-body script-text">
+        <p>企业数仓是财务日常报表和数据分析的核心消费平台。财务数据沿"源头系统—ODS—中间层—汇总层—财务数据集市"逐层加工，最终对外提交给监管机构和审计机构——所以血缘的可视化、全流程可溯源，<span class="hl">不只是效率问题，是对外财务数据可信性与合规性的底层基础</span>。</p>
+        <p>目前血缘的了解主要靠相关人员的经验和分散的文档，缺少系统化、可自助查询的手段。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 痛点 -->
+  <div class="seg">
+    <div class="seg-rail"><span class="seg-time">55 秒</span><div class="seg-dot"></div><div class="seg-line"></div></div>
+    <div class="seg-card card" style="margin-bottom:0;">
+      <div class="card-bar"></div>
+      <div class="card-head"><span class="card-title">痛点 · 两个，各配一个真实案例</span><span class="badge b-amber">与邮件口径一致</span></div>
+      <div class="card-body script-text">
+        <p>痛点集中在两个：</p>
+        <p>第一，<strong>溯源效率</strong>。链路层级多、字段一路改名，目前靠手写 SQL 逐层排查，<span class="hl">单次溯源数小时，复杂场景半个到一个工作日</span>。举一个真实场景：政府设备补贴专项审计中，审计师要求对资产和折旧明细提供源头系统依据和原始凭证，我们靠人工梳理加跨团队逐级确认，花了数日才追到源头。这类监管、审计场景时效敏感，效率损失会直接变成合规响应压力。</p>
+        <p>第二，<strong>变更影响难预判</strong>。之前有一个源系统把某文本字段从 2000 字符扩到 3000，变更没有传导到下游，<span class="hl">数据被静默截断，直到用户使用中反馈才发现</span>。有字段级血缘，这类风险本可以在上游变更前就识别所有下游接入方。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 目标 -->
+  <div class="seg">
+    <div class="seg-rail"><span class="seg-time">70 秒</span><div class="seg-dot"></div><div class="seg-line"></div></div>
+    <div class="seg-card card" style="margin-bottom:0;">
+      <div class="card-bar"></div>
+      <div class="card-head"><span class="card-title">目标 · 四个期望（第三点主动答"谁来用"）</span><span class="badge b-tech">UX：可视化 + 简洁</span></div>
+      <div class="card-body script-text">
+        <p>基于此，财务对平台有四个期望：</p>
+        <p>一，<strong>正向、反向的字段级血缘查询</strong>——从任一字段出发，向下追分发路径，向上溯源头和加工逻辑；</p>
+        <p>二，<strong>变更影响分析</strong>——源头字段或加工逻辑要变时，快速圈出下游影响范围，支持变更前评估；</p>
+        <p>三，<strong>使用体验</strong>——这里我说明一下我们的使用对象：<span class="hl">主力用户是 Finance IT 同事</span>，承担日常溯源和排查；同时我们财务部有一个<span class="hl">数字化人才小组</span>，这批同事具备 SQL 和数据分析能力，也会作为自助查询的用户。所以我们期望平台在体验上兼顾<strong>可视化和简洁</strong>，日常查询有便捷高效的交互体验，具体技术方案我们完全尊重 IT 侧的设计；</p>
+        <p>四，<strong>支撑业务数据咨询</strong>——基于字段级血缘，财务能快速、有据地回应业务部门关于口径和来源的咨询，这是我们 2026 年的重点。</p>
+        <p>收益上，预估单次溯源从数小时缩短到<span class="hl">分钟级</span>，在结账期和监管响应场景价值最明显。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 收尾 -->
+  <div class="seg">
+    <div class="seg-rail"><span class="seg-time">20 秒</span><div class="seg-dot"></div></div>
+    <div class="seg-card card" style="margin-bottom:0;">
+      <div class="card-bar"></div>
+      <div class="card-head"><span class="card-title">收尾 · 闭环 + 轻埋一句 + 承诺</span><span class="badge b-green">暗线在此</span></div>
+      <div class="card-body script-text">
+        <p>长期看，这套能力让财务能系统化识别源头数据质量问题、向数据责任方提出改进要求，形成<strong>"溯源—识别—反馈—改进"</strong>的闭环；同时这份字段级血缘梳理成果，<span class="hl">也会成为财务后续数据口径梳理和数据资产管理工作的重要数据基础</span>。财务会指定专人对接、承担业务口径确认，和 IT 项目组一起把首批试点做实。谢谢。</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════ TAB 2: Q&A ════════ -->
+<div class="tab-content" id="tab-qa">
+  <div class="section-label">IT 领导 / 同事可能的挑战 · 点击展开标准答法</div>
+
+  <div class="qa-item open">
+    <button class="qa-head" onclick="toggleQA(this)">
+      <span class="qa-num">1</span>
+      <span class="qa-q">你们到底想怎么用？使用场景是什么？使用对象是谁？ <span class="badge b-red">必考</span></span>
+      <span class="qa-toggle"></span>
+    </button>
+    <div class="qa-body">
+      <div class="qa-a">
+        <p><strong>场景四类</strong>：① 日常报表指标异常排查（高频）；② 监管申报 / 审计核查 / 内部合规的溯源举证（时效敏感，如高新复审、加计扣除、设备补贴审计）；③ 源头变更前的下游影响评估（配合 IT 变更流程）；④ 回应业务部门口径咨询（2026 重点）。</p>
+        <p style="margin-top:6px;"><strong>对象两层</strong>：主力是 Finance IT（日常溯源排查的专业用户）；延伸是财务数字化人才小组（会 SQL、能自助查询的业务同事）。</p>
+        <p style="margin-top:6px;"><strong>顺势带出 UX</strong>：正因为用户有两层，才期望可视化与简洁兼顾——专业用户查得深，业务用户看得懂。</p>
+      </div>
+      <div class="qa-note"><strong>战术</strong>：三层答，一层比一层具体。这题答完，把"财务需求不清"的质疑空间直接封死。</div>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <button class="qa-head" onclick="toggleQA(this)">
+      <span class="qa-num">2</span>
+      <span class="qa-q">溯源"数小时到一天"的数字哪来的？有依据吗？</span>
+      <span class="qa-toggle"></span>
+    </button>
+    <div class="qa-body">
+      <div class="qa-a">两个层次：日常单链路靠 SQL 逐层排查，典型 4-5 层，数小时；跨团队找原始凭证的极端场景，比如设备补贴专项审计那次，实际花了数日。这些在前期给王总的沟通材料里都有<strong>书面记录</strong>。</div>
+      <div class="qa-note"><strong>战术</strong>："书面记录"四个字是关键——不是现场编的。</div>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <button class="qa-head" onclick="toggleQA(this)">
+      <span class="qa-num">3</span>
+      <span class="qa-q">我们调度工具 / 数据字典已有血缘信息，是不是你们没用好现有工具？</span>
+      <span class="qa-toggle"></span>
+    </button>
+    <div class="qa-body">
+      <div class="qa-a">存量能力我们了解也在用，痛点不在"IT 没有信息"，而在信息分散在工具和专家经验里：<strong>使用部门无法自助、粒度不到字段级、跨层链路拼不起来</strong>。这正是需要平台化、产品化的原因——也说明 IT 有很好的基础，不是从零开始。</div>
+      <div class="qa-note"><strong>战术</strong>：先接住、再转化，最后一句给 IT 台阶。</div>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <button class="qa-head" onclick="toggleQA(this)">
+      <span class="qa-num">4</span>
+      <span class="qa-q">秒级响应是验收指标吗？做不到算谁的？</span>
+      <span class="qa-toggle"></span>
+    </button>
+    <div class="qa-body">
+      <div class="qa-a">那是使用部门视角的<strong>体验期望</strong>，不是我们单方定的验收指标。财务的诉求是日常查询满足交互式使用，具体性能方案和指标<strong>以 IT 侧技术评估为准</strong>。</div>
+      <div class="qa-note"><strong>战术</strong>：把定义权还给 IT，靶子直接消失。</div>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <button class="qa-head" onclick="toggleQA(this)">
+      <span class="qa-num">5</span>
+      <span class="qa-q">血缘梳理要靠业务确认口径，财务出多少人？</span>
+      <span class="qa-toggle"></span>
+    </button>
+    <div class="qa-body">
+      <div class="qa-a">财务已明确 <strong>Finance IT 专人作为项目对接人</strong>，负责梳理过程中的口径确认和验证；涉及具体业务口径时按需拉对应科室同事。机制已经定了，<strong>不会让项目等财务</strong>。</div>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <button class="qa-head" onclick="toggleQA(this)">
+      <span class="qa-num">6</span>
+      <span class="qa-q">试点范围到底多大？会不会做着做着蔓延？</span>
+      <span class="qa-toggle"></span>
+    </button>
+    <div class="qa-body">
+      <div class="qa-a">范围是双方共同约定的：<strong>8 大源系统</strong>（CRM、JDE、PMS/PDMS、Insight Tax、OA、Timesheet、WMS、Edex）相关链路，<strong>明细清单已提供给项目组</strong>。字段级梳理在约定范围内完成，范围调整走项目组共同确认。</div>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <button class="qa-head" onclick="toggleQA(this)">
+      <span class="qa-num">7</span>
+      <span class="qa-q">上线后怎么算成功？谁说了算？</span>
+      <span class="qa-toggle"></span>
+    </button>
+    <div class="qa-body">
+      <div class="qa-a"><strong>双口径</strong>：过程上，约定范围内字段级血缘梳理完成；效果上，选 1-2 个真实溯源场景做上线前后耗时实测对比。都是<strong>双方可共同验证</strong>的，不是财务单方评价。</div>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <button class="qa-head" onclick="toggleQA(this)">
+      <span class="qa-num">8</span>
+      <span class="qa-q">你们说梳理成果要做财务的"数据基础"，具体想拿去干什么？ <span class="badge b-tech">暗线防御</span></span>
+      <span class="qa-toggle"></span>
+    </button>
+    <div class="qa-body">
+      <div class="qa-a">财务后续要做数据口径的体系化梳理和数据资产管理，血缘是这类工作天然的数据基础。这和平台建设是<strong>上下游互补关系</strong>——平台管"数据从哪来、怎么流"，财务在这之上做"数据是什么意思、口径怎么定"。具体同步机制到项目里再和项目组对。</div>
+      <div class="qa-note"><strong>战术</strong>：上下游分层叙事，既不提 Ontology，又把边界钉住。</div>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <button class="qa-head" onclick="toggleQA(this)">
+      <span class="qa-num">9</span>
+      <span class="qa-q">为什么财务当首批试点？</span>
+      <span class="qa-toggle"></span>
+    </button>
+    <div class="qa-body">
+      <div class="qa-a">三个原因：财务是数仓最核心的消费方之一；财务数据直接对外提交监管和审计，<strong>可信性要求最高、溯源需求最刚性</strong>；且这个需求是财务 2026 年度正式提出的，试点意愿和配合投入都有保障。试点收益也最容易衡量——<strong>溯源耗时是可实测的</strong>。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ TAB 3: Slide 微调 ════════ -->
+<div class="tab-content" id="tab-slide">
+
+  <div class="card">
+    <div class="card-bar"></div>
+    <div class="card-head"><span class="card-title">Slide 口径微调清单</span><span class="badge b-amber">讲之前改掉</span></div>
+    <div class="card-body">
+      <div class="fix-item">
+        <div class="fix-num">1</div>
+        <div class="fix-text"><strong>错别字</strong>：「追潮困难」<span class="arrow-fix">&rarr;</span>「追溯困难」；「变更影响难以预判」在痛点里重复了两次，删一处。</div>
+      </div>
+      <div class="fix-item">
+        <div class="fix-num">2</div>
+        <div class="fix-text"><strong>目标 3 措辞软化</strong>：「秒级查询响应」<span class="arrow-fix">&rarr;</span>「便捷高效的查询体验：日常查询满足交互式使用的响应效率」——与 Q4 答法一致，不留硬指标把柄。</div>
+      </div>
+      <div class="fix-item">
+        <div class="fix-num">3</div>
+        <div class="fix-text"><strong>目标 3 加一行使用对象</strong>：「主要使用对象为 Finance IT 及财务部具备数据分析能力的同事，期望界面兼顾可视化与简洁」——把 IT 老板必问的题提前答在页面上。</div>
+      </div>
+      <div class="fix-item">
+        <div class="fix-num">4</div>
+        <div class="fix-text"><strong>收尾段落</strong>：格式修正为「"溯源—识别—反馈—改进"」；并在该句后加轻埋句：「相关血缘梳理成果亦将作为财务部数据口径梳理与数据资产管理工作的数据基础」。</div>
+      </div>
+      <div class="fix-item">
+        <div class="fix-num">5</div>
+        <div class="fix-text"><strong>痛点处补一行小字（可选）</strong>：「典型案例：设备类资产专项审计溯源、源系统字段扩长未传导致下游截断」——现场讲案例时页面有锚点。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-bar tech"></div>
+    <div class="card-head"><span class="card-title">口径一致性红线</span><span class="badge b-red">P0</span></div>
+    <div class="card-body">
+      <div class="redline">
+        <span class="redline-tag badge b-red">数字</span>
+        <span class="redline-text">所有数字与前期发给王总的邮件严格一致：日常溯源「数小时（复杂场景半个至一个工作日）」；设备审计极端场景「数日」是口头补充层次，<strong>不写上 slide</strong>。</span>
+      </div>
+      <div class="redline">
+        <span class="redline-tag badge b-red">词汇</span>
+        <span class="redline-text">全程不出现「Ontology」一词；暗线只用「数据口径梳理与数据资产管理的数据基础」表述。</span>
+      </div>
+      <div class="redline">
+        <span class="redline-tag badge b-red">范围</span>
+        <span class="redline-text">试点范围口径固定：8 大源系统 = CRM、JDE、PMS/PDMS、Insight Tax、OA、Timesheet、WMS、Edex。</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ TAB 4: 决策记录 ════════ -->
+<div class="tab-content" id="tab-decision">
+
+  <div class="card">
+    <div class="card-bar"></div>
+    <div class="card-head"><span class="card-title">Grill 决策记录 · 6 分支全收口</span><span class="badge b-green">2026-07-03</span></div>
+    <div class="card-body">
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:32px;">#</th><th>分支</th><th>决策</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td><strong>试点范围</strong></td><td>8 大源系统清单已明细提供 IT</td><td>有硬答案，不是挂名试点</td></tr>
+            <tr><td>2</td><td><strong>耗时举证</strong></td><td>邮件两个真实案例：设备审计溯源（数日）+ 字段 2000&rarr;3000 截断事故</td><td>已书面发给王总，口径一致且不可反驳</td></tr>
+            <tr><td>3</td><td><strong>秒级响应</strong></td><td>用户体验期望，非验收指标，定义权还给 IT</td><td>消掉「财务给 IT 下 KPI」的靶子</td></tr>
+            <tr><td>4</td><td><strong>人力投入</strong></td><td>Finance IT 专人对接 + 业务科室按需口径确认</td><td>证明财务出力不只收货</td></tr>
+            <tr><td>5</td><td><strong>IT 既有工具</strong></td><td>承认存量，矛头定为「未产品化、不可自助、不到字段级」</td><td>不否定 IT，痛点依然成立</td></tr>
+            <tr><td>6</td><td><strong>成果衡量</strong></td><td>双口径：约定范围字段级覆盖 + 真实场景前后实测耗时</td><td>可验证且不压 IT 性能 KPI</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px; padding:10px 12px; background:#FFF8E6; border-left:3px solid #E89820; border-radius:0 6px 6px 0; font-size:11px; line-height:1.7; color:#6B7094;">
+        <strong style="color:#B87A10;">推翻的原假设</strong>：原以为耗时数字需现造案例——实际邮件已有更硬的书面案例，纪律变为「script 严格复用邮件口径」。
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-bar tech"></div>
+    <div class="card-head"><span class="card-title">叙事底座 · 上下游分层（不上台面，心里有数）</span></div>
+    <div class="card-body">
+      <div class="chain">
+        <span class="chain-node deep">基础设施层 · IT</span><span class="chain-arrow">&rarr;</span>
+        <span class="chain-node">血缘追踪层 · IT</span><span class="chain-arrow">&rarr;</span>
+        <span class="chain-node mid">语义口径层 · 财务</span><span class="chain-arrow">&rarr;</span>
+        <span class="chain-node tech">智能应用层 · 财务</span>
+      </div>
+      <div style="font-size:11px; line-height:1.8; color:#6B7094; margin-top:10px;">
+        IT 回答<strong style="color:#1226AA;">"数据从哪来、怎么流、是否可靠"</strong>；财务回答<strong style="color:#1226AA;">"数据是什么意思、口径怎么定、怎么用"</strong>。两者不是平级竞争，是上下游互补——本页所有 Q&amp;A 答法（尤其 Q8）都锚定在这个分层上。
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-bar"></div>
+    <div class="card-head"><span class="card-title">试点范围 · 8 大源系统</span></div>
+    <div class="card-body">
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:32px;">#</th><th>系统</th><th>全称</th><th>主要数据内容</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td><strong>CRM</strong></td><td>客户关系管理系统</td><td>客户信息、项目机会</td></tr>
+            <tr><td>2</td><td><strong>JDE</strong></td><td>企业资源规划（ERP）系统</td><td>总账 GL、应收 AR、应付 AP、固定资产 FA</td></tr>
+            <tr><td>3</td><td><strong>PMS/PDMS</strong></td><td>项目管理系统</td><td>项目头、项目行</td></tr>
+            <tr><td>4</td><td><strong>Insight Tax</strong></td><td>开票系统</td><td>项目交易池、开票申请头行、开票头行</td></tr>
+            <tr><td>5</td><td><strong>OA</strong></td><td>办公自动化系统</td><td>日常报销、差旅费用、票夹</td></tr>
+            <tr><td>6</td><td><strong>Timesheet</strong></td><td>工时系统</td><td>员工填报工时数据</td></tr>
+            <tr><td>7</td><td><strong>WMS</strong></td><td>仓库管理系统</td><td>存货明细、退库明细、发货明细</td></tr>
+            <tr><td>8</td><td><strong>Edex</strong></td><td>财务低代码平台</td><td>手工补录维度数据（BU、Company 等）</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast">已复制</div>
+
+<div class="footer">数据血缘治理项目 Kickoff · 财务侧介绍 Brief · 内部资料 · 2026-07 · Corporate Dual-Blue</div>
+
+<script>
+// Tab switching
+var tabBar = document.getElementById('tabBar');
+tabBar.addEventListener('click', function(e){
+  var btn = e.target.closest('.tab-btn'); if(!btn) return;
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function(c){ c.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById(btn.dataset.tab).classList.add('active');
+  window.scrollTo(0,0);
+});
+tabBar.addEventListener('keydown', function(e){
+  if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+    var tabs=[].slice.call(tabBar.querySelectorAll('.tab-btn'));
+    var cur=tabs.findIndex(function(t){return t.classList.contains('active');});
+    var next=e.key==='ArrowRight'?(cur+1)%tabs.length:(cur-1+tabs.length)%tabs.length;
+    tabs[next].click(); tabs[next].focus();
+  }
+});
+
+// Q&A collapse
+function toggleQA(btn){ btn.closest('.qa-item').classList.toggle('open'); }
+
+// Toast
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.style.opacity='1'; t.style.transform='translateY(0)';
+  setTimeout(function(){ t.style.opacity='0'; t.style.transform='translateY(-10px)'; },2500);
+}
+
+// Copy full script
+function copyScript(){
+  var segs=document.querySelectorAll('#tab-script .seg');
+  var out=[];
+  segs.forEach(function(s){
+    var title=s.querySelector('.card-title').textContent;
+    var time=s.querySelector('.seg-time').textContent;
+    var text=[].slice.call(s.querySelectorAll('.script-text p')).map(function(p){return p.textContent;}).join('\n');
+    out.push('【'+title+' · '+time+'】\n'+text);
+  });
+  var full=out.join('\n\n');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(full).then(function(){ showToast('逐字稿已复制'); },function(){ fallbackCopy(full); });
+  } else { fallbackCopy(full); }
+}
+function fallbackCopy(text){
+  var ta=document.createElement('textarea'); ta.value=text;
+  ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); showToast('逐字稿已复制'); }catch(e){ showToast('复制失败，请手动选择'); }
+  document.body.removeChild(ta);
+}
+</script>
+
+<!-- kengit analytics: GoatCounter (gated, inline implementation, no CDN dependency) -->
+<script>
+window.kengitTrackVisit = function() {
+  if (window._kengitTracked) return;
+  window._kengitTracked = true;
+  try {
+    var url = 'https://kenno.goatcounter.com/count?' +
+      'p=' + encodeURIComponent(location.pathname + location.search) +
+      '&t=' + encodeURIComponent(document.title) +
+      '&r=' + encodeURIComponent(document.referrer) +
+      '&s=' + screen.width + ',' + screen.height + ',' + (window.devicePixelRatio || 1) +
+      '&rnd=' + Math.random();
+    var img = new Image(1, 1);
+    img.src = url;
+  } catch(e) {}
+};
+if (!document.getElementById('auth-gate') || sessionStorage.getItem('kengit-authed')==='1') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.kengitTrackVisit);
+  } else {
+    window.kengitTrackVisit();
+  }
+}
+</script>
+</body>
+</html>
