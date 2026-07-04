@@ -204,10 +204,7 @@ document.addEventListener('DOMContentLoaded', function(){
       sessionStorage.setItem('kengit-authed','1');
       if (window.kengitTrackVisit) window.kengitTrackVisit();
       gate.style.opacity='0';gate.style.transition='opacity .5s';
-      setTimeout(()=>{
-        gate.remove();
-        document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});
-      },500);
+      setTimeout(()=>{gate.remove();document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});},500);
     }else{
       err.style.opacity='1';input.value='';input.style.borderColor='#E74C3C';
       setTimeout(()=>{err.style.opacity='0';input.style.borderColor='rgba(255,255,255,.1)'},2000);
@@ -232,8 +229,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <div class="tab-bar" role="tablist" id="tabBar">
   <button class="tab-btn active" data-tab="tab-script" role="tab">逐字稿</button>
   <button class="tab-btn" data-tab="tab-qa" role="tab">应对矩阵</button>
-  <button class="tab-btn" data-tab="tab-slide" role="tab">Slide 微调</button>
-  <button class="tab-btn" data-tab="tab-decision" role="tab">决策记录</button>
+  <button class="tab-btn" data-tab="tab-original" role="tab">原始沟通</button>
 </div>
 
 <!-- ════════ TAB 1: Script ════════ -->
@@ -263,9 +259,10 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="seg-rail"><span class="seg-time">15 秒</span><div class="seg-dot"></div><div class="seg-line"></div></div>
     <div class="seg-card card" style="margin-bottom:0;">
       <div class="card-bar"></div>
-      <div class="card-head"><span class="card-title">开场 · 致谢 + 定位</span><span class="badge b-blue">身份：需求方</span></div>
+      <div class="card-head"><span class="card-title">开场 · 致谢 + 协同基调</span><span class="badge b-blue">给足 IT 面子</span></div>
       <div class="card-body script-text">
-        <p>感谢 IT 项目组把这个项目推动落地。这个需求是<span class="hl">财务部在 2026 年度改善事项中正式提出的</span>，今天由我代表财务，把我们作为首批试点部门的背景、痛点和期望讲清楚。</p>
+        <p>非常感谢 IT 的<span class="hl">王总、Jolin 和项目组专业地推动</span>这个项目。这个需求也是财务部和 IT 部在 2026 年度改善事项中共同提出的；后来交流中我们了解到，<span class="hl">Jolin 他们本身也在专业地推进这方面的梳理</span>，可以说是一拍即合。</p>
+        <p>下面我代表财务，把这个项目的背景、痛点和目标期望，跟各位同步一下。</p>
       </div>
     </div>
   </div>
@@ -321,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="card-bar"></div>
       <div class="card-head"><span class="card-title">收尾 · 闭环 + 轻埋一句 + 承诺</span><span class="badge b-green">暗线在此</span></div>
       <div class="card-body script-text">
-        <p>长期看，这套能力让财务能系统化识别源头数据质量问题、向数据责任方提出改进要求，形成<strong>"溯源—识别—反馈—改进"</strong>的闭环；同时这份字段级血缘梳理成果，<span class="hl">也会成为财务后续数据口径梳理和数据资产管理工作的重要数据基础</span>。财务会指定专人对接、承担业务口径确认，和 IT 项目组一起把首批试点做实。谢谢。</p>
+        <p>长期看，这套能力让财务能系统化识别源头数据质量问题、向数据责任方提出改进要求，形成<strong>"溯源—识别—反馈—改进"</strong>的闭环；同时这份字段级血缘梳理成果，<span class="hl">也会成为财务后续数据口径梳理和数据资产管理工作的重要数据基础</span>。财务会指定专人对接、承担业务口径确认，和 IT 项目组<strong>一起把首批试点做实、做出样板</strong>。也再次感谢项目组的专业推动，谢谢。</p>
       </div>
     </div>
   </div>
@@ -436,124 +433,65 @@ document.addEventListener('DOMContentLoaded', function(){
       <span class="qa-toggle"></span>
     </button>
     <div class="qa-body">
-      <div class="qa-a">三个原因：财务是数仓最核心的消费方之一；财务数据直接对外提交监管和审计，<strong>可信性要求最高、溯源需求最刚性</strong>；且这个需求是财务 2026 年度正式提出的，试点意愿和配合投入都有保障。试点收益也最容易衡量——<strong>溯源耗时是可实测的</strong>。</div>
+      <div class="qa-a">三个原因：财务是数仓最核心的消费方之一；财务数据直接对外提交监管和审计，<strong>可信性要求最高、溯源需求最刚性</strong>；且财务已把它正式纳入年度改善事项，试点意愿和配合投入都有保障。试点收益也最容易衡量——<strong>溯源耗时是可实测的</strong>。</div>
     </div>
   </div>
 </div>
 
-<!-- ════════ TAB 3: Slide 微调 ════════ -->
-<div class="tab-content" id="tab-slide">
+<!-- ════════ TAB 3: 原始沟通 ════════ -->
+<div class="tab-content" id="tab-original">
+
+  <div class="card">
+    <div class="card-bar tech"></div>
+    <div class="card-head">
+      <span class="card-title">前期回复 IT 王总 · 沟通邮件原文（整理版）</span>
+      <span class="badge b-tech">口径 Backup</span>
+    </div>
+    <div class="card-body">
+      <div class="qa-note" style="margin-top:0;"><strong>用途</strong>：现场若被追问细节，可回到这份与 IT 已书面对齐的口径。所有数字、案例均以此为准，不即兴发挥。</div>
+      <div class="script-text" style="margin-top:12px;">
+        <p style="color:#6B7094; font-size:11px;">主题：回复 · 数据资产血缘治理项目沟通</p>
+        <p>感谢王总对数据资产血缘治理项目的支持和上次会议的现场指导。根据会议讨论，我们对项目背景和意义、当前面临的痛点、项目目标与收益做了更新，还请查收和斧正。</p>
+      </div>
+    </div>
+  </div>
 
   <div class="card">
     <div class="card-bar"></div>
-    <div class="card-head"><span class="card-title">Slide 口径微调清单</span><span class="badge b-amber">讲之前改掉</span></div>
-    <div class="card-body">
-      <div class="fix-item">
-        <div class="fix-num">1</div>
-        <div class="fix-text"><strong>错别字</strong>：「追潮困难」<span class="arrow-fix">&rarr;</span>「追溯困难」；「变更影响难以预判」在痛点里重复了两次，删一处。</div>
-      </div>
-      <div class="fix-item">
-        <div class="fix-num">2</div>
-        <div class="fix-text"><strong>目标 3 措辞软化</strong>：「秒级查询响应」<span class="arrow-fix">&rarr;</span>「便捷高效的查询体验：日常查询满足交互式使用的响应效率」——与 Q4 答法一致，不留硬指标把柄。</div>
-      </div>
-      <div class="fix-item">
-        <div class="fix-num">3</div>
-        <div class="fix-text"><strong>目标 3 加一行使用对象</strong>：「主要使用对象为 Finance IT 及财务部具备数据分析能力的同事，期望界面兼顾可视化与简洁」——把 IT 老板必问的题提前答在页面上。</div>
-      </div>
-      <div class="fix-item">
-        <div class="fix-num">4</div>
-        <div class="fix-text"><strong>收尾段落</strong>：格式修正为「"溯源—识别—反馈—改进"」；并在该句后加轻埋句：「相关血缘梳理成果亦将作为财务部数据口径梳理与数据资产管理工作的数据基础」。</div>
-      </div>
-      <div class="fix-item">
-        <div class="fix-num">5</div>
-        <div class="fix-text"><strong>痛点处补一行小字（可选）</strong>：「典型案例：设备类资产专项审计溯源、源系统字段扩长未传导致下游截断」——现场讲案例时页面有锚点。</div>
-      </div>
+    <div class="card-head"><span class="card-title">一 · 项目背景和意义</span></div>
+    <div class="card-body script-text">
+      <p>公司企业数仓是财务部日常报表和数据分析的核心数据消费平台之一。数据从多个源头系统（如 ERP、CRM、Insight Tax、PDMS 等）经过 ETL 加工和多层处理后，最终供财务部门在日常工作中使用。</p>
+      <p>近年来，随着数仓建设的逐步深入，接入的数据源和加工链路不断增加，数据资产的规模和复杂度也在持续增长。在这个过程中，一个<strong>日益突出的问题</strong>是——企业数仓目前缺少一套清晰、全面、用户友好的数据血缘可视化工具。财务部作为数仓数据的核心使用方之一，在日常工作中无法自助查看某个数据字段从源头系统到最终消费层的完整流转路径；血缘关系的了解目前主要依赖相关人员的经验或分散的文档，缺少系统化、可查询的管理手段。</p>
+      <p>通过系统化的数据血缘梳理并最终落地为可视化平台，对于保障财务数据的可信性与合规性具有重要意义。数据从"源头系统—ODS—中间层—汇总层—财务数据集市"，最终对外提交给各类监管机构和审计机构，整个链路实现可视化呈现、全流程可溯源，让数据的定义、来源、加工逻辑、质量状况都能做到<strong>有据可查、有迹可溯</strong>，为财务部对内对外的数据使用提供坚实的底层支撑。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-bar"></div>
+    <div class="card-head"><span class="card-title">二 · 当前面临的痛点</span><span class="badge b-amber">两类</span></div>
+    <div class="card-body script-text">
+      <p style="font-size:13px; font-weight:700; color:#1226AA; margin-bottom:6px;">1. 数据溯源效率受限</p>
+      <p>当财务部日常报表中的某个数据指标出现疑问，或在监管申报、审计核查、内部合规审查等场景下需要对关键字段提供完整溯源依据时，使用部门均无法自助追溯该字段的数据来源和加工逻辑，需要协调数仓、源头系统等多个团队逐层排查。涉及的链路越长、经手的加工步骤越多，定位所需的时间成本就越高——这一成本在日常分析中体现为效率损失，在监管 / 审计时效敏感的场景下，则会直接演变为合规响应压力。</p>
+      <div class="qa-note"><strong>具体案例场景</strong>：近年来政府监管和外部审计要求日趋严格，对公司财务数据的全链路清晰度、可追溯性提出了越来越高的要求，典型场景如高新技术企业认定复审、研发费用加计扣除审核、政府设备补贴专项审计等。以设备类资产的审计溯源为例，审计师通常要求针对审计范围内的资产清单与折旧明细，提供报告中关键字段的源头系统截图，以及对应的原始业务凭证（采购合同、验收单、发票等）。在当前缺少血缘可视化工具的情况下，此类溯源需求的响应主要依靠人工梳理、跨团队协同确认，依靠业务同事的过往经验加技术人员的 SQL 脚本解读一级级往上追溯，最终可能需要花费<strong>数日</strong>才能追溯到源头系统，继而找到相关责任部门与原始的合同或内部归档记录。在监管 / 审计时效要求紧张的场景下，无法快速、可靠地提供数据溯源依据，既增加了合规响应的压力，也对财务部在外部监管机构和审计机构面前的专业形象构成挑战。</div>
+
+      <p style="font-size:13px; font-weight:700; color:#1226AA; margin:14px 0 6px;">2. 变更影响难以预判</p>
+      <p>当产生数据的源头系统，其数据结构或数仓加工逻辑需要调整时，目前缺少便捷的手段去快速评估该变更会影响到下游哪些数据资产。这意味着存在变更后下游出现数据异常而未能第一时间识别的风险。</p>
+      <div class="qa-note"><strong>具体案例场景</strong>：某个源头系统此前对一个文本描述字段进行了长度扩展调整（由 2000 字符扩展至 3000 字符）。由于该变更未能同步传递至下游数仓，下游同步层仍按原长度（2000 字符）接收数据，导致超过原长度部分的字符内容被截断。该问题在用户使用过程中反馈后才被发现，随后由 IT 数仓团队介入处理并最终解决。该案例反映出的典型问题是：即便是看似简单的字段属性调整（如长度、类型、编码规则变更等），在缺少血缘传导机制的情况下，也可能在下游产生难以预判的数据影响。如果有数据血缘可视化平台，上游系统在实施此类调整前即可通过血缘关系图识别所有下游接入方，提前沟通或做好同步适配，将变更风险控制在上游阶段，避免问题数据在被动反馈前就已流转至最终使用环节。</div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-bar tech"></div>
-    <div class="card-head"><span class="card-title">口径一致性红线</span><span class="badge b-red">P0</span></div>
-    <div class="card-body">
-      <div class="redline">
-        <span class="redline-tag badge b-red">数字</span>
-        <span class="redline-text">所有数字与前期发给王总的邮件严格一致：日常溯源「数小时（复杂场景半个至一个工作日）」；设备审计极端场景「数日」是口头补充层次，<strong>不写上 slide</strong>。</span>
-      </div>
-      <div class="redline">
-        <span class="redline-tag badge b-red">词汇</span>
-        <span class="redline-text">全程不出现「Ontology」一词；暗线只用「数据口径梳理与数据资产管理的数据基础」表述。</span>
-      </div>
-      <div class="redline">
-        <span class="redline-tag badge b-red">范围</span>
-        <span class="redline-text">试点范围口径固定：8 大源系统 = CRM、JDE、PMS/PDMS、Insight Tax、OA、Timesheet、WMS、Edex。</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ════════ TAB 4: 决策记录 ════════ -->
-<div class="tab-content" id="tab-decision">
-
-  <div class="card">
-    <div class="card-bar"></div>
-    <div class="card-head"><span class="card-title">Grill 决策记录 · 6 分支全收口</span><span class="badge b-green">2026-07-03</span></div>
-    <div class="card-body">
-      <div class="tbl-wrap">
-        <table>
-          <thead><tr><th style="width:32px;">#</th><th>分支</th><th>决策</th><th>理由</th></tr></thead>
-          <tbody>
-            <tr><td>1</td><td><strong>试点范围</strong></td><td>8 大源系统清单已明细提供 IT</td><td>有硬答案，不是挂名试点</td></tr>
-            <tr><td>2</td><td><strong>耗时举证</strong></td><td>邮件两个真实案例：设备审计溯源（数日）+ 字段 2000&rarr;3000 截断事故</td><td>已书面发给王总，口径一致且不可反驳</td></tr>
-            <tr><td>3</td><td><strong>秒级响应</strong></td><td>用户体验期望，非验收指标，定义权还给 IT</td><td>消掉「财务给 IT 下 KPI」的靶子</td></tr>
-            <tr><td>4</td><td><strong>人力投入</strong></td><td>Finance IT 专人对接 + 业务科室按需口径确认</td><td>证明财务出力不只收货</td></tr>
-            <tr><td>5</td><td><strong>IT 既有工具</strong></td><td>承认存量，矛头定为「未产品化、不可自助、不到字段级」</td><td>不否定 IT，痛点依然成立</td></tr>
-            <tr><td>6</td><td><strong>成果衡量</strong></td><td>双口径：约定范围字段级覆盖 + 真实场景前后实测耗时</td><td>可验证且不压 IT 性能 KPI</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div style="margin-top:12px; padding:10px 12px; background:#FFF8E6; border-left:3px solid #E89820; border-radius:0 6px 6px 0; font-size:11px; line-height:1.7; color:#6B7094;">
-        <strong style="color:#B87A10;">推翻的原假设</strong>：原以为耗时数字需现造案例——实际邮件已有更硬的书面案例，纪律变为「script 严格复用邮件口径」。
-      </div>
+    <div class="card-head"><span class="card-title">三 · 项目目标与收益</span></div>
+    <div class="card-body script-text">
+      <p>基于以上背景，财务部在 2026 年度"期待进一步提高和改善的工作事项"中正式提出了这一需求。该项目对财务部今年 Scorecard 中的数据治理目标有着重要意义，数仓数据血缘可视化平台是开展数据治理工作的关键前序步骤。希望能够在 IT 部的支持下，共同推动企业数仓数据血缘可视化平台的搭建，在双方共同约定的治理范围内，完成字段级的血缘链路梳理。项目上线后，对财务部可量化与潜在收益：</p>
+      <p style="font-size:13px; font-weight:700; color:#1226AA; margin:12px 0 4px;">1）显著提升数据溯源效率，降低问题排查时间成本</p>
+      <p>改变当前主要依赖编写 SQL 脚本逐层排查的工作方式，使用部门可通过可视化界面自助完成字段级血缘追溯。预估单次数据溯源所需时间可从目前的数小时（复杂场景下可能达到半个至一个工作日）<strong>缩短至分钟级</strong>，在结账期、监管响应等时效敏感场景下的价值尤为明显。</p>
+      <p style="font-size:13px; font-weight:700; color:#1226AA; margin:12px 0 4px;">2）反向推动源头系统数据质量的持续提升</p>
+      <p>基于可视化血缘工具带来的溯源效率提升，财务部将具备对消费端数据进行全字段溯源梳理的能力。这一能力使财务部能够以系统化、有依据的方式识别源头系统的数据质量问题，并向源头系统 Owner（数据责任方）提出更高、更明确的数据质量改进要求，形成<strong>"溯源—识别—反馈—改进"</strong>的良性闭环，从长期看有助于整体数据资产质量的持续优化。</p>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-bar tech"></div>
-    <div class="card-head"><span class="card-title">叙事底座 · 上下游分层（不上台面，心里有数）</span></div>
-    <div class="card-body">
-      <div class="chain">
-        <span class="chain-node deep">基础设施层 · IT</span><span class="chain-arrow">&rarr;</span>
-        <span class="chain-node">血缘追踪层 · IT</span><span class="chain-arrow">&rarr;</span>
-        <span class="chain-node mid">语义口径层 · 财务</span><span class="chain-arrow">&rarr;</span>
-        <span class="chain-node tech">智能应用层 · 财务</span>
-      </div>
-      <div style="font-size:11px; line-height:1.8; color:#6B7094; margin-top:10px;">
-        IT 回答<strong style="color:#1226AA;">"数据从哪来、怎么流、是否可靠"</strong>；财务回答<strong style="color:#1226AA;">"数据是什么意思、口径怎么定、怎么用"</strong>。两者不是平级竞争，是上下游互补——本页所有 Q&amp;A 答法（尤其 Q8）都锚定在这个分层上。
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-bar"></div>
-    <div class="card-head"><span class="card-title">试点范围 · 8 大源系统</span></div>
-    <div class="card-body">
-      <div class="tbl-wrap">
-        <table>
-          <thead><tr><th style="width:32px;">#</th><th>系统</th><th>全称</th><th>主要数据内容</th></tr></thead>
-          <tbody>
-            <tr><td>1</td><td><strong>CRM</strong></td><td>客户关系管理系统</td><td>客户信息、项目机会</td></tr>
-            <tr><td>2</td><td><strong>JDE</strong></td><td>企业资源规划（ERP）系统</td><td>总账 GL、应收 AR、应付 AP、固定资产 FA</td></tr>
-            <tr><td>3</td><td><strong>PMS/PDMS</strong></td><td>项目管理系统</td><td>项目头、项目行</td></tr>
-            <tr><td>4</td><td><strong>Insight Tax</strong></td><td>开票系统</td><td>项目交易池、开票申请头行、开票头行</td></tr>
-            <tr><td>5</td><td><strong>OA</strong></td><td>办公自动化系统</td><td>日常报销、差旅费用、票夹</td></tr>
-            <tr><td>6</td><td><strong>Timesheet</strong></td><td>工时系统</td><td>员工填报工时数据</td></tr>
-            <tr><td>7</td><td><strong>WMS</strong></td><td>仓库管理系统</td><td>存货明细、退库明细、发货明细</td></tr>
-            <tr><td>8</td><td><strong>Edex</strong></td><td>财务低代码平台</td><td>手工补录维度数据（BU、Company 等）</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 </div>
 
 <div id="toast">已复制</div>
@@ -614,29 +552,10 @@ function fallbackCopy(text){
 }
 </script>
 
-<!-- kengit analytics: GoatCounter (gated, inline implementation, no CDN dependency) -->
+<!-- kengit analytics: GoatCounter -->
 <script>
-window.kengitTrackVisit = function() {
-  if (window._kengitTracked) return;
-  window._kengitTracked = true;
-  try {
-    var url = 'https://kenno.goatcounter.com/count?' +
-      'p=' + encodeURIComponent(location.pathname + location.search) +
-      '&t=' + encodeURIComponent(document.title) +
-      '&r=' + encodeURIComponent(document.referrer) +
-      '&s=' + screen.width + ',' + screen.height + ',' + (window.devicePixelRatio || 1) +
-      '&rnd=' + Math.random();
-    var img = new Image(1, 1);
-    img.src = url;
-  } catch(e) {}
-};
-if (!document.getElementById('auth-gate') || sessionStorage.getItem('kengit-authed')==='1') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', window.kengitTrackVisit);
-  } else {
-    window.kengitTrackVisit();
-  }
-}
+window.kengitTrackVisit=function(){if(window._kengitTracked)return;window._kengitTracked=true;try{var url='https://kenno.goatcounter.com/count?p='+encodeURIComponent(location.pathname+location.search)+'&t='+encodeURIComponent(document.title)+'&r='+encodeURIComponent(document.referrer)+'&s='+screen.width+','+screen.height+','+(window.devicePixelRatio||1)+'&rnd='+Math.random();var img=new Image(1,1);img.src=url;}catch(e){}};
+if(!document.getElementById('auth-gate')||sessionStorage.getItem('kengit-authed')==='1'){if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',window.kengitTrackVisit);}else{window.kengitTrackVisit();}}
 </script>
 </body>
 </html>
