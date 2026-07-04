@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- ════════ TAB 2: Q&A ════════ -->
 <div class="tab-content" id="tab-qa">
-  <div class="section-label">IT 领导 / 同事可能的挑战 · 点击展开标准答法</div>
+  <div class="section-label">IT 领导 / 同事可能的挑战 · 点击展开标准答法（kenymd·Fable 5 认知协议优化版）</div>
 
   <div class="qa-item open">
     <button class="qa-head" onclick="toggleQA(this)">
@@ -336,23 +336,25 @@ document.addEventListener('DOMContentLoaded', function(){
     </button>
     <div class="qa-body">
       <div class="qa-a">
-        <p><strong>场景四类</strong>：① 日常报表指标异常排查（高频）；② 监管申报 / 审计核查 / 内部合规的溯源举证（时效敏感，如高新复审、加计扣除、设备补贴审计）；③ 源头变更前的下游影响评估（配合 IT 变更流程）；④ 回应业务部门口径咨询（2026 重点）。</p>
-        <p style="margin-top:6px;"><strong>对象两层</strong>：主力是 Finance IT（日常溯源排查的专业用户）；延伸是财务数字化人才小组（会 SQL、能自助查询的业务同事）。</p>
-        <p style="margin-top:6px;"><strong>顺势带出 UX</strong>：正因为用户有两层，才期望可视化与简洁兼顾——专业用户查得深，业务用户看得懂。</p>
+        <p>这个问题问得好，用途不清项目就没锚点。财务侧收敛为四类高频场景：一是<strong>日常报表指标异常</strong>时的排查定位；二是<strong>监管审计中的口径溯源与举证</strong>；三是<strong>源系统变更前的下游影响评估</strong>——这一条其实也是在帮 IT 减负，变更评估目前双方都很耗人力；四是<strong>回应业务部门的口径咨询</strong>。</p>
+        <p style="margin-top:8px;">使用对象两层：主力是 Finance IT 团队做日常操作，延伸到财务数字化人才小组做自助查阅。正因为有两层用户，我们对界面的期望是<strong>可视化和简洁兼顾</strong>——但具体产品形态怎么做，我们尊重 IT 的专业判断，财务负责把场景和验收用例讲清楚。范围就锁定已定的 8 个源系统，不扩。</p>
       </div>
-      <div class="qa-note"><strong>战术</strong>：三层答，一层比一层具体。这题答完，把"财务需求不清"的质疑空间直接封死。</div>
+      <div class="qa-note"><strong>战术</strong>：四场景中把“影响评估”包装成帮 IT 省力，先给利益再提需求；产品形态主动让渡给 IT，只守场景定义权。</div>
     </div>
   </div>
 
   <div class="qa-item">
     <button class="qa-head" onclick="toggleQA(this)">
       <span class="qa-num">2</span>
-      <span class="qa-q">溯源"数小时到一天"的数字哪来的？有依据吗？</span>
+      <span class="qa-q">溯源“数小时到一天”的数字哪来的？有依据吗？</span>
       <span class="qa-toggle"></span>
     </button>
     <div class="qa-body">
-      <div class="qa-a">两个层次：日常单链路靠 SQL 逐层排查，典型 4-5 层，数小时；跨团队找原始凭证的极端场景，比如设备补贴专项审计那次，实际花了数日。这些在前期给王总的沟通材料里都有<strong>书面记录</strong>。</div>
-      <div class="qa-note"><strong>战术</strong>："书面记录"四个字是关键——不是现场编的。</div>
+      <div class="qa-a">
+        <p>有依据，且我们刻意没有夸大。三档数字都来自实际案例：日常一条指标异常排查，需要沿 SQL 逐层往上追 4 到 5 层，实测<strong>数小时</strong>；复杂一些的跨表跨系统排查，通常<strong>半个到一个工作日</strong>；极端情况如某次设备补贴审计，需要跨团队追到原始凭证，花了<strong>数日</strong>。这些在前期给王总的材料里有书面记录，可以随时调出来核对。</p>
+        <p style="margin-top:8px;">我们理解这类数字容易被质疑注水，所以宁可保守报——如果 IT 侧愿意，也可以一起挑一两个近期案例复测一遍，用双方都认可的数字作为项目基线。</p>
+      </div>
+      <div class="qa-note"><strong>战术</strong>：“宁可保守报”直接堵住注水质疑；主动邀请 IT 共同复测，把举证责任变成共建动作，抬出书面记录但不逼宫。</div>
     </div>
   </div>
 
@@ -363,8 +365,11 @@ document.addEventListener('DOMContentLoaded', function(){
       <span class="qa-toggle"></span>
     </button>
     <div class="qa-body">
-      <div class="qa-a">存量能力我们了解也在用，痛点不在"IT 没有信息"，而在信息分散在工具和专家经验里：<strong>使用部门无法自助、粒度不到字段级、跨层链路拼不起来</strong>。这正是需要平台化、产品化的原因——也说明 IT 有很好的基础，不是从零开始。</div>
-      <div class="qa-note"><strong>战术</strong>：先接住、再转化，最后一句给 IT 台阶。</div>
+      <div class="qa-a">
+        <p>首先要说，现有血缘字典我们一直在用，它是这个项目能启动的基础——<strong>没有 IT 前期这些积累，我们连从哪梳理都不知道，这不是从零开始</strong>。用下来的实际情况是：信息分散在几处、财务侧无法自助查询、粒度不到字段级、跨层链路拼不起来，每次还是要靠人工找 IT 同事拼接。</p>
+        <p style="margin-top:8px;">所以我们的诉求不是“重做一套”，而是把 IT 已有的好基础<strong>产品化、串起来</strong>，让财务能自己查、IT 少被打扰。如果说之前用得不够充分，我们也愿意先系统学一遍现有能力，把真正的缺口和已覆盖的部分区分清楚，避免重复建设。</p>
+      </div>
+      <div class="qa-note"><strong>战术</strong>：先大方承认在用并归功于 IT 打底，再用四个具体缺口证明“用了但不够”而非“没用好”，最后以“愿再学一遍”给足台阶且反证缺口真实。</div>
     </div>
   </div>
 
@@ -375,8 +380,11 @@ document.addEventListener('DOMContentLoaded', function(){
       <span class="qa-toggle"></span>
     </button>
     <div class="qa-body">
-      <div class="qa-a">那是使用部门视角的<strong>体验期望</strong>，不是我们单方定的验收指标。财务的诉求是日常查询满足交互式使用，具体性能方案和指标<strong>以 IT 侧技术评估为准</strong>。</div>
-      <div class="qa-note"><strong>战术</strong>：把定义权还给 IT，靶子直接消失。</div>
+      <div class="qa-a">
+        <p>明确讲：<strong>秒级是使用体验层面的期望，不是验收 KPI</strong>，更不会成为单方面压给 IT 的指标。财务的立场是——性能指标应该由 IT 在技术评估后提出，什么架构、什么数据量下能承诺什么响应，IT 说了算，财务不越位定技术指标。</p>
+        <p style="margin-top:8px;">我们真正在意的是“财务人员能自助完成查询、不用回到逐层查 SQL 的老路”，只要满足这个，具体响应时间在合理区间内我们都接受。建议验收标准在方案评审阶段由双方共同确认、书面固化，避免后期各说各话。</p>
+      </div>
+      <div class="qa-note"><strong>战术</strong>：一句话切割“体验期望 ≠ 验收 KPI”，性能定义权整个让给 IT 消除对抗点，再用“书面共同固化”防止日后被反咬。</div>
     </div>
   </div>
 
@@ -387,7 +395,11 @@ document.addEventListener('DOMContentLoaded', function(){
       <span class="qa-toggle"></span>
     </button>
     <div class="qa-body">
-      <div class="qa-a">财务已明确 <strong>Finance IT 专人作为项目对接人</strong>，负责梳理过程中的口径确认和验证；涉及具体业务口径时按需拉对应科室同事。机制已经定了，<strong>不会让项目等财务</strong>。</div>
+      <div class="qa-a">
+        <p>这个关切很实际，血缘项目最怕业务侧确认环节掉链子。财务侧的资源安排已经明确：<strong>Finance IT 出专人作为固定对接口</strong>，负责需求澄清、口径确认的统筹和响应时效；涉及具体业务口径时，由这个对接口按需拉相应科室的同事进来确认，不需要 IT 去逐个协调财务各科室。</p>
+        <p style="margin-top:8px;">我们可以承诺一条：<strong>口径确认不会成为项目的等待项</strong>——如果某个口径确认超时，责任在财务侧，我们内部升级解决。当然也请 IT 在排期时把口径确认的批次和时间窗提前给到我们，双方按计划走，都好安排。</p>
+      </div>
+      <div class="qa-note"><strong>战术</strong>：给出可背书的承诺（超时算财务的）换取信任，同时以“提前给批次和时间窗”设置对等条件，承诺有边界不开空头支票。</div>
     </div>
   </div>
 
@@ -398,7 +410,11 @@ document.addEventListener('DOMContentLoaded', function(){
       <span class="qa-toggle"></span>
     </button>
     <div class="qa-body">
-      <div class="qa-a">范围是双方共同约定的：<strong>8 大源系统</strong>（CRM、JDE、PMS/PDMS、Insight Tax、OA、Timesheet、WMS、Edex）相关链路，<strong>明细清单已提供给项目组</strong>。字段级梳理在约定范围内完成，范围调整走项目组共同确认。</div>
+      <div class="qa-a">
+        <p>范围这个问题我们和 IT 想到一起了——控不住范围，最先被拖累的就是双方的交付节奏。所以本次试点严格锁定在双方已确认的 <strong>8 大源系统</strong>相关链路：CRM、JDE、PMS-PDMS、Insight Tax、OA、Timesheet、WMS、Edex，系统级清单已经交付给项目组，白纸黑字，不做口头扩展。</p>
+        <p style="margin-top:8px;">试点期内财务侧不会单方面提新增诉求；如果推进中确实发现有必要调整，统一走<strong>项目组共同评审</strong>这一个口子，由双方一起判断值不值得动、什么时候动。这样既保护 IT 的资源投入不被稀释，也保证我们财务侧拿到的是一个完整闭环的成果。</p>
+      </div>
+      <div class="qa-note"><strong>战术</strong>：把“防蔓延”说成双方共同利益，用“清单已交付 + 唯一变更通道”堵死追问空间，顺手替 IT 把资源保护的话说了。</div>
     </div>
   </div>
 
@@ -409,19 +425,26 @@ document.addEventListener('DOMContentLoaded', function(){
       <span class="qa-toggle"></span>
     </button>
     <div class="qa-body">
-      <div class="qa-a"><strong>双口径</strong>：过程上，约定范围内字段级血缘梳理完成；效果上，选 1-2 个真实溯源场景做上线前后耗时实测对比。都是<strong>双方可共同验证</strong>的，不是财务单方评价。</div>
+      <div class="qa-a">
+        <p>成功标准我们建议不靠感觉、只认证据，<strong>双口径、双方共同验证</strong>：第一，范围内 8 大源系统链路的字段级血缘梳理完成，完成度可逐条核对，这是 IT 侧交付质量的客观刻度；第二，选 1 到 2 个真实业务场景，做上线前后的耗时实测对比——日常追溯要数小时、复杂的半个到一个工作日、极端跨系统的数日，上线后能压缩多少，数据说话。</p>
+        <p style="margin-top:8px;">这里我也主动说明一点：大家有时会提“秒级响应”，那是我们对使用体验的期望方向，<strong>不作为验收 KPI</strong>，验收只看这两条可复核的口径。谁说了算？两条标准都可测量、可复现，双方共同验收，不存在谁裁定谁。</p>
+      </div>
+      <div class="qa-note"><strong>战术</strong>：审计式“只认证据”立场天然免疫挑刺；主动降级“秒级”为体验期望，抢先拆掉 IT 最可能反将一军的雷。</div>
     </div>
   </div>
 
   <div class="qa-item">
     <button class="qa-head" onclick="toggleQA(this)">
       <span class="qa-num">8</span>
-      <span class="qa-q">你们说梳理成果要做财务的"数据基础"，具体想拿去干什么？ <span class="badge b-tech">暗线防御</span></span>
+      <span class="qa-q">你们说梳理成果要做财务的“数据基础”，具体想拿去干什么？ <span class="badge b-tech">暗线防御</span></span>
       <span class="qa-toggle"></span>
     </button>
     <div class="qa-body">
-      <div class="qa-a">财务后续要做数据口径的体系化梳理和数据资产管理，血缘是这类工作天然的数据基础。这和平台建设是<strong>上下游互补关系</strong>——平台管"数据从哪来、怎么流"，财务在这之上做"数据是什么意思、口径怎么定"。具体同步机制到项目里再和项目组对。</div>
-      <div class="qa-note"><strong>战术</strong>：上下游分层叙事，不点破上层那套语义框架的专有名词，又把边界钉住。</div>
+      <div class="qa-a">
+        <p>很具体，就两件事：<strong>数据口径梳理和数据资产管理</strong>，血缘是这两件事的天然数据基础。财务的数出多门问题，根子在同一个指标各系统口径不一致；要把口径定准，前提是先看清这个数从哪个源系统、经过哪些加工环节流到报表——这正是血缘提供的。</p>
+        <p style="margin-top:8px;">分工上我们和平台是清晰的<strong>上下游互补</strong>：平台管“数据从哪来、怎么流”，这是 IT 的专业领地，我们完全依赖平台的能力；财务在这个基础之上做“数据是什么意思、口径怎么定”，这是业务语义层的活。两边不重叠、互为支撑——平台链路越清晰，我们口径定得越准；口径越准，平台数据的可信度和使用率也越高。</p>
+      </div>
+      <div class="qa-note"><strong>战术</strong>：用“上下游互补、互为支撑”的框架把边界问题转化为共赢叙事，全程不越 IT 技术领地半步，语义层归财务的正当性不言自明。</div>
     </div>
   </div>
 
@@ -432,7 +455,11 @@ document.addEventListener('DOMContentLoaded', function(){
       <span class="qa-toggle"></span>
     </button>
     <div class="qa-body">
-      <div class="qa-a">三个原因：财务是数仓最核心的消费方之一；财务数据直接对外提交监管和审计，<strong>可信性要求最高、溯源需求最刚性</strong>；且财务已把它正式纳入年度改善事项，试点意愿和配合投入都有保障。试点收益也最容易衡量——<strong>溯源耗时是可实测的</strong>。</div>
+      <div class="qa-a">
+        <p>四个客观理由，都可以核实。第一，财务是数仓的<strong>核心消费方</strong>，用得最深、链路最全，试点在财务跑通，覆盖面天然最有代表性。第二，财务数据直接对外提交监管和审计，<strong>可信性要求全公司最高</strong>，对血缘的需求最刚性，成功含金量也最高。第三，这件事已纳入财务本年度改善事项，有正式立项支撑，配合资源和推进意愿都有保障，不会让 IT 孤军推动。第四，<strong>收益可实测</strong>，财务场景能给出最干净的前后对比数据。</p>
+        <p style="margin-top:8px;">说到底，选财务试点，是给平台找一个需求最真、验证最硬、最能出成果的首站——试点做成了，向其他部门推广时，IT 手里就有最有说服力的标杆案例。</p>
+      </div>
+      <div class="qa-note"><strong>战术</strong>：把“为什么是财务”反转为“财务是 IT 最优的试点选择”，结尾把成功归属让给 IT 的推广叙事，姿态上是财务在为平台成功背书。</div>
     </div>
   </div>
 </div>
