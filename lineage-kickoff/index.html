@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="card-bar"></div>
       <div class="card-head"><span class="card-title">开场 · 致谢 + 协同基调</span><span class="badge b-blue">给足 IT 面子</span></div>
       <div class="card-body script-text">
-        <p>非常感谢<span class="hl">王总、Jolin 和项目组的专业推动</span>。这个需求，是财务和 IT 在 2026 年度改善事项里共同提出的。沟通中我们了解到，<span class="hl">Jolin 团队本身已经在系统性地推进这方面的建设</span>，双方可以说是一拍即合。下面我代表财务，用三分钟，把项目的背景、痛点和目标期望，跟各位同步一下。</p>
+        <p>非常感谢<span class="hl">王总、Jolin 和项目组的专业推动</span>。数据资产血缘治理这个需求，本身也是财务和 IT 部在 2026 年度改善事项里共同提出的。后续沟通中我们了解到，<span class="hl">Jolin 团队本身也已经在着手系统性地推进这方面的建设</span>，双方可以说是一拍即合。下面我代表财务，用 2-3 分钟，把项目的背景、痛点和目标期望，跟各位同步一下。</p>
       </div>
     </div>
   </div>
@@ -273,8 +273,8 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="card-bar"></div>
       <div class="card-head"><span class="card-title">背景 · 为什么血缘是底层基础</span></div>
       <div class="card-body script-text">
-        <p>企业数仓是财务日常报表和数据分析的核心平台。财务数据从源头系统出发，经过 ODS、中间层、汇总层，到财务数据集市，逐层加工，最终提交给监管机构和审计机构。所以血缘的可视化、全链路可溯源，<span class="hl">不只是效率问题，更是对外财务数据可信性与合规性的底层基础</span>。</p>
-        <p>本次试点，覆盖<span class="hl">八大源系统：CRM、JDE、PMS-PDMS、Insight Tax、OA、Timesheet、WMS 和 Edex</span>。目前血缘信息主要沉淀在同事的经验和分散的文档里，缺一个系统化、可自助查询的工具——这正是本项目要补上的能力。</p>
+        <p>企业数仓是财务日常报表和数据分析的核心底座。财务数据从源头系统出发，经过 ODS、中间层、汇总层，到财务数据集市，逐层加工，最终会提交给监管机构和审计机构。所以血缘的可视化、全链路可溯源，<span class="hl">不只是效率问题，更是对外财务数据可信性与合规性的底层基础</span>。</p>
+        <p>这次数据范围覆盖<span class="hl">八大源系统：CRM、JDE、PMS-PDMS、Insight Tax、OA、Timesheet、WMS 和 Edex</span>。而现状是：血缘信息主要沉淀在同事的经验和分散的文档里，缺一个系统化、可自助查询的平台工具——此次项目也是为了补上这个能力而努力的。</p>
       </div>
     </div>
   </div>
@@ -286,9 +286,9 @@ document.addEventListener('DOMContentLoaded', function(){
       <div class="card-bar"></div>
       <div class="card-head"><span class="card-title">痛点 · 两个，各配一个真实案例</span><span class="badge b-amber">与邮件口径一致</span></div>
       <div class="card-body script-text">
-        <p>财务侧的痛点，集中在两个。</p>
-        <p>第一，<strong>溯源效率</strong>。链路层级多，字段一路改名，目前靠手写 SQL 逐层排查。<span class="hl">日常一次溯源要数小时，复杂场景要半个到一个工作日</span>。举个真实例子：政府设备补贴专项审计，审计师要求资产和折旧明细，追到源头系统依据和原始凭证。我们靠人工梳理、跨团队逐级确认，花了数日才追到源头。监管审计对时效很敏感，这类效率损失，会直接变成合规响应压力。</p>
-        <p>第二，<strong>变更影响难预判</strong>。之前有源系统把一个文本字段从 2000 字符扩到 3000，下游没有同步调整，<span class="hl">数据被静默截断，直到用户反馈才发现</span>。<span class="hl">这不是哪个团队的问题，是大家都缺工具</span>——有了字段级血缘，这类风险在上游变更前，就能识别出所有下游接入方。</p>
+        <p>财务侧的痛点，集中在两个方面。</p>
+        <p>第一，<strong>溯源效率</strong>。出现溯源需求时，由于现有数据链路层级多，字段在各系统间没有全局串联视角，目前主要靠手写 SQL 等方式进行逐层排查。<span class="hl">日常一次溯源要数小时，复杂场景要半个到一个工作日</span>。举个真实例子：前两年政府设备补贴专项审计，审计师提出过要求资产和折旧明细，字段级追到源头系统依据和原始凭证。我们靠人工梳理、跨团队逐级确认，花了数日才追到源头完成审计数据要求。监管审计对时效很敏感，这类效率损失，会直接变成合规响应压力，而且现在这类监管类的审计需求越来越多。</p>
+        <p>第二，<strong>变更影响难预判</strong>。之前有源系统把一个文本字段从 2000 字符扩到 3000，下游没有同步调整，<span class="hl">数据被静默截断，直到用户反馈才发现</span>。这个问题的本质，<span class="hl">是大家都缺工具</span>——有了字段级血缘平台，这类风险在上游变更前，变更方就能识别出所有下游接入方，做全面评估和沟通。</p>
       </div>
     </div>
   </div>
@@ -303,9 +303,9 @@ document.addEventListener('DOMContentLoaded', function(){
         <p>财务对平台有四个期望。</p>
         <p>第一，<strong>正反向的字段级血缘查询</strong>：任一字段，向下能追分发路径，向上能溯源头和加工逻辑。</p>
         <p>第二，<strong>变更影响分析</strong>：源头字段或加工逻辑要动的时候，能快速圈出下游影响范围，支持变更前评估。</p>
-        <p>第三，<strong>使用体验</strong>。使用者分两层：<span class="hl">主力是 Finance IT 的同事</span>，承担日常溯源排查；延伸用户是<span class="hl">财务的数字化人才小组</span>，会 SQL、能自助查询。所以从使用侧，我们期望平台兼顾<strong>可视化和简洁</strong>，日常查询便捷高效——这只是体验层面的期望，具体技术路线和实现方式，完全尊重 IT 的专业设计。</p>
-        <p>第四，<strong>支撑业务数据咨询</strong>：基于字段级血缘，财务对业务部门关于口径和来源的咨询，能快速、有据地回应，这是我们 2026 年的一个重点。</p>
-        <p>整体收益上，我们期待日常溯源从数小时量级<span class="hl">往分钟级的体验靠近</span>——强调一下，这是使用体验的期望，不是给项目组的验收指标。这个价值，在结账期和监管响应场景最明显。</p>
+        <p>第三，<strong>使用体验</strong>。使用者分两层：<span class="hl">主力是 Finance IT 的同事</span>，承担日常溯源排查；延伸用户是<span class="hl">财务的创财学员</span>，我们也在陆续培养，会 SQL、能自助查询数据的同事，包括我们 Doris 的自主场景的推广带来的助力。所以从使用侧，我们期望平台兼顾<strong>可视化和简洁</strong>，日常查询便捷高效——这只是体验层面的期望，具体技术路线和实现方式，完全依仗项目组的专业设计，我们一起配合验证打磨。</p>
+        <p>第四，<strong>支撑业务数据咨询</strong>：基于字段级血缘，财务对业务部门关于口径和来源的咨询，能快速、有据地回应，这一点也非常重要。</p>
+        <p>我们期待日常溯源从数小时量级<span class="hl">往分钟级的体验靠近</span>。</p>
       </div>
     </div>
   </div>
@@ -315,9 +315,9 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="seg-rail"><span class="seg-time">20 秒</span><div class="seg-dot"></div></div>
     <div class="seg-card card" style="margin-bottom:0;">
       <div class="card-bar"></div>
-      <div class="card-head"><span class="card-title">收尾 · 闭环 + 轻埋一句 + 承诺</span><span class="badge b-green">暗线在此</span></div>
+      <div class="card-head"><span class="card-title">收尾 · 闭环 + 致谢</span><span class="badge b-green">闭环收束</span></div>
       <div class="card-body script-text">
-        <p>往长期看，这套能力能帮财务系统化地识别源头数据质量问题，<span class="hl">和数据责任方一起推动改进</span>，形成<strong>"溯源—识别—反馈—改进"</strong>的闭环；同时，这份字段级血缘的梳理成果，<span class="hl">也会成为财务后续数据口径梳理与数据资产管理的数据基础</span>。财务这边会指定专人对接、承担业务口径的确认，和 IT 项目组一起，<strong>把首批试点做实、做出样板</strong>。再次感谢项目组的专业推动，谢谢大家。</p>
+        <p>往长期看，这套能力也能帮大家系统化地识别源头数据质量问题，<span class="hl">和数据责任方一起推动改进</span>，形成<strong>"溯源—识别—反馈—改进"</strong>的闭环；再次感谢项目组的专业推动，谢谢大家。</p>
       </div>
     </div>
   </div>
