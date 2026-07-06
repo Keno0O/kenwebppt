@@ -1,0 +1,1446 @@
+<!-- Layout: B Mission Control (改造为课程闯关导航) -->
+<!-- FinQwenFT 费控合规微调 · 小白闯关教学手册 · 内容蓝图 by Fable 5, 落地 by Opus -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FinQwenFT 微调闯关手册</title>
+<style>
+:root{
+  /* ── Corporate Dual-Blue 色板 ── */
+  --blue:#1226AA; --techBlue:#00A0DF; --blueDeep:#091252; --blueMid:#2E4FD0;
+  --blueLight:#E8EEFF; --bluePale:#F4F6FF; --techLight:#E0F4FC; --techPale:#CCF0FF;
+  --green:#0EA573; --greenLight:#E6F9F0; --amber:#E89820; --amberLight:#FFF8E6;
+  --redMuted:#C85040; --redPale:#FFF0EE;
+  --white:#fff; --bg:#F5F7FC; --dark:#1A1A2E;
+  --textMid:#3A3F5C; --textLight:#6B7094; --textMuted:#9098B8;
+  --border:#D8E2F0; --borderSoft:#E6ECF7;
+  --mono:"SF Mono","Fira Code","Cascadia Code",Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+  --status-h:104px; --header-h:104px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--textMid);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+*:focus-visible{outline:2px solid var(--techBlue);outline-offset:2px;border-radius:4px}
+a{color:var(--techBlue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ══ STATUS BAR ══ */
+.status-bar{background:linear-gradient(180deg,#fff 0%,var(--bluePale) 100%);border-bottom:1px solid var(--border);
+  padding:12px 24px 14px;position:sticky;top:0;z-index:200;box-shadow:0 1px 10px rgba(9,18,82,.06);isolation:isolate}
+.sb-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.sb-brand{display:inline-flex;align-items:center;gap:10px;font-size:16px;font-weight:800;color:var(--blue);letter-spacing:.2px}
+.sb-brand svg{width:24px;height:24px;flex-shrink:0}
+.sb-sub{font-size:11px;color:var(--textLight);font-family:var(--mono);letter-spacing:.3px}
+.sb-meta{margin-left:auto;display:inline-flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px}
+.sb-pill{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:11px;background:var(--greenLight);color:var(--green);font-weight:700;font-size:10.5px}
+.sb-pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sb-progress-txt{color:var(--textLight)}
+.sb-progress-txt b{color:var(--blue);font-weight:800;font-variant-numeric:tabular-nums;font-size:13px}
+/* 进度地图 */
+.map{display:flex;align-items:center;gap:0;margin-top:11px;overflow-x:auto;padding-bottom:2px}
+.map-node{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;cursor:pointer;position:relative;min-width:52px}
+.map-dot{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--border);display:flex;align-items:center;
+  justify-content:center;font-size:9px;font-weight:800;color:var(--textMuted);font-family:var(--mono);transition:all .18s ease;z-index:2}
+.map-node.done .map-dot{background:var(--green);border-color:var(--green);color:#fff}
+.map-node.active .map-dot{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px var(--blueLight)}
+.map-line{position:absolute;top:9px;left:50%;width:100%;height:2px;background:var(--border);z-index:1}
+.map-node.done .map-line{background:var(--green)}
+.map-label{font-size:8.5px;color:var(--textLight);margin-top:4px;white-space:nowrap;font-weight:600}
+.map-node.active .map-label{color:var(--blue);font-weight:800}
+.map-node:last-child .map-line{display:none}
+
+/* ══ LAYOUT ══ */
+.layout{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - var(--header-h))}
+.layout.collapsed{grid-template-columns:56px 1fr}
+.layout,.left-nav{transition:grid-template-columns .22s cubic-bezier(.4,0,.2,1)}
+
+/* ══ LEFT NAV ══ */
+.left-nav{background:#fff;border-right:1px solid var(--border);padding:12px 0 32px;position:sticky;top:var(--header-h);
+  height:calc(100vh - var(--header-h));overflow-y:auto;overflow-x:visible;font-family:var(--sans)}
+.left-nav::-webkit-scrollbar{width:6px}
+.left-nav::-webkit-scrollbar-thumb{background:var(--borderSoft);border-radius:3px}
+.nav-toggle{display:flex;align-items:center;justify-content:space-between;width:calc(100% - 20px);margin:0 10px 10px;padding:6px 10px;
+  background:var(--bluePale);border:1px solid var(--borderSoft);border-radius:6px;cursor:pointer;font-family:var(--mono);
+  font-size:10px;font-weight:700;color:var(--textLight);letter-spacing:.5px;text-transform:uppercase}
+.nav-toggle:hover{background:var(--blueLight);color:var(--blue)}
+.nav-group-title{font-size:9.5px;font-weight:800;color:var(--textLight);letter-spacing:.7px;text-transform:uppercase;padding:8px 16px 6px;
+  display:flex;align-items:center;gap:6px}
+.nav-group-title::before{content:"─";color:var(--blue);opacity:.6}
+.nav-row{display:grid;grid-template-columns:11px 1fr auto;align-items:center;gap:9px;width:100%;padding:9px 14px 9px 12px;
+  background:transparent;border:none;border-left:3px solid transparent;cursor:pointer;text-align:left;font-family:var(--sans);
+  transition:background .15s ease,border-color .15s ease;position:relative}
+.nav-row:hover{background:var(--bluePale)}
+.nav-row.active{background:var(--blueLight);border-left-color:var(--blue)}
+.nav-row.active .nav-name{color:var(--blue);font-weight:800}
+.nav-row .dot{width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--textMuted);flex-shrink:0;transition:all .18s ease}
+.nav-row.done .dot{background:var(--green);border-color:var(--green)}
+.nav-row.done .dot::after{content:"✓";position:absolute;color:#fff;font-size:7px;font-weight:900;left:14px;top:50%;transform:translateY(-50%)}
+.nav-name{font-size:12.5px;font-weight:600;color:var(--textMid);display:flex;flex-direction:column;gap:1px;min-width:0}
+.nav-name .nav-meta{font-size:9.5px;color:var(--textLight);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.nav-idx{font-family:var(--mono);font-size:9px;font-weight:800;color:var(--textMuted);background:var(--bluePale);border-radius:4px;padding:1px 5px}
+.nav-row.active .nav-idx{background:var(--blue);color:#fff}
+.nav-row.done .nav-idx{background:var(--greenLight);color:var(--green)}
+/* collapsed */
+.left-nav.collapsed{padding-top:10px;overflow:visible}
+.left-nav.collapsed .nav-toggle{width:36px;margin:0 auto 10px;justify-content:center;padding:6px}
+.left-nav.collapsed .nav-toggle-label,.left-nav.collapsed .nav-group-title,.left-nav.collapsed .nav-name{display:none}
+.left-nav.collapsed .nav-row{grid-template-columns:1fr;justify-items:center;padding:11px 4px;border-left-width:0;border-right:3px solid transparent}
+.left-nav.collapsed .nav-row.active{border-right-color:var(--blue);background:var(--blueLight)}
+.left-nav.collapsed .nav-row .dot{display:none}
+.left-nav.collapsed .nav-row.done .dot::after{display:none}
+
+/* ══ MAIN ══ */
+.main{padding:28px 40px 80px;max-width:960px}
+.pane{display:none;animation:fade .18s ease}
+.pane.active{display:block}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* lesson header */
+.lh{margin-bottom:22px}
+.lh-kicker{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--techBlue);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.lh-title{font-size:27px;font-weight:800;color:var(--blue);letter-spacing:-.3px;line-height:1.25}
+.lh-goal{margin-top:14px;background:var(--techLight);border:1px solid var(--techBlue);border-left:4px solid var(--techBlue);
+  border-radius:8px;padding:11px 16px;font-size:14px;color:var(--blueDeep)}
+.lh-goal b{color:var(--blue)}
+
+/* section */
+h2.sec{font-size:18px;font-weight:800;color:var(--blue);margin:32px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--blueLight);
+  display:flex;align-items:center;gap:9px}
+h2.sec .n{font-family:var(--mono);font-size:12px;background:var(--blue);color:#fff;border-radius:5px;padding:2px 8px;font-weight:800}
+h3.sub{font-size:15.5px;font-weight:800;color:var(--textMid);margin:22px 0 9px}
+p{margin:10px 0;font-size:15px;color:var(--textMid)}
+.p-lead{font-size:16px}
+strong{color:var(--blueDeep);font-weight:700}
+em{font-style:normal;background:linear-gradient(180deg,transparent 62%,var(--amberLight) 62%);font-weight:700;color:var(--blueDeep);padding:0 1px}
+ul,ol{margin:10px 0 10px 4px;padding-left:22px}
+li{margin:6px 0;font-size:15px}
+code.inl{font-family:var(--mono);font-size:13px;background:var(--blueLight);color:var(--blue);padding:1px 6px;border-radius:4px;font-weight:600}
+
+/* card */
+.card{background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden;margin:16px 0}
+.card-bar{height:4px;background:var(--blue)}
+.card-bar.tech{background:var(--techBlue)}
+.card-bar.green{background:var(--green)}
+.card-bar.amber{background:var(--amber)}
+.card-hd{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.card-hd .t{font-size:13.5px;font-weight:800;color:var(--blue)}
+.card-bd{padding:15px 17px}
+
+/* analogy inline block */
+.analogy{background:var(--bluePale);border:1px solid var(--borderSoft);border-radius:8px;padding:12px 15px;margin:12px 0;font-size:14.5px}
+.analogy .lbl{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:800;color:var(--techBlue);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
+
+/* red line banner */
+.redline{background:var(--redPale);border:1.5px solid var(--redMuted);border-radius:9px;padding:13px 16px 13px 15px;margin:18px 0;
+  display:flex;gap:12px;align-items:flex-start;position:relative;overflow:hidden}
+.redline::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--redMuted)}
+.redline .ico{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--redMuted);color:#fff;display:flex;align-items:center;
+  justify-content:center;font-size:15px;font-weight:900;margin-top:1px}
+.redline .body{font-size:14.5px;color:#7a2c22}
+.redline .body b{color:var(--redMuted);font-weight:800}
+.redline .tag{font-family:var(--mono);font-size:9.5px;font-weight:800;color:var(--redMuted);letter-spacing:.6px;text-transform:uppercase;display:block;margin-bottom:2px}
+
+/* warn / 成败点 */
+.warn{background:var(--amberLight);border:1px solid var(--amber);border-left:4px solid var(--amber);border-radius:8px;padding:12px 15px;margin:16px 0;font-size:14.5px}
+.warn .tag{font-family:var(--mono);font-size:10px;font-weight:800;color:#a86a12;letter-spacing:.5px;text-transform:uppercase;margin-right:6px}
+.warn b{color:#a86a12}
+.tip{background:var(--greenLight);border:1px solid var(--green);border-left:4px solid var(--green);border-radius:8px;padding:12px 15px;margin:16px 0;font-size:14.5px}
+.tip .tag{font-family:var(--mono);font-size:10px;font-weight:800;color:var(--green);letter-spacing:.5px;text-transform:uppercase;margin-right:6px}
+
+/* code block */
+.code{background:var(--dark);border-radius:9px;overflow:hidden;margin:15px 0;box-shadow:0 3px 12px rgba(9,18,82,.14)}
+.code-hd{background:#0d0d1c;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #26264a}
+.code-hd .fn{font-family:var(--mono);font-size:11px;color:#8a8fb5;display:flex;align-items:center;gap:8px}
+.code-hd .fn::before{content:"";width:9px;height:9px;border-radius:50%;background:#ff5f56;box-shadow:14px 0 0 #ffbd2e,28px 0 0 #27c93f}
+.code-hd .fn span{margin-left:34px}
+.copy-btn{background:#26264a;border:none;color:#b8bce0;font-family:var(--mono);font-size:10.5px;font-weight:700;padding:4px 11px;border-radius:5px;cursor:pointer;transition:all .15s ease}
+.copy-btn:hover{background:var(--blue);color:#fff}
+.copy-btn.ok{background:var(--green);color:#fff}
+.code-bd{padding:13px 0;overflow-x:auto}
+.code-line{display:grid;grid-template-columns:1fr auto;gap:20px;padding:1px 16px;font-family:var(--mono);font-size:13px;line-height:1.85}
+.code-line .cmd{color:#e6e9ff;white-space:pre}
+.code-line .cmd .tok-c{color:#00d4ff}
+.code-line .cmd .tok-s{color:#7ee787}
+.code-line .cmd .tok-k{color:#ff9d6b}
+.code-line .cmd .tok-d{color:#6a6f9e}
+.code-line .note{color:#8a8fb5;font-size:11px;font-family:var(--sans);white-space:nowrap;align-self:center;font-style:italic}
+.code-cmt{padding:2px 16px;font-family:var(--mono);font-size:12px;color:#6a6f9e;line-height:1.7}
+
+/* quiz */
+.quiz{background:#fff;border:1.5px solid var(--blueLight);border-radius:11px;margin:26px 0 8px;overflow:hidden}
+.quiz-hd{background:linear-gradient(135deg,var(--blueDeep),var(--blue));padding:12px 17px;color:#fff;display:flex;align-items:center;gap:10px}
+.quiz-hd .ico{width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900}
+.quiz-hd .t{font-size:14px;font-weight:800}
+.quiz-hd .c{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--techPale)}
+.quiz-bd{padding:8px 17px 17px}
+.q{border-bottom:1px dashed var(--borderSoft);padding:13px 0}
+.q:last-child{border-bottom:none}
+.q-txt{font-size:14.5px;font-weight:700;color:var(--textMid);display:flex;gap:9px}
+.q-txt .qn{flex-shrink:0;font-family:var(--mono);font-size:11px;font-weight:800;color:#fff;background:var(--techBlue);border-radius:4px;padding:2px 7px;height:fit-content;margin-top:1px}
+.q-ans{display:none;margin:10px 0 2px 34px;background:var(--greenLight);border-left:3px solid var(--green);border-radius:0 6px 6px 0;padding:9px 13px;font-size:14px;color:#0a6b4a}
+.q-ans.show{display:block;animation:fade .2s ease}
+.q-ans b{color:var(--green)}
+.q-toggle{margin:8px 0 0 34px;background:#fff;border:1px solid var(--green);color:var(--green);font-family:var(--mono);font-size:11px;font-weight:700;
+  padding:4px 12px;border-radius:6px;cursor:pointer;transition:all .15s ease}
+.q-toggle:hover{background:var(--green);color:#fff}
+
+/* complete lesson button */
+.done-bar{margin-top:24px;padding:18px;background:var(--bluePale);border:1px dashed var(--border);border-radius:11px;display:flex;
+  align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.done-bar .txt{font-size:13.5px;color:var(--textLight)}
+.done-bar .txt b{color:var(--blue)}
+.btn-done{background:var(--blue);color:#fff;border:none;font-size:13.5px;font-weight:700;padding:9px 20px;border-radius:8px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;transition:all .18s ease;font-family:var(--sans)}
+.btn-done:hover{background:var(--blueMid);transform:translateY(-1px);box-shadow:0 4px 14px rgba(18,38,170,.22)}
+.btn-done.done{background:var(--green)}
+.btn-done .chk{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900}
+.btn-done.done .chk{border-color:#fff;background:#fff;color:var(--green)}
+
+/* comparison table */
+table.tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:10px;overflow:hidden;border:1px solid var(--border);margin:16px 0;font-size:14px}
+table.tbl th{background:var(--blueDeep);color:#fff;padding:10px 13px;font-size:11px;font-weight:700;text-align:left;letter-spacing:.4px}
+table.tbl td{padding:10px 13px;color:var(--textMid);border-bottom:1px solid var(--border);vertical-align:top}
+table.tbl tr:nth-child(even) td{background:var(--bluePale)}
+table.tbl tr:last-child td{border-bottom:none}
+.yes{color:var(--green);font-weight:800}
+.no{color:var(--redMuted);font-weight:800}
+
+/* decision tree (三问决策器) */
+.dtree{background:#fff;border:1.5px solid var(--blue);border-radius:12px;overflow:hidden;margin:20px 0}
+.dtree-hd{background:linear-gradient(135deg,var(--blueDeep),var(--blue));color:#fff;padding:14px 18px}
+.dtree-hd .t{font-size:15px;font-weight:800}
+.dtree-hd .s{font-size:12px;color:var(--techPale);margin-top:2px}
+.dtree-bd{padding:20px}
+.dstep{margin-bottom:14px}
+.dstep.hidden{display:none}
+.dstep .qq{font-size:15.5px;font-weight:800;color:var(--blueDeep);margin-bottom:11px;display:flex;gap:10px;align-items:flex-start}
+.dstep .qq .qi{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:800}
+.dstep .hint{font-size:13px;color:var(--textLight);margin:0 0 11px 34px}
+.dbtns{display:flex;gap:12px;margin-left:34px}
+.dbtn{flex:1;max-width:200px;padding:11px;border-radius:9px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:14px;
+  font-weight:700;color:var(--textMid);transition:all .15s ease;display:flex;align-items:center;justify-content:center;gap:8px}
+.dbtn:hover{border-color:var(--techBlue);background:var(--techLight)}
+.dbtn.yes-b:hover{border-color:var(--green);background:var(--greenLight);color:var(--green)}
+.dbtn.no-b:hover{border-color:var(--redMuted);background:var(--redPale);color:var(--redMuted)}
+.dbtn .k{font-family:var(--mono);font-size:11px;opacity:.7}
+.dresult{display:none;padding:22px;border-radius:11px;text-align:center;margin-top:6px;animation:fade .25s ease}
+.dresult.show{display:block}
+.dresult.good{background:var(--greenLight);border:1.5px solid var(--green)}
+.dresult.bad{background:var(--redPale);border:1.5px solid var(--redMuted)}
+.dresult .rico{font-size:34px;font-weight:900;margin-bottom:8px}
+.dresult.good .rico{color:var(--green)}
+.dresult.bad .rico{color:var(--redMuted)}
+.dresult .rt{font-size:18px;font-weight:800;margin-bottom:6px}
+.dresult.good .rt{color:var(--green)}
+.dresult.bad .rt{color:var(--redMuted)}
+.dresult .rd{font-size:14px;color:var(--textMid);max-width:520px;margin:0 auto}
+.dreset{margin-top:14px;background:#fff;border:1px solid var(--border);color:var(--textLight);font-family:var(--mono);font-size:11px;
+  font-weight:700;padding:6px 16px;border-radius:7px;cursor:pointer}
+.dreset:hover{border-color:var(--blue);color:var(--blue)}
+.dpath{margin-left:34px;margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap}
+.dpath .chip{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:11px}
+.dpath .chip.y{background:var(--greenLight);color:var(--green)}
+.dpath .chip.n{background:var(--redPale);color:var(--redMuted)}
+
+/* flip cards (超参墙) */
+.flipwall{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:13px;margin:16px 0}
+.flip{background:transparent;height:158px;perspective:1000px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;transition:transform .5s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+.flip.flipped .flip-in{transform:rotateY(180deg)}
+.flip-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:11px;padding:14px;display:flex;flex-direction:column;border:1px solid var(--border)}
+.flip-front{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.flip-front .fname{font-family:var(--mono);font-size:12px;font-weight:800;color:var(--blue)}
+.flip-front .fval{font-family:var(--mono);font-size:21px;font-weight:800;color:var(--techBlue);margin:8px 0 4px}
+.flip-front .fdesc{font-size:12.5px;color:var(--textLight);margin-top:auto}
+.flip-front .fhint{font-family:var(--mono);font-size:9.5px;color:var(--textMuted);margin-top:8px;display:flex;align-items:center;gap:5px}
+.flip-front .fhint::before{content:"⟳";font-size:12px;color:var(--techBlue)}
+.flip-back{background:linear-gradient(150deg,var(--blueDeep),var(--blue));color:#fff;transform:rotateY(180deg)}
+.flip-back .bname{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--techPale);letter-spacing:.5px;text-transform:uppercase}
+.flip-back .banalogy{font-size:13px;font-weight:600;margin:6px 0 8px;line-height:1.5}
+.flip-back .bswing{font-size:11.5px;color:var(--techPale);margin-top:auto;line-height:1.5}
+.flip-back .bswing b{color:#fff}
+
+/* pitfall search table */
+.pf-search{position:relative;margin:16px 0 4px}
+.pf-search input{width:100%;padding:11px 14px 11px 40px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:var(--sans);background:#fff}
+.pf-search input:focus{outline:none;border-color:var(--techBlue);box-shadow:0 0 0 3px rgba(0,160,223,.14)}
+.pf-search .si{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--textMuted);font-size:15px}
+.pf-empty{display:none;text-align:center;padding:30px;color:var(--textMuted);font-size:13px;border:2px dashed var(--border);border-radius:10px;margin-top:12px}
+.pf-empty.show{display:block}
+table.pf{width:100%;border-collapse:separate;border-spacing:0;border-radius:10px;overflow:hidden;border:1px solid var(--border);margin:12px 0;font-size:13.5px}
+table.pf th{background:var(--blueDeep);color:#fff;padding:10px 13px;font-size:10.5px;font-weight:700;text-align:left;letter-spacing:.4px;position:sticky;top:var(--header-h)}
+table.pf td{padding:10px 13px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--textMid)}
+table.pf tr:nth-child(even) td{background:var(--bluePale)}
+table.pf td .sym{font-family:var(--mono);font-size:12.5px;color:var(--redMuted);font-weight:600}
+table.pf td.fix{color:var(--green);font-weight:600}
+
+/* term glossary */
+.gloss{columns:2;column-gap:18px;margin:14px 0}
+@media(max-width:900px){.gloss{columns:1}}
+.gitem{break-inside:avoid;background:#fff;border:1px solid var(--border);border-radius:9px;padding:11px 14px;margin-bottom:12px}
+.gitem .gt{font-family:var(--mono);font-size:13px;font-weight:800;color:var(--blue);margin-bottom:3px}
+.gitem .gd{font-size:13.5px;color:var(--textMid);line-height:1.55}
+
+/* svg figure wrapper */
+.fig{background:#fff;border:1px solid var(--border);border-radius:11px;padding:18px;margin:18px 0;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.fig-cap{font-size:12px;color:var(--textLight);text-align:center;margin-top:10px;font-style:italic}
+.fig svg{display:block;max-width:100%;height:auto;margin:0 auto}
+
+/* map/roadmap chips */
+.roadmap{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.roadmap .rc{background:var(--blueLight);color:var(--blue);border-radius:8px;padding:7px 13px;font-size:13px;font-weight:700;
+  display:flex;align-items:center;gap:7px}
+.roadmap .rc .ri{font-family:var(--mono);font-size:10px;background:var(--blue);color:#fff;border-radius:4px;padding:1px 6px}
+.roadmap .arrow{color:var(--textMuted);align-self:center;font-size:15px}
+
+/* toast */
+#toast{position:fixed;top:18px;right:18px;padding:11px 20px;background:var(--blueDeep);color:#fff;border-radius:9px;font-size:13px;
+  font-weight:600;box-shadow:0 6px 20px rgba(9,18,82,.28);z-index:3000;opacity:0;transform:translateY(-12px);
+  transition:opacity .25s ease,transform .25s ease;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+
+/* agent tooltip (折叠态) */
+.nav-tooltip{position:fixed;left:0;top:0;background:var(--blueDeep);color:#fff;padding:7px 12px;border-radius:6px;font-family:var(--mono);
+  font-size:11px;font-weight:500;white-space:nowrap;z-index:9999;pointer-events:none;opacity:0;transform:translateX(-4px);
+  transition:opacity .14s ease,transform .14s ease;box-shadow:0 6px 18px rgba(9,18,82,.3);visibility:hidden}
+.nav-tooltip.show{opacity:1;visibility:visible;transform:translateX(0)}
+.nav-tooltip::before{content:"";position:absolute;left:-5px;top:12px;border:5px solid transparent;border-right-color:var(--blueDeep)}
+
+/* footer */
+.footer{border-top:1px solid var(--border);margin-top:40px;padding-top:16px;font-size:11px;color:var(--textMuted);font-family:var(--mono)}
+
+/* responsive */
+@media(max-width:1099px){
+  .layout,.layout.collapsed{grid-template-columns:1fr}
+  .left-nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border)}
+  .main{padding:22px 20px 60px}
+}
+@media(max-width:680px){
+  .flipwall{grid-template-columns:1fr 1fr}
+  .lh-title{font-size:22px}
+  .dbtns{flex-direction:column}
+}
+@media print{
+  .status-bar,.left-nav,.done-bar,#toast,.nav-tooltip{display:none}
+  .pane{display:block!important;page-break-after:always}
+  body{background:#fff}
+  .main{max-width:100%}
+}
+</style>
+
+<!-- 访问密码门 -->
+<div id="auth-gate" style="position:fixed;inset:0;z-index:99999;background:#0A0A0A;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+  <div style="font-family:-apple-system,sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3)">ENTER ACCESS CODE</div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <input id="auth-input" type="password" placeholder="Access Code" autocomplete="off"
+      style="width:200px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;font-size:1rem;font-family:-apple-system,sans-serif;outline:none;text-align:center;letter-spacing:.1em;"
+      onfocus="this.style.borderColor='rgba(255,255,255,.2)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+  </div>
+  <div id="auth-error" style="font-size:.75rem;color:#E74C3C;opacity:0;transition:opacity .3s">incorrect code</div>
+  <div style="font-size:.6rem;color:rgba(255,255,255,.15);margin-top:20px">Press Enter to continue</div>
+</div>
+<script>
+const AUTH_HASH = '7d153d2a4423e402868a5eb0cbe8bbdefa87bd0888eef1ea6febd769152bc0d3';
+document.addEventListener('DOMContentLoaded', function(){
+  if(sessionStorage.getItem('kengit-authed')==='1'){document.getElementById('auth-gate').remove();return}
+  const gate=document.getElementById('auth-gate'),input=document.getElementById('auth-input'),err=document.getElementById('auth-error');
+  const mainEls=Array.from(document.body.children).filter(el=>el.id!=='auth-gate'&&el.tagName!=='SCRIPT'&&el.tagName!=='SVG');
+  mainEls.forEach(el=>{el.dataset.kengitHidden='1';el.style.display='none';});
+  setTimeout(()=>input.focus(),100);
+  input.addEventListener('keydown',async e=>{
+    if(e.key!=='Enter')return;
+    const val=input.value;
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(val));
+    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hash===AUTH_HASH){
+      sessionStorage.setItem('kengit-authed','1');
+      if (window.kengitTrackVisit) window.kengitTrackVisit();
+      gate.style.opacity='0';gate.style.transition='opacity .5s';
+      setTimeout(()=>{
+        gate.remove();
+        document.querySelectorAll('[data-kengit-hidden]').forEach(el=>{el.style.display='';delete el.dataset.kengitHidden;});
+      },500);
+    }else{
+      err.style.opacity='1';input.value='';input.style.borderColor='#E74C3C';
+      setTimeout(()=>{err.style.opacity='0';input.style.borderColor='rgba(255,255,255,.1)'},2000);
+    }
+  });
+});
+</script>
+
+<div class="nav-tooltip" id="nav-tooltip" role="tooltip"></div>
+<div id="toast"></div>
+
+<!-- ══════════ STATUS BAR ══════════ -->
+<header class="status-bar">
+  <div class="sb-top">
+    <span class="sb-brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="url(#bg1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="bg1" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#1226AA"/><stop offset="1" stop-color="#00A0DF"/></linearGradient></defs><path d="M12 2 3 6v6c0 5 4 8 9 10 5-2 9-5 9-10V6l-9-4z"/><path d="M9 12l2 2 4-4"/></svg>
+      FinQwenFT 微调闯关手册
+    </span>
+    <span class="sb-sub">费控合规垂类模型 · 0→1 小白教学 · Qwen2.5-32B · QLoRA</span>
+    <span class="sb-meta">
+      <span class="sb-pill"><span class="dot"></span>LIVE 教程</span>
+      <span class="sb-progress-txt">进度 <b id="prog-n">0</b>/<b>12</b> 关</span>
+    </span>
+  </div>
+  <div class="map" id="map"></div>
+</header>
+
+<div class="layout" id="layout">
+  <!-- ══════════ LEFT NAV ══════════ -->
+  <aside class="left-nav" id="left-nav">
+    <button class="nav-toggle" id="nav-toggle" type="button" title="收起侧边栏">
+      <span class="nav-toggle-label">收起目录</span><span>◀</span>
+    </button>
+    <div class="nav-group-title">概念地基</div>
+    <button class="nav-row active" data-pane="k0" title="开营 · 你30天后做出什么"><span class="dot"></span><span class="nav-name">开营<span class="nav-meta">你30天后会做出什么</span></span><span class="nav-idx">00</span></button>
+    <button class="nav-row" data-pane="k1" title="大模型到底是个啥"><span class="dot"></span><span class="nav-name">大模型是个啥<span class="nav-meta">预训练/微调/后训练</span></span><span class="nav-idx">01</span></button>
+    <button class="nav-row" data-pane="k2" title="决策课 · 该不该用微调"><span class="dot"></span><span class="nav-name">该不该微调<span class="nav-meta">方法论核心 · 三问口诀</span></span><span class="nav-idx">02</span></button>
+    <button class="nav-row" data-pane="k3" title="LoRA/量化/超参数"><span class="dot"></span><span class="nav-name">LoRA与超参<span class="nav-meta">看懂配置每一行</span></span><span class="nav-idx">03</span></button>
+    <button class="nav-row" data-pane="k4" title="数据/5文件/硬件"><span class="dot"></span><span class="nav-name">认识你的弹药<span class="nav-meta">数据·5文件·硬件</span></span><span class="nav-idx">04</span></button>
+    <div class="nav-group-title">动手实操</div>
+    <button class="nav-row" data-pane="k5" title="搭建环境"><span class="dot"></span><span class="nav-name">搭建环境<span class="nav-meta">步骤0 · conda</span></span><span class="nav-idx">05</span></button>
+    <button class="nav-row" data-pane="k6" title="放数据并登记"><span class="dot"></span><span class="nav-name">放数据登记<span class="nav-meta">步骤1</span></span><span class="nav-idx">06</span></button>
+    <button class="nav-row" data-pane="k7" title="7B 冒烟测试"><span class="dot"></span><span class="nav-name">7B 冒烟<span class="nav-meta">步骤2 · 成败点</span></span><span class="nav-idx">07</span></button>
+    <button class="nav-row" data-pane="k8" title="正式训练 32B"><span class="dot"></span><span class="nav-name">正式训 32B<span class="nav-meta">步骤3</span></span><span class="nav-idx">08</span></button>
+    <button class="nav-row" data-pane="k9" title="评估与基线对比"><span class="dot"></span><span class="nav-name">评估基线<span class="nav-meta">步骤4 · 最重要纪律</span></span><span class="nav-idx">09</span></button>
+    <div class="nav-group-title">进阶与查错</div>
+    <button class="nav-row" data-pane="k10" title="常见坑急诊室"><span class="dot"></span><span class="nav-name">坑急诊室<span class="nav-meta">症状→诊断→处理</span></span><span class="nav-idx">10</span></button>
+    <button class="nav-row" data-pane="k11" title="从玩具到生产"><span class="dot"></span><span class="nav-name">走向生产<span class="nav-meta">后训练工程</span></span><span class="nav-idx">11</span></button>
+    <button class="nav-row" data-pane="glossary" title="人话术语表"><span class="dot"></span><span class="nav-name">人话术语表<span class="nav-meta">全流程速查</span></span><span class="nav-idx">A</span></button>
+  </aside>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="main" id="main">
+
+  <!-- ═══ 第 0 关 ═══ -->
+  <section class="pane active" id="k0">
+    <div class="lh">
+      <div class="lh-kicker">第 00 关 · 开营</div>
+      <div class="lh-title">你 30 天后会做出什么</div>
+      <div class="lh-goal"><b>学完你就能：</b>说清这个项目最终产出是什么、自己现在处于地图哪个位置。</div>
+    </div>
+
+    <p class="p-lead">一句话讲清这个项目：我们要<strong>教一个 AI「财务合规审查员」</strong>——让它看懂一张 BD（商务拓展）人员的差旅报销单，自动判断这笔钱花得<em>合规 / 存疑 / 违规</em>，并给出带理由的结构化结论。</p>
+
+    <h2 class="sec"><span class="n">看</span>终点长什么样</h2>
+    <p>先看一眼你要抵达的终点。左边是喂给 AI 的「输入」（一张报销记录），右边是 AI 要吐出的「输出」（一段结构化 JSON）：</p>
+    <div class="fig">
+      <svg viewBox="0 0 720 250" role="img" aria-label="输入报销记录 到 输出JSON判定 的示意">
+        <rect x="8" y="20" width="300" height="210" rx="10" fill="#F4F6FF" stroke="#D8E2F0"/>
+        <text x="24" y="46" font-family="monospace" font-size="12" font-weight="800" fill="#1226AA">输入 · 一张报销单（人话文本）</text>
+        <text x="24" y="72" font-size="12" fill="#3A3F5C">员工：张伟(BD部)</text>
+        <text x="24" y="93" font-size="12" fill="#3A3F5C">出差：2024-03-11~13 · 深圳</text>
+        <text x="24" y="114" font-size="12" fill="#3A3F5C">客户：深圳前海科技(注册地深圳)</text>
+        <text x="24" y="135" font-size="12" fill="#3A3F5C">费用：机票+酒店2晚+市内交通</text>
+        <text x="24" y="156" font-size="12" fill="#3A3F5C">金额：3860 元</text>
+        <text x="24" y="177" font-size="12" fill="#3A3F5C">签单：已签，合同 82 万元</text>
+        <text x="24" y="205" font-size="11" fill="#6B7094">备注：拜访技术与采购负责人…</text>
+        <g>
+          <line x1="316" y1="125" x2="404" y2="125" stroke="#1226AA" stroke-width="2.5" marker-end="url(#ah0)"/>
+          <rect x="330" y="100" width="60" height="24" rx="12" fill="#00A0DF"/>
+          <text x="360" y="116" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">AI</text>
+        </g>
+        <rect x="412" y="20" width="300" height="210" rx="10" fill="#0d0d1c" stroke="#26264a"/>
+        <text x="428" y="46" font-family="monospace" font-size="12" font-weight="800" fill="#00d4ff">输出 · 结构化 JSON</text>
+        <text x="428" y="74" font-family="monospace" font-size="11.5" fill="#7ee787">"合规判定": "合规",</text>
+        <text x="428" y="96" font-family="monospace" font-size="11.5" fill="#7ee787">"风险等级": "低",</text>
+        <text x="428" y="118" font-family="monospace" font-size="11.5" fill="#e6e9ff">"命中规则": [],</text>
+        <text x="428" y="140" font-family="monospace" font-size="11.5" fill="#e6e9ff">"分析理由": "城市与客户地</text>
+        <text x="446" y="158" font-family="monospace" font-size="11.5" fill="#e6e9ff">一致，82万签单产出匹配…",</text>
+        <text x="428" y="180" font-family="monospace" font-size="11.5" fill="#ff9d6b">"建议动作": "正常审批通过"</text>
+        <defs><marker id="ah0" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1226AA"/></marker></defs>
+      </svg>
+      <div class="fig-cap">从「一段人话」到「一段机器能用的结构化判定」——这就是我们要训练的能力。</div>
+    </div>
+
+    <h2 class="sec"><span class="n">图</span>全景闯关地图</h2>
+    <p>整趟旅程分成三大阶段、12 个关卡。你现在在第 00 关（起点）：</p>
+    <div class="roadmap">
+      <span class="rc"><span class="ri">01-04</span>概念地基</span><span class="arrow">→</span>
+      <span class="rc"><span class="ri">05-09</span>动手实操</span><span class="arrow">→</span>
+      <span class="rc"><span class="ri">10-11</span>查错与生产</span>
+    </div>
+    <ul>
+      <li><strong>概念地基（01-04）</strong>：搞懂大模型是什么、这任务该不该微调、LoRA 和超参在讲啥、你手上有哪些弹药。</li>
+      <li><strong>动手实操（05-09）</strong>：搭环境 → 放数据 → 先用小模型试跑 → 上大模型正式训 → 考试评分。</li>
+      <li><strong>查错与生产（10-11）</strong>：常见坑速查手册 + 从玩具走向真实上线的路线图。</li>
+    </ul>
+
+    <h2 class="sec"><span class="n">心</span>开工前的三句心态建设</h2>
+    <div class="card"><div class="card-bar tech"></div><div class="card-bd">
+      <p style="margin-top:0">① <strong>你不需要会写代码</strong>。全程只需要「复制粘贴 + 改几个名字」，我们把每条命令都写好了。</p>
+      <p>② <strong>你需要理解每一步「为什么」</strong>。否则一旦出错，你会完全不知道从哪下手。这本手册每一步都会讲 what + why。</p>
+      <p style="margin-bottom:0">③ 我们手上<strong>只有 12 条玩具数据</strong>。这一轮的目标是<em>跑通流程 + 建立理解</em>，不是训出能上线的模型——真模型需要几百到几千条真数据。</p>
+    </div></div>
+
+    <div class="redline">
+      <div class="ico">!</div>
+      <div class="body"><span class="tag">红线 · 第 1 次出现（共 3 条，全程反复）</span>
+        <b>数据质量 = 微调成败。</b>12 条数据是用来「看清题型」的，不是用来训出真模型的。这条红线后面还会说两遍，请刻进脑子。</div>
+    </div>
+
+    <div class="done-bar">
+      <div class="txt">读完这一关的内容了吗？点右边按钮<b>打卡完成</b>，进度地图会亮起来 →</div>
+      <button class="btn-done" data-done="k0"><span class="chk"></span>完成本关</button>
+    </div>
+  </section>
+
+  <!-- ═══ 第 1 关 ═══ -->
+  <section class="pane" id="k1">
+    <div class="lh">
+      <div class="lh-kicker">第 01 关 · 概念地基</div>
+      <div class="lh-title">大模型到底是个啥（10 分钟极简版）</div>
+      <div class="lh-goal"><b>学完你就能：</b>用自己的话向同事解释「大模型、预训练、微调、后训练」是什么关系。</div>
+    </div>
+
+    <h2 class="sec"><span class="n">1</span>大模型 = 超级文字接龙机器</h2>
+    <p class="p-lead">别被「人工智能」吓到。大模型的核心其实特别朴素：<strong>它是一台读过几乎整个互联网文字的「超级文字接龙机」</strong>。</p>
+    <div class="analogy"><span class="lbl">打个比方</span>你玩过成语接龙吧？给你「一心一…」，你脱口而出「意」。大模型干的是同一件事：给它一段前文，它猜「下一个字最可能是什么」。只不过它接龙接到极致——读了海量文字之后，这种「接下一个字」的能力，就表现成了理解、推理、写作。</div>
+
+    <h2 class="sec"><span class="n">2</span>参数 = 大脑里的旋钮</h2>
+    <p>你常听到「320 亿参数」。参数是什么？</p>
+    <div class="analogy"><span class="lbl">打个比方</span><strong>参数就是模型大脑里一个个可调的小旋钮</strong>（其实就是一堆数字）。每个旋钮拧到什么位置，共同决定了它怎么接龙。「320 亿参数」= 320 亿个旋钮。所谓「训练」，就是不断微调这些旋钮，让它接龙越接越对。</div>
+
+    <h2 class="sec"><span class="n">3</span>预训练 vs 微调 vs 后训练（一张图讲清）</h2>
+    <p>这三个词最容易搞混。用<strong>「培养一名医生」</strong>作总类比，一次讲透：</p>
+    <div class="fig">
+      <svg viewBox="0 0 720 210" role="img" aria-label="预训练 vs 微调 对比图">
+        <rect x="8" y="24" width="330" height="164" rx="12" fill="#F4F6FF" stroke="#2E4FD0" stroke-width="1.5"/>
+        <text x="173" y="52" text-anchor="middle" font-size="14" font-weight="800" fill="#091252">预训练 · PRE-TRAIN</text>
+        <text x="173" y="74" text-anchor="middle" font-size="12" fill="#3A3F5C">小学读到医学院毕业（通识）</text>
+        <g transform="translate(60,92)"><rect width="226" height="30" rx="6" fill="#091252"/><text x="113" y="20" text-anchor="middle" font-size="11" fill="#fff">海量互联网文字 · 学「什么都懂一点」</text></g>
+        <text x="173" y="146" text-anchor="middle" font-size="11.5" font-weight="700" fill="#C85040">成本 几千万美元 · 几个月 · 几千张顶级GPU</text>
+        <text x="173" y="170" text-anchor="middle" font-size="12" font-weight="800" fill="#0EA573">✓ 阿里已替我们做完 = Qwen2.5 基座</text>
+
+        <rect x="382" y="24" width="330" height="164" rx="12" fill="#E0F4FC" stroke="#00A0DF" stroke-width="1.5"/>
+        <text x="547" y="52" text-anchor="middle" font-size="14" font-weight="800" fill="#091252">微调 · FINE-TUNE（我们做的）</text>
+        <text x="547" y="74" text-anchor="middle" font-size="12" fill="#3A3F5C">毕业后进「费控合规」专科培训</text>
+        <g transform="translate(434,92)"><rect width="226" height="30" rx="6" fill="#00A0DF"/><text x="113" y="20" text-anchor="middle" font-size="11" fill="#fff">看「报销单+标准判定」学专门本领</text></g>
+        <text x="547" y="146" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0EA573">✓ 4 张卡 · 几小时 · 便宜</text>
+        <text x="547" y="170" text-anchor="middle" font-size="12" font-weight="800" fill="#1226AA">← 这就是本手册要带你做的事</text>
+      </svg>
+      <div class="fig-cap">预训练是「别人花大钱造好的通才」，微调是「我们花小钱教它一门专业课」。</div>
+    </div>
+    <ul>
+      <li><strong>预训练</strong> = 从小学读到医学院毕业：海量通识，成本天文数字，产出一个「什么都懂一点」的通才。<em>这一步阿里已经替我们做完了</em>——Qwen2.5 就是产物。</li>
+      <li><strong>后训练</strong> = 毕业后一切进阶训练的总称（规培、专科、职业道德训练都算）。业内的 SFT、RLHF、DPO 都属于后训练。</li>
+      <li><strong>微调（我们做的 SFT，监督微调）</strong> = 后训练里最常用的一种：给它看「病例 + 标准诊断」的成对示例。我们的「病例」= 报销记录，「标准诊断」= 合规判定 JSON。</li>
+    </ul>
+    <div class="fig">
+      <svg viewBox="0 0 520 200" role="img" aria-label="预训练 包含 后训练 包含 微调 的嵌套圈">
+        <circle cx="260" cy="100" r="92" fill="#E8EEFF" stroke="#1226AA" stroke-width="1.5"/>
+        <circle cx="290" cy="100" r="58" fill="#CCF0FF" stroke="#00A0DF" stroke-width="1.5"/>
+        <circle cx="308" cy="100" r="30" fill="#0EA573" fill-opacity="0.85"/>
+        <text x="200" y="42" font-size="13" font-weight="800" fill="#1226AA">预训练</text>
+        <text x="200" y="60" font-size="10" fill="#6B7094">（造出基座）</text>
+        <text x="270" y="70" font-size="12" font-weight="800" fill="#0080B0">后训练</text>
+        <text x="308" y="98" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">微调</text>
+        <text x="308" y="112" text-anchor="middle" font-size="8.5" fill="#eafff5">SFT</text>
+      </svg>
+      <div class="fig-cap">包含关系：预训练造出基座 → 后训练（微调是它的子集）→ 把通才变专才。</div>
+    </div>
+
+    <h2 class="sec"><span class="n">4</span>为什么不从零训，而要「站在基座上」</h2>
+    <div class="analogy"><span class="lbl">打个比方</span>想开一家面馆，你需要自己种小麦吗？不需要。从零预训练一个大模型，要几千张顶级 GPU 跑几个月；而站在基座上微调，4 张卡几小时就够。<strong>基座已经会中文、会读文本、会输出 JSON，我们只需要教它「费控合规」这一门专业课。</strong></div>
+
+    <div class="quiz">
+      <div class="quiz-hd"><span class="ico">?</span><span class="t">理解检查点</span><span class="c">答完再打卡本关</span></div>
+      <div class="quiz-bd">
+        <div class="q"><div class="q-txt"><span class="qn">Q1</span><span>预训练和微调，哪个是我们要做的？为什么不做另一个？</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans"><b>微调。</b>预训练成本天文数字，且已有现成基座（Qwen2.5），没必要也没能力自己从零来。</div></div>
+        <div class="q"><div class="q-txt"><span class="qn">Q2</span><span>「320 亿参数」里的参数是什么意思？</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans">模型内部<b>可调的数字旋钮</b>，共同决定它如何接龙输出。320 亿 = 320 亿个旋钮。</div></div>
+        <div class="q"><div class="q-txt"><span class="qn">Q3</span><span>微调时我们喂给模型的「教材」长什么样？</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans">成对的<b>「输入文本 + 标准答案」</b>示例——一张报销单，配一段标准的合规判定 JSON。</div></div>
+      </div>
+    </div>
+    <div class="done-bar"><div class="txt">能向同事复述这四个概念了吗？<b>打卡完成</b>本关 →</div><button class="btn-done" data-done="k1"><span class="chk"></span>完成本关</button></div>
+  </section>
+
+  <!-- ═══ 第 2 关 ═══ -->
+  <section class="pane" id="k2">
+    <div class="lh">
+      <div class="lh-kicker">第 02 关 · 方法论核心 · 必修</div>
+      <div class="lh-title">决策课：这个任务到底该不该用微调 LLM</div>
+      <div class="lh-goal"><b>学完你就能：</b>拿到任何一个新需求，自己判断「该微调 LLM，还是该用别的工具」。</div>
+    </div>
+
+    <div class="warn"><span class="tag">为什么这关最重要</span><b>「选错工具」是小白最大、最贵的坑，比任何训练报错都致命。</b>训练报错顶多浪费你几个小时；工具选错，浪费的是几周甚至一个项目。所以这一关排在动手之前。</div>
+
+    <p>真实故事：本项目主人（Kenno）原本提了三个想法——<strong>汇率预测、用户收入预测、费控合规</strong>。只有一个适合微调 LLM。哪一个？为什么？看这张表：</p>
+    <table class="tbl">
+      <thead><tr><th style="width:20%">任务</th><th style="width:24%">本质</th><th style="width:14%">用微调 LLM？</th><th>正确工具</th></tr></thead>
+      <tbody>
+        <tr><td><strong>汇率预测</strong></td><td>数值时间序列</td><td class="no">✗ 不行</td><td>ARIMA/GARCH、XGBoost、时序神经网络</td></tr>
+        <tr><td><strong>用户收入预测</strong></td><td>结构化表格回归</td><td class="no">✗ 不行</td><td>LightGBM / XGBoost</td></tr>
+        <tr><td><strong>费控合规分析</strong></td><td>文本理解 + 软规则推理 + 结构化判断</td><td class="yes">✓ 主场</td><td><strong>微调 LLM</strong></td></tr>
+      </tbody>
+    </table>
+    <ul>
+      <li><strong>汇率预测</strong>：输入是数字序列、要输出精确数值。LLM 是「文字接龙机」，<em>最不擅长精确算数</em>——就像让语文老师去做高频交易。</li>
+      <li><strong>用户收入预测</strong>：结构化表格进、数字出。这是 LightGBM/XGBoost 的主场，又快又准又便宜。</li>
+      <li><strong>费控合规</strong>：文本进、要理解「软规则」、输出结构化结论 + 解释。<em>这才是 LLM 的主场。</em></li>
+    </ul>
+
+    <h2 class="sec"><span class="n">试</span>三问决策器（亲手点一遍）</h2>
+    <p>把判断口诀做成一个可以点的工具。想一个你自己的新需求，用它走一遍三问：</p>
+    <div class="dtree" id="dtree">
+      <div class="dtree-hd"><div class="t">该不该微调 LLM · 三问决策器</div><div class="s">如实回答三个问题，终点告诉你答案</div></div>
+      <div class="dtree-bd">
+        <div class="dpath" id="dpath"></div>
+        <div class="dstep" data-step="0">
+          <div class="qq"><span class="qi">1</span><span>输入是不是「人话文本」（非结构化）？</span></div>
+          <div class="hint">比如报销单、聊天记录、合同——而不是一张纯数字表格 / 一列时间序列。</div>
+          <div class="dbtns"><button class="dbtn yes-b" data-a="y">是，是人话文本 <span class="k">YES</span></button><button class="dbtn no-b" data-a="n">否，是数字/表格 <span class="k">NO</span></button></div>
+        </div>
+        <div class="dstep hidden" data-step="1">
+          <div class="qq"><span class="qi">2</span><span>判断规则是不是「写不死的软规则」？</span></div>
+          <div class="hint">用 if-else 写不出来、需要理解和权衡的（如「投入产出是否匹配」）；而不是「金额&gt;5000 就报警」这种硬阈值。</div>
+          <div class="dbtns"><button class="dbtn yes-b" data-a="y">是，软规则 <span class="k">YES</span></button><button class="dbtn no-b" data-a="n">否，硬规则 <span class="k">NO</span></button></div>
+        </div>
+        <div class="dstep hidden" data-step="2">
+          <div class="qq"><span class="qi">3</span><span>输出是不是要「结构化结论 + 解释理由」？</span></div>
+          <div class="hint">要一段 JSON、要给出判定 + 为什么；而不是只要一个精确数字。</div>
+          <div class="dbtns"><button class="dbtn yes-b" data-a="y">是，结构化+解释 <span class="k">YES</span></button><button class="dbtn no-b" data-a="n">否，只要个数字 <span class="k">NO</span></button></div>
+        </div>
+        <div class="dresult good" id="dres-good"><div class="rico">✓</div><div class="rt">微调 LLM 的主场！</div>
+          <div class="rd">三问全中——这类任务正是微调 LLM 最擅长的。<strong>但先别急</strong>：还要问一句「直接写好 prompt 用现成大模型，能不能解决？」微调是 prompt 搞不定、或需要稳定格式 / 私有部署 / 降本时才上的手段。</div>
+          <button class="dreset">重新走一遍</button></div>
+        <div class="dresult bad" id="dres-bad"><div class="rico">✗</div><div class="rt">转身找传统机器学习</div>
+          <div class="rd">只要有一问是「数字进、精确数字出」，就不该用微调 LLM。<strong>推荐工具：</strong>时间序列 → ARIMA/GARCH；表格回归 → LightGBM/XGBoost。用对工具又快又准又便宜。</div>
+          <button class="dreset">重新走一遍</button></div>
+      </div>
+    </div>
+    <div class="tip"><span class="tag">口诀</span>输入是<b>非结构化文本</b>、规则是<b>难写死的软规则</b>、输出要<b>结构化 + 带解释</b>——三者都满足，才是微调 LLM 的主场。</div>
+
+    <div class="quiz">
+      <div class="quiz-hd"><span class="ico">?</span><span class="t">新场景判断 · 练手</span><span class="c">先自己判，再看答案</span></div>
+      <div class="quiz-bd">
+        <div class="q"><div class="q-txt"><span class="qn">Q1</span><span>「根据客服聊天记录判断客户是否有流失风险，输出风险等级+原因」</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans"><b>✓ 微调 LLM。</b>文本进、软规则、结构化+解释出——三问全中。</div></div>
+        <div class="q"><div class="q-txt"><span class="qn">Q2</span><span>「预测下季度各门店销售额」</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans"><b>✗ 传统 ML。</b>表格回归，用 XGBoost，别用 LLM 算数。</div></div>
+        <div class="q"><div class="q-txt"><span class="qn">Q3</span><span>「把合同 PDF 里的甲方、金额、日期抽成表格」</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans"><b>✓ 可微调</b>（偏文本抽取），但<b>先试 prompt</b>——现成大模型可能直接就能做，不必微调。</div></div>
+        <div class="q"><div class="q-txt"><span class="qn">Q4</span><span>「根据历史股价预测明天涨跌幅」</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans"><b>✗ 传统 ML</b>（时序数值），而且本质上很难，别指望 LLM。</div></div>
+      </div>
+    </div>
+    <div class="done-bar"><div class="txt">能独立判断新需求该不该微调了吗？<b>打卡完成</b> →</div><button class="btn-done" data-done="k2"><span class="chk"></span>完成本关</button></div>
+  </section>
+
+  <!-- ═══ 第 3 关 ═══ -->
+  <section class="pane" id="k3">
+    <div class="lh">
+      <div class="lh-kicker">第 03 关 · 概念地基</div>
+      <div class="lh-title">深入地基：LoRA、量化与那些超参数</div>
+      <div class="lh-goal"><b>学完你就能：</b>看懂训练配置文件里每一行在说什么、调大调小会发生什么。</div>
+    </div>
+
+    <h2 class="sec"><span class="n">1</span>全量微调的麻烦 → LoRA 的便签妙招</h2>
+    <p><strong>全量微调</strong>是把 320 亿个旋钮全部重调。</p>
+    <div class="analogy"><span class="lbl">问题在哪</span>这等于<strong>把整栋 100 层大楼重新装修</strong>——<em>第一贵到跑不动</em>（32B 全量微调连基座带优化器状态远超我们 192GB 显存），<em>第二还容易</em>把原本学会的通识「装修坏」（术语叫灾难性遗忘）。所以我们不重装，改贴便签。</div>
+    <div class="analogy"><span class="lbl">LoRA = 便签纸改造法</span>大楼一根钉子不动（基座参数<strong>冻结</strong>），只在每个房间门上贴一张薄薄的「修改便签」——上面写「这个房间的行为往合规分析方向偏移多少」。<strong>训练时只写便签，不动大楼。</strong></div>
+    <div class="fig">
+      <svg viewBox="0 0 640 250" role="img" aria-label="大楼加便签的 LoRA 示意图">
+        <rect x="40" y="30" width="150" height="200" rx="6" fill="#091252"/>
+        <text x="115" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="#091252">基座大楼（冻结）</text>
+        <g fill="#2E4FD0">
+          <rect x="55" y="45" width="55" height="26" rx="3"/><rect x="120" y="45" width="55" height="26" rx="3"/>
+          <rect x="55" y="80" width="55" height="26" rx="3"/><rect x="120" y="80" width="55" height="26" rx="3"/>
+          <rect x="55" y="115" width="55" height="26" rx="3"/><rect x="120" y="115" width="55" height="26" rx="3"/>
+          <rect x="55" y="150" width="55" height="26" rx="3"/><rect x="120" y="150" width="55" height="26" rx="3"/>
+          <rect x="55" y="185" width="55" height="26" rx="3"/><rect x="120" y="185" width="55" height="26" rx="3"/>
+        </g>
+        <text x="115" y="248" text-anchor="middle" font-size="10" fill="#6B7094">320 亿参数 · 一个都不改</text>
+        <!-- 便签 -->
+        <g>
+          <rect x="196" y="50" width="30" height="22" rx="2" fill="#E89820" transform="rotate(4 211 61)"/>
+          <rect x="196" y="120" width="30" height="22" rx="2" fill="#E89820" transform="rotate(-3 211 131)"/>
+          <rect x="196" y="190" width="30" height="22" rx="2" fill="#E89820" transform="rotate(5 211 201)"/>
+        </g>
+        <path d="M232,131 L300,131" stroke="#E89820" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#ah3)"/>
+        <rect x="308" y="70" width="300" height="120" rx="10" fill="#FFF8E6" stroke="#E89820" stroke-width="1.5"/>
+        <text x="458" y="96" text-anchor="middle" font-size="13" font-weight="800" fill="#a86a12">便签 = LoRA 适配器</text>
+        <text x="458" y="122" text-anchor="middle" font-size="12" fill="#7a5a12">训练只更新这些便签</text>
+        <text x="458" y="146" text-anchor="middle" font-size="12" fill="#7a5a12">7B 约几十MB · 32B 约几百MB</text>
+        <text x="458" y="172" text-anchor="middle" font-size="12" font-weight="700" fill="#0EA573">用时 = 大楼 + 贴上便签</text>
+        <defs><marker id="ah3" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#E89820"/></marker></defs>
+      </svg>
+      <div class="fig-cap">这张「大楼 + 便签」是全书标志图。记住它，LoRA 就懂了一半。</div>
+    </div>
+    <ul>
+      <li><strong>为什么便签就够？</strong>研究发现「专业化改造」需要的改动量本质很「薄」（术语：<em>低秩</em>）——不用重画整张 1000×1000 大表格，用一张 1000×16 和一张 16×1000 的窄条相乘就能近似。这个 <code class="inl">16</code> 就是 <strong>rank=16</strong>。</li>
+      <li><strong>alpha=32</strong> = 便签的「音量旋钮」，控制便签对大楼行为的影响力度（惯例设成 rank 的 2 倍）。</li>
+      <li><strong>dropout=0.05</strong> = 训练时随机盖住 5% 便签内容，防止死记硬背（防过拟合）。</li>
+      <li><strong>target=all</strong> = 大楼每层每个房间都贴（所有线性层），比只贴部分更稳。</li>
+      <li><strong>adapter 为什么这么小</strong>：产物只是「便签合集」，不是大楼本身。大小随基座和 rank 走——<em>7B 约几十 MB，我们的 32B（rank=16、target=all）约 200~300 MB</em>。看到几百 MB 别慌，这是正常的。这也是为什么第 09 关推理时必须「基座 + adapter」一起加载。</li>
+    </ul>
+
+    <h2 class="sec"><span class="n">2</span>量化 & QLoRA：把大楼压缩着用</h2>
+    <div class="analogy"><span class="lbl">量化 = 记账精度从「分」压到「元」</span>模型参数本是高精度小数（16 比特记一个）。<strong>4-bit 量化</strong> = 每个数只用 4 比特（16 个档位）来记，体积压到 1/4，代价是略微失真。</div>
+    <div class="fig">
+      <svg viewBox="0 0 640 150" role="img" aria-label="量化前后对比 高清 vs 压缩">
+        <rect x="30" y="30" width="250" height="90" rx="8" fill="#fff" stroke="#1226AA" stroke-width="1.5"/>
+        <text x="155" y="22" text-anchor="middle" font-size="12" font-weight="800" fill="#1226AA">原始 bf16（高清）</text>
+        <text x="155" y="66" text-anchor="middle" font-family="monospace" font-size="15" fill="#3A3F5C">0.7182634…</text>
+        <text x="155" y="98" text-anchor="middle" font-size="11" fill="#6B7094">16 比特/数 · 32B 要 ~64GB</text>
+        <text x="320" y="82" text-anchor="middle" font-size="26" fill="#00A0DF">→</text>
+        <rect x="360" y="30" width="250" height="90" rx="8" fill="#E0F4FC" stroke="#00A0DF" stroke-width="1.5"/>
+        <text x="485" y="22" text-anchor="middle" font-size="12" font-weight="800" fill="#0080B0">4-bit 量化（压缩）</text>
+        <text x="485" y="66" text-anchor="middle" font-family="monospace" font-size="15" fill="#3A3F5C">0.72</text>
+        <text x="485" y="98" text-anchor="middle" font-size="11" fill="#0080B0">4 比特/数 · 只要 ~18GB</text>
+      </svg>
+      <div class="fig-cap">同一个数，压缩后略糊但省 3/4 空间——大楼只是「被参观」，糊一点无伤大雅。</div>
+    </div>
+    <div class="analogy"><span class="lbl">QLoRA = 冻结大楼压成 4-bit + 便签仍用高精度训</span>大楼只是「被参观」（前向计算），压缩一点没关系；便签是「正在写的作业」，必须高精度。结果：32B 原本 bf16 加载要 ~64GB，4-bit 只要 <strong>~18GB</strong>，我们 4×48GB 的卡变得<em>非常宽裕</em>。</div>
+
+    <h2 class="sec"><span class="n">3</span>超参仪表盘（点卡片翻面看类比）</h2>
+    <p>训练配置里的每个超参，都做成一张可翻转卡片。<strong>正面</strong>是术语+数值，<strong>点一下翻面</strong>看类比 + 调大调小的后果：</p>
+    <div class="flipwall" id="flipwall"></div>
+    <div class="warn"><span class="tag">埋个伏笔</span>注意 <b>epoch=3</b> 那张卡——12 条数据刷 3 遍，模型基本在「背题」（过拟合）。这是玩具数据的必然，第 08、09 关会兑现这个伏笔。</div>
+
+    <div class="quiz">
+      <div class="quiz-hd"><span class="ico">?</span><span class="t">理解检查点</span><span class="c"></span></div>
+      <div class="quiz-bd">
+        <div class="q"><div class="q-txt"><span class="qn">Q1</span><span>训练完得到的文件为什么只有几百 MB 而不是 60GB？</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans">只存 <b>LoRA 便签/改动量</b>，不存基座大楼本身。32B 约 200~300MB，7B 才几十 MB。</div></div>
+        <div class="q"><div class="q-txt"><span class="qn">Q2</span><span>QLoRA 里被压成 4-bit 的是谁？正在训练的 LoRA 部分也是 4-bit 吗？</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans">被压的是<b>冻结的基座</b>；<b>不是</b>——LoRA 便签部分保持高精度训练。</div></div>
+        <div class="q"><div class="q-txt"><span class="qn">Q3</span><span>loss 一直不降说明什么？剧烈上下跳呢？</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans">不降 = 没学到东西/数据或配置有问题；<b>剧烈震荡</b> = 学习率太大。</div></div>
+        <div class="q"><div class="q-txt"><span class="qn">Q4</span><span>等效 batch=64 是怎么算出来的？</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans"><b>2（每卡）× 8（梯度累积）× 4（卡数）= 64</b>。</div></div>
+      </div>
+    </div>
+    <div class="done-bar"><div class="txt">配置文件每行都看得懂了吗？<b>打卡完成</b> →</div><button class="btn-done" data-done="k3"><span class="chk"></span>完成本关</button></div>
+  </section>
+
+  <!-- ═══ 第 4 关 ═══ -->
+  <section class="pane" id="k4">
+    <div class="lh">
+      <div class="lh-kicker">第 04 关 · 概念地基</div>
+      <div class="lh-title">认识你的弹药：数据、5 个文件与硬件</div>
+      <div class="lh-goal"><b>学完你就能：</b>说清手上每个文件是干嘛的、数据每个字段的含义、为什么 4 张 L20 够用。</div>
+    </div>
+
+    <h2 class="sec"><span class="n">1</span>数据格式解剖（一条样本三色拆开）</h2>
+    <p>训练数据用的是 <strong>ShareGPT / ChatML</strong> 格式，每条是一个 <code class="inl">messages</code> 数组，三段：</p>
+    <div class="fig">
+      <svg viewBox="0 0 720 250" role="img" aria-label="一条训练样本的三色解剖">
+        <rect x="10" y="14" width="700" height="66" rx="8" fill="#E8EEFF" stroke="#1226AA"/>
+        <text x="24" y="34" font-family="monospace" font-size="12" font-weight="800" fill="#1226AA">system · 岗位说明书</text>
+        <text x="24" y="56" font-size="12" fill="#3A3F5C">「你是企业费控合规分析师，必须输出这几个字段：合规判定/风险等级/命中规则/分析理由/建议动作」</text>
+        <text x="24" y="73" font-size="11" fill="#6B7094">→ 告诉模型：你的身份 + 必须遵守的输出格式</text>
+
+        <rect x="10" y="90" width="700" height="66" rx="8" fill="#E0F4FC" stroke="#00A0DF"/>
+        <text x="24" y="110" font-family="monospace" font-size="12" font-weight="800" fill="#0080B0">user · 一份待审的报销单</text>
+        <text x="24" y="132" font-size="12" fill="#3A3F5C">「请分析以下 BD 差旅报销：员工/日期/城市/客户及所在地/费用类型/金额/签单情况/备注…」</text>
+        <text x="24" y="149" font-size="11" fill="#6B7094">→ 就是第 00 关那张报销单，渲染成一段文本</text>
+
+        <rect x="10" y="166" width="700" height="72" rx="8" fill="#0d0d1c" stroke="#26264a"/>
+        <text x="24" y="186" font-family="monospace" font-size="12" font-weight="800" fill="#00d4ff">assistant · 标准答案</text>
+        <text x="24" y="208" font-family="monospace" font-size="12" fill="#7ee787">{"合规判定":"合规","风险等级":"低","命中规则":[],</text>
+        <text x="24" y="228" font-family="monospace" font-size="12" fill="#e6e9ff">"分析理由":"…","建议动作":"正常审批通过"}</text>
+      </svg>
+      <div class="fig-cap">微调的本质一句话：<strong>让模型见过几百次「这样的单子 → 这样的判定」，从而学会这个映射。</strong></div>
+    </div>
+
+    <h2 class="sec"><span class="n">2</span>12 条样本覆盖的风险题型</h2>
+    <p>这 12 条玩具数据（10 训 / 2 验）覆盖了 8 类典型风险 + 合规正例：</p>
+    <div class="roadmap">
+      <span class="rc">城市与客户地不符</span><span class="rc">投入产出不匹配</span><span class="rc">拆单规避审批</span><span class="rc">同日多地时间冲突</span>
+      <span class="rc">住宿/招待超标</span><span class="rc">周末娱乐</span><span class="rc">类目与差旅无关</span><span class="rc">关键信息缺失</span>
+      <span class="rc" style="background:var(--greenLight);color:var(--green)">✓ 合规正例</span>
+    </div>
+    <div class="redline">
+      <div class="ico">!</div>
+      <div class="body"><span class="tag">红线 · 第 2 次出现</span>
+        这 12 条是「让你看清题型」的<b>玩具数据</b>。真实可用的模型需要<b>数百~数千条真实脱敏数据</b>。<b>数据质量 = 微调成败</b>——本书会说三遍，这是第二遍。</div>
+    </div>
+
+    <h2 class="sec"><span class="n">3</span>你手上的 5 个文件（逐个点名）</h2>
+    <table class="tbl">
+      <thead><tr><th style="width:32%">文件</th><th style="width:30%">是什么</th><th>一句话类比</th></tr></thead>
+      <tbody>
+        <tr><td><code class="inl">feikong_train.jsonl</code></td><td>10 条训练数据</td><td>习题册</td></tr>
+        <tr><td><code class="inl">feikong_val.jsonl</code></td><td>2 条验证数据</td><td>模拟考卷（不给模型背，只用来抽查）</td></tr>
+        <tr><td><code class="inl">dataset_info.json</code></td><td>数据集注册片段</td><td>图书馆「新书登记表」——框架只认登记过的数据集</td></tr>
+        <tr><td><code class="inl">feikong_qwen32b_qlora.yaml</code></td><td>训练配置</td><td>整个训练的「菜谱」，所有超参都写在这</td></tr>
+        <tr><td><code class="inl">run_train_4xL20.sh</code></td><td>启动脚本</td><td>一键点火按钮（内部指定用哪 4 张卡）</td></tr>
+        <tr><td><code class="inl">evaluate_feikong.py</code></td><td>评估脚本</td><td>阅卷老师 + 和基线对比的裁判</td></tr>
+      </tbody>
+    </table>
+    <div class="fig">
+      <svg viewBox="0 0 720 90" role="img" aria-label="5个文件的流水线关系">
+        <g font-size="11" font-weight="700" text-anchor="middle">
+          <rect x="8" y="30" width="118" height="40" rx="7" fill="#00A0DF"/><text x="67" y="48" fill="#fff">数据 jsonl</text><text x="67" y="62" fill="#eafaff" font-size="9" font-weight="400">习题册+考卷</text>
+          <rect x="150" y="30" width="118" height="40" rx="7" fill="#2E4FD0"/><text x="209" y="48" fill="#fff">dataset_info</text><text x="209" y="62" fill="#dce4ff" font-size="9" font-weight="400">登记表</text>
+          <rect x="292" y="30" width="118" height="40" rx="7" fill="#1226AA"/><text x="351" y="48" fill="#fff">yaml 配置</text><text x="351" y="62" fill="#dce4ff" font-size="9" font-weight="400">菜谱</text>
+          <rect x="434" y="30" width="118" height="40" rx="7" fill="#091252"/><text x="493" y="48" fill="#fff">run 脚本</text><text x="493" y="62" fill="#c9d2f5" font-size="9" font-weight="400">点火</text>
+          <rect x="576" y="30" width="130" height="40" rx="7" fill="#0EA573"/><text x="641" y="48" fill="#fff">evaluate.py</text><text x="641" y="62" fill="#e0fff2" font-size="9" font-weight="400">阅卷+基线裁判</text>
+        </g>
+        <g stroke="#9098B8" stroke-width="1.6" marker-end="url(#ah4)">
+          <line x1="126" y1="50" x2="148" y2="50"/><line x1="268" y1="50" x2="290" y2="50"/><line x1="410" y1="50" x2="432" y2="50"/><line x1="552" y1="50" x2="574" y2="50"/>
+        </g>
+        <defs><marker id="ah4" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L7,4 L0,8 z" fill="#9098B8"/></marker></defs>
+      </svg>
+      <div class="fig-cap">数据 → 登记 → 菜谱 → 点火 → 阅卷，五个文件串成一条流水线。</div>
+    </div>
+
+    <h2 class="sec"><span class="n">4</span>硬件账：4×L20 到底够不够</h2>
+    <p><strong>GPU / 显存</strong> = 超级计算工人的「工作台面积」。我们有 <strong>4 张 L20，每张 48GB，共 192GB</strong>。算笔账：</p>
+    <div class="fig">
+      <svg viewBox="0 0 720 120" role="img" aria-label="单张48GB显存占用条">
+        <text x="10" y="22" font-size="12" font-weight="800" fill="#1226AA">单张 L20 显存 48GB 的占用（QLoRA 训 32B）</text>
+        <rect x="10" y="34" width="700" height="34" rx="6" fill="#F4F6FF" stroke="#D8E2F0"/>
+        <rect x="10" y="34" width="262" height="34" rx="6" fill="#091252"/>
+        <rect x="272" y="34" width="60" height="34" fill="#00A0DF"/>
+        <rect x="332" y="34" width="150" height="34" fill="#E89820"/>
+        <text x="141" y="55" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">4-bit 基座 ~18GB</text>
+        <text x="302" y="55" text-anchor="middle" font-size="9" fill="#fff">LoRA</text>
+        <text x="407" y="55" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">训练开销/激活值</text>
+        <text x="600" y="55" text-anchor="middle" font-size="11" font-weight="700" fill="#0EA573">余量充足 ✓</text>
+        <text x="10" y="92" font-size="12" fill="#3A3F5C">结论：<tspan font-weight="800" fill="#0EA573">QLoRA 32B 非常宽裕</tspan>。无 NVLink（卡间高速专线）对 QLoRA 影响有限——便签很小，卡间要传的数据少。</text>
+        <text x="10" y="110" font-size="11.5" fill="#6B7094">行有余力可挑战：不量化的普通 LoRA + DeepSpeed ZeRO（把大楼拆开摊在 4 张桌上），效果略好。先跑通 QLoRA 再说。</text>
+      </svg>
+    </div>
+    <div class="warn"><span class="tag">给想挑战的人一句避坑</span>上面说的「普通 LoRA + ZeRO」里，<b>ZeRO-3（参数分片）只能配不量化的 LoRA</b>。我们默认走的 <b>QLoRA（4-bit）只能配 DDP 或 ZeRO-2</b>——把 <code class="inl">zero3</code> 塞进 QLoRA 的 yaml 会直接报错，因为 4-bit 量化和 ZeRO-3 分片不兼容。小白按默认配置走就不会碰到这个。</div>
+    <p><strong>Qwen2.5-32B-Instruct</strong> = 阿里练好的 320 亿参数中文强基座；结尾的「<code class="inl">-Instruct</code>」表示它已经受过「听懂人话指令」的后训练。<strong>LLaMA-Factory</strong> = 开源「微调一条龙工作台」，把训练的脏活封装成「填 yaml + 一条命令」。</p>
+
+    <div class="quiz">
+      <div class="quiz-hd"><span class="ico">?</span><span class="t">理解检查点</span><span class="c"></span></div>
+      <div class="quiz-bd">
+        <div class="q"><div class="q-txt"><span class="qn">Q1</span><span>dataset_info.json 忘了配置会怎样？</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans">训练启动就报 <b>「找不到数据集」</b>——框架不认没登记的数据。</div></div>
+        <div class="q"><div class="q-txt"><span class="qn">Q2</span><span>验证集的 2 条为什么不能放进训练集？</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans">模拟考卷<b>不能提前泄题</b>，否则测不出模型真实水平。</div></div>
+        <div class="q"><div class="q-txt"><span class="qn">Q3</span><span>为什么 assistant 的答案必须是严格 JSON？</span></div>
+          <button class="q-toggle">显示答案要点</button><div class="q-ans">模型照猫画虎——<b>教材格式乱 → 输出格式乱 → 下游系统没法解析</b>。</div></div>
+      </div>
+    </div>
+    <div class="done-bar"><div class="txt">五个文件和硬件账都清楚了吗？<b>打卡完成</b> →</div><button class="btn-done" data-done="k4"><span class="chk"></span>完成本关</button></div>
+  </section>
+
+  <!-- ═══ 第 5 关 ═══ -->
+  <section class="pane" id="k5">
+    <div class="lh">
+      <div class="lh-kicker">第 05 关 · 动手实操 · 步骤 0</div>
+      <div class="lh-title">搭建环境</div>
+      <div class="lh-goal"><b>学完你就能：</b>拥有一个能跑 LLaMA-Factory 的 Python 环境。</div>
+    </div>
+    <p>从这一关开始要在你的 <strong>GPU 服务器</strong>上敲命令了。别怕——每条命令后面都有「这在干嘛」的批注。逐条复制粘贴即可。<strong>但在敲第一条命令前，先过这个「零基础先决条件」清单</strong>，很多人就是卡在这里。</p>
+
+    <h3 class="sub">先决条件（0 基础必读，否则第一条命令就报错）</h3>
+    <div class="card"><div class="card-bar amber"></div><div class="card-bd">
+      <p style="margin-top:0"><strong>① 4×L20 的 GPU 服务器从哪来？</strong>三条路：公司/学校有机房 → 找运维要一台；没有 → 云上按小时租（国内 AutoDL、阿里云 PAI、腾讯 GPU；海外 AWS/Lambda），搜「4 卡 48G 显存」实例。<em>本机的普通笔记本跑不了 32B，别在自己电脑上试。</em></p>
+      <p><strong>② 什么是「终端」、怎么连上服务器？</strong>「终端」就是一个<em>黑底白字、只能打字的窗口</em>——你在自己电脑上打开它，用 <strong>SSH</strong>（一种远程登录方式）连进服务器，之后你敲的每条命令都在服务器上跑。连接命令长这样（把 <code class="inl">用户名</code> 和 <code class="inl">服务器IP</code> 换成运维/云平台给你的）：</p>
+      <div class="code" style="margin:8px 0 4px"><div class="code-hd"><div class="fn"><span>在你自己电脑的终端里</span></div><button class="copy-btn" data-copy="ssh">复制</button></div>
+        <div class="code-bd" id="code-ssh">
+          <div class="code-line"><span class="cmd"><span class="tok-c">ssh</span> 用户名@服务器IP</span><span class="note">回车后输密码，进服务器</span></div>
+        </div></div>
+      <p style="margin-bottom:0"><strong>③ 服务器上没有 <code class="inl">conda</code> 命令怎么办？</strong>下面第 1 条命令用到 <code class="inl">conda</code>，如果报 <code class="inl">command not found: conda</code>，说明还没装。先一次性装好 miniconda：</p>
+      <div class="code" style="margin:8px 0 0"><div class="code-hd"><div class="fn"><span>服务器终端 · 装 miniconda（只需一次）</span></div><button class="copy-btn" data-copy="conda">复制</button></div>
+        <div class="code-bd" id="code-conda">
+          <div class="code-line"><span class="cmd"><span class="tok-c">wget</span> https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh</span><span class="note">下载安装包</span></div>
+          <div class="code-line"><span class="cmd"><span class="tok-c">bash</span> Miniconda3-latest-Linux-x86_64.sh -b</span><span class="note">静默安装</span></div>
+          <div class="code-line"><span class="cmd"><span class="tok-c">source</span> ~/miniconda3/bin/activate</span><span class="note">激活，之后 conda 命令就有了</span></div>
+        </div></div>
+    </div></div>
+
+    <h3 class="sub">正式搭环境（conda 就绪后）</h3>
+    <div class="code">
+      <div class="code-hd"><div class="fn"><span>终端 · 搭环境（逐行执行）</span></div><button class="copy-btn" data-copy="env">复制全部</button></div>
+      <div class="code-bd" id="code-env">
+        <div class="code-cmt"># 1. 创建独立 Python 环境（给项目开一间专用厨房，避免和别的项目打架）</div>
+        <div class="code-line"><span class="cmd"><span class="tok-c">conda</span> create -n finqwen <span class="tok-k">python</span>=3.11 -y</span><span class="note">建厨房</span></div>
+        <div class="code-cmt"># 2. 进入这间厨房（之后每次开新终端都要先执行这句！）</div>
+        <div class="code-line"><span class="cmd"><span class="tok-c">conda</span> activate finqwen</span><span class="note">进厨房</span></div>
+        <div class="code-cmt"># 3. 安装 LLaMA-Factory 及三件套</div>
+        <div class="code-line"><span class="cmd"><span class="tok-c">pip</span> install <span class="tok-s">"llamafactory[torch,bitsandbytes,deepspeed]"</span></span><span class="note">装工作台</span></div>
+        <div class="code-cmt"># torch=计算引擎 · bitsandbytes=负责4-bit量化 · deepspeed=多卡协作</div>
+        <div class="code-cmt"># 4. 验证安装成功</div>
+        <div class="code-line"><span class="cmd"><span class="tok-c">llamafactory-cli</span> version</span><span class="note">查版本</span></div>
+        <div class="code-cmt"># 5. 验证 4 张卡都在</div>
+        <div class="code-line"><span class="cmd"><span class="tok-c">nvidia-smi</span></span><span class="note">应看到 4 张 L20 各 48GB</span></div>
+      </div>
+    </div>
+    <div class="warn"><span class="tag">国内/海外二选一</span>如果服务器在<b>国内</b>、下载很慢：pip 可配清华源；模型下载可用 <b>ModelScope（国内镜像站）</b>替代 HuggingFace。海外服务器则默认走 HuggingFace 即可。（这条按你的服务器位置选一条路走。）</div>
+
+    <h3 class="sub">下载模型（几十 GB 的必撞坑，别跳过）</h3>
+    <p>模型<strong>不会自己出现</strong>。第一次训练时框架会自动去下载，但 <em>Qwen2.5-7B 约 15GB、32B 约 65GB</em>——网不好会下到一半失败。<strong>先预留约 80GB 磁盘</strong>（<code class="inl">df -h</code> 看剩余空间），并建议提前手动下好，训练时直接读本地，避免边训边下失败：</p>
+    <div class="code"><div class="code-hd"><div class="fn"><span>服务器终端 · 提前下模型（国内推荐 ModelScope）</span></div><button class="copy-btn" data-copy="dl">复制</button></div>
+      <div class="code-bd" id="code-dl">
+        <div class="code-line"><span class="cmd"><span class="tok-c">pip</span> install modelscope</span><span class="note">国内镜像下载器</span></div>
+        <div class="code-line"><span class="cmd"><span class="tok-c">modelscope</span> download --model Qwen/Qwen2.5-7B-Instruct --local_dir ./Qwen2.5-7B-Instruct</span><span class="note">先下小的冒烟用</span></div>
+        <div class="code-cmt"># 32B 同理：--model Qwen/Qwen2.5-32B-Instruct --local_dir ./Qwen2.5-32B-Instruct</div>
+        <div class="code-cmt"># 断了重跑同一条命令即可，会断点续传，已下的不重下</div>
+        <div class="code-cmt"># 海外走 HuggingFace：先 export HF_ENDPOINT=https://hf-mirror.com（国内加速），再用 huggingface-cli download</div>
+      </div></div>
+    <div class="tip"><span class="tag">下好之后</span>把 yaml 里的 <code class="inl">model_name_or_path</code> 从 <code class="inl">Qwen/Qwen2.5-7B-Instruct</code> 改成刚下载的<b>本地路径</b>（如 <code class="inl">./Qwen2.5-7B-Instruct</code>），训练就直接读本地、不再联网下载。</div>
+
+    <h3 class="sub">最容易踩的坑</h3>
+    <ul>
+      <li>忘了 <code class="inl">conda activate</code> 就 pip / 运行 → 报 <code class="inl">command not found: llamafactory-cli</code>。看到这个第一反应就是：<em>我是不是忘了进厨房？</em></li>
+      <li><code class="inl">nvidia-smi</code> 报错 → 是<strong>驱动问题，找运维</strong>，不是你的错。</li>
+    </ul>
+    <div class="quiz"><div class="quiz-hd"><span class="ico">?</span><span class="t">理解检查点</span><span class="c"></span></div><div class="quiz-bd">
+      <div class="q"><div class="q-txt"><span class="qn">Q1</span><span>conda 环境是什么、为什么要建？</span></div>
+        <button class="q-toggle">显示答案要点</button><div class="q-ans">项目专属的<b>隔离厨房</b>，避免不同项目的依赖版本互相冲突打架。</div></div>
+    </div></div>
+    <div class="done-bar"><div class="txt">环境搭好、四张卡都能看到了吗？<b>打卡完成</b> →</div><button class="btn-done" data-done="k5"><span class="chk"></span>完成本关</button></div>
+  </section>
+
+  <!-- ═══ 第 6 关 ═══ -->
+  <section class="pane" id="k6">
+    <div class="lh">
+      <div class="lh-kicker">第 06 关 · 动手实操 · 步骤 1</div>
+      <div class="lh-title">放数据并登记</div>
+      <div class="lh-goal"><b>学完你就能：</b>把数据放到框架认得的地方，并在「登记表」上登记好。</div>
+    </div>
+    <ol>
+      <li>把 <code class="inl">feikong_train.jsonl</code>、<code class="inl">feikong_val.jsonl</code> 复制进 LLaMA-Factory 目录下的 <code class="inl">data/</code> 文件夹。<br><span style="color:var(--textLight);font-size:13.5px">→ 把习题册放进框架指定的书架。</span></li>
+      <li>打开 <code class="inl">data/dataset_info.json</code>，把项目给的注册片段<strong>合并</strong>进去（<em>不是覆盖整个文件</em>！在最外层大括号内加两个条目，注意上一条末尾要加英文逗号）。<br><span style="color:var(--textLight);font-size:13.5px">→ 在图书馆登记表上登记新书；登记的名字必须和 yaml 里 <code class="inl">dataset:</code> 引用的名字一字不差。</span></li>
+      <li>自查 JSON 没写坏：</li>
+    </ol>
+    <div class="code"><div class="code-hd"><div class="fn"><span>终端 · 自查登记表</span></div><button class="copy-btn" data-copy="reg">复制</button></div>
+      <div class="code-bd" id="code-reg">
+        <div class="code-line"><span class="cmd"><span class="tok-c">python</span> -c <span class="tok-s">"import json; json.load(open('data/dataset_info.json'))"</span></span><span class="note">不报错=JSON没坏</span></div>
+      </div></div>
+    <div class="warn"><span class="tag">成败点 · 本关 90% 报错来源</span>① JSON <b>少/多逗号</b>写坏了文件；② 登记的名字和 yaml 里引用的名字<b>不一致</b>。错误信号：训练一启动就报 <code class="inl">dataset not found</code> 或 JSON 解析错误。</div>
+    <div class="done-bar"><div class="txt">数据放好、登记表自查通过了吗？<b>打卡完成</b> →</div><button class="btn-done" data-done="k6"><span class="chk"></span>完成本关</button></div>
+  </section>
+
+  <!-- ═══ 第 7 关 ═══ -->
+  <section class="pane" id="k7">
+    <div class="lh">
+      <div class="lh-kicker">第 07 关 · 动手实操 · 步骤 2 · 成败点</div>
+      <div class="lh-title">冒烟测试：先用 7B 小模型跑通</div>
+      <div class="lh-goal"><b>学完你就能：</b>在几分钟内验证整条链路是通的，并学会看 loss 曲线。</div>
+    </div>
+    <div class="redline"><div class="ico">!</div><div class="body"><span class="tag">纪律课 · 老手铁律</span>
+      <b>先用 7B 小模型花几分钟「点一炷香试试烟道通不通」，再上 32B。</b>32B 一次训练要占满机器很久，如果数据登记错、模板错、路径错，你会等很久才发现失败。<b>跳过冒烟直接上 32B = 小白事故第一名。</b></div></div>
+    <div class="analogy"><span class="lbl">打个比方</span>搬新家先烧壶水试试煤气通不通，而不是直接开一场 20 人晚宴。</div>
+    <h3 class="sub">操作三步</h3>
+    <ol>
+      <li>打开 <code class="inl">feikong_qwen32b_qlora.yaml</code>，找到 <code class="inl">model_name_or_path</code>，<strong>临时</strong>改成 <code class="inl">Qwen/Qwen2.5-7B-Instruct</code>。<br><span style="color:var(--textLight);font-size:13.5px">→ 换一个小号发动机试车，其他配置一律不动。</span></li>
+      <li>运行启动脚本：</li>
+    </ol>
+    <div class="code"><div class="code-hd"><div class="fn"><span>终端 · 点火（7B 冒烟）</span></div><button class="copy-btn" data-copy="smoke">复制</button></div>
+      <div class="code-bd" id="code-smoke">
+        <div class="code-line"><span class="cmd"><span class="tok-c">bash</span> run_train_4xL20.sh</span><span class="note">一键点火</span></div>
+        <div class="code-cmt"># 脚本内部干了 3 件事：</div>
+        <div class="code-cmt"># ① export CUDA_VISIBLE_DEVICES=0,1,2,3   指定用这 4 张卡</div>
+        <div class="code-cmt"># ② FORCE_TORCHRUN=1                       强制多卡启动模式</div>
+        <div class="code-cmt"># ③ llamafactory-cli train 你的.yaml       真正开训</div>
+      </div></div>
+    <h3 class="sub">3. 看什么才算「通」（判定清单）</h3>
+    <ul>
+      <li>首次运行会先<strong>下载模型</strong>（十几 GB，耐心等，<em>这不是卡死</em>）；</li>
+      <li>日志里出现逐步打印的 <code class="inl">loss=…</code>，且<strong>总体趋势在下降</strong>（比如从 2.x 降到 1.x 以下）；</li>
+      <li>训练结束，输出目录里出现 adapter 文件（<code class="inl">adapter_model.safetensors</code> 等）。</li>
+      <li><strong>三条全满足 = 链路通 ✓</strong>，可以进下一关。</li>
+    </ul>
+    <h3 class="sub">看懂 loss 曲线（悬停三条线看诊断）</h3>
+    <div class="fig">
+      <svg viewBox="0 0 720 190" role="img" aria-label="正常/震荡/平线三种loss曲线">
+        <line x1="40" y1="20" x2="40" y2="160" stroke="#D8E2F0" stroke-width="1.5"/>
+        <line x1="40" y1="160" x2="700" y2="160" stroke="#D8E2F0" stroke-width="1.5"/>
+        <text x="20" y="30" font-size="10" fill="#9098B8">loss</text><text x="680" y="178" font-size="10" fill="#9098B8">步数→</text>
+        <g class="loss-line" data-diag="✓ 正常：稳步下降 = 模型在学习。这是你想看到的。">
+          <polyline points="60,40 150,70 250,95 350,115 450,128 550,136 660,140" fill="none" stroke="#0EA573" stroke-width="2.5"/>
+          <text x="665" y="140" font-size="11" font-weight="700" fill="#0EA573">正常↓</text></g>
+        <g class="loss-line" data-diag="✗ 剧烈震荡：学习率太大，一步跨过谷底。→ 调小学习率（如 5e-5）。">
+          <polyline points="60,50 130,110 200,55 280,120 360,60 450,115 540,70 640,105" fill="none" stroke="#C85040" stroke-width="2.5"/>
+          <text x="648" y="105" font-size="11" font-weight="700" fill="#C85040">震荡</text></g>
+        <g class="loss-line" data-diag="✗ 一条平线：没在学。→ 检查数据是否喂进去、学习率是否太小、template 是否对。">
+          <polyline points="60,90 660,88" fill="none" stroke="#E89820" stroke-width="2.5" stroke-dasharray="6,4"/>
+          <text x="665" y="88" font-size="11" font-weight="700" fill="#E89820">平线</text></g>
+      </svg>
+      <div class="fig-cap" id="loss-diag">把鼠标移到三条曲线上，看它各自代表什么、怎么处理。</div>
+    </div>
+    <div class="quiz"><div class="quiz-hd"><span class="ico">?</span><span class="t">理解检查点</span><span class="c"></span></div><div class="quiz-bd">
+      <div class="q"><div class="q-txt"><span class="qn">Q1</span><span>为什么不直接训 32B？</span></div>
+        <button class="q-toggle">显示答案要点</button><div class="q-ans">用<b>最小代价</b>验证配置/数据/环境全链路，让错误<b>早暴露</b>，别等很久才发现失败。</div></div>
+      <div class="q"><div class="q-txt"><span class="qn">Q2</span><span>冒烟时 loss 从 2.3 降到 0.3，说明模型已经很强了吗？</span></div>
+        <button class="q-toggle">显示答案要点</button><div class="q-ans"><b>不！</b>12 条数据 loss 快速降到很低，多半是「背题」，不代表真本事。真本事要靠第 09 关的考试（基线对比）。</div></div>
+    </div></div>
+    <div class="done-bar"><div class="txt">7B 冒烟跑通、看懂 loss 曲线了吗？<b>打卡完成</b> →</div><button class="btn-done" data-done="k7"><span class="chk"></span>完成本关</button></div>
+  </section>
+
+  <!-- ═══ 第 8 关 ═══ -->
+  <section class="pane" id="k8">
+    <div class="lh">
+      <div class="lh-kicker">第 08 关 · 动手实操 · 步骤 3</div>
+      <div class="lh-title">正式训练 32B</div>
+      <div class="lh-goal"><b>学完你就能：</b>把配置换回大模型，跑出真正的 32B 适配器。</div>
+    </div>
+    <ol>
+      <li>把 yaml 的 <code class="inl">model_name_or_path</code> 改回 <code class="inl">Qwen/Qwen2.5-32B-Instruct</code>。</li>
+      <li>再跑一次 <code class="inl">bash run_train_4xL20.sh</code>。</li>
+      <li>训练中值得盯的三样：<strong>loss 趋势</strong>（应稳步下降）、<code class="inl">nvidia-smi</code> 看<strong>显存占用</strong>（确认没爆）、<strong>预估剩余时间</strong>。</li>
+      <li>结束后到 <strong>yaml 里 <code class="inl">output_dir</code> 指定的目录</strong>（本项目是 <code class="inl">saves/qwen32b-feikong-qlora/</code>）里确认产物——你应看到 <code class="inl">adapter_model.safetensors</code> 和 <code class="inl">adapter_config.json</code> 这两个文件，<strong>这就是你的「便签」，第 09 关挂载要用这个目录路径</strong>。</li>
+    </ol>
+    <div class="tip"><span class="tag">防呆建议 · 强烈推荐</span>与其在同一个 yaml 里「7B 改来改回 32B」（极易忘记改回、或把 7B 的产物覆盖掉），不如<b>复制成两个文件</b>：<code class="inl">qwen7b_smoke.yaml</code>（冒烟用，<code class="inl">output_dir: saves/qwen7b-smoke</code>）和 <code class="inl">qwen32b.yaml</code>（正式用）。跑哪个就 <code class="inl">llamafactory-cli train 哪个.yaml</code>，两者产物各存各的目录，永不打架、也不会忘。</div>
+    <div class="tip"><span class="tag">再记一次</span>你得到的<b>不是</b> 60GB 的新模型，而是<b>约 200~300 MB</b>（32B 量级）的「便签合集」（呼应第 03 关大楼+便签图）。</div>
+    <div class="warn"><span class="tag">诚实预告 · 兑现伏笔</span>12 条数据训 3 个 epoch，模型基本在<b>背这 12 道题</b>。下一关的考试它<b>可能赢不了基线</b>——这是<b>意料之中的教学设计</b>。你将亲身体会「数据量决定一切」，比读一百遍口号深刻。</div>
+    <h3 class="sub">玩具数据的超参真相（兑现第 03 关 epoch 伏笔）</h3>
+    <p>原始 yaml 的等效 batch=64（2×8×4），是<strong>为真实的几百~几千条数据准备的</strong>。但我们只有 <strong>10 条训练数据</strong>——64 比 10 还大，意味着<em>每个 epoch 都凑不满一次参数更新，训练几乎在空转</em>。这不是 bug，是玩具数据的又一个局限。</p>
+    <div class="tip"><span class="tag">想让 12 条认真跑起来</span>把 yaml 改成：<code class="inl">gradient_accumulation_steps: 1</code>（有效 batch 降到 2×1×4=8，凑得满更新）、<code class="inl">warmup_ratio: 0</code>（总步数才几十步，热车没意义）、<code class="inl">num_train_epochs: 5~10</code>（反正是背题实验，敢多跑几遍）。<b>但记住</b>：这只是让流程「转起来」，真正的解药永远是<b>扩数据</b>（第 11 关）。</div>
+    <h3 class="sub">如果显存爆了（OOM）</h3>
+    <div class="code"><div class="code-hd"><div class="fn"><span>看到 CUDA out of memory 时，按顺序改 yaml</span></div><button class="copy-btn" data-copy="oom">复制</button></div>
+      <div class="code-bd" id="code-oom">
+        <div class="code-line"><span class="cmd">gradient_checkpointing: <span class="tok-k">true</span>      <span class="tok-d"># ① 先确认它是 true（省显存主开关）</span></span><span class="note">最先查这个</span></div>
+        <div class="code-line"><span class="cmd">per_device_train_batch_size: <span class="tok-k">1</span>   <span class="tok-d"># ② 从 2 降到 1，每卡少看点</span></span><span class="note">再降这个</span></div>
+        <div class="code-line"><span class="cmd">cutoff_len: <span class="tok-k">2048</span>              <span class="tok-d"># ③ 从 4096 降一半，序列短更省显存</span></span><span class="note">还爆就降这个</span></div>
+      </div></div>
+    <div class="warn"><span class="tag">别踩这个坑</span>OOM 时<b>不要</b>靠把 <code class="inl">gradient_accumulation_steps</code> 往上堆——那治不了单步显存爆，还会在小数据上把有效 batch 撑得更大、更空转。省显存要靠上面三招（尤其 checkpointing 和 cutoff_len）。</div>
+    <div class="done-bar"><div class="txt">32B 训练跑完、adapter 路径记下了吗？<b>打卡完成</b> →</div><button class="btn-done" data-done="k8"><span class="chk"></span>完成本关</button></div>
+  </section>
+
+  <!-- ═══ 第 9 关 ═══ -->
+  <section class="pane" id="k9">
+    <div class="lh">
+      <div class="lh-kicker">第 09 关 · 动手实操 · 步骤 4 · 全书最重要的纪律</div>
+      <div class="lh-title">评估与基线对比</div>
+      <div class="lh-goal"><b>学完你就能：</b>用数字回答「微调到底有没有用」，并永远记住基线对比这条铁律。</div>
+    </div>
+    <div class="analogy"><span class="lbl">基线是什么</span><strong>基线（baseline）= 不微调的原版 Qwen2.5-32B，用一模一样的 prompt 去做同一套考题的成绩。</strong>就像新药必须和安慰剂对照才知道有没有效——只说「吃了药病好了」毫无意义，也许不吃也会好。</div>
+    <div class="redline"><div class="ico">!</div><div class="body"><span class="tag">红线 · 第 3 次出现 · 全书最粗一条</span>
+      <b>微调模型没赢过基线 = 这次微调白做。</b>小白最常见的自欺：训完随手聊两句，「感觉不错」就宣布成功。<b>感觉不算数，数字才算数。</b></div></div>
+    <div class="redline"><div class="ico">!</div><div class="body"><span class="tag">最致命的陷阱 · 一定要看懂这段</span>
+      直接 <code class="inl">python evaluate_feikong.py</code> 会打印出<b>全是 1.0 的满分</b>——<b>但那是假的！</b>脚本里那行 <code class="inl">preds = [json.dumps(g…) for g in golds]</code> 是「<b>假装模型完美复现答案</b>」的占位演示（demo），它拿标准答案当模型输出，当然 100% 对。<b>它根本没调用你的模型。</b>被这个假满分骗着交差，是全手册最容易犯的错。</div></div>
+    <h3 class="sub">拿到「真分数」的正确三步</h3>
+    <p>evaluate 脚本本身没错，它是个合格的「阅卷器」；缺的是<strong>喂给它真实的模型输出</strong>。正确流程是：</p>
+    <ol>
+      <li><strong>让「微调后模型」真的答一遍 val 集</strong>——对 <code class="inl">feikong_val.jsonl</code> 里每条的 user 输入做推理，收集它<em>真实生成</em>的文本，这才是真 <code class="inl">preds</code>。</li>
+      <li><strong>让「未微调基线」答同一套题</strong>——同样的输入、同样的 prompt，只是不挂 adapter，得到基线 preds。</li>
+      <li><strong>两组 preds 分别喂进 <code class="inl">evaluate()</code> 函数对比</strong>——微调的四项指标必须高过基线，才算真赢。</li>
+    </ol>
+    <p>用 LLaMA-Factory 自带的<strong>批量预测模式</strong>生成真实输出最省事（不用自己写推理循环）：</p>
+    <div class="code"><div class="code-hd"><div class="fn"><span>终端 · 用 predict 模式生成真实 preds</span></div><button class="copy-btn" data-copy="eval">复制</button></div>
+      <div class="code-bd" id="code-eval">
+        <div class="code-cmt"># 复制一份 yaml 改成预测模式：do_train:false + do_predict:true + predict_with_generate:true</div>
+        <div class="code-cmt"># eval_dataset 仍指向 feikong_val，adapter 指向你第 08 关的输出目录，再运行：</div>
+        <div class="code-line"><span class="cmd"><span class="tok-c">llamafactory-cli</span> train qwen32b_predict.yaml</span><span class="note">微调模型答卷</span></div>
+        <div class="code-cmt"># 完成后 output_dir 里会出现 generated_predictions.jsonl —— 这才是模型真实输出</div>
+        <div class="code-cmt"># 把它的 predict 字段读成 preds、label 字段读成 golds，喂进 evaluate_feikong.py 的 evaluate()</div>
+        <div class="code-cmt"># 再对「不挂 adapter 的基线」重跑一遍上面全过程，两组分数对比 ← 这才是基线对比</div>
+      </div></div>
+    <div class="warn"><span class="tag">诚实提醒 · 这是全流程最难的一步</span>「让模型真的答一遍卷再阅卷」比前面所有步骤都更需要动手，卡在这里<b>非常正常</b>。别用假满分蒙混——宁可在这一步多花时间，也不要拿着 demo 的 1.0 去汇报。</div>
+    <h3 class="sub">四个指标（是什么 + 为什么重要）</h3>
+    <table class="tbl"><thead><tr><th style="width:26%">指标</th><th>含义 & 为什么重要</th></tr></thead><tbody>
+      <tr><td><strong>JSON 格式合规率</strong></td><td>输出能否被机器解析。格式都不对，后面全白搭——这是接入报销系统的<em>入场券</em>。</td></tr>
+      <tr><td><strong>合规判定准确率</strong><br><span style="font-size:12px;color:var(--textLight)">合规/存疑/违规</span></td><td><strong>最核心的业务指标</strong>。判错 = 要么放过违规、要么冤枉好人。</td></tr>
+      <tr><td><strong>风险等级准确率</strong><br><span style="font-size:12px;color:var(--textLight)">低/中/高</span></td><td>风险分级判得准不准。</td></tr>
+      <tr><td><strong>命中规则 F1</strong></td><td>命中的规则既要「抓得全」（召回）又要「不乱抓」（精确），F1 是两者的调和平均。<em>渔网既要网住该抓的鱼，又不能捞一堆水草。</em></td></tr>
+    </tbody></table>
+    <h3 class="sub">怎么读结果（诚实版）</h3>
+    <div class="fig">
+      <svg viewBox="0 0 720 220" role="img" aria-label="微调 vs 基线 四指标对比柱状图（留空模板）">
+        <text x="360" y="18" text-anchor="middle" font-size="12" font-weight="800" fill="#1226AA">微调 vs 基线 · 四指标对比（跑完把你的数字填这里）</text>
+        <line x1="50" y1="30" x2="50" y2="175" stroke="#D8E2F0"/><line x1="50" y1="175" x2="700" y2="175" stroke="#D8E2F0"/>
+        <g font-size="10" text-anchor="middle">
+          <!-- 四组，每组两根柱：基线(灰蓝)、微调(techBlue) -->
+          <g transform="translate(90,0)">
+            <rect x="0" y="95" width="34" height="80" fill="#9098B8"/><rect x="40" y="80" width="34" height="95" fill="#00A0DF"/>
+            <text x="37" y="192" fill="#3A3F5C">JSON格式</text></g>
+          <g transform="translate(250,0)">
+            <rect x="0" y="110" width="34" height="65" fill="#9098B8"/><rect x="40" y="100" width="34" height="75" fill="#00A0DF"/>
+            <text x="37" y="192" fill="#3A3F5C">判定准确</text></g>
+          <g transform="translate(410,0)">
+            <rect x="0" y="120" width="34" height="55" fill="#9098B8"/><rect x="40" y="112" width="34" height="63" fill="#00A0DF"/>
+            <text x="37" y="192" fill="#3A3F5C">等级准确</text></g>
+          <g transform="translate(570,0)">
+            <rect x="0" y="130" width="34" height="45" fill="#9098B8"/><rect x="40" y="122" width="34" height="53" fill="#00A0DF"/>
+            <text x="37" y="192" fill="#3A3F5C">规则F1</text></g>
+        </g>
+        <g font-size="10"><rect x="470" y="34" width="14" height="10" fill="#9098B8"/><text x="490" y="43" fill="#6B7094">基线（未微调）</text>
+          <rect x="580" y="34" width="14" height="10" fill="#00A0DF"/><text x="600" y="43" fill="#0080B0">微调后</text></g>
+      </svg>
+      <div class="fig-cap">这是空模板——真正的数字要你跑完 evaluate 亲手填。这个「填数字」的仪式，就是在强化基线对比的纪律。</div>
+    </div>
+    <ul>
+      <li><strong>微调 &gt; 基线</strong>：链路和方法都对，接下来加数据放大优势。</li>
+      <li><strong>微调 ≈ 或 &lt; 基线</strong>：<em>在 12 条玩具数据下这是大概率结局，不代表你失败</em>——它证明的是「数据不够时微调无法起效」，这正是本课要你带走的最重要结论。解法在第 11 关：扩数据。</li>
+    </ul>
+    <h3 class="sub">顺手做个推理体验</h3>
+    <div class="code"><div class="code-hd"><div class="fn"><span>终端 · 挂载 基座+适配器 聊天</span></div><button class="copy-btn" data-copy="chat">复制</button></div>
+      <div class="code-bd" id="code-chat">
+        <div class="code-line"><span class="cmd"><span class="tok-c">llamafactory-cli</span> chat \</span><span class="note"></span></div>
+        <div class="code-line"><span class="cmd">  --model_name_or_path Qwen/Qwen2.5-32B-Instruct \</span><span class="note">原版大楼</span></div>
+        <div class="code-line"><span class="cmd">  --adapter_name_or_path <span class="tok-s">&lt;你的adapter输出目录&gt;</span> \</span><span class="note">贴上你的便签</span></div>
+        <div class="code-line"><span class="cmd">  --template qwen \</span><span class="note">必须是 qwen 信封</span></div>
+        <div class="code-line"><span class="cmd">  --quantization_bit 4</span><span class="note">4-bit 省显存</span></div>
+      </div></div>
+    <p>贴一条<strong>训练集之外</strong>的新报销记录进去，观察它输出是否守 JSON 格式。</p>
+    <div class="quiz"><div class="quiz-hd"><span class="ico">?</span><span class="t">理解检查点 · 最关键</span><span class="c"></span></div><div class="quiz-bd">
+      <div class="q"><div class="q-txt"><span class="qn">Q1</span><span>为什么必须和基线比，而不是「训完聊几句感觉不错」？</span></div>
+        <button class="q-toggle">显示答案要点</button><div class="q-ans">没有对照就<b>无法归因</b>——也许原模型本来就会，微调根本没起作用。</div></div>
+      <div class="q"><div class="q-txt"><span class="qn">Q2</span><span>基线对比时为什么必须用「同一个 prompt、同一套考题」？</span></div>
+        <button class="q-toggle">显示答案要点</button><div class="q-ans">变量只留「<b>微调与否</b>」这一个，否则比较无效——这是对照实验的基本功。</div></div>
+      <div class="q"><div class="q-txt"><span class="qn">Q3</span><span>微调没赢基线，最可能的第一原因是什么？</span></div>
+        <button class="q-toggle">显示答案要点</button><div class="q-ans"><b>数据太少 / 质量不够</b>。先怀疑数据，再怀疑参数。</div></div>
+    </div></div>
+    <div class="done-bar"><div class="txt">跑完评估、理解了基线铁律了吗？<b>打卡完成</b> →</div><button class="btn-done" data-done="k9"><span class="chk"></span>完成本关</button></div>
+  </section>
+
+  <!-- ═══ 第 10 关 ═══ -->
+  <section class="pane" id="k10">
+    <div class="lh">
+      <div class="lh-kicker">第 10 关 · 查错 · 速查手册</div>
+      <div class="lh-title">常见坑急诊室</div>
+      <div class="lh-goal"><b>学完你就能：</b>看到任何一个报错现象，立刻查到「多半是什么错、怎么办」。</div>
+    </div>
+    <p>这一关是你的<strong>速查手册</strong>。遇到报错先来这搜关键词（比如输入 <code class="inl">memory</code>、<code class="inl">loss</code>、<code class="inl">json</code>）：</p>
+    <div class="pf-search"><span class="si">⌕</span><input type="text" id="pf-input" placeholder="搜索现象 / 关键词，例如：out of memory、loss、json、adapter、基线…"></div>
+    <div class="pf-empty" id="pf-empty">没有匹配的坑。换个关键词试试，或直接翻下面的完整表格。</div>
+    <table class="pf" id="pf-table"><thead><tr><th style="width:33%">你看到的现象</th><th style="width:34%">多半是什么错</th><th>怎么办</th></tr></thead>
+      <tbody>
+        <tr><td><span class="sym">dataset not found</span> / 启动即失败</td><td>dataset_info.json 没登记 / 名字不一致 / JSON 写坏</td><td class="fix">回第 06 关自查三步</td></tr>
+        <tr><td><span class="sym">command not found</span></td><td>忘了 conda activate</td><td class="fix">先进厨房：conda activate finqwen</td></tr>
+        <tr><td><span class="sym">CUDA out of memory</span></td><td>显存爆了</td><td class="fix">先确认 gradient_checkpointing=true → batch 降 1 → cutoff_len 降 2048。别靠堆梯度累积</td></tr>
+        <tr><td>loss 完全不降（平线）</td><td>数据没喂进去 / 学习率太小 / 格式错</td><td class="fix">检查数据条数日志、template 是否 qwen</td></tr>
+        <tr><td>loss 剧烈震荡或变 <span class="sym">NaN</span></td><td>学习率太大</td><td class="fix">降学习率（如 5e-5）</td></tr>
+        <tr><td>loss 降到接近 0</td><td>小数据过拟合（背题）</td><td class="fix">数据太少的必然，扩数据才是解（第 11 关）</td></tr>
+        <tr><td>输出乱码 / 答非所问</td><td><strong>template 装错信封</strong>（没用 qwen）</td><td class="fix">检查 yaml 和 chat 命令的 template</td></tr>
+        <tr><td>推理时表现和没训一样</td><td>忘挂 adapter，只加载了基座</td><td class="fix">检查 adapter_name_or_path 有没有填对</td></tr>
+        <tr><td>输出 JSON 缺字段 / 多废话</td><td>训练数据里答案格式不统一</td><td class="fix">清洗数据，格式必须条条一致</td></tr>
+        <tr><td>训完自我感觉良好就收工</td><td><strong>没做基线对比</strong></td><td class="fix">回第 09 关，铁律不可跳</td></tr>
+        <tr><td>12 条数据就想上生产</td><td>期望管理错误</td><td class="fix">见第 11 关，扩到数百~数千条</td></tr>
+        <tr><td>跳过 7B 直接训 32B 然后报错等半天</td><td>违反冒烟纪律</td><td class="fix">永远先 7B 冒烟</td></tr>
+      </tbody></table>
+    <div class="done-bar"><div class="txt">知道遇到报错来这查了吗？<b>打卡完成</b> →</div><button class="btn-done" data-done="k10"><span class="chk"></span>完成本关</button></div>
+  </section>
+
+  <!-- ═══ 第 11 关 ═══ -->
+  <section class="pane" id="k11">
+    <div class="lh">
+      <div class="lh-kicker">第 11 关 · 进阶 · 后训练工程</div>
+      <div class="lh-title">从玩具到生产：真正的后训练工程</div>
+      <div class="lh-goal"><b>学完你就能：</b>说出这个项目走向真实上线的四步路线图。</div>
+    </div>
+    <p>跑通玩具版之后，真正让模型能上线，还有四步。每步讲清「做什么 + 为什么」：</p>
+    <div class="card"><div class="card-bar"></div><div class="card-bd">
+      <h3 class="sub" style="margin-top:0">① 扩数据（重中之重）</h3>
+      <p>12 条 → <strong>数百~数千条</strong>。来源 = 真实脱敏报销单 + 公司费控制度文本。</p>
+      <div class="analogy"><span class="lbl">加速技巧：蒸馏 + 人审</span>用最强的商用大模型按规则批量生成「判定初稿」，<strong>人工逐条校对后</strong>才能入库。就像请特级教师写习题初稿，教研组审核后才发给学生。</div>
+      <div class="redline" style="margin:12px 0 0"><div class="ico">!</div><div class="body"><span class="tag">红线 · 第 3 次（说到做到，这是第三遍）</span><b>数据质量 = 微调成败。</b>这一步做扎实，前面所有关卡才有意义。</div></div>
+    </div></div>
+    <div class="card"><div class="card-bar tech"></div><div class="card-bd">
+      <h3 class="sub" style="margin-top:0">② 规则对齐</h3>
+      <p>把「命中规则」的取值固定成一份<strong>规则字典（封闭枚举表）</strong>，标注、训练、评估三方用同一套编号。</p>
+      <div class="analogy"><span class="lbl">为什么</span>否则同一个问题今天叫「异地报销」明天叫「城市不符」，模型学不稳、F1 也没法算。就像<strong>全公司统一会计科目表</strong>。</div>
+    </div></div>
+    <div class="card"><div class="card-bar green"></div><div class="card-bd">
+      <h3 class="sub" style="margin-top:0">③ 接入系统</h3>
+      <p>用 <strong>vLLM</strong>（高性能推理引擎）挂载「基座 + LoRA adapter」对外提供 API，接进报销审批流。</p>
+      <div class="tip" style="margin:10px 0 0"><span class="tag">定位</span>是「<b>自动初筛 + 风险标记 + 人工复核</b>」，不是替代人——高风险单子标红给人看，<b>AI 当助手不当法官</b>。</div>
+    </div></div>
+    <div class="card"><div class="card-bar amber"></div><div class="card-bd">
+      <h3 class="sub" style="margin-top:0">④ 数据飞轮</h3>
+      <p>人工复核纠正的结果<strong>回流成新训练数据</strong>，定期重训。模型越用越准，形成闭环。</p>
+      <div class="fig" style="margin:12px 0 0;border:none;box-shadow:none;padding:0">
+        <svg viewBox="0 0 560 200" role="img" aria-label="数据飞轮环形图">
+          <defs><marker id="ahf" markerWidth="9" markerHeight="9" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#E89820"/></marker></defs>
+          <g font-size="11" font-weight="700" text-anchor="middle">
+            <circle cx="280" cy="100" r="26" fill="#091252"/><text x="280" y="97" fill="#fff" font-size="10">数据</text><text x="280" y="110" fill="#fff" font-size="10">飞轮</text>
+            <g><rect x="230" y="18" width="100" height="30" rx="15" fill="#00A0DF"/><text x="280" y="38" fill="#fff">报销单进来</text></g>
+            <g><rect x="418" y="70" width="110" height="30" rx="15" fill="#1226AA"/><text x="473" y="90" fill="#fff">模型初筛</text></g>
+            <g><rect x="410" y="140" width="120" height="30" rx="15" fill="#2E4FD0"/><text x="470" y="160" fill="#fff">人工复核纠错</text></g>
+            <g><rect x="30" y="140" width="120" height="30" rx="15" fill="#0EA573"/><text x="90" y="160" fill="#fff">纠错回流</text></g>
+            <g><rect x="34" y="70" width="110" height="30" rx="15" fill="#E89820"/><text x="89" y="90" fill="#fff">重训·更强</text></g>
+          </g>
+          <g fill="none" stroke="#E89820" stroke-width="2" marker-end="url(#ahf)">
+            <path d="M330,34 Q420,40 460,68"/><path d="M470,100 Q478,120 472,138"/>
+            <path d="M410,158 Q250,190 152,160"/><path d="M88,138 Q78,120 88,102"/>
+            <path d="M120,72 Q180,40 228,34"/>
+          </g>
+        </svg>
+      </div>
+    </div></div>
+    <div class="quiz"><div class="quiz-hd"><span class="ico">?</span><span class="t">收官检查点</span><span class="c">四步路线图</span></div><div class="quiz-bd">
+      <div class="q"><div class="q-txt"><span class="qn">Q1</span><span>走向生产的第一步、也是最重要的一步是什么？</span></div>
+        <button class="q-toggle">显示答案要点</button><div class="q-ans"><b>扩数据</b>——12 条 → 数百~数千条真实脱敏数据 + 规则。数据质量 = 成败。</div></div>
+      <div class="q"><div class="q-txt"><span class="qn">Q2</span><span>模型上线后应该是「法官」还是「助手」？</span></div>
+        <button class="q-toggle">显示答案要点</button><div class="q-ans"><b>助手</b>。自动初筛 + 风险标记，高风险标红交人复核，不替代人做终裁。</div></div>
+    </div></div>
+    <div class="done-bar"><div class="txt">四步路线图清楚了！这也是<b>最后一关</b>。<b>打卡完成</b>整套课程 →</div><button class="btn-done" data-done="k11"><span class="chk"></span>完成本关</button></div>
+  </section>
+
+  <!-- ═══ 术语表 ═══ -->
+  <section class="pane" id="glossary">
+    <div class="lh">
+      <div class="lh-kicker">附录 A · 速查</div>
+      <div class="lh-title">人话术语表</div>
+      <div class="lh-goal"><b>用法：</b>任何一关看到不认识的词，回这里查它的「人话版」。</div>
+    </div>
+    <div class="pf-search"><span class="si">⌕</span><input type="text" id="gl-input" placeholder="搜术语，例如：LoRA、量化、epoch、基线、F1…"></div>
+    <div class="pf-empty" id="gl-empty">没找到这个词。换个说法试试。</div>
+    <div class="gloss" id="gloss"></div>
+    <div class="done-bar"><div class="txt">术语表随时回来查。整套 12 关都打卡了吗？看顶部进度地图 →</div><button class="btn-done" data-done="glossary"><span class="chk"></span>标记读过</button></div>
+  </section>
+
+    <div class="footer">FinQwenFT 费控合规微调 · 小白闯关教学手册 &nbsp;|&nbsp; 内容蓝图 by Fable 5，交互落地 by Opus &nbsp;|&nbsp; 2026-07-06 &nbsp;|&nbsp; 单文件离线可用 · 进度存本地浏览器</div>
+  </main>
+</div>
+
+<script>
+/* ============ 数据 ============ */
+const PANES = ['k0','k1','k2','k3','k4','k5','k6','k7','k8','k9','k10','k11','glossary'];
+const MAP_LABELS = ['开营','大模型','决策课','LoRA','弹药','环境','数据','7B','32B','评估','查错','生产','术语'];
+
+const HYPERPARAMS = [
+  {name:'learning_rate', val:'1e-4', desc:'学习率', analogy:'下山时每步迈多大。', swing:'太大→一步跨过谷底、loss 震荡甚至飞掉；太小→蜗牛速度训不完。LoRA 常用 1e-4 左右。'},
+  {name:'num_train_epochs', val:'3', desc:'刷几遍习题册', analogy:'整本习题册从头刷到尾算 1 遍，我们刷 3 遍。', swing:'遍数太多+数据太少=死记硬背（过拟合）。12 条刷 3 遍就已在背题——玩具数据的必然。'},
+  {name:'batch_size', val:'2', desc:'每卡一次看几份', analogy:'老师一次批改几份作业再统一订正。', swing:'每张卡一次看 2 份。太大→显存爆；太小→更新不稳。'},
+  {name:'grad_accum', val:'8', desc:'梯度累积', analogy:'钱包一次拿不出大额，攒 8 次小账一起结。', swing:'先积累 8 个小批次的订正意见，攒够再一次更新。等效 batch=2×8×4卡=64，又省显存又稳。'},
+  {name:'warmup_ratio', val:'0.03', desc:'热车比例', analogy:'冷车先热车。', swing:'前 3% 训练用很小步子起步，避免一上来大步乱走毁掉基座能力。'},
+  {name:'lr_scheduler', val:'cosine', desc:'学习率曲线', analogy:'进站列车的刹车曲线。', swing:'学习率先保持、后期像余弦曲线平滑降到接近 0，收尾更稳。'},
+  {name:'loss', val:'↓', desc:'损失/扣分数', analogy:'每次考试的扣分数。', swing:'全程盯它：稳步下降=在学；不动=没学；剧烈震荡=步子太大。'},
+  {name:'bf16', val:'true', desc:'数字记账格式', analogy:'一种够用又省内存的记账格式。', swing:'L20 这类新卡的标配，计算又快又省。'},
+  {name:'grad_checkpoint', val:'true', desc:'梯度检查点', analogy:'为省桌面不留草稿，需要时重算一遍。', swing:'用时间换空间的经典交易——省显存，代价是稍慢。'},
+  {name:'cutoff_len', val:'4096', desc:'最多读多长', analogy:'一次最多读 4096 个「字块」(token)。', swing:'超长会被截断。报销记录不长，绰绰有余。'},
+  {name:'lora_rank', val:'16', desc:'便签厚度', analogy:'改动量的「秩」——便签有多厚。', swing:'越大表达力越强但便签越大越易过拟合；16 是常用稳妥值。'},
+  {name:'template', val:'qwen', desc:'信封格式', analogy:'每个模型家族有自己的「信封」。', swing:'Qwen 的信必须装 Qwen 的信封。装错信封→输出乱码，经典大坑。'}
+];
+
+const GLOSSARY = [
+  ['大模型 / LLM','读过整个互联网的超级文字接龙机器'],
+  ['参数','模型脑中的可调旋钮，数量以亿计'],
+  ['预训练','上完九年义务教育+大学的通识阶段，别人已做好'],
+  ['后训练','毕业后一切进阶训练的总称'],
+  ['微调 / SFT','用「题目+标准答案」对训模型学专业本领'],
+  ['基座模型','别人练好的通才模型，我们改造的起点'],
+  ['Instruct 模型','已受过「听懂指令」训练的基座'],
+  ['LoRA','不改大楼、只贴改动便签的省钱微调法'],
+  ['rank / alpha / dropout','便签的厚度 / 音量 / 防背题的随机遮盖'],
+  ['adapter','训练产物「便签合集」，7B 约几十MB / 32B 约几百MB'],
+  ['量化 / 4-bit','把参数从精确到分压到精确到元，省空间'],
+  ['QLoRA','冻结基座压成 4-bit + 高精度训 LoRA'],
+  ['显存 / GPU','计算工人的工作台面积 / 超级计算工人'],
+  ['NVLink','卡与卡之间的高速专线（我们没有，但 QLoRA 不太需要）'],
+  ['loss','考试扣分数，训练时盯它下降'],
+  ['epoch / batch','刷完整本习题册一遍 / 一次批改几份作业'],
+  ['learning rate','下山步幅'],
+  ['梯度累积','攒 8 笔小账一起结，模拟大 batch'],
+  ['warmup / cosine','热车起步 / 进站缓刹'],
+  ['gradient checkpointing','不留草稿省桌面，需要时重算'],
+  ['cutoff_len / token','一次最多读多长 / 文字的「字块」计量单位'],
+  ['bf16','够用又省内存的数字记账格式'],
+  ['template','模型家族专属的「信封格式」'],
+  ['ShareGPT / ChatML','对话数据的标准存法（system/user/assistant）'],
+  ['dataset_info.json','数据集登记表'],
+  ['冒烟测试','先用小模型几分钟验证链路通不通'],
+  ['过拟合','背题背死了，换新题就不会'],
+  ['基线','不微调的原模型同卷成绩，微调必须赢它'],
+  ['F1','「抓得全」和「不乱抓」的综合分'],
+  ['蒸馏','让强模型当老师批量出题写答案'],
+  ['vLLM','生产环境高性能「上菜窗口」（推理服务）'],
+  ['DeepSpeed ZeRO','把大模型拆开摊在多张卡上的协作术']
+];
+
+/* ============ 渲染进度地图 ============ */
+const doneSet = new Set(JSON.parse(localStorage.getItem('finqwen_done')||'[]'));
+const mapEl = document.getElementById('map');
+mapEl.innerHTML = PANES.map((p,i)=>`<div class="map-node" data-pane="${p}"><div class="map-line"></div><div class="map-dot">${i<12?i:'A'}</div><div class="map-label">${MAP_LABELS[i]}</div></div>`).join('');
+
+/* ============ 渲染超参翻转墙 ============ */
+document.getElementById('flipwall').innerHTML = HYPERPARAMS.map(h=>`
+  <div class="flip" tabindex="0" role="button" aria-label="${h.name} 卡片，点击翻面">
+    <div class="flip-in">
+      <div class="flip-face flip-front">
+        <div class="fname">${h.name}</div><div class="fval">${h.val}</div>
+        <div class="fdesc">${h.desc}</div><div class="fhint">点击翻面看类比</div>
+      </div>
+      <div class="flip-face flip-back">
+        <div class="bname">${h.name}</div><div class="banalogy">${h.analogy}</div>
+        <div class="bswing">${h.swing}</div>
+      </div>
+    </div>
+  </div>`).join('');
+document.querySelectorAll('.flip').forEach(f=>{
+  const t=()=>f.classList.toggle('flipped');
+  f.addEventListener('click',t);
+  f.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();t();}});
+});
+
+/* ============ 渲染术语表 ============ */
+function renderGloss(q=''){
+  const el=document.getElementById('gloss'); const ql=q.toLowerCase();
+  const items=GLOSSARY.filter(([t,d])=>!q||t.toLowerCase().includes(ql)||d.toLowerCase().includes(ql));
+  el.innerHTML=items.map(([t,d])=>`<div class="gitem"><div class="gt">${t}</div><div class="gd">${d}</div></div>`).join('');
+  document.getElementById('gl-empty').classList.toggle('show',items.length===0);
+}
+renderGloss();
+document.getElementById('gl-input').addEventListener('input',e=>renderGloss(e.target.value));
+
+/* ============ 关卡切换 ============ */
+function go(pane){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('active',p.id===pane));
+  document.querySelectorAll('.nav-row').forEach(r=>r.classList.toggle('active',r.dataset.pane===pane));
+  document.querySelectorAll('.map-node').forEach(n=>n.classList.toggle('active',n.dataset.pane===pane));
+  document.getElementById('main').scrollTo?.(0,0);
+  window.scrollTo({top:0,behavior:'smooth'});
+  history.replaceState(null,'','#'+pane);
+}
+document.querySelectorAll('.nav-row').forEach(r=>r.addEventListener('click',()=>go(r.dataset.pane)));
+document.querySelectorAll('.map-node').forEach(n=>n.addEventListener('click',()=>go(n.dataset.pane)));
+
+/* ============ 完成打卡 ============ */
+function refreshDone(){
+  document.getElementById('prog-n').textContent=[...doneSet].filter(x=>x!=='glossary').length;
+  document.querySelectorAll('.nav-row').forEach(r=>r.classList.toggle('done',doneSet.has(r.dataset.pane)));
+  document.querySelectorAll('.map-node').forEach(n=>n.classList.toggle('done',doneSet.has(n.dataset.pane)));
+  document.querySelectorAll('.btn-done').forEach(b=>{
+    const d=doneSet.has(b.dataset.done); b.classList.toggle('done',d);
+    b.querySelector('.chk').textContent=d?'✓':'';
+    b.childNodes[b.childNodes.length-1].textContent=d?'已完成':'完成本关';
+  });
+}
+document.querySelectorAll('.btn-done').forEach(b=>b.addEventListener('click',()=>{
+  const id=b.dataset.done;
+  if(doneSet.has(id)){doneSet.delete(id);} else {doneSet.add(id); toast('已打卡 · '+([...doneSet].filter(x=>x!=='glossary').length)+'/12 关完成');}
+  localStorage.setItem('finqwen_done',JSON.stringify([...doneSet]));
+  refreshDone();
+}));
+refreshDone();
+
+/* ============ 自测题显示答案 ============ */
+document.querySelectorAll('.q-toggle').forEach(btn=>btn.addEventListener('click',()=>{
+  const ans=btn.nextElementSibling; const show=ans.classList.toggle('show');
+  btn.textContent=show?'收起答案':'显示答案要点';
+}));
+
+/* ============ 决策树 ============ */
+(function(){
+  const tree=document.getElementById('dtree'); if(!tree) return;
+  const path=document.getElementById('dpath');
+  let step=0;
+  function reset(){
+    step=0; path.innerHTML='';
+    tree.querySelectorAll('.dstep').forEach((s,i)=>s.classList.toggle('hidden',i!==0));
+    document.getElementById('dres-good').classList.remove('show');
+    document.getElementById('dres-bad').classList.remove('show');
+  }
+  tree.querySelectorAll('.dstep .dbtn').forEach(btn=>btn.addEventListener('click',()=>{
+    const yes=btn.dataset.a==='y';
+    path.innerHTML+=`<span class="chip ${yes?'y':'n'}">问${step+1}: ${yes?'是':'否'}</span>`;
+    tree.querySelector(`.dstep[data-step="${step}"]`).classList.add('hidden');
+    if(!yes){ document.getElementById('dres-bad').classList.add('show'); return; }
+    step++;
+    if(step<3){ tree.querySelector(`.dstep[data-step="${step}"]`).classList.remove('hidden'); }
+    else { document.getElementById('dres-good').classList.add('show'); }
+  }));
+  tree.querySelectorAll('.dreset').forEach(b=>b.addEventListener('click',reset));
+})();
+
+/* ============ loss 曲线诊断 ============ */
+document.querySelectorAll('.loss-line').forEach(g=>{
+  const base='把鼠标移到三条曲线上，看它各自代表什么、怎么处理。';
+  g.style.cursor='pointer';
+  g.addEventListener('mouseenter',()=>document.getElementById('loss-diag').textContent=g.dataset.diag);
+  g.addEventListener('mouseleave',()=>document.getElementById('loss-diag').textContent=base);
+});
+
+/* ============ 代码复制 ============ */
+document.querySelectorAll('.copy-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  const box=document.getElementById('code-'+btn.dataset.copy);
+  const lines=[...box.querySelectorAll('.code-line .cmd')].map(c=>c.textContent.replace(/\s+#.*$/,'').trim());
+  const text=lines.join('\n');
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='已复制 ✓'; btn.classList.add('ok'); toast('命令已复制到剪贴板');
+    setTimeout(()=>{btn.textContent=btn.dataset.copy==='env'?'复制全部':'复制';btn.classList.remove('ok');},1600);
+  }).catch(()=>toast('复制失败，请手动选择'));
+}));
+
+/* ============ 坑急诊室搜索 ============ */
+document.getElementById('pf-input').addEventListener('input',e=>{
+  const q=e.target.value.toLowerCase(); let n=0;
+  document.querySelectorAll('#pf-table tbody tr').forEach(r=>{
+    const hit=r.textContent.toLowerCase().includes(q); r.style.display=hit?'':'none'; if(hit)n++;
+  });
+  document.getElementById('pf-empty').classList.toggle('show',n===0);
+});
+
+/* ============ toast ============ */
+let toastT;
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+/* ============ 侧边栏折叠 ============ */
+(function(){
+  const nav=document.getElementById('left-nav'),lay=document.getElementById('layout'),btn=document.getElementById('nav-toggle');
+  function set(c){nav.classList.toggle('collapsed',c);lay.classList.toggle('collapsed',c);
+    btn.querySelector('.nav-toggle-label').textContent=c?'':'收起目录';
+    btn.lastElementChild.textContent=c?'▶':'◀';
+    try{localStorage.setItem('finqwen_nav',c?'1':'0');}catch(e){}}
+  set(localStorage.getItem('finqwen_nav')==='1');
+  btn.addEventListener('click',()=>set(!nav.classList.contains('collapsed')));
+})();
+
+/* ============ 折叠态 tooltip ============ */
+(function(){
+  const tip=document.getElementById('nav-tooltip'),nav=document.getElementById('left-nav');
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function show(row){ if(!nav.classList.contains('collapsed'))return;
+    const txt=row.dataset.tip; if(!txt)return; tip.textContent=esc(txt);
+    const r=row.getBoundingClientRect(); tip.style.left=(r.right+8)+'px'; tip.style.top=(r.top+8)+'px'; tip.classList.add('show');
+  }
+  function hide(){tip.classList.remove('show');}
+  document.querySelectorAll('.nav-row[title]').forEach(row=>{
+    row.dataset.tip=row.title; row.removeAttribute('title');
+    row.addEventListener('mouseenter',()=>show(row)); row.addEventListener('mouseleave',hide);
+    row.addEventListener('focus',()=>show(row)); row.addEventListener('blur',hide);
+  });
+  window.addEventListener('scroll',hide,true);
+})();
+
+/* ============ header 高度同步 ============ */
+(function(){
+  const sb=document.querySelector('.status-bar');
+  function recalc(){const h=sb?sb.offsetHeight:104;document.documentElement.style.setProperty('--header-h',h+'px');document.documentElement.style.setProperty('--status-h',h+'px');}
+  recalc(); window.addEventListener('resize',recalc); setTimeout(recalc,120); setTimeout(recalc,500);
+})();
+
+/* ============ 键盘 · 左右切关 ============ */
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  const cur=PANES.findIndex(p=>document.getElementById(p).classList.contains('active'));
+  if(e.key==='ArrowRight'&&cur<PANES.length-1)go(PANES[cur+1]);
+  if(e.key==='ArrowLeft'&&cur>0)go(PANES[cur-1]);
+});
+
+/* ============ 深链恢复 ============ */
+if(location.hash){const p=location.hash.slice(1); if(PANES.includes(p))go(p);}
+</script>
+
+<!-- kengit analytics: GoatCounter (gated, inline implementation, no CDN dependency) -->
+<script>
+window.kengitTrackVisit = function() {
+  if (window._kengitTracked) return;
+  window._kengitTracked = true;
+  try {
+    var url = 'https://kenno.goatcounter.com/count?' +
+      'p=' + encodeURIComponent(location.pathname + location.search) +
+      '&t=' + encodeURIComponent(document.title) +
+      '&r=' + encodeURIComponent(document.referrer) +
+      '&s=' + screen.width + ',' + screen.height + ',' + (window.devicePixelRatio || 1) +
+      '&rnd=' + Math.random();
+    var img = new Image(1, 1);
+    img.src = url;
+  } catch(e) {}
+};
+if (!document.getElementById('auth-gate') || sessionStorage.getItem('kengit-authed')==='1') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', window.kengitTrackVisit);
+  } else {
+    window.kengitTrackVisit();
+  }
+}
+</script>
